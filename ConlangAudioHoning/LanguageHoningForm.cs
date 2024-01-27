@@ -36,8 +36,10 @@ namespace ConlangAudioHoning
 {
     public partial class LanguageHoningForm : Form
     {
-        private LanguageDescription? languageDescription;
+        private LanguageDescription? languageDescription = null;
         private FileInfo? languageFileInfo = null;
+        private string? sampleText = null;
+        private PollySpeech? pollySpeech = null;
 
         public LanguageHoningForm()
         {
@@ -111,6 +113,14 @@ namespace ConlangAudioHoning
                 return;
             }
             // TODO: Populate form
+            if (pollySpeech == null)
+            {
+                pollySpeech = new PollySpeech(languageDescription);
+            }
+            else
+            {
+                pollySpeech.LanguageDescription = languageDescription;
+            }
         }
 
         private void SaveLanguage(string filename)
@@ -147,5 +157,89 @@ namespace ConlangAudioHoning
             }
         }
 
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new())
+            {
+                if (languageFileInfo == null)
+                {
+                    openFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+                }
+                else
+                {
+                    openFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+                }
+                openFileDialog.Filter = "txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.Multiselect = false;
+                openFileDialog.RestoreDirectory = true;
+                openFileDialog.CheckFileExists = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    LoadSampleText(openFileDialog.FileName);
+                }
+            }
+        }
+
+        private void LoadSampleText(string fileName)
+        {
+            string fileText = File.ReadAllText(fileName);
+
+            sampleText = fileText;
+            txt_SampleText.Text = sampleText;
+            if(pollySpeech != null)
+            {
+                pollySpeech.sampleText = sampleText;
+            }
+        }
+
+        private void saveSampleMenu_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new())
+            {
+                if (languageFileInfo == null)
+                {
+                    saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+                }
+                else
+                {
+                    saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+                }
+                saveFileDialog.Filter = "txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 1;
+                saveFileDialog.RestoreDirectory = true;
+                saveFileDialog.CheckFileExists = false;
+                saveFileDialog.OverwritePrompt = true;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    SaveSampleText(saveFileDialog.FileName);
+                }
+            }
+        }
+
+        private void SaveSampleText(string filename)
+        {
+            sampleText = txt_SampleText.Text;
+            sampleText = sampleText.Trim();
+            File.WriteAllText(filename, sampleText);
+        }
+
+        private void txt_SampleText_TextChanged(object sender, EventArgs e)
+        {
+            sampleText = txt_SampleText.Text;
+            sampleText = sampleText.Trim();
+        }
+
+        private void btn_generate_Click(object sender, EventArgs e)
+        {
+            if((languageDescription != null) && (pollySpeech != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
+            {
+                pollySpeech.generate(languageDescription.preferred_voice ?? "Brian","slow");
+                txt_phonetic.Text = pollySpeech.phoneticText;
+            }
+        }
     }
 }
+
