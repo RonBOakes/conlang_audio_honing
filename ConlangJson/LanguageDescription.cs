@@ -1,21 +1,21 @@
 ﻿/*
-* C# Structure of the Conlang JSON structure top level.
-* 
-* Copyright (C) 2024 Ronald B. Oakes
-*
-* This program is free software: you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the Free
-* Software Foundation, either version 3 of the License, or (at your option)
-* any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along with
-* this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * C# Structure of the Conlang JSON structure top level.
+ * 
+ * Copyright (C) 2024 Ronald B. Oakes
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +28,17 @@ namespace ConlangJson
     public class LanguageDescription
     {
         private string? _english_name;
+        private string? _phonetic_characters;
         private string? _native_name_phonetic;
         private string? _native_name_english;
         private string? _preferred_voice;
+        private string? _preferred_language;
         private bool? _derived;
         private bool? _declined;
         private List<string>? _noun_gender_list;
         private List<string>? _part_of_speech_list;
         private List<string>? _phoneme_inventory;
+        private Dictionary<string, string[]?>? _phonetic_inventory;
         private List<SoundMap>? _sound_map_list;
         private List<string>? _lexical_order_list;
         private Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? _affix_map;
@@ -58,14 +61,17 @@ namespace ConlangJson
             _metadata = [];
         }
 
-        public LanguageDescription(string? english_name, string? native_name_phonetic, string? native_name_english, List<string>? noun_gender_list, string? preferred_voice, 
-            bool? derived, bool? declined, List<string>? part_of_speech_list, List<string>? phoneme_inventory, List<SoundMap>? sound_map_list, 
-            List<string>? lexical_order_list, Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? affix_map, Dictionary<string, DerivationalAffix>? derivational_affix_map, 
+        public LanguageDescription(string? english_name, string? phonetic_characters, string? native_name_phonetic, string? native_name_english, List<string>? noun_gender_list, string? preferred_voice,
+            string? preferred_language, bool? derived, bool? declined, List<string>? part_of_speech_list, List<string>? phoneme_inventory, List<SoundMap>? sound_map_list,
+            List<string>? lexical_order_list, Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? affix_map, Dictionary<string, DerivationalAffix>? derivational_affix_map,
             List<LexiconEntry> lexicon, List<string>? derived_word_list, JsonObject metadata)
         {
             _english_name = english_name;
+            _phonetic_characters = phonetic_characters;
             _native_name_phonetic = native_name_phonetic;
             _native_name_english = native_name_english;
+            _preferred_voice = preferred_voice;
+            _preferred_language = preferred_language;
             _noun_gender_list = noun_gender_list ?? [];
             _part_of_speech_list = part_of_speech_list ?? [];
             _phoneme_inventory = phoneme_inventory ?? [];
@@ -83,7 +89,13 @@ namespace ConlangJson
             get => _english_name;
             set => _english_name = value;
         }
-        
+
+        public string? phonetic_characters
+        {
+            get => _phonetic_characters;
+            set => _phonetic_characters = value;
+        }
+
         public string? native_name_phonetic
         {
             get => _native_name_phonetic;
@@ -102,15 +114,21 @@ namespace ConlangJson
             set => _preferred_voice = value;
         }
 
+        public string? preferred_language
+        {
+            get => _preferred_language;
+            set => _preferred_language = value;
+        }
+
         public bool? derived
         {
-            get => _derived; 
+            get => _derived;
             set => _derived = value;
         }
 
         public bool? declined
         {
-            get => _declined; 
+            get => _declined;
             set => _declined = value;
         }
 
@@ -130,6 +148,12 @@ namespace ConlangJson
         {
             get => _phoneme_inventory ?? [];
             set => _phoneme_inventory = value;
+        }
+
+        public Dictionary<string, string[]?> phonetic_inventory
+        {
+            get => _phonetic_inventory ?? new Dictionary<string, string[]?>();
+            set => _phonetic_inventory = value;
         }
 
         public List<SoundMap> sound_map_list
