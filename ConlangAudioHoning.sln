@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConlangAudioHoning", "Conla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConlangJson", "ConlangJson\ConlangJson.csproj", "{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComboTest", "ComboTest\ComboTest.csproj", "{8DFDA58C-390F-4A94-80BA-62B36D67BBF4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263} = {ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +26,10 @@ Global
 		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DFDA58C-390F-4A94-80BA-62B36D67BBF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DFDA58C-390F-4A94-80BA-62B36D67BBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DFDA58C-390F-4A94-80BA-62B36D67BBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DFDA58C-390F-4A94-80BA-62B36D67BBF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

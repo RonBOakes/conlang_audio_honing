@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Security.AccessControl;
 
 namespace ConlangJson
 {
@@ -166,6 +167,102 @@ namespace ConlangJson
             }
 
             return phoneticList;
+        }
+
+        public static List<List<T>> allCombinations<T>(List<T> list)
+        {
+            List<List<T>> allCombos = new List<List<T>>();
+            for (int i = 0; i <  list.Count; i++)
+            {
+                List<List<T>> combos = combinations(list, i + 1);
+                allCombos.AddRange(combos);
+            }
+            return allCombos;
+        }
+
+        public static List<List<T>> combinations<T>(List<T> list, int count)
+        {
+            if(list == null)
+            {
+                throw new ArgumentNullException("list");
+            }
+            List<List<T>> permutationList = permutations<T>(list, count);
+            List<List<T>> combos = new List<List<T>>();
+            foreach (List<T> permutation in permutationList)
+            {
+                bool newCombo = true;
+                foreach(List<T> combo in combos)
+                {
+                    if(sameContent(combo, permutation))
+                    {
+                        newCombo = false;
+                    }
+                }
+                if(newCombo)
+                {
+                    combos.Add(permutation);
+                }
+            }
+            foreach (List<T> combo in combos)
+            {
+                combo.Reverse();
+            }
+            return combos;
+        }
+
+        public static List<List<T>> permutations<T>(List<T> list, int count)
+        {
+            if(list == null)
+            {
+                throw new ArgumentNullException("list");
+            }
+            List<List<T>> permutationList = new List<List<T>>();
+
+            if (count == 1)
+            {
+                foreach(T t in list)
+                {
+                    List<T> combo = new List<T>() { t };
+                    permutationList.Add(combo);
+                }
+            }
+            else
+            {
+                List<List<T>> partialCombos = permutations<T>(list, count - 1);
+                foreach(List<T> combo in partialCombos)
+                {
+                    foreach (T t in list)
+                    {
+                        if (!(combo.Contains(t)))
+                        {
+                            List<T> newCombo = new List<T>();
+                            newCombo.Add(t);
+                            newCombo.AddRange(combo);
+                            permutationList.Add(newCombo);
+                        }
+                    }
+                }
+            }
+            return permutationList;
+        }
+
+        private static bool sameContent<T>(List<T> one, List<T> two)
+        {
+            if(one.Count != two.Count)
+            {
+                return false;
+            }
+            // Asumption: neither list will have duplicate entries - safe for our needs here.
+            int matchCount = 0;
+            foreach(T t in one)
+            {
+                if(two.Contains(t))
+                {
+                    matchCount += 1;
+                    continue;
+                }
+            }
+            return matchCount == one.Count;
         }
     }
 }
