@@ -39,7 +39,7 @@ namespace ConlangAudioHoning
 
         public LanguageDescription LanguageDescription
         {
-            get => _languageDescription ??  new LanguageDescription();
+            get => _languageDescription ?? new LanguageDescription();
             set => _languageDescription = value;
         }
 
@@ -63,11 +63,17 @@ namespace ConlangAudioHoning
         {
             if (_languageDescription == null)
             {
-                throw new ConlangAudioHoningException("Cannot generate Polly Speech without a language description"); 
+                throw new ConlangAudioHoningException("Cannot generate Polly Speech without a language description");
             }
-            if((_sampleText == null) || (sampleText.Trim().Equals(string.Empty)))
+            if ((_sampleText == null) || (sampleText.Trim().Equals(string.Empty)))
             {
                 throw new ConlangAudioHoningException("Cannot generate polly Speech without sample text");
+            }
+            bool removeDeclinedWord = false;
+            if (!_languageDescription.declined)
+            {
+                ConLangUtilities.declineLexicon(_languageDescription);
+                removeDeclinedWord = true;
             }
 
             // Build a lookup dictionary from the lexicon - spelled words to their lexicon entries
@@ -85,9 +91,9 @@ namespace ConlangAudioHoning
                 do
                 {
                     line = sampleTextReader.ReadLine();
-                    if(line != null)
+                    if ((line != null) && (!line.Trim().Equals(string.Empty)))
                     {
-                        List<Dictionary<string,string>> lineMapList = new List<Dictionary<string,string>>();
+                        List<Dictionary<string, string>> lineMapList = new List<Dictionary<string, string>>();
                         foreach (string word in line.Split(null))
                         {
                             Dictionary<string, string>? pronoucneMap = pronounceWord(word, wordMap);
@@ -108,33 +114,31 @@ namespace ConlangAudioHoning
             _phoneticText = string.Empty;
             int wordWrap = 0;
 
-            foreach (List<Dictionary<string,string>> lineMapList in pronounceMapList) 
+            foreach (List<Dictionary<string, string>> lineMapList in pronounceMapList)
             {
-                foreach(Dictionary<string,string> pronounceMap in lineMapList)
+                foreach (Dictionary<string, string> pronounceMap in lineMapList)
                 {
                     // Build the phoneme tag
-                    if (!pronounceMap["phonetic"].Trim().Equals(string.Empty))
+                    if ((!pronounceMap["phonetic"].Trim().Equals(string.Empty)) && (pronounceMap["phonetic"] != ".") && (pronounceMap["phonetic"] != ","))
                     {
                         _ssmlText += "\t\t<phoneme alphabet=\"ipa\" ph=\"" + pronounceMap["phonetic"] + "\">" + pronounceMap["word"] + "</phoneme>\n";
                         _phoneticText += pronounceMap["phonetic"];
-                        wordWrap += pronounceMap["phonetic"].Length + 1;
+                        wordWrap += pronounceMap["phonetic"].Length;
+                        if (pronounceMap["punctuation"] != "")
+                        {
+                            _phoneticText += pronounceMap["punctuation"];
+                            wordWrap += pronounceMap["punctuation"].Length;
+                        }
+                        _phoneticText += " ";
+                        wordWrap += 1;
                     }
-                    if (pronounceMap["punctuation"] == ".")
+                    else if (pronounceMap["punctuation"] == ".")
                     {
                         _ssmlText += "\t\t<break strength=\"strong\"/>\n";
-                        _phoneticText += ". ";
-                        wordWrap += 2;
                     }
                     else if (pronounceMap["punctuation"] == ",")
                     {
                         _ssmlText += "\t\t<break strength=\"weak\"/>\n";
-                        _phoneticText += ", ";
-                        wordWrap += 2;
-                    }
-                    else
-                    {
-                        _phoneticText += " ";
-                        wordWrap += 1;
                     }
                     if (wordWrap >= 80)
                     {
@@ -145,18 +149,23 @@ namespace ConlangAudioHoning
             }
             _ssmlText += "\t</prosody>\n";
             _ssmlText += "</speak>\n";
+
+            if (removeDeclinedWord)
+            {
+                ConLangUtilities.removeDeclinedEntries(_languageDescription);
+            }
         }
 
-        private Dictionary<string,string>? pronounceWord(string word, Dictionary<string, LexiconEntry> wordMap)
+        private Dictionary<string, string>? pronounceWord(string word, Dictionary<string, LexiconEntry> wordMap)
         {
-            if(word.Trim().Equals(string.Empty))
+            if (word.Trim().Equals(string.Empty))
             {
                 return null;
             }
             Dictionary<string, string> pw = new Dictionary<string, string>();
             if (word.Trim().Equals("."))
             {
-                
+
                 pw.Add("phonetic", string.Empty);
                 pw.Add("punctuation", ".");
                 pw.Add("word", word);
@@ -176,12 +185,12 @@ namespace ConlangAudioHoning
 
             int wordlen = word.Length;
             string lastchar = word.Substring(wordlen - 1);
-            if((lastchar == ".") || (lastchar == ","))
+            if ((lastchar == ".") || (lastchar == ","))
             {
                 punctuation = lastchar;
-                word = word.Substring((wordlen - 1));
+                word = word.Substring(0, (wordlen - 1));
             }
-            if(wordMap.ContainsKey(word))
+            if (wordMap.ContainsKey(word))
             {
                 phonetic = wordMap[word].phonetic;
             }
@@ -199,6 +208,6 @@ namespace ConlangAudioHoning
             pw.Add("word", word);
             return pw;
 
-         }
+        }
     }
 }

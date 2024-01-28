@@ -120,15 +120,15 @@ namespace ConlangJson
             set => _preferred_language = value;
         }
 
-        public bool? derived
+        public bool derived
         {
-            get => _derived;
+            get => _derived ?? false;
             set => _derived = value;
         }
 
-        public bool? declined
+        public bool declined
         {
-            get => _declined;
+            get => _declined ?? false;
             set => _declined = value;
         }
 

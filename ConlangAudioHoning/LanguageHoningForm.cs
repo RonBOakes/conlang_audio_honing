@@ -114,7 +114,7 @@ namespace ConlangAudioHoning
             }
             // TODO: Populate form
 
-            if ((languageDescription.declined != null) && ((bool)languageDescription.declined))
+            if (languageDescription.declined)
             {
                 declineToolStripMenuItem.Enabled = false;
             }
@@ -257,7 +257,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if((languageDescription.declined == null) || (!(bool)languageDescription.declined))
+            if(!languageDescription.declined)
             {
                 ConLangUtilities.declineLexicon(languageDescription);
                 declineToolStripMenuItem.Text = "Remove Declensions";
