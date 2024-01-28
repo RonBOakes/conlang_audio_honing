@@ -37,6 +37,9 @@
             saveSampleMenu = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
+            languageToolStripMenuItem = new ToolStripMenuItem();
+            declineToolStripMenuItem = new ToolStripMenuItem();
+            deriveToolStripMenuItem = new ToolStripMenuItem();
             txt_SampleText = new TextBox();
             lbl_SampleText = new Label();
             txt_phonetic = new TextBox();
@@ -47,7 +50,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(800, 24);
@@ -108,6 +111,26 @@
             exitToolStripMenuItem.Size = new Size(227, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
+            // languageToolStripMenuItem
+            // 
+            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { declineToolStripMenuItem, deriveToolStripMenuItem });
+            languageToolStripMenuItem.Name = "languageToolStripMenuItem";
+            languageToolStripMenuItem.Size = new Size(71, 20);
+            languageToolStripMenuItem.Text = "Language";
+            // 
+            // declineToolStripMenuItem
+            // 
+            declineToolStripMenuItem.Name = "declineToolStripMenuItem";
+            declineToolStripMenuItem.Size = new Size(180, 22);
+            declineToolStripMenuItem.Text = "Decline Language";
+            declineToolStripMenuItem.Click += declineToolStripMenuItem_Click;
+            // 
+            // deriveToolStripMenuItem
+            // 
+            deriveToolStripMenuItem.Name = "deriveToolStripMenuItem";
+            deriveToolStripMenuItem.Size = new Size(180, 22);
+            deriveToolStripMenuItem.Text = "Derive Words";
             // 
             // txt_SampleText
             // 
@@ -194,5 +217,8 @@
         private TextBox txt_phonetic;
         private Label lbl_phonetic;
         private Button btn_generate;
+        private ToolStripMenuItem languageToolStripMenuItem;
+        private ToolStripMenuItem declineToolStripMenuItem;
+        private ToolStripMenuItem deriveToolStripMenuItem;
     }
 }

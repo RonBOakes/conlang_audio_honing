@@ -113,6 +113,16 @@ namespace ConlangAudioHoning
                 return;
             }
             // TODO: Populate form
+
+            if ((languageDescription.declined != null) && ((bool)languageDescription.declined))
+            {
+                declineToolStripMenuItem.Enabled = false;
+            }
+            //if((languageDescription.derived != null) && ((bool)languageDescription.derived))
+            //{
+            deriveToolStripMenuItem.Enabled = false;
+            //}
+
             if (pollySpeech == null)
             {
                 pollySpeech = new PollySpeech(languageDescription);
@@ -188,7 +198,7 @@ namespace ConlangAudioHoning
 
             sampleText = fileText;
             txt_SampleText.Text = sampleText;
-            if(pollySpeech != null)
+            if (pollySpeech != null)
             {
                 pollySpeech.sampleText = sampleText;
             }
@@ -234,11 +244,30 @@ namespace ConlangAudioHoning
 
         private void btn_generate_Click(object sender, EventArgs e)
         {
-            if((languageDescription != null) && (pollySpeech != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
+            if ((languageDescription != null) && (pollySpeech != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
             {
-                pollySpeech.generate(languageDescription.preferred_voice ?? "Brian","slow");
+                pollySpeech.generate(languageDescription.preferred_voice ?? "Brian", "slow");
                 txt_phonetic.Text = pollySpeech.phoneticText;
             }
+        }
+
+        private void declineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(languageDescription == null)
+            {
+                return;
+            }
+            if((languageDescription.declined == null) || (!(bool)languageDescription.declined))
+            {
+                ConLangUtilities.declineLexicon(languageDescription);
+                declineToolStripMenuItem.Text = "Remove Declensions";
+            }
+            else
+            {
+                ConLangUtilities.removeDeclinedEntries(languageDescription);
+                declineToolStripMenuItem.Text = "Decline Language";
+            }
+
         }
     }
 }

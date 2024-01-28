@@ -20,12 +20,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace ConlangJson
 {
-    public class LexiconEntry
+    public class LexiconEntry : IEquatable<LexiconEntry?>
     {
         private string _phonetic;
         private string _spelled;
@@ -125,6 +126,42 @@ namespace ConlangJson
             {
                 _metadata = value;
             }
+        }
+
+        public LexiconEntry copy()
+        {
+            LexiconEntry copy = new LexiconEntry(phonetic, spelled, english, part_of_speech, declensions, derived_word, declined_word, metadata);
+            if (metadata != null)
+            {
+                string metatdataString = JsonSerializer.Serialize<JsonObject>(metadata);
+#pragma warning disable CS8601 // Possible null reference assignment.
+                copy.metadata = JsonSerializer.Deserialize<JsonObject>(metatdataString);
+#pragma warning restore CS8601 // Possible null reference assignment.
+            }
+            return copy;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as LexiconEntry);
+        }
+
+        public bool Equals(LexiconEntry? other)
+        {
+            return other is not null &&
+                   _phonetic == other._phonetic &&
+                   _spelled == other._spelled &&
+                   _english == other._english &&
+                   _part_of_speech == other._part_of_speech &&
+                   EqualityComparer<List<string>>.Default.Equals(_declensions, other._declensions) &&
+                   _derived_word == other._derived_word &&
+                   _declined_word == other._declined_word &&
+                   EqualityComparer<JsonObject?>.Default.Equals(_metadata, other._metadata);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_phonetic, _spelled, _english, _part_of_speech, _declensions, _derived_word, _declined_word, _metadata);
         }
 
         public class LexicalOrderCompSpelling : IComparer<LexiconEntry>
@@ -236,6 +273,16 @@ namespace ConlangJson
 
                 return strComp.Compare(x.english, y.english);
             }
+        }
+
+        public static bool operator ==(LexiconEntry? left, LexiconEntry? right)
+        {
+            return EqualityComparer<LexiconEntry>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(LexiconEntry? left, LexiconEntry? right)
+        {
+            return !(left == right);
         }
     }
 }
