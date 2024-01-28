@@ -34,8 +34,11 @@ namespace ConlangJson
         private string? _t_spelling_add = null;
         private string? _f_pronounciation_add = null;
         private string? _f_spelling_add = null;
+        private string? _pronounciation_repl = null;
+        private string? _spelling_repl = null;
 
-        public Affix(string? pronounciation_add, string? spelling_add, string? pronounciation_regex, string? spelling_regex, string? t_pronounciation_add, string? t_spelling_add, string? f_pronounciation_add, string? f_spelling_add)
+        public Affix(string? pronounciation_add, string? spelling_add, string? pronounciation_regex, string? spelling_regex, string? t_pronounciation_add, 
+            string? t_spelling_add, string? f_pronounciation_add, string? f_spelling_add, string? pronounciation_repl, string? spelling_repl)
         {
             this._pronounciation_add = pronounciation_add;
             this._spelling_add = spelling_add;
@@ -45,6 +48,8 @@ namespace ConlangJson
             this._t_spelling_add = t_spelling_add;
             this._f_pronounciation_add = f_pronounciation_add;
             this._f_spelling_add = f_spelling_add;
+            _pronounciation_repl = pronounciation_repl;
+            _spelling_repl = spelling_repl;
         }
 
         public Affix() { }
@@ -95,6 +100,18 @@ namespace ConlangJson
         {
             get { return _f_spelling_add; }
             set { _f_spelling_add = value; }
+        }
+
+        public string? pronounciation_repl
+        {
+            get { return _pronounciation_repl; }
+            set { _pronounciation_repl = value; }
+        }
+
+        public string? spelling_repl
+        {
+            get { return _spelling_repl; }
+            set { _spelling_repl = value; }
         }
     }
 }
