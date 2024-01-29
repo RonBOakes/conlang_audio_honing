@@ -40,14 +40,15 @@
             languageToolStripMenuItem = new ToolStripMenuItem();
             declineToolStripMenuItem = new ToolStripMenuItem();
             deriveToolStripMenuItem = new ToolStripMenuItem();
+            debugToolStripMenuItem = new ToolStripMenuItem();
+            displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             txt_SampleText = new TextBox();
             lbl_SampleText = new Label();
             txt_phonetic = new TextBox();
             lbl_phonetic = new Label();
             btn_generate = new Button();
             btn_generateSpeech = new Button();
-            debugToolStripMenuItem = new ToolStripMenuItem();
-            displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
+            printIPAMapToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -135,6 +136,20 @@
             deriveToolStripMenuItem.Size = new Size(168, 22);
             deriveToolStripMenuItem.Text = "Derive Words";
             // 
+            // debugToolStripMenuItem
+            // 
+            debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayPulmonicConsonantsToolStripMenuItem, printIPAMapToolStripMenuItem });
+            debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            debugToolStripMenuItem.Size = new Size(54, 20);
+            debugToolStripMenuItem.Text = "Debug";
+            // 
+            // displayPulmonicConsonantsToolStripMenuItem
+            // 
+            displayPulmonicConsonantsToolStripMenuItem.Name = "displayPulmonicConsonantsToolStripMenuItem";
+            displayPulmonicConsonantsToolStripMenuItem.Size = new Size(232, 22);
+            displayPulmonicConsonantsToolStripMenuItem.Text = "Display Pulmonic Consonants";
+            displayPulmonicConsonantsToolStripMenuItem.Click += displayPulmonicConsonantsToolStripMenuItem_Click;
+            // 
             // txt_SampleText
             // 
             txt_SampleText.AccessibleDescription = "Sample Text";
@@ -157,6 +172,7 @@
             // 
             // txt_phonetic
             // 
+            txt_phonetic.Font = new Font("Charis SIL", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txt_phonetic.Location = new Point(12, 157);
             txt_phonetic.Multiline = true;
             txt_phonetic.Name = "txt_phonetic";
@@ -194,19 +210,12 @@
             btn_generateSpeech.UseVisualStyleBackColor = true;
             btn_generateSpeech.Click += btn_generateSpeech_Click;
             // 
-            // debugToolStripMenuItem
+            // printIPAMapToolStripMenuItem
             // 
-            debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayPulmonicConsonantsToolStripMenuItem });
-            debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            debugToolStripMenuItem.Size = new Size(54, 20);
-            debugToolStripMenuItem.Text = "Debug";
-            // 
-            // displayPulmonicConsonantsToolStripMenuItem
-            // 
-            displayPulmonicConsonantsToolStripMenuItem.Name = "displayPulmonicConsonantsToolStripMenuItem";
-            displayPulmonicConsonantsToolStripMenuItem.Size = new Size(232, 22);
-            displayPulmonicConsonantsToolStripMenuItem.Text = "Display Pulmonic Consonants";
-            displayPulmonicConsonantsToolStripMenuItem.Click += displayPulmonicConsonantsToolStripMenuItem_Click;
+            printIPAMapToolStripMenuItem.Name = "printIPAMapToolStripMenuItem";
+            printIPAMapToolStripMenuItem.Size = new Size(232, 22);
+            printIPAMapToolStripMenuItem.Text = "Print IPA Map";
+            printIPAMapToolStripMenuItem.Click += printIPAMapToolStripMenuItem_Click;
             // 
             // LanguageHoningForm
             // 
@@ -251,5 +260,6 @@
         private Button btn_generateSpeech;
         private ToolStripMenuItem debugToolStripMenuItem;
         private ToolStripMenuItem displayPulmonicConsonantsToolStripMenuItem;
+        private ToolStripMenuItem printIPAMapToolStripMenuItem;
     }
 }

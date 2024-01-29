@@ -29,10 +29,10 @@ using System.Text.Json.Nodes;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-//using Windows.Media.Playback;
 using WMPLib;
 using ConlangJson;
 using LanguageEditor;
+using System.Drawing.Printing;
 
 namespace ConlangAudioHoning
 {
@@ -42,6 +42,8 @@ namespace ConlangAudioHoning
         private FileInfo? languageFileInfo = null;
         private string? sampleText = null;
         private PollySpeech? pollySpeech = null;
+        private Font? printFont;
+        private TextReader? readerToPrint;
 
         public LanguageHoningForm()
         {
@@ -115,6 +117,8 @@ namespace ConlangAudioHoning
                 return;
             }
             languageFileInfo = new FileInfo(filename);
+
+            IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
 
             // TODO: Populate form
 
@@ -312,12 +316,69 @@ namespace ConlangAudioHoning
         private void displayPulmonicConsonantsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
-            foreach(string c in IpaUtilities.PConsonants)
+            foreach (string c in IpaUtilities.PConsonants)
             {
                 sb.Append(c);
                 sb.Append(" ");
             }
             txt_SampleText.Text = sb.ToString();
+            txt_phonetic.Text = sb.ToString();
+        }
+
+        // The PrintPage event is raised for each page to be printed.
+        private void pd_PrintPage(object sender, PrintPageEventArgs ev)
+        {
+            if ((readerToPrint == null) || (printFont == null) || (ev == null))
+            {
+                return;
+            }
+
+            float linesPerPage = 0;
+            float yPos = 0;
+            int count = 0;
+            float leftMargin = ev.MarginBounds.Left;
+            float topMargin = ev.MarginBounds.Top;
+            string line = string.Empty;
+
+            // Calculate the number of lines per page.
+            linesPerPage = ev.MarginBounds.Height / printFont.GetHeight(ev.Graphics);
+
+            // Print each line of the file.
+            while (count < linesPerPage &&
+               ((line = readerToPrint.ReadLine()) != null))
+            {
+                yPos = topMargin + (count * printFont.GetHeight(ev.Graphics));
+                ev.Graphics.DrawString(line, printFont, Brushes.Black, leftMargin, yPos, new StringFormat());
+                count++;
+            }
+
+            // If more lines exist, print another page.
+            if (line != null)
+            {
+                ev.HasMorePages = true;
+            }
+            else
+            {
+                ev.HasMorePages = false;
+            }
+        }
+
+        private void printIPAMapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string ipaPhonemes = IpaUtilities.IpaPhonemes();
+            StringReader ipaPhonemeReader = new StringReader(ipaPhonemes);
+            readerToPrint = ipaPhonemeReader;
+            try
+            {
+                printFont = new Font("Charis SIL", 12f);
+                PrintDocument pd = new PrintDocument();
+                pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
+                pd.Print();
+            }
+            finally
+            {
+                readerToPrint.Close();
+            }
         }
     }
 }

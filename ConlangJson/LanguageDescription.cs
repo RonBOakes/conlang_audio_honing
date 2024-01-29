@@ -38,7 +38,7 @@ namespace ConlangJson
         private List<string>? _noun_gender_list;
         private List<string>? _part_of_speech_list;
         private List<string>? _phoneme_inventory;
-        private Dictionary<string, string[]?>? _phonetic_inventory;
+        private Dictionary<string, string[]>? _phonetic_inventory;
         private List<SoundMap>? _sound_map_list;
         private List<string>? _lexical_order_list;
         private Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? _affix_map;
@@ -84,39 +84,39 @@ namespace ConlangJson
             _metadata = metadata ?? [];
         }
 
-        public string? english_name
+        public string english_name
         {
-            get => _english_name;
+            get => _english_name ?? string.Empty;
             set => _english_name = value;
         }
 
-        public string? phonetic_characters
+        public string phonetic_characters
         {
-            get => _phonetic_characters;
+            get => _phonetic_characters ?? "ipa";
             set => _phonetic_characters = value;
         }
 
-        public string? native_name_phonetic
+        public string native_name_phonetic
         {
-            get => _native_name_phonetic;
+            get => _native_name_phonetic ?? string.Empty;
             set => _native_name_phonetic = value;
         }
 
-        public string? native_name_english
+        public string native_name_english
         {
-            get => _native_name_english;
+            get => _native_name_english ?? string.Empty;
             set => _native_name_english = value;
         }
 
-        public string? preferred_voice
+        public string preferred_voice
         {
-            get => _preferred_voice;
+            get => _preferred_voice ?? string.Empty;
             set => _preferred_voice = value;
         }
 
-        public string? preferred_language
+        public string preferred_language
         {
-            get => _preferred_language;
+            get => _preferred_language ?? string.Empty;
             set => _preferred_language = value;
         }
 
@@ -150,9 +150,9 @@ namespace ConlangJson
             set => _phoneme_inventory = value;
         }
 
-        public Dictionary<string, string[]?> phonetic_inventory
+        public Dictionary<string, string[]> phonetic_inventory
         {
-            get => _phonetic_inventory ?? new Dictionary<string, string[]?>();
+            get => _phonetic_inventory ?? new Dictionary<string, string[]>();
             set => _phonetic_inventory = value;
         }
 
