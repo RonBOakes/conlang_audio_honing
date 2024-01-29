@@ -18,19 +18,29 @@
 */
 using ConlangJson;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace ConlangAudioHoning
 {
     internal class PollySpeech
     {
         LanguageDescription? _languageDescription;
-        string? _sampleText = null;
-        string? _ssmlText = null;
-        string? _phoneticText = null;
+        private string? _sampleText = null;
+        private string? _ssmlText = null;
+        private string? _phoneticText = null;
+
+        // URI for the Amazon REST URI for processing the Polly messages.  This needs beefing up
+        // before this project can be made public since it will allow any SSML to be turned to 
+        // speech on my dime.
+        private static string _polyURI = "https://9ggv18yii2.execute-api.us-east-1.amazonaws.com/general_speak2";
 
         public PollySpeech(LanguageDescription languageDescription)
         {
@@ -59,15 +69,15 @@ namespace ConlangAudioHoning
             get => _phoneticText ?? string.Empty;
         }
 
-        public void generate(string voice, string speed)
+        public void Generate(string voice, string speed)
         {
             if (_languageDescription == null)
             {
-                throw new ConlangAudioHoningException("Cannot generate Polly Speech without a language description");
+                throw new ConlangAudioHoningException("Cannot Generate Polly Speech without a language description");
             }
             if ((_sampleText == null) || (sampleText.Trim().Equals(string.Empty)))
             {
-                throw new ConlangAudioHoningException("Cannot generate polly Speech without sample text");
+                throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
             bool removeDeclinedWord = false;
             if (!_languageDescription.declined)
@@ -109,7 +119,7 @@ namespace ConlangAudioHoning
             }
 
             _ssmlText = "<speak>\n";
-            _ssmlText = "\t<prosody rate =\"" + speed + "\">\n";
+            _ssmlText += "\t<prosody rate =\"" + speed + "\">\n";
 
             _phoneticText = string.Empty;
             int wordWrap = 0;
@@ -154,6 +164,118 @@ namespace ConlangAudioHoning
             {
                 ConLangUtilities.removeDeclinedEntries(_languageDescription);
             }
+        }
+
+        public bool GenerateSpeach(string targetFile)
+        {
+            if (_languageDescription == null)
+            {
+                return false;
+            }
+            if ((_sampleText == null) || (_sampleText.Length == 0))
+            {
+                return false;
+            }
+            if ((_ssmlText == null) || (_ssmlText.Trim().Equals(string.Empty)))
+            {
+                Generate(_languageDescription.preferred_voice ?? "Brian", "slow");
+            }
+
+            bool generated = false;
+            HttpHandler httpHandler = HttpHandler.Instance;
+            HttpClient httpClient = httpHandler.httpClient;
+            StringContent content;
+
+            Dictionary<string, string> requestDict = new Dictionary<string, string>();
+            requestDict["systemStatus"] = string.Empty;
+            using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+            {
+                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return false;
+                }
+            }
+
+            requestDict.Clear();
+            requestDict["start"] = string.Empty;
+#pragma warning disable CS8601 // Possible null reference assignment.
+            requestDict["ssml"] = _ssmlText;
+#pragma warning restore CS8601 // Possible null reference assignment.            }
+            requestDict["voice"] = _languageDescription.preferred_voice ?? "Brian";
+            requestDict["filetype"] = "mp3";
+            string taskId;
+            string taskURI;
+            using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+            {
+                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return false;
+                }
+                string data = result.Content.ReadAsStringAsync().Result;
+#pragma warning disable CS8600 // Possible null reference assignment.
+#pragma warning disable CS8602 // Possible null reference assignment.
+                Dictionary<string, string> resultData = JsonSerializer.Deserialize<Dictionary<string, string>>(data);
+                taskId = resultData["task_id"];
+                taskURI = resultData["uri"];
+#pragma warning restore CS8602 // Possible null reference assignment.            }
+#pragma warning restore CS8600 // Possible null reference assignment.
+            }
+
+            requestDict.Clear();
+            requestDict["taskStatus"] = string.Empty;
+            requestDict["task_id"] = taskId;
+            bool complete = false;
+            do
+            {
+                using(content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+                {
+                    HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                    if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        return false;
+                    }
+                    string data = result.Content.ReadAsStringAsync().Result;
+                    if(data.Contains("FAILED"))
+                    {
+                        return false;
+                    }
+                    if(data.Contains("COMPLETE"))
+                    {
+                        complete = true;
+                    }
+                }
+                Thread.Sleep(5000);
+
+            }
+            while(!complete);
+
+            requestDict.Clear();
+            requestDict["downloadFile"] = string.Empty;
+            requestDict["uri"] = taskURI;
+            using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+            {
+                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return false;
+                }
+                byte[] data = result.Content.ReadAsByteArrayAsync().Result;
+                File.WriteAllBytes(targetFile, data);
+                generated = true;
+            }
+
+            requestDict.Clear();
+            requestDict["delete"] = string.Empty;
+            requestDict["uri"] = taskURI;
+            // requestDict["uri"] = string.Empty; // Remove or comment out to just delete the newly created file.
+            using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+            {
+                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+            }
+
+            return generated;
         }
 
         private Dictionary<string, string>? pronounceWord(string word, Dictionary<string, LexiconEntry> wordMap)

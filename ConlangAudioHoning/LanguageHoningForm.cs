@@ -29,6 +29,8 @@ using System.Text.Json.Nodes;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+//using Windows.Media.Playback;
+using WMPLib;
 using ConlangJson;
 using LanguageEditor;
 
@@ -112,6 +114,8 @@ namespace ConlangAudioHoning
                 MessageBox.Show("Unable to decode Language file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            languageFileInfo = new FileInfo(filename);
+
             // TODO: Populate form
 
             if (languageDescription.declined)
@@ -246,18 +250,18 @@ namespace ConlangAudioHoning
         {
             if ((languageDescription != null) && (pollySpeech != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
             {
-                pollySpeech.generate(languageDescription.preferred_voice ?? "Brian", "slow");
+                pollySpeech.Generate(languageDescription.preferred_voice ?? "Brian", "slow");
                 txt_phonetic.Text = pollySpeech.phoneticText;
             }
         }
 
         private void declineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
-            if(!languageDescription.declined)
+            if (!languageDescription.declined)
             {
                 ConLangUtilities.declineLexicon(languageDescription);
                 declineToolStripMenuItem.Text = "Remove Declensions";
@@ -268,6 +272,41 @@ namespace ConlangAudioHoning
                 declineToolStripMenuItem.Text = "Decline Language";
             }
 
+        }
+
+        private void btn_generateSpeech_Click(object sender, EventArgs e)
+        {
+            if(pollySpeech == null) 
+            { 
+                return; 
+            
+            }
+            DateTime now = DateTime.Now;
+            string targetFileBaseName = string.Format("speach_{0:s}.mp3", now);
+            targetFileBaseName = targetFileBaseName.Replace(":", "_");
+
+            string targetFileName;
+            if (languageFileInfo != null)
+            {
+                targetFileName = languageFileInfo.Directory + "\\" + targetFileBaseName;
+            }
+            else
+            {
+                targetFileName = Path.GetTempPath() +  targetFileBaseName;
+            }
+
+            bool ok = pollySpeech.GenerateSpeach(targetFileName);
+            if (!ok)
+            {
+                MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                // Play the audio (OGG) file with the default application
+                WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
+                player.URL = targetFileName;
+                player.controls.play();
+            }
         }
     }
 }

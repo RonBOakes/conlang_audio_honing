@@ -45,6 +45,7 @@
             txt_phonetic = new TextBox();
             lbl_phonetic = new Label();
             btn_generate = new Button();
+            btn_generateSpeech = new Button();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -122,14 +123,14 @@
             // declineToolStripMenuItem
             // 
             declineToolStripMenuItem.Name = "declineToolStripMenuItem";
-            declineToolStripMenuItem.Size = new Size(180, 22);
+            declineToolStripMenuItem.Size = new Size(168, 22);
             declineToolStripMenuItem.Text = "Decline Language";
             declineToolStripMenuItem.Click += declineToolStripMenuItem_Click;
             // 
             // deriveToolStripMenuItem
             // 
             deriveToolStripMenuItem.Name = "deriveToolStripMenuItem";
-            deriveToolStripMenuItem.Size = new Size(180, 22);
+            deriveToolStripMenuItem.Size = new Size(168, 22);
             deriveToolStripMenuItem.Text = "Derive Words";
             // 
             // txt_SampleText
@@ -181,11 +182,22 @@
             btn_generate.UseVisualStyleBackColor = true;
             btn_generate.Click += btn_generate_Click;
             // 
+            // btn_generateSpeech
+            // 
+            btn_generateSpeech.Location = new Point(156, 272);
+            btn_generateSpeech.Name = "btn_generateSpeech";
+            btn_generateSpeech.Size = new Size(130, 23);
+            btn_generateSpeech.TabIndex = 6;
+            btn_generateSpeech.Text = "Generate Speech";
+            btn_generateSpeech.UseVisualStyleBackColor = true;
+            btn_generateSpeech.Click += btn_generateSpeech_Click;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btn_generateSpeech);
             Controls.Add(btn_generate);
             Controls.Add(lbl_phonetic);
             Controls.Add(txt_phonetic);
@@ -220,5 +232,6 @@
         private ToolStripMenuItem languageToolStripMenuItem;
         private ToolStripMenuItem declineToolStripMenuItem;
         private ToolStripMenuItem deriveToolStripMenuItem;
+        private Button btn_generateSpeech;
     }
 }
