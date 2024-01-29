@@ -276,10 +276,10 @@ namespace ConlangAudioHoning
 
         private void btn_generateSpeech_Click(object sender, EventArgs e)
         {
-            if(pollySpeech == null) 
-            { 
-                return; 
-            
+            if (pollySpeech == null)
+            {
+                return;
+
             }
             DateTime now = DateTime.Now;
             string targetFileBaseName = string.Format("speach_{0:s}.mp3", now);
@@ -292,7 +292,7 @@ namespace ConlangAudioHoning
             }
             else
             {
-                targetFileName = Path.GetTempPath() +  targetFileBaseName;
+                targetFileName = Path.GetTempPath() + targetFileBaseName;
             }
 
             bool ok = pollySpeech.GenerateSpeach(targetFileName);
@@ -307,6 +307,17 @@ namespace ConlangAudioHoning
                 player.URL = targetFileName;
                 player.controls.play();
             }
+        }
+
+        private void displayPulmonicConsonantsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(string c in IpaUtilities.PConsonants)
+            {
+                sb.Append(c);
+                sb.Append(" ");
+            }
+            txt_SampleText.Text = sb.ToString();
         }
     }
 }

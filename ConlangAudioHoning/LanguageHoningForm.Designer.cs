@@ -46,12 +46,14 @@
             lbl_phonetic = new Label();
             btn_generate = new Button();
             btn_generateSpeech = new Button();
+            debugToolStripMenuItem = new ToolStripMenuItem();
+            displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, debugToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(800, 24);
@@ -192,6 +194,20 @@
             btn_generateSpeech.UseVisualStyleBackColor = true;
             btn_generateSpeech.Click += btn_generateSpeech_Click;
             // 
+            // debugToolStripMenuItem
+            // 
+            debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayPulmonicConsonantsToolStripMenuItem });
+            debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            debugToolStripMenuItem.Size = new Size(54, 20);
+            debugToolStripMenuItem.Text = "Debug";
+            // 
+            // displayPulmonicConsonantsToolStripMenuItem
+            // 
+            displayPulmonicConsonantsToolStripMenuItem.Name = "displayPulmonicConsonantsToolStripMenuItem";
+            displayPulmonicConsonantsToolStripMenuItem.Size = new Size(232, 22);
+            displayPulmonicConsonantsToolStripMenuItem.Text = "Display Pulmonic Consonants";
+            displayPulmonicConsonantsToolStripMenuItem.Click += displayPulmonicConsonantsToolStripMenuItem_Click;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -233,5 +249,7 @@
         private ToolStripMenuItem declineToolStripMenuItem;
         private ToolStripMenuItem deriveToolStripMenuItem;
         private Button btn_generateSpeech;
+        private ToolStripMenuItem debugToolStripMenuItem;
+        private ToolStripMenuItem displayPulmonicConsonantsToolStripMenuItem;
     }
 }
