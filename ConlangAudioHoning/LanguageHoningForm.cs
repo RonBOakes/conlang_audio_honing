@@ -33,6 +33,7 @@ using WMPLib;
 using ConlangJson;
 using LanguageEditor;
 using System.Drawing.Printing;
+using Timer = System.Windows.Forms.Timer;
 
 namespace ConlangAudioHoning
 {
@@ -44,6 +45,7 @@ namespace ConlangAudioHoning
         private PollySpeech? pollySpeech = null;
         private Font? printFont;
         private TextReader? readerToPrint;
+        private Dictionary<string, FileInfo> speechFiles = new Dictionary<string, FileInfo>();
 
         public LanguageHoningForm()
         {
@@ -121,6 +123,10 @@ namespace ConlangAudioHoning
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
             IpaUtilities.BuildPhoneticInventory(languageDescription);
 
+            // Empty the speech files and list box
+            speechFiles.Clear();
+            cbx_recordings.Items.Clear();
+
             // TODO: Populate form
 
             if (languageDescription.declined)
@@ -197,6 +203,9 @@ namespace ConlangAudioHoning
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     LoadSampleText(openFileDialog.FileName);
+                    // Empty the speech files and list box
+                    speechFiles.Clear();
+                    cbx_recordings.Items.Clear();
                 }
             }
         }
@@ -268,7 +277,8 @@ namespace ConlangAudioHoning
             }
             if (!languageDescription.declined)
             {
-                ConLangUtilities.declineLexicon(languageDescription);
+                declineLexicon(languageDescription);
+                //MessageBox.Show("Finished Declining the Language", "Done",MessageBoxButtons.OK);
                 declineToolStripMenuItem.Text = "Remove Declensions";
             }
             else
@@ -287,7 +297,7 @@ namespace ConlangAudioHoning
 
             }
             DateTime now = DateTime.Now;
-            string targetFileBaseName = string.Format("speach_{0:s}.mp3", now);
+            string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
             targetFileBaseName = targetFileBaseName.Replace(":", "_");
 
             string targetFileName;
@@ -307,10 +317,16 @@ namespace ConlangAudioHoning
             }
             else
             {
+                txt_phonetic.Text = pollySpeech.phoneticText;
                 // Play the audio (OGG) file with the default application
                 WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
                 player.URL = targetFileName;
                 player.controls.play();
+
+                FileInfo fileInfo = new FileInfo(targetFileName);
+                speechFiles.Add(fileInfo.Name, fileInfo);
+                cbx_recordings.Items.Add(fileInfo.Name);
+                cbx_recordings.SelectedText = fileInfo.Name;
             }
         }
 
@@ -394,6 +410,55 @@ namespace ConlangAudioHoning
             }
             txt_SampleText.Text = sb.ToString();
             txt_phonetic.Text = sb.ToString();
+        }
+
+        private void declineLexicon(LanguageDescription language)
+        {
+            pb_status.Style = ProgressBarStyle.Continuous;
+            pb_status.Minimum = 0;
+            pb_status.Maximum = language.lexicon.Count;
+            pb_status.Step = 1;
+            pb_status.Font = new Font("CharisSIL", 12f);
+            pb_status.ResetText();
+            pb_status.Visible = true;
+            List<LexiconEntry> addLexicon = new List<LexiconEntry>();
+            foreach (LexiconEntry word in language.lexicon)
+            {
+                pb_status.Text = word.phonetic.ToString();
+                addLexicon.AddRange(ConLangUtilities.DeclineWord(word, language.affix_map, language.sound_map_list));
+                pb_status.PerformStep();
+            }
+            pb_status.Style = ProgressBarStyle.Marquee;
+            pbTimer.Interval = 20;
+            pbTimer.Enabled = true;
+            pb_status.MarqueeAnimationSpeed = 200;
+            pb_status.Minimum = 0;
+            pb_status.Maximum = 100;
+            language.lexicon.AddRange(addLexicon);
+            List<LexiconEntry> cleanLexicon = ConLangUtilities.dedupLeixcon(language.lexicon);
+            if (cleanLexicon.Count < language.lexicon.Count)
+            {
+                language.lexicon = cleanLexicon;
+            }
+            language.lexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
+            pb_status.Visible = false;
+            pbTimer.Enabled = false;
+            language.declined = true;
+        }
+
+        private void pbTimer_Tick(object sender, EventArgs e)
+        {
+            pb_status.PerformStep();
+        }
+
+        private void btn_replaySpeech_Click(object sender, EventArgs e)
+        {
+            string fileName = cbx_recordings.Text;
+            string targetFileName = speechFiles[fileName].FullName;
+            // Play the audio (OGG) file with the default application
+            WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
+            player.URL = targetFileName;
+            player.controls.play();
         }
     }
 }

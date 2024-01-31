@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             loadToolStripMenuItem = new ToolStripMenuItem();
@@ -42,6 +43,7 @@
             deriveToolStripMenuItem = new ToolStripMenuItem();
             debugToolStripMenuItem = new ToolStripMenuItem();
             displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem2 = new ToolStripMenuItem();
             printIPAMapToolStripMenuItem = new ToolStripMenuItem();
             txt_SampleText = new TextBox();
             lbl_SampleText = new Label();
@@ -49,7 +51,10 @@
             lbl_phonetic = new Label();
             btn_generate = new Button();
             btn_generateSpeech = new Button();
-            toolStripMenuItem2 = new ToolStripMenuItem();
+            cbx_recordings = new ComboBox();
+            btn_replaySpeech = new Button();
+            pb_status = new ProgressBar();
+            pbTimer = new System.Windows.Forms.Timer(components);
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -58,7 +63,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, debugToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.Size = new Size(1024, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -151,6 +156,13 @@
             displayPulmonicConsonantsToolStripMenuItem.Text = "Display Pulmonic Consonants";
             displayPulmonicConsonantsToolStripMenuItem.Click += displayPulmonicConsonantsToolStripMenuItem_Click;
             // 
+            // toolStripMenuItem2
+            // 
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(232, 22);
+            toolStripMenuItem2.Text = "Display Supersegmental";
+            toolStripMenuItem2.Click += displaySupersegmentals_Click;
+            // 
             // printIPAMapToolStripMenuItem
             // 
             printIPAMapToolStripMenuItem.Name = "printIPAMapToolStripMenuItem";
@@ -161,11 +173,12 @@
             // txt_SampleText
             // 
             txt_SampleText.AccessibleDescription = "Sample Text";
-            txt_SampleText.Location = new Point(12, 42);
+            txt_SampleText.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txt_SampleText.Location = new Point(15, 47);
             txt_SampleText.Multiline = true;
             txt_SampleText.Name = "txt_SampleText";
             txt_SampleText.ScrollBars = ScrollBars.Vertical;
-            txt_SampleText.Size = new Size(769, 92);
+            txt_SampleText.Size = new Size(492, 109);
             txt_SampleText.TabIndex = 1;
             txt_SampleText.TextChanged += txt_SampleText_TextChanged;
             // 
@@ -180,19 +193,19 @@
             // 
             // txt_phonetic
             // 
-            txt_phonetic.Font = new Font("Charis SIL", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txt_phonetic.Location = new Point(12, 157);
+            txt_phonetic.Font = new Font("Charis SIL", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txt_phonetic.Location = new Point(513, 47);
             txt_phonetic.Multiline = true;
             txt_phonetic.Name = "txt_phonetic";
             txt_phonetic.ReadOnly = true;
             txt_phonetic.ScrollBars = ScrollBars.Vertical;
-            txt_phonetic.Size = new Size(769, 111);
+            txt_phonetic.Size = new Size(495, 109);
             txt_phonetic.TabIndex = 3;
             // 
             // lbl_phonetic
             // 
             lbl_phonetic.AutoSize = true;
-            lbl_phonetic.Location = new Point(14, 142);
+            lbl_phonetic.Location = new Point(515, 30);
             lbl_phonetic.Name = "lbl_phonetic";
             lbl_phonetic.Size = new Size(136, 15);
             lbl_phonetic.TabIndex = 4;
@@ -200,7 +213,7 @@
             // 
             // btn_generate
             // 
-            btn_generate.Location = new Point(14, 272);
+            btn_generate.Location = new Point(15, 162);
             btn_generate.Name = "btn_generate";
             btn_generate.Size = new Size(136, 23);
             btn_generate.TabIndex = 5;
@@ -210,7 +223,7 @@
             // 
             // btn_generateSpeech
             // 
-            btn_generateSpeech.Location = new Point(156, 272);
+            btn_generateSpeech.Location = new Point(157, 162);
             btn_generateSpeech.Name = "btn_generateSpeech";
             btn_generateSpeech.Size = new Size(130, 23);
             btn_generateSpeech.TabIndex = 6;
@@ -218,18 +231,46 @@
             btn_generateSpeech.UseVisualStyleBackColor = true;
             btn_generateSpeech.Click += btn_generateSpeech_Click;
             // 
-            // toolStripMenuItem2
+            // cbx_recordings
             // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(232, 22);
-            toolStripMenuItem2.Text = "Display Supersegmental";
-            toolStripMenuItem2.Click += displaySupersegmentals_Click;
+            cbx_recordings.FormattingEnabled = true;
+            cbx_recordings.ItemHeight = 15;
+            cbx_recordings.Location = new Point(293, 166);
+            cbx_recordings.Name = "cbx_recordings";
+            cbx_recordings.Size = new Size(214, 23);
+            cbx_recordings.Sorted = true;
+            cbx_recordings.TabIndex = 7;
+            // 
+            // btn_replaySpeech
+            // 
+            btn_replaySpeech.Location = new Point(515, 162);
+            btn_replaySpeech.Name = "btn_replaySpeech";
+            btn_replaySpeech.Size = new Size(145, 23);
+            btn_replaySpeech.TabIndex = 8;
+            btn_replaySpeech.Text = "Replay Selected Speech";
+            btn_replaySpeech.UseVisualStyleBackColor = true;
+            btn_replaySpeech.Click += btn_replaySpeech_Click;
+            // 
+            // pb_status
+            // 
+            pb_status.Location = new Point(21, 192);
+            pb_status.Name = "pb_status";
+            pb_status.Size = new Size(987, 34);
+            pb_status.TabIndex = 9;
+            pb_status.Visible = false;
+            // 
+            // pbTimer
+            // 
+            pbTimer.Tick += pbTimer_Tick;
             // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1024, 496);
+            Controls.Add(pb_status);
+            Controls.Add(btn_replaySpeech);
+            Controls.Add(cbx_recordings);
             Controls.Add(btn_generateSpeech);
             Controls.Add(btn_generate);
             Controls.Add(lbl_phonetic);
@@ -270,5 +311,9 @@
         private ToolStripMenuItem displayPulmonicConsonantsToolStripMenuItem;
         private ToolStripMenuItem printIPAMapToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem2;
+        private ComboBox cbx_recordings;
+        private Button btn_replaySpeech;
+        private ProgressBar pb_status;
+        private System.Windows.Forms.Timer pbTimer;
     }
 }

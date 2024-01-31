@@ -678,9 +678,9 @@ namespace ConlangAudioHoning
             Dictionary<string, string[]> phonetic_inventory = new Dictionary<string, string[]>();
             // TODO: Fix the spelling in the documentation and then here.
             phonetic_inventory["p_consonants"] = pConsonants.ToArray();
-            phonetic_inventory["np_consontant"] = npConsonants.ToArray();
+            phonetic_inventory["np_consonants"] = npConsonants.ToArray();
             phonetic_inventory["vowels"] = vowels.ToArray();
-            phonetic_inventory["v_dipthongs"] = vDiphthongs.ToArray();
+            phonetic_inventory["v_diphthongs"] = vDiphthongs.ToArray();
             languageDescription.phonetic_inventory = phonetic_inventory;
         }
 
