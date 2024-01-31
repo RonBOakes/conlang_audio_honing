@@ -42,13 +42,14 @@
             deriveToolStripMenuItem = new ToolStripMenuItem();
             debugToolStripMenuItem = new ToolStripMenuItem();
             displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
+            printIPAMapToolStripMenuItem = new ToolStripMenuItem();
             txt_SampleText = new TextBox();
             lbl_SampleText = new Label();
             txt_phonetic = new TextBox();
             lbl_phonetic = new Label();
             btn_generate = new Button();
             btn_generateSpeech = new Button();
-            printIPAMapToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem2 = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -93,7 +94,7 @@
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(227, 22);
             toolStripMenuItem1.Text = "Load Sample Text";
-            toolStripMenuItem1.Click += toolStripMenuItem1_Click;
+            toolStripMenuItem1.Click += loadSampleTextFile_Click;
             // 
             // saveSampleMenu
             // 
@@ -138,7 +139,7 @@
             // 
             // debugToolStripMenuItem
             // 
-            debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayPulmonicConsonantsToolStripMenuItem, printIPAMapToolStripMenuItem });
+            debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayPulmonicConsonantsToolStripMenuItem, toolStripMenuItem2, printIPAMapToolStripMenuItem });
             debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             debugToolStripMenuItem.Size = new Size(54, 20);
             debugToolStripMenuItem.Text = "Debug";
@@ -149,6 +150,13 @@
             displayPulmonicConsonantsToolStripMenuItem.Size = new Size(232, 22);
             displayPulmonicConsonantsToolStripMenuItem.Text = "Display Pulmonic Consonants";
             displayPulmonicConsonantsToolStripMenuItem.Click += displayPulmonicConsonantsToolStripMenuItem_Click;
+            // 
+            // printIPAMapToolStripMenuItem
+            // 
+            printIPAMapToolStripMenuItem.Name = "printIPAMapToolStripMenuItem";
+            printIPAMapToolStripMenuItem.Size = new Size(232, 22);
+            printIPAMapToolStripMenuItem.Text = "Print IPA Map";
+            printIPAMapToolStripMenuItem.Click += printIPAMapToolStripMenuItem_Click;
             // 
             // txt_SampleText
             // 
@@ -210,12 +218,12 @@
             btn_generateSpeech.UseVisualStyleBackColor = true;
             btn_generateSpeech.Click += btn_generateSpeech_Click;
             // 
-            // printIPAMapToolStripMenuItem
+            // toolStripMenuItem2
             // 
-            printIPAMapToolStripMenuItem.Name = "printIPAMapToolStripMenuItem";
-            printIPAMapToolStripMenuItem.Size = new Size(232, 22);
-            printIPAMapToolStripMenuItem.Text = "Print IPA Map";
-            printIPAMapToolStripMenuItem.Click += printIPAMapToolStripMenuItem_Click;
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(232, 22);
+            toolStripMenuItem2.Text = "Display Supersegmental";
+            toolStripMenuItem2.Click += displaySupersegmentals_Click;
             // 
             // LanguageHoningForm
             // 
@@ -261,5 +269,6 @@
         private ToolStripMenuItem debugToolStripMenuItem;
         private ToolStripMenuItem displayPulmonicConsonantsToolStripMenuItem;
         private ToolStripMenuItem printIPAMapToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItem2;
     }
 }

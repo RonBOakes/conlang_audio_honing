@@ -63,12 +63,12 @@ namespace ConlangAudioHoning
 
         private static string[] _suprasegmentals =
         {
-            "\u02d0", "\u02d1", "\u02c8", "\02cc", "\u035c", "\u0361"
+            "\u02d0", "\u02d1", "\u02c8", "\u02cc", "\u035c", "\u0361"
         };
 
         private static string[] _diacritics =
         {
-            "\u02f3", "\u0325", "\u030a", "\u0324", "\u032a", "\u02cc", "\u0329", "\u0c3c", "\u032c", "\u02f7", "\u0330",
+            "\u02f3", "\u0325", "\u030a", "\u0324", "\u032a", "\u0329", "\u0c3c", "\u032c", "\u02f7", "\u0330",
             "\u02f7", "\u0330", "\u02fd", "\u033a", "\u032f", "\u02b0", "\u033c", "\u033b", "\u02d2", "\u0339", "\u20b7",
             "\u0303", "\u02b2", "\u02d3", "\u031c", "\u02d6", "\u031f", "\u207f", "\u00a8", "\u0308", "\u02e0", "\u02cd",
             "\u0320", "\u20e1", "\u02df", "\u033d", "\u02e4", "\uab68", "\u0319", "\u02de"
@@ -369,7 +369,19 @@ namespace ConlangAudioHoning
             { "h", new List<string>(){"\u0266","\u0127","\u0295"} },
             { "\u0266", new List<string>(){"h","\u0127","\u0295"} },
             // Lateral fricative
-
+            { "\u026c", new List<string>(){"\u026e","\u02b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
+            { "\u026e", new List<string>(){"\u026c","\u02b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
+            // Approximate
+            { "\u028b", new List<string>(){"\u0279","\u026c","\u026e","l"} },
+            { "\u0279", new List<string>(){"\u028b","\u027b","\u026c","\u026e","l","\u026d"} },
+            { "\u027b", new List<string>(){"\u0279","j","\u026c","\u026e","l","\u026d","\u028e"} },
+            { "j", new List<string>(){"\u027b","\u0270","\u026d","\u028e","\u029f"} },
+            { "\u0270", new List<string>(){"j","\u028e","\u029f"} },
+            // Lateral approximate
+            { "l", new List<string>(){"\u026d","\u028b","\u0279","\u027b"} },
+            { "\u026d", new List<string>(){"l","\u028e","\u0279","\u027b","j"} },
+            { "\u028e", new List<string>(){"\u026d","\u029f","\u027b","j","\u0270" } },
+            { "\u029f", new List<string>(){"\u028e","j","\u0270"} }
         };
 
         public static String[] PConsonants
@@ -405,6 +417,11 @@ namespace ConlangAudioHoning
         public static Dictionary<string, string> LatinIpaReplacements
         {
             get => _latinIpaReplacements;
+        }
+
+        public static Dictionary<string, List<string>> P_consonant_changes
+        {
+            get => _p_consonant_changes;
         }
 
         public static string IpaPhonemes()
@@ -547,6 +564,95 @@ namespace ConlangAudioHoning
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Build or rebuild the phonetic_inventory section of the LanguageDescription 
+        /// structure
+        /// </summary>
+        /// <param name="languageDescription">Conlang JSON structure read into .NET</param>
+        // TODO: fix the bug with vowel diphthongs with diacritics 
+        public static void BuildPhoneticInventory(LanguageDescription languageDescription)
+        {
+            HashSet<string> pConsonants = new HashSet<string>();
+            HashSet<string> npConsonants = new HashSet<string>();
+            HashSet<string> vowels = new HashSet<string>();
+            HashSet<string> vDiphthongs = new HashSet<string>();
+
+            // Iterate over the lexicon looking at the phonetic representation of each word
+            foreach (LexiconEntry entry in languageDescription.lexicon)
+            {
+                char priorChar = '\0';
+                // Iterate over the characters in the phonetic representation
+                foreach (char letter in entry.phonetic)
+                {
+                    if (priorChar == '\0')
+                    {
+                        priorChar = letter;
+                    }
+                    else
+                    {
+                        if ((Diacritics.Contains(new string(letter, 1))) || (letter == '\u02d0') || (letter == '\u02d1'))
+                        {
+                            string newChar = new string(priorChar, 1) + new string(letter, 1);
+                            if (PConsonants.Contains(new string(priorChar, 1)))
+                            {
+                                pConsonants.Add(newChar);
+                            }
+                            else if (NpConsonants.Contains(new string(priorChar, 1)))
+                            {
+                                npConsonants.Add(newChar);
+                            }
+                            else if (Vowels.Contains(new string(priorChar, 1)))
+                            {
+                                vowels.Add(newChar);
+                            }
+                            priorChar = '\0';
+                        }
+                        else if ((letter == '\u035c') || (letter == '\u0361'))
+                        {
+                            continue; // Skip any occurrence of a tie
+                        }
+                        else if (PConsonants.Contains(new string(priorChar, 1)))
+                        {
+                            pConsonants.Add(new string(priorChar, 1));
+                            priorChar = letter;
+                        }
+                        else if (NpConsonants.Contains(new string(priorChar, 1)))
+                        {
+                            npConsonants.Add(new string(priorChar, 1));
+                            priorChar = letter;
+                        }
+                        else if (Vowels.Contains(new string(priorChar, 1)))
+                        {
+                            if (Vowels.Contains(new string(letter, 1)))
+                            {
+                                string newChar = new string(priorChar, 1) + new string(letter, 1);
+                                vDiphthongs.Add(newChar);
+                                priorChar = '\0';
+                            }
+                            else
+                            {
+                                vowels.Add(new string(priorChar, 1));
+                                priorChar = letter;
+                            }
+                        }
+                    }
+                    // treat stress like new word.
+                    if ((priorChar == '\u02c8') || (priorChar == '\u02cc'))
+                    {
+                        priorChar = '\0';
+                    }
+                }
+            }
+
+            Dictionary<string, string[]> phonetic_inventory = new Dictionary<string, string[]>();
+            // TODO: Fix the spelling in the documentation and then here.
+            phonetic_inventory["p_consonants"] = pConsonants.ToArray();
+            phonetic_inventory["np_consontant"] = npConsonants.ToArray();
+            phonetic_inventory["vowels"] = vowels.ToArray();
+            phonetic_inventory["v_dipthongs"] = vDiphthongs.ToArray();
+            languageDescription.phonetic_inventory = phonetic_inventory;
         }
 
         public static string SubstituteLatinIpaReplacements(string text)

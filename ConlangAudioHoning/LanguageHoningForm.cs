@@ -119,6 +119,7 @@ namespace ConlangAudioHoning
             languageFileInfo = new FileInfo(filename);
 
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
+            IpaUtilities.BuildPhoneticInventory(languageDescription);
 
             // TODO: Populate form
 
@@ -175,7 +176,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        private void loadSampleTextFile_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new())
             {
@@ -379,6 +380,18 @@ namespace ConlangAudioHoning
             {
                 readerToPrint.Close();
             }
+        }
+
+        private void displaySupersegmentals_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string c in IpaUtilities.Suprasegmentals)
+            {
+                sb.Append(c);
+                sb.Append(" ");
+            }
+            txt_SampleText.Text = sb.ToString();
+            txt_phonetic.Text = sb.ToString();
         }
     }
 }
