@@ -34,6 +34,7 @@ using ConlangJson;
 using LanguageEditor;
 using System.Drawing.Printing;
 using Timer = System.Windows.Forms.Timer;
+using System.Reflection.Metadata;
 
 namespace ConlangAudioHoning
 {
@@ -459,6 +460,51 @@ namespace ConlangAudioHoning
             WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
             player.URL = targetFileName;
             player.controls.play();
+        }
+
+        private void rbn_pulmonicConsonants_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbn_pulmonicConsonants.Checked)
+            {
+                if (languageDescription == null)
+                {
+                    return;
+                }
+                // Ensure that there is a blank at the top of the drop down list
+                cbx_phonemeToChange.Items.Clear();
+                // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can 
+                // use it to populate the combo box of pulmonic consonants to be changed.
+                foreach (string consonant in languageDescription.phonetic_inventory["p_consonants"])
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("{0} -- ", consonant);
+                    sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
+                    cbx_phonemeToChange.Items.Add(sb.ToString());
+                }
+
+                cbx_phonemeToChange.SelectedIndex = -1;
+            }
+        }
+
+        private void cbx_phonemeToChange_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(languageDescription == null) 
+            { 
+                return; 
+            }
+            int phonemeIndex = cbx_phonemeToChange.SelectedIndex;
+            if(rbn_pulmonicConsonants.Checked)
+            {
+                string pConsonant = languageDescription.phonetic_inventory["p_consonants"][phonemeIndex].ToString();
+                cbx_replacementPhoneme.Items.Clear();
+                foreach(string replacement in IpaUtilities.P_consonant_changes[pConsonant])
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("{0} -- ", replacement);
+                    sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
+                    cbx_replacementPhoneme.Items.Add(sb.ToString());
+                }
+            }
         }
     }
 }

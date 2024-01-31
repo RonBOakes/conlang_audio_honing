@@ -55,7 +55,16 @@
             btn_replaySpeech = new Button();
             pb_status = new ProgressBar();
             pbTimer = new System.Windows.Forms.Timer(components);
+            gbx_phonetics = new GroupBox();
+            rbn_pulmonicConsonants = new RadioButton();
+            label1 = new Label();
+            label2 = new Label();
+            cbx_phonemeToChange = new ComboBox();
+            cbx_replacementPhoneme = new ComboBox();
+            btn_applyChangeToLanguage = new Button();
+            btn_revertLastChange = new Button();
             menuStrip1.SuspendLayout();
+            gbx_phonetics.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -233,6 +242,7 @@
             // 
             // cbx_recordings
             // 
+            cbx_recordings.DropDownStyle = ComboBoxStyle.DropDownList;
             cbx_recordings.FormattingEnabled = true;
             cbx_recordings.ItemHeight = 15;
             cbx_recordings.Location = new Point(293, 166);
@@ -253,9 +263,9 @@
             // 
             // pb_status
             // 
-            pb_status.Location = new Point(21, 192);
+            pb_status.Location = new Point(15, 192);
             pb_status.Name = "pb_status";
-            pb_status.Size = new Size(987, 34);
+            pb_status.Size = new Size(993, 34);
             pb_status.TabIndex = 9;
             pb_status.Visible = false;
             // 
@@ -263,11 +273,98 @@
             // 
             pbTimer.Tick += pbTimer_Tick;
             // 
+            // gbx_phonetics
+            // 
+            gbx_phonetics.Controls.Add(rbn_pulmonicConsonants);
+            gbx_phonetics.Location = new Point(15, 233);
+            gbx_phonetics.Name = "gbx_phonetics";
+            gbx_phonetics.Size = new Size(993, 42);
+            gbx_phonetics.TabIndex = 10;
+            gbx_phonetics.TabStop = false;
+            gbx_phonetics.Text = "Phonetics to Alter";
+            // 
+            // rbn_pulmonicConsonants
+            // 
+            rbn_pulmonicConsonants.AutoSize = true;
+            rbn_pulmonicConsonants.Location = new Point(12, 16);
+            rbn_pulmonicConsonants.Name = "rbn_pulmonicConsonants";
+            rbn_pulmonicConsonants.Size = new Size(142, 19);
+            rbn_pulmonicConsonants.TabIndex = 0;
+            rbn_pulmonicConsonants.TabStop = true;
+            rbn_pulmonicConsonants.Text = "Pulmonic Consonants";
+            rbn_pulmonicConsonants.UseVisualStyleBackColor = true;
+            rbn_pulmonicConsonants.CheckedChanged += rbn_pulmonicConsonants_CheckedChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(15, 278);
+            label1.Name = "label1";
+            label1.Size = new Size(114, 15);
+            label1.TabIndex = 11;
+            label1.Text = "Phoneme to change";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(515, 278);
+            label2.Name = "label2";
+            label2.Size = new Size(130, 15);
+            label2.TabIndex = 12;
+            label2.Text = "Replacement Phoneme";
+            // 
+            // cbx_phonemeToChange
+            // 
+            cbx_phonemeToChange.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbx_phonemeToChange.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbx_phonemeToChange.FormattingEnabled = true;
+            cbx_phonemeToChange.Location = new Point(15, 296);
+            cbx_phonemeToChange.Name = "cbx_phonemeToChange";
+            cbx_phonemeToChange.Size = new Size(492, 34);
+            cbx_phonemeToChange.Sorted = true;
+            cbx_phonemeToChange.TabIndex = 13;
+            cbx_phonemeToChange.SelectedIndexChanged += cbx_phonemeToChange_SelectedIndexChanged;
+            // 
+            // cbx_replacementPhoneme
+            // 
+            cbx_replacementPhoneme.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbx_replacementPhoneme.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbx_replacementPhoneme.FormattingEnabled = true;
+            cbx_replacementPhoneme.Location = new Point(515, 296);
+            cbx_replacementPhoneme.Name = "cbx_replacementPhoneme";
+            cbx_replacementPhoneme.Size = new Size(493, 34);
+            cbx_replacementPhoneme.TabIndex = 14;
+            // 
+            // btn_applyChangeToLanguage
+            // 
+            btn_applyChangeToLanguage.Location = new Point(15, 336);
+            btn_applyChangeToLanguage.Name = "btn_applyChangeToLanguage";
+            btn_applyChangeToLanguage.Size = new Size(492, 23);
+            btn_applyChangeToLanguage.TabIndex = 15;
+            btn_applyChangeToLanguage.Text = "Apply This Change to the Language";
+            btn_applyChangeToLanguage.UseVisualStyleBackColor = true;
+            // 
+            // btn_revertLastChange
+            // 
+            btn_revertLastChange.Location = new Point(515, 336);
+            btn_revertLastChange.Name = "btn_revertLastChange";
+            btn_revertLastChange.Size = new Size(493, 23);
+            btn_revertLastChange.TabIndex = 16;
+            btn_revertLastChange.Text = "Revert the last change";
+            btn_revertLastChange.UseVisualStyleBackColor = true;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1024, 496);
+            Controls.Add(btn_revertLastChange);
+            Controls.Add(btn_applyChangeToLanguage);
+            Controls.Add(cbx_replacementPhoneme);
+            Controls.Add(cbx_phonemeToChange);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(gbx_phonetics);
             Controls.Add(pb_status);
             Controls.Add(btn_replaySpeech);
             Controls.Add(cbx_recordings);
@@ -283,6 +380,8 @@
             Text = "LanguageHoningForm";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            gbx_phonetics.ResumeLayout(false);
+            gbx_phonetics.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -315,5 +414,13 @@
         private Button btn_replaySpeech;
         private ProgressBar pb_status;
         private System.Windows.Forms.Timer pbTimer;
+        private GroupBox gbx_phonetics;
+        private RadioButton rbn_pulmonicConsonants;
+        private Label label1;
+        private Label label2;
+        private ComboBox cbx_phonemeToChange;
+        private ComboBox cbx_replacementPhoneme;
+        private Button btn_applyChangeToLanguage;
+        private Button btn_revertLastChange;
     }
 }
