@@ -339,10 +339,12 @@ namespace ConlangAudioHoning
             int count = 0;
             float leftMargin = ev.MarginBounds.Left;
             float topMargin = ev.MarginBounds.Top;
-            string line = string.Empty;
+            string? line = string.Empty;
 
             // Calculate the number of lines per page.
+#pragma warning disable CS8604 // Possible null reference argument.
             linesPerPage = ev.MarginBounds.Height / printFont.GetHeight(ev.Graphics);
+#pragma warning restore CS8604 // Possible null reference argument.
 
             // Print each line of the file.
             while (count < linesPerPage &&
