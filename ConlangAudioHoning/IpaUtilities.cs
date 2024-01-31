@@ -574,74 +574,103 @@ namespace ConlangAudioHoning
         // TODO: fix the bug with vowel diphthongs with diacritics 
         public static void BuildPhoneticInventory(LanguageDescription languageDescription)
         {
-            HashSet<string> pConsonants = new HashSet<string>();
-            HashSet<string> npConsonants = new HashSet<string>();
-            HashSet<string> vowels = new HashSet<string>();
-            HashSet<string> vDiphthongs = new HashSet<string>();
+            SortedSet<string> pConsonants = new SortedSet<string>();
+            SortedSet<string> npConsonants = new SortedSet<string>();
+            SortedSet<string> vowels = new SortedSet<string>();
+            SortedSet<string> vDiphthongs = new SortedSet<string>();
 
             // Iterate over the lexicon looking at the phonetic representation of each word
             foreach (LexiconEntry entry in languageDescription.lexicon)
             {
-                char priorChar = '\0';
+                string priorChar = string.Empty;
                 // Iterate over the characters in the phonetic representation
                 foreach (char letter in entry.phonetic)
                 {
-                    if (priorChar == '\0')
+                    if (priorChar.Equals(string.Empty))
                     {
-                        priorChar = letter;
+                        priorChar = letter.ToString();
                     }
                     else
                     {
-                        if ((Diacritics.Contains(new string(letter, 1))) || (letter == '\u02d0') || (letter == '\u02d1'))
+                        if ((Diacritics.Contains(letter.ToString())) || (letter == '\u02d0') || (letter == '\u02d1'))
                         {
-                            string newChar = new string(priorChar, 1) + new string(letter, 1);
-                            if (PConsonants.Contains(new string(priorChar, 1)))
+                            string newChar = priorChar + letter.ToString();
+                            if (PConsonants.Contains(priorChar))
                             {
                                 pConsonants.Add(newChar);
+                                priorChar = string.Empty;
                             }
-                            else if (NpConsonants.Contains(new string(priorChar, 1)))
+                            else if (NpConsonants.Contains(priorChar))
                             {
                                 npConsonants.Add(newChar);
+                                priorChar = string.Empty;
                             }
-                            else if (Vowels.Contains(new string(priorChar, 1)))
+                            else if (ContainsVowels(priorChar))
                             {
-                                vowels.Add(newChar);
+                                priorChar += letter.ToString();
                             }
-                            priorChar = '\0';
                         }
                         else if ((letter == '\u035c') || (letter == '\u0361'))
                         {
-                            continue; // Skip any occurrence of a tie
-                        }
-                        else if (PConsonants.Contains(new string(priorChar, 1)))
-                        {
-                            pConsonants.Add(new string(priorChar, 1));
-                            priorChar = letter;
-                        }
-                        else if (NpConsonants.Contains(new string(priorChar, 1)))
-                        {
-                            npConsonants.Add(new string(priorChar, 1));
-                            priorChar = letter;
-                        }
-                        else if (Vowels.Contains(new string(priorChar, 1)))
-                        {
-                            if (Vowels.Contains(new string(letter, 1)))
+                            if(ContainsVowels(priorChar))
                             {
-                                string newChar = new string(priorChar, 1) + new string(letter, 1);
-                                vDiphthongs.Add(newChar);
-                                priorChar = '\0';
+                                priorChar += letter.ToString();
+                            }
+                        }
+                        else if (PConsonants.Contains(priorChar))
+                        {
+                            pConsonants.Add(priorChar);
+                            priorChar = letter.ToString();
+                        }
+                        else if (NpConsonants.Contains(priorChar))
+                        {
+                            npConsonants.Add(priorChar);
+                            priorChar = letter.ToString();
+                        }
+                        else if (ContainsVowels(priorChar))
+                        {
+                            if (Vowels.Contains(letter.ToString()))
+                            {
+                                if (priorChar.Length >= 2)
+                                {
+                                    int vCount = CountVowels(priorChar);
+                                    int dCount = CountDiacritics(priorChar);
+                                    if ((vCount >= 2) || (dCount >= 2))
+                                    {
+                                        vDiphthongs.Add(priorChar);
+                                        priorChar = letter.ToString();
+                                    }
+                                    else
+                                    {
+                                        priorChar += letter.ToString();
+                                    }
+                                }
+                                else
+                                {
+                                    priorChar += letter.ToString(); // Keep building the possible diphthong
+                                }
                             }
                             else
                             {
-                                vowels.Add(new string(priorChar, 1));
-                                priorChar = letter;
+                                string lastPriorChar = priorChar.Last().ToString();
+                                if ((priorChar.Length == 1) || 
+                                    ((priorChar.Length == 2) && (Diacritics.Contains(lastPriorChar))) ||
+                                    ((priorChar.Length == 2) && (Suprasegmentals.Contains(lastPriorChar))))
+                                {
+                                    vowels.Add(priorChar);
+                                }
+                                else
+                                {
+                                    vDiphthongs.Add(priorChar);
+                                }
+                                priorChar = letter.ToString();
                             }
                         }
                     }
                     // treat stress like new word.
-                    if ((priorChar == '\u02c8') || (priorChar == '\u02cc'))
+                    if ((priorChar.Equals("\u02c8")) || (priorChar.Equals("\u02cc")))
                     {
-                        priorChar = '\0';
+                        priorChar = string.Empty;
                     }
                 }
             }
@@ -663,6 +692,51 @@ namespace ConlangAudioHoning
                 fixedText = fixedText.Replace(bad, LatinIpaReplacements[bad]);
             }
             return fixedText;
+        }
+
+        private static bool ContainsVowels(string priorChars)
+        {
+            bool containsVowels = false;
+            foreach(char c in priorChars) 
+            {
+                if(Vowels.Contains(c.ToString()))
+                {
+                    containsVowels = true; 
+                    break;
+                }
+            }
+
+            return containsVowels;
+        }
+
+        private static int CountVowels(string priorChars)
+        {
+            int count = 0;
+            foreach(char c in priorChars)
+            {
+                if(Vowels.Contains(c.ToString()))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        private static int CountDiacritics(string priorChars)
+        {
+            int count = 0;
+            foreach(char c in priorChars)
+            {
+                if(Diacritics.Contains(c.ToString()))
+                {
+                    count++;
+                }
+                else if((c == '\u02D0') || (c == '\u02D1'))
+                {
+                    count++;
+                }
+            }
+            return count;
         }
 
     }
