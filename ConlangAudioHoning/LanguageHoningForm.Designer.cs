@@ -63,6 +63,9 @@
             cbx_replacementPhoneme = new ComboBox();
             btn_applyChangeToLanguage = new Button();
             btn_revertLastChange = new Button();
+            label3 = new Label();
+            label4 = new Label();
+            label5 = new Label();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
             SuspendLayout();
@@ -276,7 +279,7 @@
             // gbx_phonetics
             // 
             gbx_phonetics.Controls.Add(rbn_pulmonicConsonants);
-            gbx_phonetics.Location = new Point(15, 233);
+            gbx_phonetics.Location = new Point(15, 192);
             gbx_phonetics.Name = "gbx_phonetics";
             gbx_phonetics.Size = new Size(993, 42);
             gbx_phonetics.TabIndex = 10;
@@ -298,7 +301,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(15, 278);
+            label1.Location = new Point(15, 238);
             label1.Name = "label1";
             label1.Size = new Size(114, 15);
             label1.TabIndex = 11;
@@ -307,7 +310,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(515, 278);
+            label2.Location = new Point(15, 288);
             label2.Name = "label2";
             label2.Size = new Size(130, 15);
             label2.TabIndex = 12;
@@ -318,7 +321,7 @@
             cbx_phonemeToChange.DropDownStyle = ComboBoxStyle.DropDownList;
             cbx_phonemeToChange.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbx_phonemeToChange.FormattingEnabled = true;
-            cbx_phonemeToChange.Location = new Point(15, 296);
+            cbx_phonemeToChange.Location = new Point(15, 256);
             cbx_phonemeToChange.Name = "cbx_phonemeToChange";
             cbx_phonemeToChange.Size = new Size(492, 34);
             cbx_phonemeToChange.TabIndex = 13;
@@ -329,14 +332,14 @@
             cbx_replacementPhoneme.DropDownStyle = ComboBoxStyle.DropDownList;
             cbx_replacementPhoneme.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbx_replacementPhoneme.FormattingEnabled = true;
-            cbx_replacementPhoneme.Location = new Point(515, 296);
+            cbx_replacementPhoneme.Location = new Point(15, 306);
             cbx_replacementPhoneme.Name = "cbx_replacementPhoneme";
-            cbx_replacementPhoneme.Size = new Size(493, 34);
+            cbx_replacementPhoneme.Size = new Size(492, 34);
             cbx_replacementPhoneme.TabIndex = 14;
             // 
             // btn_applyChangeToLanguage
             // 
-            btn_applyChangeToLanguage.Location = new Point(15, 336);
+            btn_applyChangeToLanguage.Location = new Point(15, 346);
             btn_applyChangeToLanguage.Name = "btn_applyChangeToLanguage";
             btn_applyChangeToLanguage.Size = new Size(492, 23);
             btn_applyChangeToLanguage.TabIndex = 15;
@@ -346,26 +349,57 @@
             // 
             // btn_revertLastChange
             // 
-            btn_revertLastChange.Location = new Point(515, 336);
+            btn_revertLastChange.Location = new Point(15, 375);
             btn_revertLastChange.Name = "btn_revertLastChange";
-            btn_revertLastChange.Size = new Size(493, 23);
+            btn_revertLastChange.Size = new Size(492, 23);
             btn_revertLastChange.TabIndex = 16;
             btn_revertLastChange.Text = "Revert the last change";
             btn_revertLastChange.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.ForeColor = Color.Red;
+            label3.Location = new Point(517, 304);
+            label3.Name = "label3";
+            label3.Size = new Size(174, 15);
+            label3.TabIndex = 17;
+            label3.Text = "Red - Phoneme in Spelling Map";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.ForeColor = Color.Green;
+            label4.Location = new Point(517, 319);
+            label4.Name = "label4";
+            label4.Size = new Size(216, 15);
+            label4.TabIndex = 18;
+            label4.Text = "Green - Phoneme in phonetic inventory";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.ForeColor = Color.Blue;
+            label5.Location = new Point(517, 334);
+            label5.Name = "label5";
+            label5.Size = new Size(302, 15);
+            label5.TabIndex = 19;
+            label5.Text = "Blue - Phoneme in spelling map and phonetic inventory";
             // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1024, 496);
+            Controls.Add(label5);
+            Controls.Add(label4);
+            Controls.Add(label3);
             Controls.Add(btn_revertLastChange);
             Controls.Add(btn_applyChangeToLanguage);
             Controls.Add(cbx_replacementPhoneme);
             Controls.Add(cbx_phonemeToChange);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(gbx_phonetics);
-            Controls.Add(pb_status);
             Controls.Add(btn_replaySpeech);
             Controls.Add(cbx_recordings);
             Controls.Add(btn_generateSpeech);
@@ -375,6 +409,8 @@
             Controls.Add(lbl_SampleText);
             Controls.Add(txt_SampleText);
             Controls.Add(menuStrip1);
+            Controls.Add(gbx_phonetics);
+            Controls.Add(pb_status);
             MainMenuStrip = menuStrip1;
             Name = "LanguageHoningForm";
             Text = "LanguageHoningForm";
@@ -422,5 +458,8 @@
         private ComboBox cbx_replacementPhoneme;
         private Button btn_applyChangeToLanguage;
         private Button btn_revertLastChange;
+        private Label label3;
+        private Label label4;
+        private Label label5;
     }
 }

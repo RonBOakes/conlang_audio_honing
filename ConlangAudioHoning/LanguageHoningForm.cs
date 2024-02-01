@@ -35,6 +35,7 @@ using LanguageEditor;
 using System.Drawing.Printing;
 using Timer = System.Windows.Forms.Timer;
 using System.Reflection.Metadata;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ConlangAudioHoning
 {
@@ -420,6 +421,7 @@ namespace ConlangAudioHoning
         private void declineLexicon(LanguageDescription language)
         {
             pb_status.Style = ProgressBarStyle.Continuous;
+            pb_status.BringToFront();
             pb_status.Minimum = 0;
             pb_status.Maximum = language.lexicon.Count;
             pb_status.Step = 1;
@@ -447,6 +449,7 @@ namespace ConlangAudioHoning
             }
             language.lexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
             pb_status.Visible = false;
+            pb_status.SendToBack();
             pbTimer.Enabled = false;
             language.declined = true;
         }
@@ -508,7 +511,15 @@ namespace ConlangAudioHoning
                     sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
                     cbx_replacementPhoneme.Items.Add(sb.ToString());
                 }
+                cbx_replacementPhoneme.DrawMode = DrawMode.OwnerDrawFixed;
+                cbx_replacementPhoneme.MeasureItem += Cbx_replacementPhoneme_MeasureItem;
+                cbx_replacementPhoneme.DrawItem += cbx_replacementPhoneme_DrawItem;
             }
+        }
+
+        private void Cbx_replacementPhoneme_MeasureItem(object? sender, MeasureItemEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void btn_applyChangeToLanguage_Click(object sender, EventArgs e)
@@ -549,6 +560,93 @@ namespace ConlangAudioHoning
                 cbx_replacementPhoneme.Items.Clear();
             }
             // TODO: Add other options
+        }
+
+        private void cbx_replacementPhoneme_MeasureItem(object sender, System.Windows.Forms.MeasureItemEventArgs e)
+        {
+            e.ItemWidth = cbx_phonemeToChange.DropDownWidth;
+            e.ItemHeight = cbx_replacementPhoneme.Font.Height + 10;
+        }
+
+        private void cbx_replacementPhoneme_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
+        {
+            if(e.Index<0)
+            {
+                e.DrawBackground();
+                e.DrawFocusRectangle();
+                return;
+            }
+            Brush comboBrush = Brushes.Black; // Set the default color to black
+
+            string cbxEntry = string.Empty;
+            if (cbx_replacementPhoneme.Items[e.Index] != null)
+            {
+                cbxEntry = (string)cbx_replacementPhoneme.Items[e.Index];
+            }
+            bool inInventory = IsInInventory(cbxEntry);
+            bool hasSpellingMap = HasSpellingMap(cbxEntry);
+            if(inInventory && hasSpellingMap)
+            {
+                comboBrush = Brushes.Blue;
+            }
+            else if (inInventory)
+            {
+                comboBrush = Brushes.Green;
+            }
+            else if(hasSpellingMap)
+            {
+                comboBrush = Brushes.Red;
+            }
+
+            e.DrawBackground();
+            Rectangle rectangle = new Rectangle(2, e.Bounds.Top + 2, e.Bounds.Height, e.Bounds.Height - 4);
+            e.Graphics.DrawString(cbxEntry, cbx_replacementPhoneme.Font, comboBrush, 
+                new RectangleF(e.Bounds.X + rectangle.Width, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
+        }
+
+        private bool IsInInventory(string cbxEntry)
+        {
+            if(languageDescription == null)
+            { 
+                return false; 
+            }
+            bool isInInventory = false;
+            string checkChar = cbxEntry.Split()[0]; // The combo boxes to be checked always have the character first, followed by whitespace
+            if (rbn_pulmonicConsonants.Checked)
+            {
+                isInInventory = languageDescription.phonetic_inventory["p_consonants"].Contains(checkChar);
+            }
+
+            return isInInventory;
+        }
+        private bool HasSpellingMap(string cbxEntry)
+        {
+            if(languageDescription == null) 
+            { 
+                return false; 
+            }
+            bool hasSpellingMap = false;
+            string checkChar = cbxEntry.Split()[0]; // The combo boxes to be checked always have the character first, followed by whitespace
+            if(checkChar.Length == 1)
+            {
+                char c = checkChar[0];
+                if(Char.IsLetter(c))
+                {
+                    hasSpellingMap = true;
+                }
+            }
+            else
+            {
+                foreach(SoundMap soundMap in languageDescription.sound_map_list)
+                {
+                    if((soundMap.phoneme.Contains(checkChar)) || (soundMap.spelling_regex.Contains(checkChar)))
+                    {
+                        hasSpellingMap = true;
+                    }
+                }
+            }
+
+            return hasSpellingMap;
         }
     }
 }
