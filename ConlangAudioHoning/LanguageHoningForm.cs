@@ -490,6 +490,9 @@ namespace ConlangAudioHoning
                 }
 
                 cbx_phonemeToChange.SelectedIndex = -1;
+
+                // Set the spelling/pronunciation options to a default value
+                rbn_preserveSpelling.Checked = true;
             }
         }
 
@@ -542,7 +545,7 @@ namespace ConlangAudioHoning
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
                 // Make the change
-                phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme);
+                phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme, rbn_createNewRule.Checked);
                 // Update sample text
                 if(sampleText != string.Empty)
                 {

@@ -23,13 +23,14 @@ using System.Text;
 using System.Threading.Tasks;
 using ConlangJson;
 
-namespace LanguageEditor
+namespace ConlangAudioHoning
 {
     internal class SoundMapEditor : UserControl
     {
         private static Size controlSize = new(850, 50);
 
         private SoundMap? _soundMapData;
+        private bool _enabled;
 
         public SoundMap SoundMapData
         {
@@ -39,7 +40,7 @@ namespace LanguageEditor
                 {
                     _soundMapData = new SoundMap();
                 }
-                _soundMapData.pronounciation_regex = txt_pronounciationRegex.Text;
+                _soundMapData.pronounciation_regex = txt_pronunciationRegex.Text;
                 _soundMapData.phoneme = txt_phoneme.Text;
                 _soundMapData.romanization = txt_romanization.Text;
                 _soundMapData.spelling_regex = txt_spellingRegex.Text;
@@ -49,20 +50,36 @@ namespace LanguageEditor
             set 
             { 
                 _soundMapData = value; 
-                txt_pronounciationRegex.Text = _soundMapData.pronounciation_regex;
+                txt_pronunciationRegex.Text = _soundMapData.pronounciation_regex;
                 txt_phoneme.Text = _soundMapData.phoneme;
                 txt_romanization.Text = _soundMapData.romanization;
                 txt_spellingRegex.Text = _soundMapData.spelling_regex;
             }
         }
 
+        public new bool Enabled
+        {
+            get
+            {
+                return _enabled;
+            }
+            set
+            {
+                _enabled = value;
+                txt_phoneme.Enabled = _enabled;
+                txt_pronunciationRegex.Enabled = _enabled;
+                txt_romanization.Enabled = _enabled;
+                txt_spellingRegex.Enabled = _enabled;
+            }
+        }
+
         private Label lbl_phoneme;
-        private Label lbl_pronounciationRegex;
+        private Label lbl_pronunciationRegex;
         private Label lbl_romanization;
         private Label lbl_spellingRegex;
 
         private TextBox txt_phoneme;
-        private TextBox txt_pronounciationRegex;
+        private TextBox txt_pronunciationRegex;
         private TextBox txt_romanization;
         private TextBox txt_spellingRegex;
 
@@ -71,6 +88,7 @@ namespace LanguageEditor
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
+            Enabled = true;
         }
 
         private void InitializeComponent()
@@ -90,17 +108,17 @@ namespace LanguageEditor
             txt_phoneme.Size = new Size(200, 15);
             Controls.Add(txt_phoneme);
 
-            lbl_pronounciationRegex = new Label();
-            lbl_pronounciationRegex.Text = "Pronounciation RegEx:";
-            lbl_pronounciationRegex.Location = new Point(410, 5);
-            lbl_pronounciationRegex.Size = new Size(200, 15);
-            lbl_pronounciationRegex.TextAlign = ContentAlignment.MiddleRight;
-            Controls.Add(lbl_pronounciationRegex);
+            lbl_pronunciationRegex = new Label();
+            lbl_pronunciationRegex.Text = "Pronounciation RegEx:";
+            lbl_pronunciationRegex.Location = new Point(410, 5);
+            lbl_pronunciationRegex.Size = new Size(200, 15);
+            lbl_pronunciationRegex.TextAlign = ContentAlignment.MiddleRight;
+            Controls.Add(lbl_pronunciationRegex);
 
-            txt_pronounciationRegex = new TextBox();
-            txt_pronounciationRegex.Location = new Point(615, 5);
-            txt_pronounciationRegex.Size = new Size(200, 15);
-            Controls.Add(txt_pronounciationRegex);
+            txt_pronunciationRegex = new TextBox();
+            txt_pronunciationRegex.Location = new Point(615, 5);
+            txt_pronunciationRegex.Size = new Size(200, 15);
+            Controls.Add(txt_pronunciationRegex);
 
             lbl_romanization = new Label();
             lbl_romanization.Text = "Spelling/Romanization:";

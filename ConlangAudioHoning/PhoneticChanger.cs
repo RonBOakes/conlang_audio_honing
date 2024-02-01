@@ -54,7 +54,7 @@ namespace ConlangAudioHoning
             set => this._sampleText = value;
         }
 
-        public void PhoneticChange(string oldPhoneme, string newPhoneme)
+        public void PhoneticChange(string oldPhoneme, string newPhoneme, bool createNewSoundMapEntry)
         {
             if (this._language == null)
             {
@@ -62,6 +62,12 @@ namespace ConlangAudioHoning
             }
 
             // TODO: Update spelling/pronunciation rules (a.k.a. sound map list)
+            SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
+            soundMapListEditor.SoundMapList = Language.sound_map_list;
+            soundMapListEditor.ShowDialog();
+            // DEBUG
+            return;
+
             bool spellingChange = false;
             foreach (SoundMap soundMap in Language.sound_map_list)
             {

@@ -66,8 +66,12 @@
             label3 = new Label();
             label4 = new Label();
             label5 = new Label();
+            gbx_spellingPronuncation = new GroupBox();
+            rbn_createNewRule = new RadioButton();
+            rbn_preserveSpelling = new RadioButton();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
+            gbx_spellingPronuncation.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -386,11 +390,45 @@
             label5.TabIndex = 19;
             label5.Text = "Blue - Phoneme in spelling map and phonetic inventory";
             // 
+            // gbx_spellingPronuncation
+            // 
+            gbx_spellingPronuncation.Controls.Add(rbn_createNewRule);
+            gbx_spellingPronuncation.Controls.Add(rbn_preserveSpelling);
+            gbx_spellingPronuncation.Location = new Point(515, 238);
+            gbx_spellingPronuncation.Name = "gbx_spellingPronuncation";
+            gbx_spellingPronuncation.Size = new Size(493, 52);
+            gbx_spellingPronuncation.TabIndex = 20;
+            gbx_spellingPronuncation.TabStop = false;
+            gbx_spellingPronuncation.Text = "Spelling/Pronouncation Options";
+            // 
+            // rbn_createNewRule
+            // 
+            rbn_createNewRule.AutoSize = true;
+            rbn_createNewRule.Location = new Point(124, 26);
+            rbn_createNewRule.Name = "rbn_createNewRule";
+            rbn_createNewRule.Size = new Size(112, 19);
+            rbn_createNewRule.TabIndex = 1;
+            rbn_createNewRule.TabStop = true;
+            rbn_createNewRule.Text = "Create New Rule";
+            rbn_createNewRule.UseVisualStyleBackColor = true;
+            // 
+            // rbn_preserveSpelling
+            // 
+            rbn_preserveSpelling.AutoSize = true;
+            rbn_preserveSpelling.Location = new Point(6, 26);
+            rbn_preserveSpelling.Name = "rbn_preserveSpelling";
+            rbn_preserveSpelling.Size = new Size(114, 19);
+            rbn_preserveSpelling.TabIndex = 0;
+            rbn_preserveSpelling.TabStop = true;
+            rbn_preserveSpelling.Text = "Preserve Spelling";
+            rbn_preserveSpelling.UseVisualStyleBackColor = true;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1024, 496);
+            Controls.Add(gbx_spellingPronuncation);
             Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(label3);
@@ -418,6 +456,8 @@
             menuStrip1.PerformLayout();
             gbx_phonetics.ResumeLayout(false);
             gbx_phonetics.PerformLayout();
+            gbx_spellingPronuncation.ResumeLayout(false);
+            gbx_spellingPronuncation.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -461,5 +501,8 @@
         private Label label3;
         private Label label4;
         private Label label5;
+        private GroupBox gbx_spellingPronuncation;
+        private RadioButton rbn_createNewRule;
+        private RadioButton rbn_preserveSpelling;
     }
 }
