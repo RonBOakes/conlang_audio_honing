@@ -83,7 +83,7 @@ namespace ConlangJson
             {
                 derivedWord = (bool)word.derived_word;
             }
-            LexiconEntry wordSouceData = word.copy();
+            LexiconEntry wordSourceData = word.copy();
 
             // Search the affixMap for a matching part of speech.  If one is found then
             // there are rules for declining this part of speech, so apply them to this word,
@@ -114,7 +114,7 @@ namespace ConlangJson
                     newMetadata = new JsonObject();
                 }
                 JsonObject declinedWordData = new JsonObject();
-                string declinedWordDataString = JsonSerializer.Serialize<LexiconEntry>(wordSouceData);
+                string declinedWordDataString = JsonSerializer.Serialize<LexiconEntry>(wordSourceData);
                 declinedWordData.Add("declined_word", JsonSerializer.Deserialize<JsonObject>(declinedWordDataString));
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 if (newMetadata.ContainsKey("Source"))
@@ -123,9 +123,9 @@ namespace ConlangJson
                 }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 newMetadata.Add("Source", declinedWordData);
-                LexiconEntry lexent = new LexiconEntry(phoneticEntry.Phonetic, spelled,english,phoneticEntry.PartOfSpeech,phoneticEntry.Declensions,derivedWord,true,newMetadata);
-                lexent.declined_word = true;
-                lexiconFragment.Add(lexent);
+                LexiconEntry entry = new LexiconEntry(phoneticEntry.Phonetic, spelled,english,phoneticEntry.PartOfSpeech,phoneticEntry.Declensions,derivedWord,true,newMetadata);
+                entry.declined_word = true;
+                lexiconFragment.Add(entry);
             }
 
             return lexiconFragment;
@@ -204,7 +204,7 @@ namespace ConlangJson
                 }
                 else
                 {
-                    throw new ArgumentException("Invlid Argument in NewWordData.Equals");
+                    throw new ArgumentException("Invalid Argument in NewWordData.Equals");
                 }
             }
 
@@ -256,7 +256,7 @@ namespace ConlangJson
                 return phoneticList;
             }
 
-            // Remove the emphisys mark off the beginning of the phonetic string.
+            // Remove the emphasis mark off the beginning of the phonetic string.
             string phonetic2;
             if (phonetic.Substring(0, 1).Equals("ˈ"))
             {
@@ -274,7 +274,7 @@ namespace ConlangJson
                 Affix rules = entry[declension];
 
                 string? newWord = null;
-                // Perform the subsitution if there is a regular expression in the affix rule
+                // Perform the substitution if there is a regular expression in the affix rule
                 if (rules.pronounciation_regex != null)
                 {
                     if (affix.Equals("prefix"))
@@ -347,12 +347,12 @@ namespace ConlangJson
             List<NewWordData> phoneticList = new List<NewWordData>();
 
             List<List<Dictionary<string, List<Dictionary<string, Affix>>>>> affixMapCombos = allCombinations(affixMapList);
-            foreach (List<Dictionary<string, List<Dictionary<string, Affix>>>> affixMapTupple in affixMapCombos)
+            foreach (List<Dictionary<string, List<Dictionary<string, Affix>>>> affixMapTuple in affixMapCombos)
             {
-                phoneticList.AddRange(ProcessAffixMapTuple(affixMapTupple, phonetic, partOfSpeech));
+                phoneticList.AddRange(ProcessAffixMapTuple(affixMapTuple, phonetic, partOfSpeech));
             }
 
-            phoneticList = dedupPhoneticList(phoneticList);
+            phoneticList = deDuplicatePhoneticList(phoneticList);
 
             return phoneticList;
         }
@@ -373,7 +373,7 @@ namespace ConlangJson
             return allCombos;
         }
 
-        private static List<NewWordData> dedupPhoneticList(List<NewWordData> phoneticList)
+        private static List<NewWordData> deDuplicatePhoneticList(List<NewWordData> phoneticList)
         {
             List<NewWordData> newPhoneticList = new List<NewWordData>();
             foreach (NewWordData entry in phoneticList)
