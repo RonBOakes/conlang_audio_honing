@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
@@ -75,6 +76,7 @@ namespace ConlangAudioHoning
             foreach (LexiconEntry word in Language.lexicon)
             {
                 // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                LexiconEntry oldVersion = word.copy();
                 string oldPhonetic = word.phonetic;
                 word.phonetic = word.phonetic.Replace(oldPhoneme, newPhoneme);
                 if (!oldPhonetic.Equals(word.phonetic))
@@ -89,21 +91,23 @@ namespace ConlangAudioHoning
                     {
                         word.metadata = new System.Text.Json.Nodes.JsonObject();
                     }
-                    List<PhoneticChangeHistory>? phoneticChangeHistories = null;
+                    Dictionary<string,PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
                     {
-                        phoneticChangeHistories = JsonSerializer.Deserialize<List<PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
+                        phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
                     }
                     if (phoneticChangeHistories == null)
                     {
-                        phoneticChangeHistories = new List<PhoneticChangeHistory>();
+                        phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
                     }
                     PhoneticChangeHistory pch = new PhoneticChangeHistory();
                     pch.OldPhoneme = oldPhoneme;
                     pch.NewPhoneme = newPhoneme;
-                    pch.ChangeTime = DateTime.Now;
-                    phoneticChangeHistories.Add(pch);
-                    word.metadata["PhoneticChangeHistory"] = JsonSerializer.Serialize<List<PhoneticChangeHistory>>(phoneticChangeHistories);
+                    pch.OldVersion = oldVersion;
+                    string timestamp = string.Format("{0:s}",DateTime.Now);
+                    phoneticChangeHistories.Add(timestamp,pch);
+                    string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
+                    word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
                 }
 
             }
@@ -117,7 +121,7 @@ namespace ConlangAudioHoning
         {
             private string _oldPhoneme;
             private string _newPhoneme;
-            private DateTime _changeTime;
+            private LexiconEntry _oldVersion;
 
             public string OldPhoneme
             {
@@ -129,10 +133,10 @@ namespace ConlangAudioHoning
                 get => this._newPhoneme;
                 set => this._newPhoneme = value;
             }
-            public DateTime ChangeTime
+            public LexiconEntry OldVersion
             {
-                get => this._changeTime;
-                set => this._changeTime = value;
+                get => this._oldVersion;
+                set => this._oldVersion = value;
             }
         }
     }
