@@ -139,7 +139,7 @@ namespace ConlangJson
                 addLexicon.AddRange(DeclineWord(word, language.affix_map, language.sound_map_list));
             }
             language.lexicon.AddRange(addLexicon);
-            List<LexiconEntry> cleanLexicon = dedupLeixcon(language.lexicon);
+            List<LexiconEntry> cleanLexicon = deDuplicateLexicon(language.lexicon);
             if(cleanLexicon.Count <  language.lexicon.Count)
             {
                 language.lexicon = cleanLexicon;
@@ -167,7 +167,7 @@ namespace ConlangJson
             language.declined = false;
         }
 
-        public static List<LexiconEntry> dedupLeixcon(List<LexiconEntry> lexicon)
+        public static List<LexiconEntry> deDuplicateLexicon(List<LexiconEntry> lexicon)
         {
             List<LexiconEntry> newLexicon = new List<LexiconEntry>();
             foreach(LexiconEntry lexiconEntry in lexicon) 

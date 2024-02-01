@@ -321,7 +321,6 @@
             cbx_phonemeToChange.Location = new Point(15, 296);
             cbx_phonemeToChange.Name = "cbx_phonemeToChange";
             cbx_phonemeToChange.Size = new Size(492, 34);
-            cbx_phonemeToChange.Sorted = true;
             cbx_phonemeToChange.TabIndex = 13;
             cbx_phonemeToChange.SelectedIndexChanged += cbx_phonemeToChange_SelectedIndexChanged;
             // 
@@ -343,6 +342,7 @@
             btn_applyChangeToLanguage.TabIndex = 15;
             btn_applyChangeToLanguage.Text = "Apply This Change to the Language";
             btn_applyChangeToLanguage.UseVisualStyleBackColor = true;
+            btn_applyChangeToLanguage.Click += btn_applyChangeToLanguage_Click;
             // 
             // btn_revertLastChange
             // 

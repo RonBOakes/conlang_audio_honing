@@ -47,10 +47,12 @@ namespace ConlangAudioHoning
         private Font? printFont;
         private TextReader? readerToPrint;
         private Dictionary<string, FileInfo> speechFiles = new Dictionary<string, FileInfo>();
+        private PhoneticChanger phoneticChanger;
 
         public LanguageHoningForm()
         {
             InitializeComponent();
+            phoneticChanger = new PhoneticChanger();
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -123,6 +125,7 @@ namespace ConlangAudioHoning
 
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
             IpaUtilities.BuildPhoneticInventory(languageDescription);
+            phoneticChanger.Language = languageDescription;
 
             // Empty the speech files and list box
             speechFiles.Clear();
@@ -134,7 +137,7 @@ namespace ConlangAudioHoning
             {
                 declineToolStripMenuItem.Enabled = false;
             }
-            //if((languageDescription.derived != null) && ((bool)languageDescription.derived))
+            //if((_language.derived != null) && ((bool)_language.derived))
             //{
             deriveToolStripMenuItem.Enabled = false;
             //}
@@ -221,6 +224,7 @@ namespace ConlangAudioHoning
             {
                 pollySpeech.sampleText = sampleText;
             }
+            phoneticChanger.SampleText = sampleText;
         }
 
         private void saveSampleMenu_Click(object sender, EventArgs e)
@@ -436,7 +440,7 @@ namespace ConlangAudioHoning
             pb_status.Minimum = 0;
             pb_status.Maximum = 100;
             language.lexicon.AddRange(addLexicon);
-            List<LexiconEntry> cleanLexicon = ConLangUtilities.dedupLeixcon(language.lexicon);
+            List<LexiconEntry> cleanLexicon = ConLangUtilities.deDuplicateLexicon(language.lexicon);
             if (cleanLexicon.Count < language.lexicon.Count)
             {
                 language.lexicon = cleanLexicon;
@@ -488,16 +492,16 @@ namespace ConlangAudioHoning
 
         private void cbx_phonemeToChange_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(languageDescription == null) 
-            { 
-                return; 
+            if (languageDescription == null)
+            {
+                return;
             }
             int phonemeIndex = cbx_phonemeToChange.SelectedIndex;
-            if(rbn_pulmonicConsonants.Checked)
+            if (rbn_pulmonicConsonants.Checked)
             {
                 string pConsonant = languageDescription.phonetic_inventory["p_consonants"][phonemeIndex].ToString();
                 cbx_replacementPhoneme.Items.Clear();
-                foreach(string replacement in IpaUtilities.P_consonant_changes[pConsonant])
+                foreach (string replacement in IpaUtilities.P_consonant_changes[pConsonant])
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.AppendFormat("{0} -- ", replacement);
@@ -505,6 +509,46 @@ namespace ConlangAudioHoning
                     cbx_replacementPhoneme.Items.Add(sb.ToString());
                 }
             }
+        }
+
+        private void btn_applyChangeToLanguage_Click(object sender, EventArgs e)
+        {
+            if(languageDescription == null) 
+            { 
+                return; 
+            }
+            if(!(rbn_pulmonicConsonants.Checked)) // TODO: Add the other options to ensure that at least one is checked
+            {
+                return;
+            }
+            if((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
+            {
+                return;
+            }
+
+            if(rbn_pulmonicConsonants.Checked)
+            {
+                string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
+                string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
+                // Make the change
+                phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme);
+                // Update sample text
+                if(sampleText != string.Empty)
+                {
+                    sampleText = phoneticChanger.SampleText;
+                    txt_SampleText.Text = sampleText;
+                    txt_phonetic.Text = string.Empty;
+                    if (pollySpeech != null)
+                    {
+                        pollySpeech.sampleText = sampleText;
+                    }
+                }
+                // Clear the combo boxes
+                rbn_pulmonicConsonants.Checked = false;
+                cbx_phonemeToChange.Items.Clear();
+                cbx_replacementPhoneme.Items.Clear();
+            }
+            // TODO: Add other options
         }
     }
 }

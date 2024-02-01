@@ -95,6 +95,7 @@ namespace ConlangAudioHoning
 
             // Get the phonetic representations of the text - ported from Python code.
             List<List<Dictionary<string, string>>> pronounceMapList = new List<List<Dictionary<string, string>>>();
+            pronounceMapList.Clear();
             using (StringReader sampleTextReader = new StringReader(sampleText))
             {
                 string? line;
@@ -106,10 +107,10 @@ namespace ConlangAudioHoning
                         List<Dictionary<string, string>> lineMapList = new List<Dictionary<string, string>>();
                         foreach (string word in line.Split(null))
                         {
-                            Dictionary<string, string>? pronoucneMap = pronounceWord(word, wordMap);
-                            if (pronoucneMap != null)
+                            Dictionary<string, string>? pronounceMap = pronounceWord(word, wordMap);
+                            if (pronounceMap != null)
                             {
-                                lineMapList.Add(pronoucneMap);
+                                lineMapList.Add(pronounceMap);
                             }
                         }
                         pronounceMapList.Add(lineMapList);
@@ -285,6 +286,7 @@ namespace ConlangAudioHoning
                 return null;
             }
             Dictionary<string, string> pw = new Dictionary<string, string>();
+            pw.Clear();
             if (word.Trim().Equals("."))
             {
 
@@ -305,12 +307,12 @@ namespace ConlangAudioHoning
             word = word.Trim();
             word = word.ToLower();
 
-            int wordlen = word.Length;
-            string lastchar = word.Substring(wordlen - 1);
-            if ((lastchar == ".") || (lastchar == ","))
+            int wordLen = word.Length;
+            string lastChar = word.Substring(wordLen - 1);
+            if ((lastChar == ".") || (lastChar == ","))
             {
-                punctuation = lastchar;
-                word = word.Substring(0, (wordlen - 1));
+                punctuation = lastChar;
+                word = word.Substring(0, (wordLen - 1));
             }
             if (wordMap.ContainsKey(word))
             {
@@ -322,7 +324,14 @@ namespace ConlangAudioHoning
                 LexiconEntry entry = new LexiconEntry();
                 entry.phonetic = phonetic;
                 entry.spelled = word;
+                entry.english = "<<unknown/undefined word sounded out by the Language Honing Application>>";
+                entry.part_of_speech = "unk";
+                entry.declensions = new List<string>() { "root" };
+                entry.declined_word = false;
+                entry.derived_word = false;
                 wordMap[word] = entry;
+                // Add this word to the lexicon so that it is available for sound changes later.
+                LanguageDescription.lexicon.Add(entry);
             }
 
             pw.Add("phonetic", phonetic);

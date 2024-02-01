@@ -350,7 +350,7 @@ namespace ConlangAudioHoning
             { "\u03b2", new List<string>(){"\u0278","f","v","\u2c71"} },
             { "f", new List<string>(){"v","\u0278","\u03b2","\u02b8","\u00f0","\u2c71","\u027e","\u026c","\u026e" } },
             { "v", new List<string>(){"f","\u0278","\u03b2","\u02b8","\u00f0","\u2c71","\u027e", "\u026c", "\u026e" } },
-            { "\u02b8", new List<string>(){"\u00f0","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
+            { "\u03b8", new List<string>(){"\u00f0","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
             { "\u00f0", new List<string>(){"\u02b8","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
             { "s", new List<string>(){"z","\u02b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
             { "z", new List<string>(){"s","\u02b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
@@ -567,7 +567,7 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// Build or rebuild the phonetic_inventory section of the LanguageDescription 
+        /// Build or rebuild the phonetic_inventory section of the Language 
         /// structure
         /// </summary>
         /// <param name="languageDescription">Conlang JSON structure read into .NET</param>
