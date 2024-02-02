@@ -63,10 +63,16 @@ namespace ConlangAudioHoning
 
             // TODO: Update spelling/pronunciation rules (a.k.a. sound map list)
             SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
+            List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0,Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
+            soundMapListEditor.PhonemeBeingReplaced = oldPhoneme;
+            soundMapListEditor.ReplacementPhoneme = newPhoneme;
             soundMapListEditor.ShowDialog();
-            // DEBUG
-            return;
+            // ShowDialog is modal
+            if(soundMapListEditor.SoundMapSaved)
+            {
+                Language.sound_map_list = soundMapListEditor.SoundMapList;
+            }
 
             bool spellingChange = false;
             foreach (SoundMap soundMap in Language.sound_map_list)

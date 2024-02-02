@@ -32,6 +32,8 @@ namespace ConlangAudioHoning
     public partial class SoundMapListEditor : Form
     {
         private List<SoundMap> _soundMapList;
+        private string _phonemeBeingReplaced;
+        private string _replacementPhoneme;
         private bool _soundMapSaved = false;
 
         public List<SoundMap> SoundMapList
@@ -48,6 +50,24 @@ namespace ConlangAudioHoning
             }
         }
 
+        public string PhonemeBeingReplaced
+        {
+            set
+            {
+                _phonemeBeingReplaced = value;
+                txtPhonemeBeingReplaced.Text = _phonemeBeingReplaced;
+            }
+        }
+
+        public string ReplacementPhoneme
+        {
+            set
+            {
+                _replacementPhoneme = value;
+                txtReplacementPhoneme.Text = _replacementPhoneme;
+            }
+        }
+
         public bool SoundMapSaved
         {
             get => _soundMapSaved;
@@ -56,7 +76,7 @@ namespace ConlangAudioHoning
         public SoundMapListEditor()
         {
             InitializeComponent();
-            CharacterInsertToolStripMenuItem ciMenu =  new CharacterInsertToolStripMenuItem();
+            CharacterInsertToolStripMenuItem ciMenu = new CharacterInsertToolStripMenuItem();
             menuStrip1.Items.Add(ciMenu);
             _soundMapList = new List<SoundMap>();
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
@@ -64,39 +84,42 @@ namespace ConlangAudioHoning
 
         private void loadForm()
         {
-            foreach (SoundMap map in _soundMapList)
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.AppendFormat("Phonetic Regex: {0}, ", map.pronounciation_regex);
-                sb.AppendFormat("Phoneme: {0}, ", map.phoneme);
-                sb.AppendFormat("Spelling Regex: {0}, ", map.spelling_regex);
-                sb.AppendFormat("Spelling: {0}", map.romanization);
-                lbx_soundMapListEntries.Items.Add(sb.ToString());
-            }
+            UpdateSoundMapEntries();
         }
 
         private void btnAddAbove_Click(object sender, EventArgs e)
         {
-            if (!soundMapEditor2.ValidMap)
+            if (!soundMapEditor.ValidMap)
             {
                 return;
             }
             int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
+            if (index >= 0)
+            {
+                SoundMapList.Insert(index, soundMapEditor.SoundMapData);
+                UpdateSoundMapEntries();
+            }
         }
 
         private void btnAddBelow_Click(object sender, EventArgs e)
         {
-            if (!soundMapEditor2.ValidMap)
+            if (!soundMapEditor.ValidMap)
             {
                 return;
             }
             int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
+            index += 1;
+            if (index > 0)
+            {
+                SoundMapList.Insert(index, soundMapEditor.SoundMapData);
+                UpdateSoundMapEntries();
+            }
         }
 
         private void addCharToSoundMap(string charToAdd)
         {
-            soundMapEditor2.AppendToFocusedBox(charToAdd);
-            soundMapEditor2.Focus();
+            soundMapEditor.AppendToFocusedBox(charToAdd);
+            soundMapEditor.Focus();
         }
 
         private void saveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,7 +136,7 @@ namespace ConlangAudioHoning
 
         private void CharInsetToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            if(sender == null)
+            if (sender == null)
             {
                 return;
             }
@@ -123,7 +146,62 @@ namespace ConlangAudioHoning
                 return;
             }
             string charToInsert = menuItem.Text.Split()[0];
-            soundMapEditor2.AppendToFocusedBox(charToInsert);
+            soundMapEditor.AppendToFocusedBox(charToInsert);
+        }
+
+        private void btnEditSelected_Click(object sender, EventArgs e)
+        {
+            int index = lbx_soundMapListEntries.SelectedIndex;
+            if (index >= 0)
+            {
+                SoundMap soundMapToEdit = SoundMapList[index];
+                this.soundMapEditor.SoundMapData = soundMapToEdit;
+            }
+        }
+
+        private void btnDeleteSelected_Click(object sender, EventArgs e)
+        {
+            int index = lbx_soundMapListEntries.SelectedIndex;
+            if (index >= 0)
+            {
+                DialogResult result = MessageBox.Show("This action cannot be reversed", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.OK)
+                {
+                    SoundMapList.RemoveAt(index);
+                    UpdateSoundMapEntries();
+                }
+            }
+        }
+
+        private void UpdateSoundMapEntries()
+        {
+            lbx_soundMapListEntries.SuspendLayout();
+            lbx_soundMapListEntries.Items.Clear();
+            foreach (SoundMap map in _soundMapList)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat("Phonetic Regex: {0}, ", map.pronounciation_regex);
+                sb.AppendFormat("Phoneme: {0}, ", map.phoneme);
+                sb.AppendFormat("Spelling Regex: {0}, ", map.spelling_regex);
+                sb.AppendFormat("Spelling: {0}", map.romanization);
+                lbx_soundMapListEntries.Items.Add(sb.ToString());
+            }
+            lbx_soundMapListEntries.ResumeLayout();
+        }
+
+        private void btnReplaceSelected_Click(object sender, EventArgs e)
+        {
+            if (!soundMapEditor.ValidMap)
+            {
+                return;
+            }
+            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
+            if (index >= 0)
+            {
+                SoundMapList[index] = soundMapEditor.SoundMapData;
+                UpdateSoundMapEntries();
+            }
+
         }
     }
 }
