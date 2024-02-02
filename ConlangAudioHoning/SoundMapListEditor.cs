@@ -56,127 +56,10 @@ namespace ConlangAudioHoning
         public SoundMapListEditor()
         {
             InitializeComponent();
+            CharacterInsertToolStripMenuItem ciMenu =  new CharacterInsertToolStripMenuItem();
+            menuStrip1.Items.Add(ciMenu);
             _soundMapList = new List<SoundMap>();
-            List<ToolStripMenuItem> ipaMenuItems = new List<ToolStripMenuItem>()
-            {
-                pToolStripMenuItem,
-                bToolStripMenuItem,
-                tToolStripMenuItem,
-                dToolStripMenuItem,
-                ʈToolStripMenuItem,
-                ɖToolStripMenuItem,
-                cToolStripMenuItem,
-                ɟToolStripMenuItem,
-                kToolStripMenuItem,
-                ɡToolStripMenuItem,
-                qToolStripMenuItem,
-                ɢToolStripMenuItem,
-                ʔToolStripMenuItem,
-                mToolStripMenuItem,
-                ɱToolStripMenuItem,
-                nToolStripMenuItem,
-                ɳToolStripMenuItem,
-                ɲToolStripMenuItem,
-                ŋToolStripMenuItem,
-                ɴToolStripMenuItem,
-                ʙToolStripMenuItem,
-                rToolStripMenuItem,
-                ʀToolStripMenuItem,
-                ⱱToolStripMenuItem,
-                ɾToolStripMenuItem,
-                ɽToolStripMenuItem,
-                ɸToolStripMenuItem,
-                βToolStripMenuItem,
-                fToolStripMenuItem,
-                vToolStripMenuItem,
-                θToolStripMenuItem,
-                ðToolStripMenuItem,
-                sToolStripMenuItem,
-                zToolStripMenuItem,
-                ʃToolStripMenuItem,
-                ʒToolStripMenuItem,
-                ʂToolStripMenuItem,
-                ʂToolStripMenuItem1,
-                çToolStripMenuItem,
-                ʝToolStripMenuItem,
-                xToolStripMenuItem,
-                ɣToolStripMenuItem,
-                χToolStripMenuItem,
-                ʁToolStripMenuItem,
-                ʁToolStripMenuItem1,
-                ʁToolStripMenuItem2,
-                ʜToolStripMenuItem,
-                ʢToolStripMenuItem,
-                ɦToolStripMenuItem,
-                ɬToolStripMenuItem,
-                ɮToolStripMenuItem,
-                ʋToolStripMenuItem,
-                ɹToolStripMenuItem,
-                ɻToolStripMenuItem,
-                ɰToolStripMenuItem,
-                ɭToolStripMenuItem,
-                ʎToolStripMenuItem,
-                ʟToolStripMenuItem,
-                ʘToolStripMenuItem,
-                ǀDentalClickToolStripMenuItem,
-                ǃAlveolarClickToolStripMenuItem,
-                ǂClickToolStripMenuItem,
-                ǁAlveolarLateralClickToolStripMenuItem,
-                ɓBilabialVoicedImplosiveToolStripMenuItem,
-                ɗAlveolarVoicedImplosiveToolStripMenuItem,
-                ʄPalatalVoicedImplosiveToolStripMenuItem,
-                ɠValarVoicedImplosiveToolStripMenuItem,
-                ʛUvularVoicedImplosiveToolStripMenuItem,
-                ʍVoicelessLabialvelarApproximateToolStripMenuItem,
-                ɥVoicedLabialpalatalApproximateToolStripMenuItem,
-                iToolStripMenuItem,
-                yToolStripMenuItem,
-                ɨToolStripMenuItem,
-                ʉToolStripMenuItem,
-                ɯToolStripMenuItem,
-                uToolStripMenuItem,
-                ɪToolStripMenuItem,
-                ʏToolStripMenuItem,
-                ɪToolStripMenuItem1,
-                ʊToolStripMenuItem,
-                ʊToolStripMenuItem1,
-                eToolStripMenuItem,
-                øToolStripMenuItem,
-                əToolStripMenuItem,
-                ɤToolStripMenuItem,
-                oToolStripMenuItem,
-                eToolStripMenuItem1,
-                øToolStripMenuItem1,
-                ɘToolStripMenuItem,
-                ɵToolStripMenuItem,
-                ɤToolStripMenuItem1,
-                oToolStripMenuItem1,
-                ɛToolStripMenuItem,
-                œToolStripMenuItem,
-                ɜToolStripMenuItem,
-                ɞToolStripMenuItem,
-                ʌToolStripMenuItem,
-                ɔToolStripMenuItem,
-                æToolStripMenuItem,
-                ɐToolStripMenuItem,
-                aToolStripMenuItem,
-                ɶToolStripMenuItem,
-                äToolStripMenuItem,
-                ɑToolStripMenuItem,
-                ɒToolStripMenuItem,
-                lengthenedToolStripMenuItem,
-                halfLengthenedToolStripMenuItem,
-                shortenedToolStripMenuItem,
-                rhoticityToolStripMenuItem,
-            };
-            foreach (ToolStripMenuItem menuItem in ipaMenuItems)
-            {
-                if (!String.IsNullOrEmpty(menuItem.Text))
-                {
-                    string menuChar = menuItem.Text.Trim().Split()[0];
-                    menuItem.Text = string.Format("{0} -- {1}", menuChar, IpaUtilities.IpaPhonemesMap[menuChar]);
-                }
-            }
+            ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
         }
 
         private void loadForm()
@@ -228,8 +111,12 @@ namespace ConlangAudioHoning
             this.Close();
         }
 
-        private void CharInsetToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CharInsetToolStripMenuItem_Click(object? sender, EventArgs e)
         {
+            if(sender == null)
+            {
+                return;
+            }
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
             if (String.IsNullOrEmpty(menuItem.Text))
             {
