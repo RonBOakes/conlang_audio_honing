@@ -75,6 +75,8 @@ namespace ConlangAudioHoning
 
         public SoundMapListEditor()
         {
+            _phonemeBeingReplaced = string.Empty;
+            _replacementPhoneme= string.Empty;
             InitializeComponent();
             CharacterInsertToolStripMenuItem ciMenu = new CharacterInsertToolStripMenuItem();
             menuStrip1.Items.Add(ciMenu);

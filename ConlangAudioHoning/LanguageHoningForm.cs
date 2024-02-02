@@ -316,7 +316,7 @@ namespace ConlangAudioHoning
                 targetFileName = Path.GetTempPath() + targetFileBaseName;
             }
 
-            bool ok = pollySpeech.GenerateSpeach(targetFileName);
+            bool ok = pollySpeech.GenerateSpeech(targetFileName);
             if (!ok)
             {
                 MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -490,9 +490,6 @@ namespace ConlangAudioHoning
                 }
 
                 cbx_phonemeToChange.SelectedIndex = -1;
-
-                // Set the spelling/pronunciation options to a default value
-                rbn_preserveSpelling.Checked = true;
             }
         }
 
@@ -545,7 +542,7 @@ namespace ConlangAudioHoning
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
                 // Make the change
-                phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme, rbn_createNewRule.Checked);
+                phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme);
                 // Update sample text
                 if(sampleText != string.Empty)
                 {
@@ -571,7 +568,7 @@ namespace ConlangAudioHoning
             e.ItemHeight = cbx_replacementPhoneme.Font.Height + 10;
         }
 
-        private void cbx_replacementPhoneme_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
+        private void cbx_replacementPhoneme_DrawItem(object? sender, System.Windows.Forms.DrawItemEventArgs e)
         {
             if(e.Index<0)
             {
@@ -582,9 +579,15 @@ namespace ConlangAudioHoning
             Brush comboBrush = Brushes.Black; // Set the default color to black
 
             string cbxEntry = string.Empty;
-            if (cbx_replacementPhoneme.Items[e.Index] != null)
+            if ((cbx_replacementPhoneme.Items[e.Index] != null) && (cbx_replacementPhoneme.Items[e.Index] is string))
             {
+#pragma warning disable CS8600
                 cbxEntry = (string)cbx_replacementPhoneme.Items[e.Index];
+#pragma warning restore CS8600
+                if(cbxEntry == null)
+                {
+                    cbxEntry = string.Empty;
+                }
             }
             bool inInventory = IsInInventory(cbxEntry);
             bool hasSpellingMap = HasSpellingMap(cbxEntry);

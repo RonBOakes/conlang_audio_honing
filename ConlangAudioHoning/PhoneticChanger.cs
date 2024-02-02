@@ -54,7 +54,7 @@ namespace ConlangAudioHoning
             set => this._sampleText = value;
         }
 
-        public void PhoneticChange(string oldPhoneme, string newPhoneme, bool createNewSoundMapEntry)
+        public void PhoneticChange(string oldPhoneme, string newPhoneme)
         {
             if (this._language == null)
             {

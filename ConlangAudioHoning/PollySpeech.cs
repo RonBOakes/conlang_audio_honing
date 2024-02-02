@@ -174,7 +174,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        public bool GenerateSpeach(string targetFile)
+        public bool GenerateSpeech(string targetFile)
         {
             if (_languageDescription == null)
             {
