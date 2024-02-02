@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ConlangJson.SoundMap soundMap1 = new ConlangJson.SoundMap();
+            ConlangJson.SoundMap soundMap2 = new ConlangJson.SoundMap();
             btnAddAbove = new Button();
             btnAddBelow = new Button();
             lbx_soundMapListEntries = new ListBox();
@@ -167,6 +167,7 @@
             symbolsToolStripMenuItem = new ToolStripMenuItem();
             btnReplaceSelected = new Button();
             btnEditSelected = new Button();
+            latinTextDiacriticsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -205,11 +206,11 @@
             soundMapEditor2.Location = new Point(12, 27);
             soundMapEditor2.Name = "soundMapEditor2";
             soundMapEditor2.Size = new Size(850, 80);
-            soundMap1.phoneme = "";
-            soundMap1.pronounciation_regex = "";
-            soundMap1.romanization = "";
-            soundMap1.spelling_regex = "";
-            soundMapEditor2.SoundMapData = soundMap1;
+            soundMap2.phoneme = "";
+            soundMap2.pronounciation_regex = "";
+            soundMap2.romanization = "";
+            soundMap2.spelling_regex = "";
+            soundMapEditor2.SoundMapData = soundMap2;
             soundMapEditor2.TabIndex = 6;
             // 
             // menuStrip1
@@ -244,17 +245,17 @@
             // 
             // iPACharactersToolStripMenuItem
             // 
-            iPACharactersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pulmonicConsonantsToolStripMenuItem, otherConsonantsToolStripMenuItem, vowelsToolStripMenuItem, symbolsToolStripMenuItem });
+            iPACharactersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pulmonicConsonantsToolStripMenuItem, otherConsonantsToolStripMenuItem, vowelsToolStripMenuItem, symbolsToolStripMenuItem, latinTextDiacriticsToolStripMenuItem });
             iPACharactersToolStripMenuItem.Name = "iPACharactersToolStripMenuItem";
-            iPACharactersToolStripMenuItem.Size = new Size(95, 20);
-            iPACharactersToolStripMenuItem.Text = "IPA Characters";
+            iPACharactersToolStripMenuItem.Size = new Size(107, 20);
+            iPACharactersToolStripMenuItem.Text = "Character Inserts";
             // 
             // pulmonicConsonantsToolStripMenuItem
             // 
             pulmonicConsonantsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { plosiveToolStripMenuItem, nasalToolStripMenuItem, trillStripMenuItem, tapOrFlapToolStripMenuItem, fricativeToolStripMenuItem, lateralFricativeToolStripMenuItem, approximateToolStripMenuItem, lateralApproximateToolStripMenuItem });
             pulmonicConsonantsToolStripMenuItem.Name = "pulmonicConsonantsToolStripMenuItem";
-            pulmonicConsonantsToolStripMenuItem.Size = new Size(191, 22);
-            pulmonicConsonantsToolStripMenuItem.Text = "Pulmonic Consonants";
+            pulmonicConsonantsToolStripMenuItem.Size = new Size(211, 22);
+            pulmonicConsonantsToolStripMenuItem.Text = "IPA Pulmonic Consonants";
             // 
             // plosiveToolStripMenuItem
             // 
@@ -400,19 +401,19 @@
             // ʙToolStripMenuItem
             // 
             ʙToolStripMenuItem.Name = "ʙToolStripMenuItem";
-            ʙToolStripMenuItem.Size = new Size(180, 22);
+            ʙToolStripMenuItem.Size = new Size(80, 22);
             ʙToolStripMenuItem.Text = "ʙ";
             // 
             // rToolStripMenuItem
             // 
             rToolStripMenuItem.Name = "rToolStripMenuItem";
-            rToolStripMenuItem.Size = new Size(180, 22);
+            rToolStripMenuItem.Size = new Size(80, 22);
             rToolStripMenuItem.Text = "r";
             // 
             // ʀToolStripMenuItem
             // 
             ʀToolStripMenuItem.Name = "ʀToolStripMenuItem";
-            ʀToolStripMenuItem.Size = new Size(180, 22);
+            ʀToolStripMenuItem.Size = new Size(80, 22);
             ʀToolStripMenuItem.Text = "ʀ";
             // 
             // tapOrFlapToolStripMenuItem
@@ -664,14 +665,14 @@
             // 
             otherConsonantsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clicksToolStripMenuItem, voicedImplosivesToolStripMenuItem, otherConsonantsToolStripMenuItem1 });
             otherConsonantsToolStripMenuItem.Name = "otherConsonantsToolStripMenuItem";
-            otherConsonantsToolStripMenuItem.Size = new Size(191, 22);
-            otherConsonantsToolStripMenuItem.Text = "Other Consonants";
+            otherConsonantsToolStripMenuItem.Size = new Size(211, 22);
+            otherConsonantsToolStripMenuItem.Text = "IPA Other Consonants";
             // 
             // clicksToolStripMenuItem
             // 
             clicksToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ʘToolStripMenuItem, ǀDentalClickToolStripMenuItem, ǃAlveolarClickToolStripMenuItem, ǂClickToolStripMenuItem, ǁAlveolarLateralClickToolStripMenuItem });
             clicksToolStripMenuItem.Name = "clicksToolStripMenuItem";
-            clicksToolStripMenuItem.Size = new Size(170, 22);
+            clicksToolStripMenuItem.Size = new Size(180, 22);
             clicksToolStripMenuItem.Text = "Clicks";
             // 
             // ʘToolStripMenuItem
@@ -708,7 +709,7 @@
             // 
             voicedImplosivesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ɓBilabialVoicedImplosiveToolStripMenuItem, ɗAlveolarVoicedImplosiveToolStripMenuItem, ʄPalatalVoicedImplosiveToolStripMenuItem, ɠValarVoicedImplosiveToolStripMenuItem, ʛUvularVoicedImplosiveToolStripMenuItem });
             voicedImplosivesToolStripMenuItem.Name = "voicedImplosivesToolStripMenuItem";
-            voicedImplosivesToolStripMenuItem.Size = new Size(170, 22);
+            voicedImplosivesToolStripMenuItem.Size = new Size(180, 22);
             voicedImplosivesToolStripMenuItem.Text = "Voiced Implosives";
             // 
             // ɓBilabialVoicedImplosiveToolStripMenuItem
@@ -745,7 +746,7 @@
             // 
             otherConsonantsToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { ʍVoicelessLabialvelarApproximateToolStripMenuItem, ɥVoicedLabialpalatalApproximateToolStripMenuItem });
             otherConsonantsToolStripMenuItem1.Name = "otherConsonantsToolStripMenuItem1";
-            otherConsonantsToolStripMenuItem1.Size = new Size(170, 22);
+            otherConsonantsToolStripMenuItem1.Size = new Size(180, 22);
             otherConsonantsToolStripMenuItem1.Text = "Other Consonants";
             // 
             // ʍVoicelessLabialvelarApproximateToolStripMenuItem
@@ -764,14 +765,14 @@
             // 
             vowelsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { closeToolStripMenuItem, nearcloseToolStripMenuItem, closemidToolStripMenuItem, midToolStripMenuItem, openmidToolStripMenuItem, nearopenToolStripMenuItem, openToolStripMenuItem });
             vowelsToolStripMenuItem.Name = "vowelsToolStripMenuItem";
-            vowelsToolStripMenuItem.Size = new Size(191, 22);
-            vowelsToolStripMenuItem.Text = "Vowels";
+            vowelsToolStripMenuItem.Size = new Size(211, 22);
+            vowelsToolStripMenuItem.Text = "IPA Vowels";
             // 
             // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { iToolStripMenuItem, yToolStripMenuItem, ɨToolStripMenuItem, ʉToolStripMenuItem, ɯToolStripMenuItem, uToolStripMenuItem });
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(131, 22);
+            closeToolStripMenuItem.Size = new Size(180, 22);
             closeToolStripMenuItem.Text = "Close";
             // 
             // iToolStripMenuItem
@@ -814,7 +815,7 @@
             // 
             nearcloseToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ɪToolStripMenuItem, ʏToolStripMenuItem, ɪToolStripMenuItem1, ʊToolStripMenuItem, ʊToolStripMenuItem1 });
             nearcloseToolStripMenuItem.Name = "nearcloseToolStripMenuItem";
-            nearcloseToolStripMenuItem.Size = new Size(131, 22);
+            nearcloseToolStripMenuItem.Size = new Size(180, 22);
             nearcloseToolStripMenuItem.Text = "Near-close";
             // 
             // ɪToolStripMenuItem
@@ -851,7 +852,7 @@
             // 
             closemidToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { eToolStripMenuItem1, øToolStripMenuItem1, ɘToolStripMenuItem, ɵToolStripMenuItem, ɤToolStripMenuItem1, oToolStripMenuItem1 });
             closemidToolStripMenuItem.Name = "closemidToolStripMenuItem";
-            closemidToolStripMenuItem.Size = new Size(131, 22);
+            closemidToolStripMenuItem.Size = new Size(180, 22);
             closemidToolStripMenuItem.Text = "Close-mid";
             // 
             // eToolStripMenuItem1
@@ -894,7 +895,7 @@
             // 
             midToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { eToolStripMenuItem, øToolStripMenuItem, əToolStripMenuItem, ɤToolStripMenuItem, oToolStripMenuItem });
             midToolStripMenuItem.Name = "midToolStripMenuItem";
-            midToolStripMenuItem.Size = new Size(131, 22);
+            midToolStripMenuItem.Size = new Size(180, 22);
             midToolStripMenuItem.Text = "Mid";
             // 
             // eToolStripMenuItem
@@ -931,7 +932,7 @@
             // 
             openmidToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ɛToolStripMenuItem, œToolStripMenuItem, ɜToolStripMenuItem, ɞToolStripMenuItem, ʌToolStripMenuItem, ɔToolStripMenuItem });
             openmidToolStripMenuItem.Name = "openmidToolStripMenuItem";
-            openmidToolStripMenuItem.Size = new Size(131, 22);
+            openmidToolStripMenuItem.Size = new Size(180, 22);
             openmidToolStripMenuItem.Text = "Open-mid";
             // 
             // ɛToolStripMenuItem
@@ -974,7 +975,7 @@
             // 
             nearopenToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { æToolStripMenuItem, ɐToolStripMenuItem });
             nearopenToolStripMenuItem.Name = "nearopenToolStripMenuItem";
-            nearopenToolStripMenuItem.Size = new Size(131, 22);
+            nearopenToolStripMenuItem.Size = new Size(180, 22);
             nearopenToolStripMenuItem.Text = "Near-open";
             // 
             // æToolStripMenuItem
@@ -993,7 +994,7 @@
             // 
             openToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aToolStripMenuItem, ɶToolStripMenuItem, äToolStripMenuItem, ɑToolStripMenuItem, ɒToolStripMenuItem });
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(131, 22);
+            openToolStripMenuItem.Size = new Size(180, 22);
             openToolStripMenuItem.Text = "Open";
             // 
             // aToolStripMenuItem
@@ -1029,8 +1030,8 @@
             // symbolsToolStripMenuItem
             // 
             symbolsToolStripMenuItem.Name = "symbolsToolStripMenuItem";
-            symbolsToolStripMenuItem.Size = new Size(191, 22);
-            symbolsToolStripMenuItem.Text = "Symbols";
+            symbolsToolStripMenuItem.Size = new Size(211, 22);
+            symbolsToolStripMenuItem.Text = "IPA Symbols";
             // 
             // btnReplaceSelected
             // 
@@ -1049,6 +1050,12 @@
             btnEditSelected.TabIndex = 9;
             btnEditSelected.Text = "Load Selected Into Editor";
             btnEditSelected.UseVisualStyleBackColor = true;
+            // 
+            // latinTextDiacriticsToolStripMenuItem
+            // 
+            latinTextDiacriticsToolStripMenuItem.Name = "latinTextDiacriticsToolStripMenuItem";
+            latinTextDiacriticsToolStripMenuItem.Size = new Size(211, 22);
+            latinTextDiacriticsToolStripMenuItem.Text = "Latin/Text Diacritics";
             // 
             // SoundMapListEditor
             // 
@@ -1210,5 +1217,6 @@
 		private ToolStripMenuItem xToolStripMenuItem;
         private Button btnReplaceSelected;
         private Button btnEditSelected;
+        private ToolStripMenuItem latinTextDiacriticsToolStripMenuItem;
     }
 }
