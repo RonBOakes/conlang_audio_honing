@@ -69,7 +69,7 @@ namespace ConlangAudioHoning
             get => _phoneticText ?? string.Empty;
         }
 
-        public void Generate(string voice, string speed)
+        public void Generate(string voice, string speed, LanguageHoningForm? caller = null)
         {
             if (_languageDescription == null)
             {
@@ -82,7 +82,14 @@ namespace ConlangAudioHoning
             bool removeDeclinedWord = false;
             if (!_languageDescription.declined)
             {
-                ConLangUtilities.declineLexicon(_languageDescription);
+                if (caller != null)
+                {
+                    caller.DeclineLexicon(_languageDescription);
+                }
+                else
+                {
+                    ConLangUtilities.declineLexicon(_languageDescription);
+                }
                 removeDeclinedWord = true;
             }
 

@@ -186,17 +186,17 @@ namespace ConlangAudioHoning
 
         private void txt_pronunciationRegex_GotFocus(Object? sender, EventArgs e)
         {
-            _lastFocused = this.txt_phoneme;
+            _lastFocused = this.txt_pronunciationRegex;
         }
 
         private void txt_romanization_GotFocus(Object? sender, EventArgs e)
         {
-            _lastFocused = this.txt_phoneme;
+            _lastFocused = this.txt_romanization;
         }
 
         private void txt_spellingRegex_GotFocus(Object? sender, EventArgs e)
         {
-            _lastFocused = this.txt_phoneme;
+            _lastFocused = this.txt_spellingRegex;
         }
     }
 }

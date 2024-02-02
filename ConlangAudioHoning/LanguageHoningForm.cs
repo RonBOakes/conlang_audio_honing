@@ -270,7 +270,7 @@ namespace ConlangAudioHoning
         {
             if ((languageDescription != null) && (pollySpeech != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
             {
-                pollySpeech.Generate(languageDescription.preferred_voice ?? "Brian", "slow");
+                pollySpeech.Generate(languageDescription.preferred_voice ?? "Brian", "slow", this);
                 txt_phonetic.Text = pollySpeech.phoneticText;
             }
         }
@@ -283,7 +283,7 @@ namespace ConlangAudioHoning
             }
             if (!languageDescription.declined)
             {
-                declineLexicon(languageDescription);
+                DeclineLexicon(languageDescription);
                 //MessageBox.Show("Finished Declining the Language", "Done",MessageBoxButtons.OK);
                 declineToolStripMenuItem.Text = "Remove Declensions";
             }
@@ -418,7 +418,7 @@ namespace ConlangAudioHoning
             txt_phonetic.Text = sb.ToString();
         }
 
-        private void declineLexicon(LanguageDescription language)
+        internal void DeclineLexicon(LanguageDescription language)
         {
             pb_status.Style = ProgressBarStyle.Continuous;
             pb_status.BringToFront();
