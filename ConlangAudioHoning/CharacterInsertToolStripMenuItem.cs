@@ -179,6 +179,8 @@ namespace ConlangAudioHoning
         private ToolStripMenuItem shortenedToolStripMenuItem;
         private ToolStripMenuItem rhoticityToolStripMenuItem;
 
+        private List<ToolStripMenuItem> latinDiacriticToolStripMenuItems = new List<ToolStripMenuItem>();
+
         public CharacterInsertToolStripMenuItem()
         {
             // Instantiate the menu items.
@@ -767,7 +769,7 @@ namespace ConlangAudioHoning
             // 
             ǂClickToolStripMenuItem.Name = "ǂClickToolStripMenuItem";
             ǂClickToolStripMenuItem.Size = new Size(200, 22);
-            ǂClickToolStripMenuItem.Text = " ǂ - Palatoalveolar Click";
+            ǂClickToolStripMenuItem.Text = " ǂ - PalatoAlveolar Click";
             // 
             // alveolarLateralClickToolStripMenuItem
             // 
@@ -800,7 +802,7 @@ namespace ConlangAudioHoning
             ʄPalatalVoicedImplosiveToolStripMenuItem.Size = new Size(227, 22);
             ʄPalatalVoicedImplosiveToolStripMenuItem.Text = "ʄ - Palatal Voiced Implosive";
             // 
-            // ɠValarVoicedImplosiveToolStripMenuItem
+            // ɠVelarVoicedImplosiveToolStripMenuItem
             // 
             ɠVelarVoicedImplosiveToolStripMenuItem.Name = "ɠValarVoicedImplosiveToolStripMenuItem";
             ɠVelarVoicedImplosiveToolStripMenuItem.Size = new Size(227, 22);
@@ -1134,6 +1136,14 @@ namespace ConlangAudioHoning
             latinTextDiacriticsToolStripMenuItem.Size = new Size(211, 22);
             latinTextDiacriticsToolStripMenuItem.Text = "Latin/Text Diacritics";
 
+            foreach(string latinDiacritic in LatinUtilities.DiacriticsMap.Keys)
+            {
+                ToolStripMenuItem latinToolStripMenuItem = new ToolStripMenuItem();
+                latinToolStripMenuItem.Size = new Size(211, 22);
+                latinToolStripMenuItem.Text = string.Format("{0} -- {1}",latinDiacritic, LatinUtilities.DiacriticsMap[latinDiacritic]);
+                latinTextDiacriticsToolStripMenuItem.DropDownItems.Add(latinToolStripMenuItem);
+            }
+
             this.Size = new Size(107, 20);
             this.Text = "Character Inserts";
             this.DropDownItems.AddRange(new ToolStripItem[]
@@ -1266,6 +1276,10 @@ namespace ConlangAudioHoning
                     string menuChar = menuItem.Text.Trim().Split()[0];
                     menuItem.Text = string.Format("{0} -- {1}", menuChar, IpaUtilities.IpaPhonemesMap[menuChar]);
                 }
+                menuItem.Click += clickDelegate;
+            }
+            foreach (ToolStripMenuItem menuItem in latinTextDiacriticsToolStripMenuItem.DropDownItems)
+            {
                 menuItem.Click += clickDelegate;
             }
 
