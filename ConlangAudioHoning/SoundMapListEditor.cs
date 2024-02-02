@@ -57,7 +57,7 @@ namespace ConlangAudioHoning
         {
             InitializeComponent();
             _soundMapList = new List<SoundMap>();
-            List<ToolStripMenuItem> menuItems = new List<ToolStripMenuItem>()
+            List<ToolStripMenuItem> ipaMenuItems = new List<ToolStripMenuItem>()
             {
                 pToolStripMenuItem,
                 bToolStripMenuItem,
@@ -164,18 +164,16 @@ namespace ConlangAudioHoning
                 äToolStripMenuItem,
                 ɑToolStripMenuItem,
                 ɒToolStripMenuItem,
+                lengthenedToolStripMenuItem,
+                halfLengthenedToolStripMenuItem,
+                shortenedToolStripMenuItem,
+                rhoticityToolStripMenuItem,
             };
-            foreach (ToolStripMenuItem menuItem in menuItems)
+            foreach (ToolStripMenuItem menuItem in ipaMenuItems)
             {
                 if (!String.IsNullOrEmpty(menuItem.Text))
                 {
                     string menuChar = menuItem.Text.Trim().Split()[0];
-                    if (menuChar.Equals("ä"))
-                    {
-                        // Wikipedia didn't follow its own recommendation and used a different version of ä (the version in the comment: U+0288)
-                        // So the version of the open central rounded vowel in the menu from the designer is not what is elsewhere.
-                        menuChar = "\u0061\u0308";
-                    }
                     menuItem.Text = string.Format("{0} -- {1}", menuChar, IpaUtilities.IpaPhonemesMap[menuChar]);
                 }
             }
