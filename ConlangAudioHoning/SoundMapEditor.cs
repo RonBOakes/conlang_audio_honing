@@ -32,7 +32,7 @@ namespace ConlangAudioHoning
         private SoundMap? _soundMapData;
         private bool _enabled;
 
-        private Control? _lastFocused = null;
+        private TextBox? _lastFocused = null;
 
         public SoundMap SoundMapData
         {
@@ -116,6 +116,7 @@ namespace ConlangAudioHoning
             if((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
             {
                 _lastFocused.Text += textToAppend;
+                _lastFocused.Select(_lastFocused.Text.Length, 0);
                 _lastFocused.Focus();
             }
         }

@@ -57,6 +57,128 @@ namespace ConlangAudioHoning
         {
             InitializeComponent();
             _soundMapList = new List<SoundMap>();
+            List<ToolStripMenuItem> menuItems = new List<ToolStripMenuItem>()
+            {
+                pToolStripMenuItem,
+                bToolStripMenuItem,
+                tToolStripMenuItem,
+                dToolStripMenuItem,
+                ʈToolStripMenuItem,
+                ɖToolStripMenuItem,
+                cToolStripMenuItem,
+                ɟToolStripMenuItem,
+                kToolStripMenuItem,
+                ɡToolStripMenuItem,
+                qToolStripMenuItem,
+                ɢToolStripMenuItem,
+                ʔToolStripMenuItem,
+                mToolStripMenuItem,
+                ɱToolStripMenuItem,
+                nToolStripMenuItem,
+                ɳToolStripMenuItem,
+                ɲToolStripMenuItem,
+                ŋToolStripMenuItem,
+                ɴToolStripMenuItem,
+                ʙToolStripMenuItem,
+                rToolStripMenuItem,
+                ʀToolStripMenuItem,
+                ⱱToolStripMenuItem,
+                ɾToolStripMenuItem,
+                ɽToolStripMenuItem,
+                ɸToolStripMenuItem,
+                βToolStripMenuItem,
+                fToolStripMenuItem,
+                vToolStripMenuItem,
+                θToolStripMenuItem,
+                ðToolStripMenuItem,
+                sToolStripMenuItem,
+                zToolStripMenuItem,
+                ʃToolStripMenuItem,
+                ʒToolStripMenuItem,
+                ʂToolStripMenuItem,
+                ʂToolStripMenuItem1,
+                çToolStripMenuItem,
+                ʝToolStripMenuItem,
+                xToolStripMenuItem,
+                ɣToolStripMenuItem,
+                χToolStripMenuItem,
+                ʁToolStripMenuItem,
+                ʁToolStripMenuItem1,
+                ʁToolStripMenuItem2,
+                ʜToolStripMenuItem,
+                ʢToolStripMenuItem,
+                ɦToolStripMenuItem,
+                ɬToolStripMenuItem,
+                ɮToolStripMenuItem,
+                ʋToolStripMenuItem,
+                ɹToolStripMenuItem,
+                ɻToolStripMenuItem,
+                ɰToolStripMenuItem,
+                ɭToolStripMenuItem,
+                ʎToolStripMenuItem,
+                ʟToolStripMenuItem,
+                ʘToolStripMenuItem,
+                ǀDentalClickToolStripMenuItem,
+                ǃAlveolarClickToolStripMenuItem,
+                ǂClickToolStripMenuItem,
+                ǁAlveolarLateralClickToolStripMenuItem,
+                ɓBilabialVoicedImplosiveToolStripMenuItem,
+                ɗAlveolarVoicedImplosiveToolStripMenuItem,
+                ʄPalatalVoicedImplosiveToolStripMenuItem,
+                ɠValarVoicedImplosiveToolStripMenuItem,
+                ʛUvularVoicedImplosiveToolStripMenuItem,
+                ʍVoicelessLabialvelarApproximateToolStripMenuItem,
+                ɥVoicedLabialpalatalApproximateToolStripMenuItem,
+                iToolStripMenuItem,
+                yToolStripMenuItem,
+                ɨToolStripMenuItem,
+                ʉToolStripMenuItem,
+                ɯToolStripMenuItem,
+                uToolStripMenuItem,
+                ɪToolStripMenuItem,
+                ʏToolStripMenuItem,
+                ɪToolStripMenuItem1,
+                ʊToolStripMenuItem,
+                ʊToolStripMenuItem1,
+                eToolStripMenuItem,
+                øToolStripMenuItem,
+                əToolStripMenuItem,
+                ɤToolStripMenuItem,
+                oToolStripMenuItem,
+                eToolStripMenuItem1,
+                øToolStripMenuItem1,
+                ɘToolStripMenuItem,
+                ɵToolStripMenuItem,
+                ɤToolStripMenuItem1,
+                oToolStripMenuItem1,
+                ɛToolStripMenuItem,
+                œToolStripMenuItem,
+                ɜToolStripMenuItem,
+                ɞToolStripMenuItem,
+                ʌToolStripMenuItem,
+                ɔToolStripMenuItem,
+                æToolStripMenuItem,
+                ɐToolStripMenuItem,
+                aToolStripMenuItem,
+                ɶToolStripMenuItem,
+                äToolStripMenuItem,
+                ɑToolStripMenuItem,
+                ɒToolStripMenuItem,
+            };
+            foreach (ToolStripMenuItem menuItem in menuItems)
+            {
+                if (!String.IsNullOrEmpty(menuItem.Text))
+                {
+                    string menuChar = menuItem.Text.Trim().Split()[0];
+                    if (menuChar.Equals("ä"))
+                    {
+                        // Wikipedia didn't follow its own recommendation and used a different version of ä (the version in the comment: U+0288)
+                        // So the version of the open central rounded vowel in the menu from the designer is not what is elsewhere.
+                        menuChar = "\u0061\u0308";
+                    }
+                    menuItem.Text = string.Format("{0} -- {1}", menuChar, IpaUtilities.IpaPhonemesMap[menuChar]);
+                }
+            }
         }
 
         private void loadForm()
@@ -108,9 +230,15 @@ namespace ConlangAudioHoning
             this.Close();
         }
 
-        private void ʘToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CharInsetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            soundMapEditor2.AppendToFocusedBox("\u0298");
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            if (String.IsNullOrEmpty(menuItem.Text))
+            {
+                return;
+            }
+            string charToInsert = menuItem.Text.Split()[0];
+            soundMapEditor2.AppendToFocusedBox(charToInsert);
         }
     }
 }
