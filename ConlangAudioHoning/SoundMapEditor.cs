@@ -32,6 +32,8 @@ namespace ConlangAudioHoning
         private SoundMap? _soundMapData;
         private bool _enabled;
 
+        private Control? _lastFocused = null;
+
         public SoundMap SoundMapData
         {
             get 
@@ -91,6 +93,33 @@ namespace ConlangAudioHoning
             Enabled = true;
         }
 
+        public bool ValidMap
+        {
+            get
+            {
+                bool valid = false;
+           
+                if ((!String.IsNullOrEmpty(SoundMapData.pronounciation_regex.Trim())) && (!String.IsNullOrEmpty(SoundMapData.phoneme.Trim())))
+                {
+                    valid = true;
+                }
+                if ((!String.IsNullOrEmpty(SoundMapData.spelling_regex.Trim())) && (!String.IsNullOrEmpty(SoundMapData.romanization.Trim())))
+                {
+                    valid = true;
+                }
+                return valid;
+            }
+        }
+
+        public void AppendToFocusedBox(string textToAppend)
+        {
+            if((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
+            {
+                _lastFocused.Text += textToAppend;
+                _lastFocused.Focus();
+            }
+        }
+
         private void InitializeComponent()
         {
             this.Size = controlSize;
@@ -106,10 +135,11 @@ namespace ConlangAudioHoning
             txt_phoneme = new TextBox();
             txt_phoneme.Location = new Point(205, 5);
             txt_phoneme.Size = new Size(200, 15);
+            txt_phoneme.GotFocus += txt_phoneme_GotFocus;
             Controls.Add(txt_phoneme);
 
             lbl_pronunciationRegex = new Label();
-            lbl_pronunciationRegex.Text = "Pronounciation RegEx:";
+            lbl_pronunciationRegex.Text = "Pronunciation RegEx:";
             lbl_pronunciationRegex.Location = new Point(410, 5);
             lbl_pronunciationRegex.Size = new Size(200, 15);
             lbl_pronunciationRegex.TextAlign = ContentAlignment.MiddleRight;
@@ -118,6 +148,7 @@ namespace ConlangAudioHoning
             txt_pronunciationRegex = new TextBox();
             txt_pronunciationRegex.Location = new Point(615, 5);
             txt_pronunciationRegex.Size = new Size(200, 15);
+            txt_pronunciationRegex.GotFocus += txt_pronunciationRegex_GotFocus;
             Controls.Add(txt_pronunciationRegex);
 
             lbl_romanization = new Label();
@@ -130,6 +161,7 @@ namespace ConlangAudioHoning
             txt_romanization = new TextBox();
             txt_romanization.Location = new Point(205, 30);
             txt_romanization.Size = new Size(200, 15);
+            txt_romanization.GotFocus += txt_romanization_GotFocus;
             Controls.Add(txt_romanization);
 
             lbl_spellingRegex = new Label();
@@ -142,7 +174,28 @@ namespace ConlangAudioHoning
             txt_spellingRegex = new TextBox();
             txt_spellingRegex.Location = new Point(615, 30);
             txt_spellingRegex.Size = new Size(200, 15);
+            txt_spellingRegex.GotFocus += txt_spellingRegex_GotFocus;
             Controls.Add(txt_spellingRegex);
+        }
+
+        private void txt_phoneme_GotFocus(Object? sender, EventArgs e)
+        {
+            _lastFocused = this.txt_phoneme;
+        }
+
+        private void txt_pronunciationRegex_GotFocus(Object? sender, EventArgs e)
+        {
+            _lastFocused = this.txt_phoneme;
+        }
+
+        private void txt_romanization_GotFocus(Object? sender, EventArgs e)
+        {
+            _lastFocused = this.txt_phoneme;
+        }
+
+        private void txt_spellingRegex_GotFocus(Object? sender, EventArgs e)
+        {
+            _lastFocused = this.txt_phoneme;
         }
     }
 }

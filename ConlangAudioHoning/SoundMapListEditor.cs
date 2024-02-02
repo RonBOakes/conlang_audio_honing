@@ -32,6 +32,7 @@ namespace ConlangAudioHoning
     public partial class SoundMapListEditor : Form
     {
         private List<SoundMap> _soundMapList;
+        private bool _soundMapSaved = false;
 
         public List<SoundMap> SoundMapList
         {
@@ -45,6 +46,11 @@ namespace ConlangAudioHoning
                 _soundMapList = value;
                 loadForm();
             }
+        }
+
+        public bool SoundMapSaved
+        {
+            get => _soundMapSaved;
         }
 
         public SoundMapListEditor()
@@ -64,6 +70,47 @@ namespace ConlangAudioHoning
                 sb.AppendFormat("Spelling: {0}", map.romanization);
                 lbx_soundMapListEntries.Items.Add(sb.ToString());
             }
+        }
+
+        private void btnAddAbove_Click(object sender, EventArgs e)
+        {
+            if (!soundMapEditor2.ValidMap)
+            {
+                return;
+            }
+            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
+        }
+
+        private void btnAddBelow_Click(object sender, EventArgs e)
+        {
+            if (!soundMapEditor2.ValidMap)
+            {
+                return;
+            }
+            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
+        }
+
+        private void addCharToSoundMap(string charToAdd)
+        {
+            soundMapEditor2.AppendToFocusedBox(charToAdd);
+            soundMapEditor2.Focus();
+        }
+
+        private void saveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _soundMapSaved = true;
+            this.Close();
+        }
+
+        private void closeWithoutSavingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _soundMapSaved = false;
+            this.Close();
+        }
+
+        private void ʘToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            soundMapEditor2.AppendToFocusedBox("\u0298");
         }
     }
 }
