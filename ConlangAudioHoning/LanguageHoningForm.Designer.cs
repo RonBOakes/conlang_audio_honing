@@ -66,6 +66,10 @@
             label3 = new Label();
             label4 = new Label();
             label5 = new Label();
+            cbx_voice = new ComboBox();
+            label6 = new Label();
+            cbx_speed = new ComboBox();
+            label7 = new Label();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
             SuspendLayout();
@@ -386,11 +390,50 @@
             label5.TabIndex = 19;
             label5.Text = "Blue - Phoneme in spelling map and phonetic inventory";
             // 
+            // cbx_voice
+            // 
+            cbx_voice.FormattingEnabled = true;
+            cbx_voice.Location = new Point(517, 267);
+            cbx_voice.Name = "cbx_voice";
+            cbx_voice.Size = new Size(246, 23);
+            cbx_voice.Sorted = true;
+            cbx_voice.TabIndex = 20;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(517, 249);
+            label6.Name = "label6";
+            label6.Size = new Size(35, 15);
+            label6.TabIndex = 21;
+            label6.Text = "Voice";
+            // 
+            // cbx_speed
+            // 
+            cbx_speed.FormattingEnabled = true;
+            cbx_speed.Location = new Point(769, 267);
+            cbx_speed.Name = "cbx_speed";
+            cbx_speed.Size = new Size(239, 23);
+            cbx_speed.TabIndex = 22;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(769, 249);
+            label7.Name = "label7";
+            label7.Size = new Size(39, 15);
+            label7.TabIndex = 23;
+            label7.Text = "Speed";
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1024, 496);
+            Controls.Add(label7);
+            Controls.Add(cbx_speed);
+            Controls.Add(label6);
+            Controls.Add(cbx_voice);
             Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(label3);
@@ -461,5 +504,9 @@
         private Label label3;
         private Label label4;
         private Label label5;
+        private ComboBox cbx_voice;
+        private Label label6;
+        private ComboBox cbx_speed;
+        private Label label7;
     }
 }

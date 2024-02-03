@@ -49,11 +49,35 @@ namespace ConlangAudioHoning
         private TextReader? readerToPrint;
         private Dictionary<string, FileInfo> speechFiles = new Dictionary<string, FileInfo>();
         private PhoneticChanger phoneticChanger;
+        private Dictionary<string, PollySpeech.VoiceData> amazonPollyVoices = new Dictionary<string, PollySpeech.VoiceData>();
 
         public LanguageHoningForm()
         {
             InitializeComponent();
             phoneticChanger = new PhoneticChanger();
+            amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
+            LoadVoices();
+            LoadSpeeds();
+        }
+
+        private void LoadVoices()
+        {
+            cbx_voice.SuspendLayout();
+            cbx_voice.Items.Clear();
+            foreach(string voiceName in amazonPollyVoices.Keys)
+            {
+                string voiceMenu = string.Format("{0} ({1}, {2})", voiceName, amazonPollyVoices[voiceName].LanguageName, amazonPollyVoices[voiceName].Gender);
+                cbx_voice.Items.Add(voiceMenu);
+            }
+            cbx_voice.ResumeLayout();
+        }
+
+        private void LoadSpeeds()
+        {
+            cbx_speed.SuspendLayout();
+            cbx_speed.Items.Clear();
+            cbx_speed.Items.AddRange(new string[] { "x-slow","slow","medium","fast","x-fast" });
+            cbx_speed.ResumeLayout();
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -131,17 +155,23 @@ namespace ConlangAudioHoning
             // Empty the speech files and list box
             speechFiles.Clear();
             cbx_recordings.Items.Clear();
+            cbx_speed.SelectedText = "slow";
 
-            // TODO: Populate form
+            if(languageDescription.preferred_voice != null)
+            {
+                string voiceMenu = string.Format("{0} ({1}, {2})", languageDescription.preferred_voice, 
+                    amazonPollyVoices[languageDescription.preferred_voice].LanguageName, amazonPollyVoices[languageDescription.preferred_voice].Gender);
+                cbx_voice.SelectedText = voiceMenu;
+            }
 
             if (languageDescription.declined)
             {
                 declineToolStripMenuItem.Enabled = false;
             }
-            //if((_language.derived != null) && ((bool)_language.derived))
-            //{
-            deriveToolStripMenuItem.Enabled = false;
-            //}
+            if(languageDescription.derived)
+            {
+                deriveToolStripMenuItem.Enabled = false;
+            }
 
             if (pollySpeech == null)
             {
@@ -270,7 +300,8 @@ namespace ConlangAudioHoning
         {
             if ((languageDescription != null) && (pollySpeech != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
             {
-                pollySpeech.Generate(languageDescription.preferred_voice ?? "Brian", "slow", this);
+                string speed = cbx_speed.Text.Trim();
+                pollySpeech.Generate(speed, this);
                 txt_phonetic.Text = pollySpeech.phoneticText;
             }
         }
@@ -316,7 +347,10 @@ namespace ConlangAudioHoning
                 targetFileName = Path.GetTempPath() + targetFileBaseName;
             }
 
-            bool ok = pollySpeech.GenerateSpeech(targetFileName);
+            string voice = cbx_voice.Text.Trim().Split()[0];
+            string speed = cbx_speed.Text.Trim();
+
+            bool ok = pollySpeech.GenerateSpeech(targetFileName, voice, speed, this);
             if (!ok)
             {
                 MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

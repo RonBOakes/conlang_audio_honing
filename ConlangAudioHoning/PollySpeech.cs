@@ -69,7 +69,7 @@ namespace ConlangAudioHoning
             get => _phoneticText ?? string.Empty;
         }
 
-        public void Generate(string voice, string speed, LanguageHoningForm? caller = null)
+        public void Generate(string speed, LanguageHoningForm? caller = null)
         {
             if (_languageDescription == null)
             {
@@ -174,7 +174,114 @@ namespace ConlangAudioHoning
             }
         }
 
-        public bool GenerateSpeech(string targetFile)
+        public struct VoiceData
+        {
+            private string _name;
+            private string _gender;
+            private string _id;
+            private string _languageCode;
+            private string _languageName;
+            private string[] _additionalLanguageCodes;
+            private string[] _supportedEngines;
+            public string Name
+            {
+                get => _name;
+                set => _name = value;
+            }
+            public string Gender
+            {
+                get => _gender;
+                set => _gender = value;
+            }
+            public string Id
+            {
+                get => _id; 
+                set => _id = value;
+            }
+            public string LanguageCode
+            {
+                get => _languageCode; 
+                set => _languageCode = value;
+            }
+            public string LanguageName
+            {
+                get => _languageName; 
+                set => _languageName = value;
+            }
+            public string[] AdditionalLanguageCodes
+            {
+                get => _additionalLanguageCodes; 
+                set => _additionalLanguageCodes = value;
+            }
+            public string[] SupportedEngines
+            {
+                get => _supportedEngines; 
+                set => _supportedEngines = value;
+            }
+        }
+
+        public static Dictionary<string, PollySpeech.VoiceData> getAmazonPollyVoices()
+        {
+            Dictionary<string, PollySpeech.VoiceData> voices = new Dictionary<string, PollySpeech.VoiceData>();
+            HttpHandler httpHandler = HttpHandler.Instance;
+            HttpClient httpClient = httpHandler.httpClient;
+            StringContent content;
+
+            Dictionary<string, string> requestDict = new Dictionary<string, string>();
+            requestDict["systemStatus"] = string.Empty;
+            using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+            {
+                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return voices;
+                }
+            }
+            requestDict.Clear();
+            requestDict["requestVoices"] = string.Empty;
+            JsonObject? responseData = null;
+            using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+            {
+                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return voices;
+                }
+                string data = result.Content.ReadAsStringAsync().Result;
+                if (!String.IsNullOrEmpty(data))
+                {
+                    responseData = JsonSerializer.Deserialize<JsonObject>(data);
+                }
+            }
+            if(responseData == null)
+            {
+                return voices;
+            }
+           
+            if(responseData.ContainsKey("Voices"))
+            {
+                JsonNode? voiceDataNode;
+                if ((responseData.TryGetPropertyValue("Voices", out voiceDataNode)) && (voiceDataNode != null))
+                {
+                    JsonArray voiceData = voiceDataNode.AsArray();
+                    foreach(JsonNode? voiceDatum in voiceData)
+                    {
+                        if(voiceDatum != null)
+                        {
+                            // Run the AWS output through JSON serializer to convert into the structure
+                            VoiceData data = JsonSerializer.Deserialize<VoiceData>(voiceDatum);
+                            voices.Add(data.Name, data);
+                        }
+                    }
+                }
+            }
+           
+
+
+             return voices;
+        }
+
+        public bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)
         {
             if (_languageDescription == null)
             {
@@ -184,9 +291,19 @@ namespace ConlangAudioHoning
             {
                 return false;
             }
+
+            if(string.IsNullOrEmpty(voice))
+            {
+                voice = _languageDescription.preferred_voice ?? "Brian";
+            }
+            if(string.IsNullOrEmpty(speed)) 
+            {
+                speed = "slow";
+            }
+
             if ((_ssmlText == null) || (_ssmlText.Trim().Equals(string.Empty)))
             {
-                Generate(_languageDescription.preferred_voice ?? "Brian", "slow");
+                Generate(speed,caller);
             }
 
             bool generated = false;
@@ -210,7 +327,7 @@ namespace ConlangAudioHoning
 #pragma warning disable CS8601 // Possible null reference assignment.
             requestDict["ssml"] = _ssmlText;
 #pragma warning restore CS8601 // Possible null reference assignment.            }
-            requestDict["voice"] = _languageDescription.preferred_voice ?? "Brian";
+            requestDict["voice"] = voice;
             requestDict["filetype"] = "mp3";
             string taskId;
             string taskURI;
