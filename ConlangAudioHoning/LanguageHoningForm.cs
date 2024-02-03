@@ -181,6 +181,9 @@ namespace ConlangAudioHoning
             {
                 pollySpeech.LanguageDescription = languageDescription;
             }
+
+            // Set the default depth of replacement phonemes after loading back to one
+            rbn_l1.Checked = true;
         }
 
         private void SaveLanguage(string filename)
@@ -358,7 +361,7 @@ namespace ConlangAudioHoning
             else
             {
                 txt_phonetic.Text = pollySpeech.phoneticText;
-                // Play the audio (OGG) file with the default application
+                // Play the audio (MP3) file with the Windows Media Player
                 WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
                 player.URL = targetFileName;
                 player.controls.play();
@@ -538,7 +541,24 @@ namespace ConlangAudioHoning
             {
                 string pConsonant = languageDescription.phonetic_inventory["p_consonants"][phonemeIndex].ToString();
                 cbx_replacementPhoneme.Items.Clear();
-                foreach (string replacement in IpaUtilities.P_consonant_changes[pConsonant])
+                List<string> replacementPhonemes;
+                if(rbn_l1.Checked)
+                {
+                    replacementPhonemes = IpaUtilities.P_consonant_changes[pConsonant];
+                }
+                else if(rbn_l2.Checked)
+                {
+                    replacementPhonemes = IpaUtilities.P_consonant_changes_l2[pConsonant];
+                }
+                else if(rbn_l3.Checked)
+                {
+                    replacementPhonemes = IpaUtilities.P_consonant_changes_l3[pConsonant];
+                }
+                else
+                {
+                    replacementPhonemes = IpaUtilities.P_consonant_changes[pConsonant];
+                }
+                foreach (string replacement in replacementPhonemes)
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.AppendFormat("{0} -- ", replacement);

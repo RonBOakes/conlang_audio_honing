@@ -328,7 +328,7 @@ namespace ConlangAudioHoning
             { "c", new List<string>(){ "\u0288","\u0256","\u025f","k","\u0261","\u0273","\u0272","\u014b"} },
             { "\u025f", new List<string>(){ "\u0288", "\u0256", "c", "k", "\u0261", "\u0273", "\u0272", "\u014b" } },
             { "k", new List<string>(){"c","\u025f","\u0261","q","\u0262","\u0272","\u014b","\u0274"} },
-            { "\u0261", new List<string>(){"c","\u025f","k","q","\u0262","\u0272","\u041b","\u0274"} },
+            { "\u0261", new List<string>(){"c","\u025f","k","q","\u0262","\u0272","\u014b","\u0274"} },
             { "q", new List<string>(){"k","\u0261","\u0262","\u0294","\u014b","\u0274"} },
             { "\u0262", new List<string>(){"k","\u0261","q","\u0294","\u014b","\u0274"} },
             { "\u0294", new List<string>(){"q","\u0262","\u0274"} },
@@ -338,7 +338,8 @@ namespace ConlangAudioHoning
             { "n", new List<string>(){"\u0271","t","d","\u0288","\u0256","\u0273","r"}},
             { "\u0273", new List<string>(){"n","\u0272","t","d","\u0288","\u0256","c","\u025f","r"} },
             { "\u0272", new List<string>(){"\u0273","\u014b","\u0274","\u0288","\u0256","c","\u025f","k","\u0261","\u0280"} },
-            { "\u0274", new List<string>(){"\u0272","k","\u0261","q","\u0262","\u0294"} },
+            { "\u014b", new List<string>(){"\u0272","\u0274","c","\u025f","k","\u0261","q","\u0262"} },
+            { "\u0274", new List<string>(){"\u014b","k","\u0261","q","\u0262","\u0294"} },
             // Trill
             { "\u0299", new List<string>(){"r","m","\u0271","\u2c71" } },
             { "r", new List<string>(){"\u0299","\u0280","\u0271","n","\u0273","\u2c71","\u027e","\u027d"} },
@@ -346,16 +347,16 @@ namespace ConlangAudioHoning
             // Tap or Flap
             { "\u2c71", new List<string>(){"\u027e","\u0299","r","\u0278","\u03b2","f","v","\u03b8","\u00f0" } },
             { "\u027e", new List<string>(){"\u2c71","\u027d","r","\u03b8","\u00f0","s","z","\u0283","\u0292"} },
-            { "\u027d", new List<string>(){"\u027e","r","\u0283","\u0292","\u0282","\u0290","\u00e7","\u0291"} },
+            { "\u027d", new List<string>(){"\u027e","r","\u0283","\u0292","\u0282","\u0290","\u00e7","\u029d"} },
             // Fricative
             { "\u0278", new List<string>(){"\u03b2","f","v","\u2c71"} },
             { "\u03b2", new List<string>(){"\u0278","f","v","\u2c71"} },
-            { "f", new List<string>(){"v","\u0278","\u03b2","\u02b8","\u00f0","\u2c71","\u027e","\u026c","\u026e" } },
-            { "v", new List<string>(){"f","\u0278","\u03b2","\u02b8","\u00f0","\u2c71","\u027e", "\u026c", "\u026e" } },
+            { "f", new List<string>(){"v","\u0278","\u03b2","\u03b8","\u00f0","\u2c71","\u027e","\u026c","\u026e" } },
+            { "v", new List<string>(){"f","\u0278","\u03b2","\u03b8","\u00f0","\u2c71","\u027e", "\u026c", "\u026e" } },
             { "\u03b8", new List<string>(){"\u00f0","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
             { "\u00f0", new List<string>(){"\u03b8","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
-            { "s", new List<string>(){"z","\u02b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
-            { "z", new List<string>(){"s","\u02b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
+            { "s", new List<string>(){"z","\u03b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
+            { "z", new List<string>(){"s","\u03b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
             { "\u0283", new List<string>(){"\u0292","s","z","\u0282","\u0290","\u027e","\u027d","\u026c","\u026e"} },
             { "\u0292", new List<string>(){"\u0283","s","z","\u0282","\u0290","\u027e","\u027d","\u026c","\u026e"} },
             { "\u0282", new List<string>(){"\u0290","\u0283","\u0292","\u00e7","\u029d","\u027e","\u027d" } },
@@ -371,8 +372,8 @@ namespace ConlangAudioHoning
             { "h", new List<string>(){"\u0266","\u0127","\u0295"} },
             { "\u0266", new List<string>(){"h","\u0127","\u0295"} },
             // Lateral fricative
-            { "\u026c", new List<string>(){"\u026e","\u02b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
-            { "\u026e", new List<string>(){"\u026c","\u02b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
+            { "\u026c", new List<string>(){"\u026e","\u03b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
+            { "\u026e", new List<string>(){"\u026c","\u03b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
             // Approximate
             { "\u028b", new List<string>(){"\u0279","\u026c","\u026e","l"} },
             { "\u0279", new List<string>(){"\u028b","\u027b","\u026c","\u026e","l","\u026d"} },
@@ -385,6 +386,10 @@ namespace ConlangAudioHoning
             { "\u028e", new List<string>(){"\u026d","\u029f","\u027b","j","\u0270" } },
             { "\u029f", new List<string>(){"\u028e","j","\u0270"} }
         };
+
+        private static Dictionary<string, List<string>>? _p_consonant_changes_l2 = null;
+
+        private static Dictionary<string, List<string>>? _p_consonant_changes_l3 = null;
 
         public static String[] PConsonants
         {
@@ -424,6 +429,30 @@ namespace ConlangAudioHoning
         public static Dictionary<string, List<string>> P_consonant_changes
         {
             get => _p_consonant_changes;
+        }
+
+        public static Dictionary<string, List<string>> P_consonant_changes_l2
+        {
+            get
+            {
+                if(_p_consonant_changes_l2 == null)
+                {
+                    _p_consonant_changes_l2 = PopulateL2PConantChanges();
+                }
+                return _p_consonant_changes_l2;
+            }
+        }
+
+        public static Dictionary<string, List<string>> P_consonant_changes_l3
+        {
+            get
+            {
+                if (_p_consonant_changes_l3 == null)
+                {
+                    _p_consonant_changes_l3 = PopulateL3PConantChanges();
+                }
+                return _p_consonant_changes_l3;
+            }
         }
 
         public static string IpaPhonemes()
@@ -739,6 +768,63 @@ namespace ConlangAudioHoning
                 }
             }
             return count;
+        }
+
+        private static Dictionary<string, List<string>> PopulateL2PConantChanges()
+        {
+            Dictionary<string, List<string>> pConsonantChangesL2 = new Dictionary<string, List<string>>();
+
+            foreach(string pConsonant in P_consonant_changes.Keys)
+            {
+                SortedSet<string> addedChanges = new SortedSet<string>();
+                foreach(string oldChange in P_consonant_changes[pConsonant])
+                {
+                    // Iterate over the changes for the existing changes in this consonant and add
+                    // them to the candidate set of changes if, and only if, they are not already
+                    // changes
+                    foreach(string candidateChange in P_consonant_changes[oldChange])
+                    {
+                        if((!candidateChange.Equals(pConsonant)) && (!P_consonant_changes[pConsonant].Contains(candidateChange)))
+                        {
+                            addedChanges.Add(candidateChange);
+                        }
+                    }
+                }
+                List<string> l2changes = new List<string>();
+                l2changes.AddRange(P_consonant_changes[pConsonant]);
+                l2changes.AddRange(addedChanges);
+                pConsonantChangesL2.Add(pConsonant, l2changes);
+            }
+
+            return pConsonantChangesL2;
+        }
+        private static Dictionary<string, List<string>> PopulateL3PConantChanges()
+        {
+            Dictionary<string, List<string>> pConsonantChangesL3 = new Dictionary<string, List<string>>();
+
+            foreach (string pConsonant in P_consonant_changes_l2.Keys)
+            {
+                SortedSet<string> addedChanges = new SortedSet<string>();
+                foreach (string oldChange in P_consonant_changes_l2[pConsonant])
+                {
+                    // Iterate over the changes for the existing changes in this consonant and add
+                    // them to the candidate set of changes if, and only if, they are not already
+                    // changes
+                    foreach (string candidateChange in P_consonant_changes_l2[oldChange])
+                    {
+                        if ((!candidateChange.Equals(pConsonant)) && (!P_consonant_changes_l2[pConsonant].Contains(candidateChange)))
+                        {
+                            addedChanges.Add(candidateChange);
+                        }
+                    }
+                }
+                List<string> l3changes = new List<string>();
+                l3changes.AddRange(P_consonant_changes[pConsonant]);
+                l3changes.AddRange(addedChanges);
+                pConsonantChangesL3.Add(pConsonant, l3changes);
+            }
+
+            return pConsonantChangesL3;
         }
 
     }

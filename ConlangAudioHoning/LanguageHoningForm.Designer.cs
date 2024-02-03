@@ -70,8 +70,13 @@
             label6 = new Label();
             cbx_speed = new ComboBox();
             label7 = new Label();
+            gbx_replacementPhomeDepth = new GroupBox();
+            rbn_l1 = new RadioButton();
+            rbn_l2 = new RadioButton();
+            rbn_l3 = new RadioButton();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
+            gbx_replacementPhomeDepth.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -229,7 +234,7 @@
             // 
             // btn_generate
             // 
-            btn_generate.Location = new Point(15, 162);
+            btn_generate.Location = new Point(15, 166);
             btn_generate.Name = "btn_generate";
             btn_generate.Size = new Size(136, 23);
             btn_generate.TabIndex = 5;
@@ -239,7 +244,7 @@
             // 
             // btn_generateSpeech
             // 
-            btn_generateSpeech.Location = new Point(157, 162);
+            btn_generateSpeech.Location = new Point(157, 166);
             btn_generateSpeech.Name = "btn_generateSpeech";
             btn_generateSpeech.Size = new Size(130, 23);
             btn_generateSpeech.TabIndex = 6;
@@ -260,7 +265,7 @@
             // 
             // btn_replaySpeech
             // 
-            btn_replaySpeech.Location = new Point(515, 162);
+            btn_replaySpeech.Location = new Point(293, 195);
             btn_replaySpeech.Name = "btn_replaySpeech";
             btn_replaySpeech.Size = new Size(145, 23);
             btn_replaySpeech.TabIndex = 8;
@@ -270,7 +275,7 @@
             // 
             // pb_status
             // 
-            pb_status.Location = new Point(15, 192);
+            pb_status.Location = new Point(15, 224);
             pb_status.Name = "pb_status";
             pb_status.Size = new Size(993, 34);
             pb_status.TabIndex = 9;
@@ -283,7 +288,7 @@
             // gbx_phonetics
             // 
             gbx_phonetics.Controls.Add(rbn_pulmonicConsonants);
-            gbx_phonetics.Location = new Point(15, 192);
+            gbx_phonetics.Location = new Point(15, 224);
             gbx_phonetics.Name = "gbx_phonetics";
             gbx_phonetics.Size = new Size(993, 42);
             gbx_phonetics.TabIndex = 10;
@@ -305,7 +310,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(15, 238);
+            label1.Location = new Point(15, 269);
             label1.Name = "label1";
             label1.Size = new Size(114, 15);
             label1.TabIndex = 11;
@@ -314,7 +319,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(15, 288);
+            label2.Location = new Point(15, 319);
             label2.Name = "label2";
             label2.Size = new Size(130, 15);
             label2.TabIndex = 12;
@@ -325,7 +330,7 @@
             cbx_phonemeToChange.DropDownStyle = ComboBoxStyle.DropDownList;
             cbx_phonemeToChange.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbx_phonemeToChange.FormattingEnabled = true;
-            cbx_phonemeToChange.Location = new Point(15, 256);
+            cbx_phonemeToChange.Location = new Point(15, 287);
             cbx_phonemeToChange.Name = "cbx_phonemeToChange";
             cbx_phonemeToChange.Size = new Size(492, 34);
             cbx_phonemeToChange.TabIndex = 13;
@@ -336,14 +341,14 @@
             cbx_replacementPhoneme.DropDownStyle = ComboBoxStyle.DropDownList;
             cbx_replacementPhoneme.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbx_replacementPhoneme.FormattingEnabled = true;
-            cbx_replacementPhoneme.Location = new Point(15, 306);
+            cbx_replacementPhoneme.Location = new Point(15, 337);
             cbx_replacementPhoneme.Name = "cbx_replacementPhoneme";
             cbx_replacementPhoneme.Size = new Size(492, 34);
             cbx_replacementPhoneme.TabIndex = 14;
             // 
             // btn_applyChangeToLanguage
             // 
-            btn_applyChangeToLanguage.Location = new Point(15, 346);
+            btn_applyChangeToLanguage.Location = new Point(15, 377);
             btn_applyChangeToLanguage.Name = "btn_applyChangeToLanguage";
             btn_applyChangeToLanguage.Size = new Size(492, 23);
             btn_applyChangeToLanguage.TabIndex = 15;
@@ -353,7 +358,7 @@
             // 
             // btn_revertLastChange
             // 
-            btn_revertLastChange.Location = new Point(15, 375);
+            btn_revertLastChange.Location = new Point(15, 406);
             btn_revertLastChange.Name = "btn_revertLastChange";
             btn_revertLastChange.Size = new Size(492, 23);
             btn_revertLastChange.TabIndex = 16;
@@ -364,7 +369,7 @@
             // 
             label3.AutoSize = true;
             label3.ForeColor = Color.Red;
-            label3.Location = new Point(517, 304);
+            label3.Location = new Point(517, 335);
             label3.Name = "label3";
             label3.Size = new Size(174, 15);
             label3.TabIndex = 17;
@@ -374,7 +379,7 @@
             // 
             label4.AutoSize = true;
             label4.ForeColor = Color.Green;
-            label4.Location = new Point(517, 319);
+            label4.Location = new Point(517, 350);
             label4.Name = "label4";
             label4.Size = new Size(216, 15);
             label4.TabIndex = 18;
@@ -384,7 +389,7 @@
             // 
             label5.AutoSize = true;
             label5.ForeColor = Color.Blue;
-            label5.Location = new Point(517, 334);
+            label5.Location = new Point(517, 365);
             label5.Name = "label5";
             label5.Size = new Size(302, 15);
             label5.TabIndex = 19;
@@ -393,7 +398,7 @@
             // cbx_voice
             // 
             cbx_voice.FormattingEnabled = true;
-            cbx_voice.Location = new Point(517, 267);
+            cbx_voice.Location = new Point(513, 166);
             cbx_voice.Name = "cbx_voice";
             cbx_voice.Size = new Size(246, 23);
             cbx_voice.Sorted = true;
@@ -402,7 +407,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(517, 249);
+            label6.Location = new Point(513, 192);
             label6.Name = "label6";
             label6.Size = new Size(35, 15);
             label6.TabIndex = 21;
@@ -411,7 +416,7 @@
             // cbx_speed
             // 
             cbx_speed.FormattingEnabled = true;
-            cbx_speed.Location = new Point(769, 267);
+            cbx_speed.Location = new Point(765, 166);
             cbx_speed.Name = "cbx_speed";
             cbx_speed.Size = new Size(239, 23);
             cbx_speed.TabIndex = 22;
@@ -419,17 +424,63 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(769, 249);
+            label7.Location = new Point(765, 192);
             label7.Name = "label7";
             label7.Size = new Size(39, 15);
             label7.TabIndex = 23;
             label7.Text = "Speed";
+            // 
+            // gbx_replacementPhomeDepth
+            // 
+            gbx_replacementPhomeDepth.Controls.Add(rbn_l3);
+            gbx_replacementPhomeDepth.Controls.Add(rbn_l2);
+            gbx_replacementPhomeDepth.Controls.Add(rbn_l1);
+            gbx_replacementPhomeDepth.Location = new Point(519, 280);
+            gbx_replacementPhomeDepth.Name = "gbx_replacementPhomeDepth";
+            gbx_replacementPhomeDepth.Size = new Size(489, 54);
+            gbx_replacementPhomeDepth.TabIndex = 24;
+            gbx_replacementPhomeDepth.TabStop = false;
+            gbx_replacementPhomeDepth.Text = "Depth of Replacement Phonemes";
+            // 
+            // rbn_l1
+            // 
+            rbn_l1.AutoSize = true;
+            rbn_l1.Location = new Point(12, 23);
+            rbn_l1.Name = "rbn_l1";
+            rbn_l1.Size = new Size(72, 19);
+            rbn_l1.TabIndex = 0;
+            rbn_l1.TabStop = true;
+            rbn_l1.Text = "1-degree";
+            rbn_l1.UseVisualStyleBackColor = true;
+            // 
+            // rbn_l2
+            // 
+            rbn_l2.AutoSize = true;
+            rbn_l2.Location = new Point(90, 23);
+            rbn_l2.Name = "rbn_l2";
+            rbn_l2.Size = new Size(72, 19);
+            rbn_l2.TabIndex = 1;
+            rbn_l2.TabStop = true;
+            rbn_l2.Text = "2-degree";
+            rbn_l2.UseVisualStyleBackColor = true;
+            // 
+            // rbn_l3
+            // 
+            rbn_l3.AutoSize = true;
+            rbn_l3.Location = new Point(168, 22);
+            rbn_l3.Name = "rbn_l3";
+            rbn_l3.Size = new Size(72, 19);
+            rbn_l3.TabIndex = 2;
+            rbn_l3.TabStop = true;
+            rbn_l3.Text = "3-degree";
+            rbn_l3.UseVisualStyleBackColor = true;
             // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1024, 496);
+            Controls.Add(gbx_replacementPhomeDepth);
             Controls.Add(label7);
             Controls.Add(cbx_speed);
             Controls.Add(label6);
@@ -461,6 +512,8 @@
             menuStrip1.PerformLayout();
             gbx_phonetics.ResumeLayout(false);
             gbx_phonetics.PerformLayout();
+            gbx_replacementPhomeDepth.ResumeLayout(false);
+            gbx_replacementPhomeDepth.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -508,5 +561,9 @@
         private Label label6;
         private ComboBox cbx_speed;
         private Label label7;
+        private GroupBox gbx_replacementPhomeDepth;
+        private RadioButton rbn_l3;
+        private RadioButton rbn_l2;
+        private RadioButton rbn_l1;
     }
 }
