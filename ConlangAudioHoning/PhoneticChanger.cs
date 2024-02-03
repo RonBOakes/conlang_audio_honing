@@ -65,8 +65,8 @@ namespace ConlangAudioHoning
             SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
             List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0,Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
-            soundMapListEditor.PhonemeBeingReplaced = oldPhoneme;
-            soundMapListEditor.ReplacementPhoneme = newPhoneme;
+            soundMapListEditor.PhonemeReplacementPairs.Add((oldPhoneme, newPhoneme));
+            soundMapListEditor.UpdatePhonemeReplacements();
             soundMapListEditor.ShowDialog();
             // ShowDialog is modal
             if(soundMapListEditor.SoundMapSaved)
@@ -124,6 +124,105 @@ namespace ConlangAudioHoning
 
             }
 
+            // Update the phonetic inventory
+            IpaUtilities.BuildPhoneticInventory(Language);
+        }
+
+        public void PhoneticChange(List<(string oldPhoneme, string newPhoneme)>changeList)
+        {
+            if (this._language == null)
+            {
+                return;
+            }
+
+            // The limit is 10 changes in a list due to how the replacements are done
+            if(changeList.Count > 10)
+            {
+                return;
+            }
+
+            // TODO: Update spelling/pronunciation rules (a.k.a. sound map list)
+            SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
+            List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0,Language.sound_map_list.Count);
+            soundMapListEditor.SoundMapList = Language.sound_map_list;
+            soundMapListEditor.PhonemeReplacementPairs.AddRange(changeList);
+            soundMapListEditor.UpdatePhonemeReplacements();
+            soundMapListEditor.ShowDialog();
+            // ShowDialog is modal
+            if(soundMapListEditor.SoundMapSaved)
+            {
+                Language.sound_map_list = soundMapListEditor.SoundMapList;
+            }
+
+            Dictionary<string, (string oldPhoneme, string newPhoneme)> interimReplacementMap = new Dictionary<string, (string oldPhoneme, string newPhoneme)>();
+
+            int interimReplacementSymbolInt = 0;
+            foreach ((string oldPhoneme, string newPhoneme) in changeList)
+            {
+                string interimReplacementSymbol = string.Format("{0}",interimReplacementSymbolInt++);
+                interimReplacementMap.Add(interimReplacementSymbol, (oldPhoneme, newPhoneme));
+                // Update the Lexicon phase 1
+                foreach (LexiconEntry word in Language.lexicon)
+                {
+                    // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                    LexiconEntry oldVersion = word.copy();
+                    word.phonetic = word.phonetic.Replace(oldPhoneme, interimReplacementSymbol);
+                }
+            }
+            foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+            {
+                (string  oldPhoneme2, string newPhoneme2) = interimReplacementMap[interimReplacementSymbol];
+                bool spellingChange = false;
+                foreach (SoundMap soundMap in Language.sound_map_list)
+                {
+                    if ((soundMap.spelling_regex.Contains(newPhoneme2)) || (soundMap.phoneme.Contains(newPhoneme2)))
+                    {
+                        spellingChange = true;
+                        break;
+                    }
+                }
+
+                // Update the Lexicon
+                foreach (LexiconEntry word in Language.lexicon)
+                {
+                    // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                    LexiconEntry oldVersion = word.copy();
+                    // Recreate the original phonetic version.
+                    oldVersion.phonetic.Replace(interimReplacementSymbol, oldPhoneme2);
+                    string oldPhonetic = word.phonetic;
+                    word.phonetic = word.phonetic.Replace(interimReplacementSymbol, newPhoneme2);
+                    if (!oldPhonetic.Equals(word.phonetic))
+                    {
+                        if (spellingChange)
+                        {
+                            string oldSpelled = word.spelled;
+                            word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                            SampleText = SampleText.Replace(oldSpelled, word.spelled);
+                        }
+                        if (word.metadata == null)
+                        {
+                            word.metadata = new System.Text.Json.Nodes.JsonObject();
+                        }
+                        Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
+                        if (word.metadata.ContainsKey("PhoneticChangeHistory"))
+                        {
+                            phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
+                        }
+                        if (phoneticChangeHistories == null)
+                        {
+                            phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
+                        }
+                        PhoneticChangeHistory pch = new PhoneticChangeHistory();
+                        pch.OldPhoneme = oldPhoneme2;
+                        pch.NewPhoneme = newPhoneme2;
+                        pch.OldVersion = oldVersion;
+                        string timestamp = string.Format("{0:s}", DateTime.Now);
+                        phoneticChangeHistories.Add(timestamp, pch);
+                        string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
+                        word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
+                    }
+                }
+            }
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
         }

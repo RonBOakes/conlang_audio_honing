@@ -32,15 +32,13 @@ namespace ConlangAudioHoning
     public partial class SoundMapListEditor : Form
     {
         private List<SoundMap> _soundMapList;
-        private string _phonemeBeingReplaced;
-        private string _replacementPhoneme;
+        List<(string, string)> _phonemeReplacementPairs = new List<(string, string)>();
         private bool _soundMapSaved = false;
 
         public List<SoundMap> SoundMapList
         {
             get
             {
-                // TODO: extract data from form.
                 return _soundMapList;
             }
             set
@@ -50,21 +48,13 @@ namespace ConlangAudioHoning
             }
         }
 
-        public string PhonemeBeingReplaced
+        public List<(string, string)> PhonemeReplacementPairs
         {
+            get => _phonemeReplacementPairs;
             set
             {
-                _phonemeBeingReplaced = value;
-                txtPhonemeBeingReplaced.Text = _phonemeBeingReplaced;
-            }
-        }
-
-        public string ReplacementPhoneme
-        {
-            set
-            {
-                _replacementPhoneme = value;
-                txtReplacementPhoneme.Text = _replacementPhoneme;
+                _phonemeReplacementPairs = value;
+                UpdatePhonemeReplacements();
             }
         }
 
@@ -75,13 +65,21 @@ namespace ConlangAudioHoning
 
         public SoundMapListEditor()
         {
-            _phonemeBeingReplaced = string.Empty;
-            _replacementPhoneme= string.Empty;
             InitializeComponent();
             CharacterInsertToolStripMenuItem ciMenu = new CharacterInsertToolStripMenuItem();
             menuStrip1.Items.Add(ciMenu);
             _soundMapList = new List<SoundMap>();
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
+        }
+
+        public void UpdatePhonemeReplacements()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach ((string phonemeToBeReplaced, string replacementPhoneme) in PhonemeReplacementPairs)
+            {
+                sb.AppendFormat("{0} -> {1},", phonemeToBeReplaced, replacementPhoneme);
+            }
+            txtPhonemeReplacements.Text = sb.ToString();
         }
 
         private void loadForm()

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ConlangJson.SoundMap soundMap1 = new ConlangJson.SoundMap();
+            ConlangJson.SoundMap soundMap2 = new ConlangJson.SoundMap();
             btnAddAbove = new Button();
             btnAddBelow = new Button();
             lbx_soundMapListEntries = new ListBox();
@@ -40,10 +40,8 @@
             btnReplaceSelected = new Button();
             btnEditSelected = new Button();
             btnDeleteSelected = new Button();
-            txtPhonemeBeingReplaced = new TextBox();
-            txtReplacementPhoneme = new TextBox();
+            txtPhonemeReplacements = new TextBox();
             label1 = new Label();
-            label2 = new Label();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -82,11 +80,11 @@
             soundMapEditor.Location = new Point(12, 82);
             soundMapEditor.Name = "soundMapEditor";
             soundMapEditor.Size = new Size(850, 80);
-            soundMap1.phoneme = "";
-            soundMap1.pronounciation_regex = "";
-            soundMap1.romanization = "";
-            soundMap1.spelling_regex = "";
-            soundMapEditor.SoundMapData = soundMap1;
+            soundMap2.phoneme = "";
+            soundMap2.pronounciation_regex = "";
+            soundMap2.romanization = "";
+            soundMap2.spelling_regex = "";
+            soundMapEditor.SoundMapData = soundMap2;
             soundMapEditor.TabIndex = 6;
             // 
             // menuStrip1
@@ -149,23 +147,14 @@
             btnDeleteSelected.UseVisualStyleBackColor = true;
             btnDeleteSelected.Click += btnDeleteSelected_Click;
             // 
-            // txtPhonemeBeingReplaced
+            // txtPhonemeReplacements
             // 
-            txtPhonemeBeingReplaced.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtPhonemeBeingReplaced.Location = new Point(163, 33);
-            txtPhonemeBeingReplaced.Name = "txtPhonemeBeingReplaced";
-            txtPhonemeBeingReplaced.ReadOnly = true;
-            txtPhonemeBeingReplaced.Size = new Size(118, 34);
-            txtPhonemeBeingReplaced.TabIndex = 11;
-            // 
-            // txtReplacementPhoneme
-            // 
-            txtReplacementPhoneme.Font = new Font("Charis SIL", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtReplacementPhoneme.Location = new Point(426, 33);
-            txtReplacementPhoneme.Name = "txtReplacementPhoneme";
-            txtReplacementPhoneme.ReadOnly = true;
-            txtReplacementPhoneme.Size = new Size(132, 32);
-            txtReplacementPhoneme.TabIndex = 12;
+            txtPhonemeReplacements.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtPhonemeReplacements.Location = new Point(163, 33);
+            txtPhonemeReplacements.Name = "txtPhonemeReplacements";
+            txtPhonemeReplacements.ReadOnly = true;
+            txtPhonemeReplacements.Size = new Size(699, 34);
+            txtPhonemeReplacements.TabIndex = 11;
             // 
             // label1
             // 
@@ -176,24 +165,13 @@
             label1.TabIndex = 13;
             label1.Text = "Phoneme Being Replaced:";
             // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(287, 42);
-            label2.Name = "label2";
-            label2.Size = new Size(133, 15);
-            label2.TabIndex = 14;
-            label2.Text = "Replacement Phoneme:";
-            // 
             // SoundMapListEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1007, 382);
-            Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(txtReplacementPhoneme);
-            Controls.Add(txtPhonemeBeingReplaced);
+            Controls.Add(txtPhonemeReplacements);
             Controls.Add(btnDeleteSelected);
             Controls.Add(btnEditSelected);
             Controls.Add(btnReplaceSelected);
@@ -223,9 +201,7 @@
         private Button btnReplaceSelected;
         private Button btnEditSelected;
         private Button btnDeleteSelected;
-        private TextBox txtPhonemeBeingReplaced;
-        private TextBox txtReplacementPhoneme;
+        private TextBox txtPhonemeReplacements;
         private Label label1;
-        private Label label2;
     }
 }
