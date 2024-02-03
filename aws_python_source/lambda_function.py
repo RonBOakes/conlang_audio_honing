@@ -82,7 +82,7 @@ def start_synthisis(ssml,voice,filetype):
 
 def get_voices():
     voice_struct_data = polly_client.describe_voices(Engine='neural')
-    logger.debug('voice_struct',extra={'voice_struct':str(voice_struct_data))})
+    logger.debug('voice_struct',extra={'voice_struct':str(voice_struct_data)})
     body = json.dumps(voice_struct_data)
     return{
         'statusCode': 200,
