@@ -61,7 +61,6 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            // TODO: Update spelling/pronunciation rules (a.k.a. sound map list)
             SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
             List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0,Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
@@ -90,7 +89,26 @@ namespace ConlangAudioHoning
                 // replace all occurrences of oldPhoneme in phonetic with newPhoneme
                 LexiconEntry oldVersion = word.copy();
                 string oldPhonetic = word.phonetic;
+
+                // Preserve vowel diphthongs before doing the main replacement
+                Dictionary<string, string> diphthongReplacementMap = new Dictionary<string, string>();
+                int ipaReplacementIndex = 0;
+                foreach(string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                {
+                    if (!diphthong.Equals(oldPhoneme))
+                    {
+                        string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                        diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                        word.phonetic = word.phonetic.Replace(diphthong, ipaReplacement);
+                    }
+                }
+
                 word.phonetic = word.phonetic.Replace(oldPhoneme, newPhoneme);
+                // Put the replaced diphthongs back
+                foreach(string diphthong in diphthongReplacementMap.Keys)
+                {
+                    word.phonetic = word.phonetic.Replace(diphthongReplacementMap[diphthong],diphthong);
+                }
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
                     if (spellingChange)
@@ -164,9 +182,27 @@ namespace ConlangAudioHoning
                 // Update the Lexicon phase 1
                 foreach (LexiconEntry word in Language.lexicon)
                 {
+                    // Preserve vowel diphthongs before doing the main replacement
+                    Dictionary<string, string> diphthongReplacementMap = new Dictionary<string, string>();
+                    int ipaReplacementIndex = 0;
+                    foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                    {
+                        if (!diphthong.Equals(oldPhoneme))
+                        {
+                            string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                            diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                            word.phonetic = word.phonetic.Replace(diphthong, ipaReplacement);
+                        }
+                    }
+
                     // replace all occurrences of oldPhoneme in phonetic with newPhoneme
                     LexiconEntry oldVersion = word.copy();
                     word.phonetic = word.phonetic.Replace(oldPhoneme, interimReplacementSymbol);
+                    // Put the replaced diphthongs back
+                    foreach (string diphthong in diphthongReplacementMap.Keys)
+                    {
+                        word.phonetic = word.phonetic.Replace(diphthongReplacementMap[diphthong], diphthong);
+                    }
                 }
             }
             foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
