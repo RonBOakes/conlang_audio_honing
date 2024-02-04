@@ -71,9 +71,10 @@
             cbx_speed = new ComboBox();
             label7 = new Label();
             gbx_replacementPhomeDepth = new GroupBox();
-            rbn_l1 = new RadioButton();
-            rbn_l2 = new RadioButton();
             rbn_l3 = new RadioButton();
+            rbn_l2 = new RadioButton();
+            rbn_l1 = new RadioButton();
+            rbn_allPhonemes = new RadioButton();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
@@ -290,7 +291,7 @@
             gbx_phonetics.Controls.Add(rbn_pulmonicConsonants);
             gbx_phonetics.Location = new Point(15, 224);
             gbx_phonetics.Name = "gbx_phonetics";
-            gbx_phonetics.Size = new Size(993, 42);
+            gbx_phonetics.Size = new Size(492, 42);
             gbx_phonetics.TabIndex = 10;
             gbx_phonetics.TabStop = false;
             gbx_phonetics.Text = "Phonetics to Alter";
@@ -300,10 +301,10 @@
             rbn_pulmonicConsonants.AutoSize = true;
             rbn_pulmonicConsonants.Location = new Point(12, 16);
             rbn_pulmonicConsonants.Name = "rbn_pulmonicConsonants";
-            rbn_pulmonicConsonants.Size = new Size(142, 19);
+            rbn_pulmonicConsonants.Size = new Size(88, 19);
             rbn_pulmonicConsonants.TabIndex = 0;
             rbn_pulmonicConsonants.TabStop = true;
-            rbn_pulmonicConsonants.Text = "Pulmonic Consonants";
+            rbn_pulmonicConsonants.Text = "Consonants";
             rbn_pulmonicConsonants.UseVisualStyleBackColor = true;
             rbn_pulmonicConsonants.CheckedChanged += rbn_pulmonicConsonants_CheckedChanged;
             // 
@@ -432,31 +433,32 @@
             // 
             // gbx_replacementPhomeDepth
             // 
+            gbx_replacementPhomeDepth.Controls.Add(rbn_allPhonemes);
             gbx_replacementPhomeDepth.Controls.Add(rbn_l3);
             gbx_replacementPhomeDepth.Controls.Add(rbn_l2);
             gbx_replacementPhomeDepth.Controls.Add(rbn_l1);
-            gbx_replacementPhomeDepth.Location = new Point(519, 280);
+            gbx_replacementPhomeDepth.Location = new Point(513, 224);
             gbx_replacementPhomeDepth.Name = "gbx_replacementPhomeDepth";
-            gbx_replacementPhomeDepth.Size = new Size(489, 54);
+            gbx_replacementPhomeDepth.Size = new Size(489, 42);
             gbx_replacementPhomeDepth.TabIndex = 24;
             gbx_replacementPhomeDepth.TabStop = false;
             gbx_replacementPhomeDepth.Text = "Depth of Replacement Phonemes";
             // 
-            // rbn_l1
+            // rbn_l3
             // 
-            rbn_l1.AutoSize = true;
-            rbn_l1.Location = new Point(12, 23);
-            rbn_l1.Name = "rbn_l1";
-            rbn_l1.Size = new Size(72, 19);
-            rbn_l1.TabIndex = 0;
-            rbn_l1.TabStop = true;
-            rbn_l1.Text = "1-degree";
-            rbn_l1.UseVisualStyleBackColor = true;
+            rbn_l3.AutoSize = true;
+            rbn_l3.Location = new Point(162, 16);
+            rbn_l3.Name = "rbn_l3";
+            rbn_l3.Size = new Size(72, 19);
+            rbn_l3.TabIndex = 2;
+            rbn_l3.TabStop = true;
+            rbn_l3.Text = "3-degree";
+            rbn_l3.UseVisualStyleBackColor = true;
             // 
             // rbn_l2
             // 
             rbn_l2.AutoSize = true;
-            rbn_l2.Location = new Point(90, 23);
+            rbn_l2.Location = new Point(84, 15);
             rbn_l2.Name = "rbn_l2";
             rbn_l2.Size = new Size(72, 19);
             rbn_l2.TabIndex = 1;
@@ -464,16 +466,27 @@
             rbn_l2.Text = "2-degree";
             rbn_l2.UseVisualStyleBackColor = true;
             // 
-            // rbn_l3
+            // rbn_l1
             // 
-            rbn_l3.AutoSize = true;
-            rbn_l3.Location = new Point(168, 22);
-            rbn_l3.Name = "rbn_l3";
-            rbn_l3.Size = new Size(72, 19);
-            rbn_l3.TabIndex = 2;
-            rbn_l3.TabStop = true;
-            rbn_l3.Text = "3-degree";
-            rbn_l3.UseVisualStyleBackColor = true;
+            rbn_l1.AutoSize = true;
+            rbn_l1.Location = new Point(6, 15);
+            rbn_l1.Name = "rbn_l1";
+            rbn_l1.Size = new Size(72, 19);
+            rbn_l1.TabIndex = 0;
+            rbn_l1.TabStop = true;
+            rbn_l1.Text = "1-degree";
+            rbn_l1.UseVisualStyleBackColor = true;
+            // 
+            // rbn_allPhonemes
+            // 
+            rbn_allPhonemes.AutoSize = true;
+            rbn_allPhonemes.Location = new Point(240, 15);
+            rbn_allPhonemes.Name = "rbn_allPhonemes";
+            rbn_allPhonemes.Size = new Size(105, 19);
+            rbn_allPhonemes.TabIndex = 3;
+            rbn_allPhonemes.TabStop = true;
+            rbn_allPhonemes.Text = "All Consonants";
+            rbn_allPhonemes.UseVisualStyleBackColor = true;
             // 
             // LanguageHoningForm
             // 
@@ -565,5 +578,6 @@
         private RadioButton rbn_l3;
         private RadioButton rbn_l2;
         private RadioButton rbn_l1;
+        private RadioButton rbn_allPhonemes;
     }
 }

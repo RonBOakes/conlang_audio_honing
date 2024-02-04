@@ -510,6 +510,8 @@ namespace ConlangAudioHoning
         {
             if (rbn_pulmonicConsonants.Checked)
             {
+                rbn_allPhonemes.Text = "All Consonants";
+
                 if (languageDescription == null)
                 {
                     return;
@@ -544,19 +546,24 @@ namespace ConlangAudioHoning
                 List<string> replacementPhonemes;
                 if(rbn_l1.Checked)
                 {
-                    replacementPhonemes = IpaUtilities.P_consonant_changes[pConsonant];
+                    replacementPhonemes = IpaUtilities.Consonant_changes[pConsonant];
                 }
                 else if(rbn_l2.Checked)
                 {
-                    replacementPhonemes = IpaUtilities.P_consonant_changes_l2[pConsonant];
+                    replacementPhonemes = IpaUtilities.Consonant_changes_l2[pConsonant];
                 }
                 else if(rbn_l3.Checked)
                 {
-                    replacementPhonemes = IpaUtilities.P_consonant_changes_l3[pConsonant];
+                    replacementPhonemes = IpaUtilities.Consonant_changes_l3[pConsonant];
+                }
+                else if(rbn_allPhonemes.Checked)
+                {
+                    replacementPhonemes = new List<string>();
+                    replacementPhonemes.AddRange(IpaUtilities.Consonant_changes.Keys);
                 }
                 else
                 {
-                    replacementPhonemes = IpaUtilities.P_consonant_changes[pConsonant];
+                    replacementPhonemes = IpaUtilities.Consonant_changes[pConsonant];
                 }
                 foreach (string replacement in replacementPhonemes)
                 {

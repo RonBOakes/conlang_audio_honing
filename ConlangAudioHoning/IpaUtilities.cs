@@ -36,7 +36,7 @@ namespace ConlangAudioHoning
             "\u0271", "n", "\u0273", "\u0272", "\u014b", "\u0274", "p", "q", "r", "\u0279", "\u027e", "\u027d",
             "\u027b", "\u027a", "\u0281", "\u0280", "s", "\u0282", "\u0283", "t", "\u0288", "\u02a6",
             "\u02a8", "\u02a7", "\uab67", "v", "\u2c71", "\u028b", "x", "\u0263", "\u03c7", "\u028e",
-            "z", "\u0290", "\u0292", "\u03b8", "\u00f0", "\u0294", "\u0295"
+            "z", "\u0290", "\u0292", "\u03b8", "\u00f0", "\u0294", "\u0295", "ɕ", "ʑ",
         };
         /*
 		 * b β ʙ c ç d ɖ ᶑ ʣ ʥ ʤ ꭦ		"b", "\u03b2", "\u0299", "c", "\u00e7", "d", "\u0256", "\u1d91", "\u02a3", "\u02a5", "\u02a4", "\uab66",
@@ -146,7 +146,14 @@ namespace ConlangAudioHoning
             { "\u027d", new string("voiced retroflex tap or flap") },
 			// Lateral flaps
 			{ "\u027a", new string("voiced alveolar lateral flap") },
-			// Wikipedia has a voiced retroflex lateral flap with an invalid unicode (or at least UTF8)
+            // Wikipedia has a voiced retroflex lateral flap with an invalid unicode (or at least UTF8)\
+            // Affricate (Only in Vulgarlang, but needed to support conlangs coming from Vulgarlang)
+            { "\u02a6", new string("unvoiced alveolar affricate") },
+            { "\u02a3", new string("voiced alveolar affricate") },
+            { "\u02a7", new string("unvoiced postalveolar affricate") },
+            { "\u02a4", new string("voiced postalveolar affricate") },
+            { "\u02a8", new string("unvoiced alveolo-palatal affricate") },
+            { "\u02a5", new string("voiced alveolo-palatal affricate") },
 			// Fricatives
 			{ "\u0278", new string("unvoiced bilabial fricative") },
             { "\u03b2", new string("voiced bilabial fricative") },
@@ -186,29 +193,29 @@ namespace ConlangAudioHoning
 			// percussive (Category only seen on Wikipedia)
 			{ "\u02ac", new string("bilabial percussive") },
             { "\u02ad", new string("dental percussive") },
-			// approximates
-			{ "\u03b2\u031e\u030a", new string("unvoiced bilabial approximate") },
-            { "\u03b2\u031e", new string("voiced bilabial approximate") },
-            { "\u028b\u0325", new string("unvoiced labiodental approximate") },
-            { "\u028b", new string("voiced labiodental approximate") },
-            { "\u00f0\u031e", new string("voiced dental approximate") },
-            { "\u0279\u0325", new string("unvoiced alveolar approximate") },
-            { "\u0279", new string("voiced alveolar approximate") },
-            { "\u027b\u030a", new string("unvoiced retroflex approximate") },
-            { "\u027b", new string("voiced retroflex approximate") },
-            { "\u0265\u0308", new string("unvoiced labialized palatial approximate") },
-            { "\u0265", new string("voiced labialized palatial approximate") },
-            { "\u006a", new string("voiced palatal approximate") },
-            { "\u028d", new string("unvoiced labial-velar approximate") },
-            { "\u0077", new string("voiced labial-velar approximate") },
-            { "\u0270", new string("voiced velar approximate") },
-			// Lateral approximates
-			{ "\u006c\u0325", new string("unvoiced alveolar lateral approximate") },
-            { "\u006c", new string("voiced alveolar lateral approximate") },
-            { "\u026d", new string("voiced retroflex lateral approximate") },
-            { "\u0234", new string("voiced alveolo-palatal lateral approximate") },
-            { "\u028e", new string("voiced palatal lateral approximate") },
-            { "\u029f", new string("voiced velar lateral approximate") },
+			// approximant
+			{ "\u03b2\u031e\u030a", new string("unvoiced bilabial approximant") },
+            { "\u03b2\u031e", new string("voiced bilabial approximant") },
+            { "\u028b\u0325", new string("unvoiced labiodental approximant") },
+            { "\u028b", new string("voiced labiodental approximant") },
+            { "\u00f0\u031e", new string("voiced dental approximant") },
+            { "\u0279\u0325", new string("unvoiced alveolar approximant") },
+            { "\u0279", new string("voiced alveolar approximant") },
+            { "\u027b\u030a", new string("unvoiced retroflex approximant") },
+            { "\u027b", new string("voiced retroflex approximant") },
+            { "\u0265\u0308", new string("unvoiced labialized palatial approximant") },
+            { "\u0265", new string("voiced labialized palatial approximant") },
+            { "\u006a", new string("voiced palatal approximant") },
+            { "\u028d", new string("unvoiced labial-velar approximant (fricative)") },
+            { "\u0077", new string("voiced labial-velar approximant") },
+            { "\u0270", new string("voiced velar approximant") },
+			// Lateral approximant
+			{ "\u006c\u0325", new string("unvoiced alveolar lateral approximant") },
+            { "\u006c", new string("voiced alveolar lateral approximant") },
+            { "\u026d", new string("voiced retroflex lateral approximant") },
+            { "\u0234", new string("voiced alveolo-palatal lateral approximant") },
+            { "\u028e", new string("voiced palatal lateral approximant") },
+            { "\u029f", new string("voiced velar lateral approximant") },
 			// click consonants
 			{ "\u0298", new string("bilabial click") },
             { "\u01c0", new string("dental click") },
@@ -316,11 +323,11 @@ namespace ConlangAudioHoning
             { "L", "\u029f" },
         };
 
-        private static Dictionary<string, List<string>> _p_consonant_changes = new Dictionary<string, List<string>>()
+        private static Dictionary<string, List<string>> _consonant_changes = new Dictionary<string, List<string>>()
         {
             // Plosive
-            { "p", new List<string>(){ "b","m","t","d","\u0271" } },
-            { "b", new List<string>(){ "p","m","t","d","\u0271" } },
+            { "p", new List<string>(){ "b","m","t","d","\u0271", "\u0253" } },
+            { "b", new List<string>(){ "p","m","t","d","\u0271", "\u0253" } },
             { "t", new List<string>(){ "p","b","d","\u0288","\u0256","\u0271","n","\u0273"} },
             { "d", new List<string>(){ "p","b","t", "\u0288", "\u0256", "\u0271", "n", "\u0273" } },
             { "\u0288", new List<string>(){ "t","d","\u0256","c","\u025f","n","\u0273","\u0272" } },
@@ -348,6 +355,13 @@ namespace ConlangAudioHoning
             { "\u2c71", new List<string>(){"\u027e","\u0299","r","\u0278","\u03b2","f","v","\u03b8","\u00f0" } },
             { "\u027e", new List<string>(){"\u2c71","\u027d","r","\u03b8","\u00f0","s","z","\u0283","\u0292"} },
             { "\u027d", new List<string>(){"\u027e","r","\u0283","\u0292","\u0282","\u0290","\u00e7","\u029d"} },
+            // Affricate
+            { "\u02a6", new List<string>(){"\u02a3", "\u02a7", "\u02a4","n","\u03b8","\u00f0","s","z","\u0283","\u0292", } },
+            { "\u02a3", new List<string>(){"\u02a6", "\u02a7", "\u02a4","n","\u03b8","\u00f0","s","z","\u0283","\u0292", } },
+            { "\u02a7", new List<string>(){"\u02a4", "\u02a3", "\u02a6","n", "\u0273","s","z","\u0283","\u0292","\u0282","\u0290", } },
+            { "\u02a4", new List<string>(){"\u02a7", "\u02a3", "\u02a6","n", "\u0273","s","z","\u0283","\u0292","\u0282","\u0290", } },
+            { "\u02a8", new List<string>(){"\u02a5", "\u0273", "\u0283", "\u0292", "\u0255","\u0291", } },
+            { "\u02a5", new List<string>(){"\u02a8", "\u0273", "\u0283", "\u0292", "\u0255","\u0291", } },
             // Fricative
             { "\u0278", new List<string>(){"\u03b2","f","v","\u2c71"} },
             { "\u03b2", new List<string>(){"\u0278","f","v","\u2c71"} },
@@ -361,6 +375,8 @@ namespace ConlangAudioHoning
             { "\u0292", new List<string>(){"\u0283","s","z","\u0282","\u0290","\u027e","\u027d","\u026c","\u026e"} },
             { "\u0282", new List<string>(){"\u0290","\u0283","\u0292","\u00e7","\u029d","\u027e","\u027d" } },
             { "\u0290", new List<string>(){"\u0282","\u0283","\u0292","\u00e7","\u029d", "\u027e", "\u027d" } },
+            { "\u0255", new List<string>(){"\u0291","\u0282","\u0290","\u00e7","\u029d","\u02a6","\u02a5","\u026d","j",} },
+            { "\u0291", new List<string>(){"\u0255","\u0282","\u0290","\u00e7","\u029d","\u02a6","\u02a5","\u026d","j",} },
             { "\u00e7", new List<string>(){"\u029d","\u0282","\u0290","x","\u0263","\u027d"} },
             { "\u029d", new List<string>(){"\u00e7","\u0282","\u0290","x","\u0263","\u027d"} },
             { "x", new List<string>(){"\u0263","\u00e7","\u029d","\u03c7","\u0281"} },
@@ -374,22 +390,37 @@ namespace ConlangAudioHoning
             // Lateral fricative
             { "\u026c", new List<string>(){"\u026e","\u03b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
             { "\u026e", new List<string>(){"\u026c","\u03b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
-            // Approximate
+            // approximant
             { "\u028b", new List<string>(){"\u0279","\u026c","\u026e","l"} },
             { "\u0279", new List<string>(){"\u028b","\u027b","\u026c","\u026e","l","\u026d"} },
             { "\u027b", new List<string>(){"\u0279","j","\u026c","\u026e","l","\u026d","\u028e"} },
-            { "j", new List<string>(){"\u027b","\u0270","\u026d","\u028e","\u029f"} },
-            { "\u0270", new List<string>(){"j","\u028e","\u029f"} },
-            // Lateral approximate
+            { "j", new List<string>(){"\u027b","\u0270","\u026d","\u028e","\u029f","\u028d","w",} },
+            { "\u0270", new List<string>(){"j","\u028e","\u029f", "\u028d", "w", } },
+            // Lateral approximant
             { "l", new List<string>(){"\u026d","\u028b","\u0279","\u027b"} },
             { "\u026d", new List<string>(){"l","\u028e","\u0279","\u027b","j"} },
-            { "\u028e", new List<string>(){"\u026d","\u029f","\u027b","j","\u0270" } },
-            { "\u029f", new List<string>(){"\u028e","j","\u0270"} }
+            { "\u028e", new List<string>(){"\u026d","\u029f","\u027b","j","\u0270", "\u028d", "w", } },
+            { "\u029f", new List<string>(){"\u028e","j","\u0270", "\u028d", "w", } },
+            // Clicks
+            { "\u0298", new List<string>(){"\u01c0","\u01c3","\u01c2","\u01c1"} },
+            { "\u01c0", new List<string>(){"\u0298","\u01c3","\u01c2","\u01c1"} },
+            { "\u01c3", new List<string>(){"\u0298","\u01c0","\u01c2","\u01c1"} },
+            { "\u01c2", new List<string>(){"\u0298","\u01c0","\u01c3","\u01c1"} },
+            { "\u01c1", new List<string>(){"\u0298","\u01c0","\u01c3","\u01c2"} },
+            // Voiced Implosives
+            { "\u0253", new List<string>(){"b","p","m","\u0257","t","d"} },
+            { "\u0257", new List<string>(){"t","d","n","\u0273","\u0253","b","p","\u0288","\u0256" } },
+            { "\u0284", new List<string>(){"c", "\u025f", "\u0288", "\u0256", "k", "\u0261","n", "\u0273", "\u0272", } },
+            { "\u0260", new List<string>(){"k","\u0261","c","\u025f","q","\u0262", "\u0273", "\u0272", "\u0274", } },
+            { "\u029b", new List<string>(){"q","\u0262", "\u0272", "\u0274", } },
+            // others
+            { "\u028d", new List<string>(){"w","\u028b","\u0279","\u027b","\u006a","\u0270","\u029d","x"} },
+            { "w", new List<string>(){ "ʍ", "\u028b","\u0279","\u027b","\u006a","\u0270","\u029d","x"} },
         };
 
-        private static Dictionary<string, List<string>>? _p_consonant_changes_l2 = null;
+        private static Dictionary<string, List<string>>? _consonant_changes_l2 = null;
 
-        private static Dictionary<string, List<string>>? _p_consonant_changes_l3 = null;
+        private static Dictionary<string, List<string>>? _consonant_changes_l3 = null;
 
         public static String[] PConsonants
         {
@@ -426,32 +457,32 @@ namespace ConlangAudioHoning
             get => _latinIpaReplacements;
         }
 
-        public static Dictionary<string, List<string>> P_consonant_changes
+        public static Dictionary<string, List<string>> Consonant_changes
         {
-            get => _p_consonant_changes;
+            get => _consonant_changes;
         }
 
-        public static Dictionary<string, List<string>> P_consonant_changes_l2
+        public static Dictionary<string, List<string>> Consonant_changes_l2
         {
             get
             {
-                if(_p_consonant_changes_l2 == null)
+                if(_consonant_changes_l2 == null)
                 {
-                    _p_consonant_changes_l2 = PopulateL2PConantChanges();
+                    _consonant_changes_l2 = PopulateL2ConantChanges();
                 }
-                return _p_consonant_changes_l2;
+                return _consonant_changes_l2;
             }
         }
 
-        public static Dictionary<string, List<string>> P_consonant_changes_l3
+        public static Dictionary<string, List<string>> Consonant_changes_l3
         {
             get
             {
-                if (_p_consonant_changes_l3 == null)
+                if (_consonant_changes_l3 == null)
                 {
-                    _p_consonant_changes_l3 = PopulateL3PConantChanges();
+                    _consonant_changes_l3 = PopulateL3ConantChanges();
                 }
-                return _p_consonant_changes_l3;
+                return _consonant_changes_l3;
             }
         }
 
@@ -770,56 +801,56 @@ namespace ConlangAudioHoning
             return count;
         }
 
-        private static Dictionary<string, List<string>> PopulateL2PConantChanges()
+        private static Dictionary<string, List<string>> PopulateL2ConantChanges()
         {
             Dictionary<string, List<string>> pConsonantChangesL2 = new Dictionary<string, List<string>>();
 
-            foreach(string pConsonant in P_consonant_changes.Keys)
+            foreach(string pConsonant in Consonant_changes.Keys)
             {
                 SortedSet<string> addedChanges = new SortedSet<string>();
-                foreach(string oldChange in P_consonant_changes[pConsonant])
+                foreach(string oldChange in Consonant_changes[pConsonant])
                 {
                     // Iterate over the changes for the existing changes in this consonant and add
                     // them to the candidate set of changes if, and only if, they are not already
                     // changes
-                    foreach(string candidateChange in P_consonant_changes[oldChange])
+                    foreach(string candidateChange in Consonant_changes[oldChange])
                     {
-                        if((!candidateChange.Equals(pConsonant)) && (!P_consonant_changes[pConsonant].Contains(candidateChange)))
+                        if((!candidateChange.Equals(pConsonant)) && (!Consonant_changes[pConsonant].Contains(candidateChange)))
                         {
                             addedChanges.Add(candidateChange);
                         }
                     }
                 }
                 List<string> l2changes = new List<string>();
-                l2changes.AddRange(P_consonant_changes[pConsonant]);
+                l2changes.AddRange(Consonant_changes[pConsonant]);
                 l2changes.AddRange(addedChanges);
                 pConsonantChangesL2.Add(pConsonant, l2changes);
             }
 
             return pConsonantChangesL2;
         }
-        private static Dictionary<string, List<string>> PopulateL3PConantChanges()
+        private static Dictionary<string, List<string>> PopulateL3ConantChanges()
         {
             Dictionary<string, List<string>> pConsonantChangesL3 = new Dictionary<string, List<string>>();
 
-            foreach (string pConsonant in P_consonant_changes_l2.Keys)
+            foreach (string pConsonant in Consonant_changes_l2.Keys)
             {
                 SortedSet<string> addedChanges = new SortedSet<string>();
-                foreach (string oldChange in P_consonant_changes_l2[pConsonant])
+                foreach (string oldChange in Consonant_changes_l2[pConsonant])
                 {
                     // Iterate over the changes for the existing changes in this consonant and add
                     // them to the candidate set of changes if, and only if, they are not already
                     // changes
-                    foreach (string candidateChange in P_consonant_changes_l2[oldChange])
+                    foreach (string candidateChange in Consonant_changes_l2[oldChange])
                     {
-                        if ((!candidateChange.Equals(pConsonant)) && (!P_consonant_changes_l2[pConsonant].Contains(candidateChange)))
+                        if ((!candidateChange.Equals(pConsonant)) && (!Consonant_changes_l2[pConsonant].Contains(candidateChange)))
                         {
                             addedChanges.Add(candidateChange);
                         }
                     }
                 }
                 List<string> l3changes = new List<string>();
-                l3changes.AddRange(P_consonant_changes[pConsonant]);
+                l3changes.AddRange(Consonant_changes[pConsonant]);
                 l3changes.AddRange(addedChanges);
                 pConsonantChangesL3.Add(pConsonant, l3changes);
             }
