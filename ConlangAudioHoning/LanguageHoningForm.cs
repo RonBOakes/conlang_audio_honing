@@ -508,7 +508,7 @@ namespace ConlangAudioHoning
 
         private void rbn_consonants_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbn_pulmonicConsonants.Checked)
+            if (rbn_consonants.Checked)
             {
                 if (languageDescription == null)
                 {
@@ -544,22 +544,32 @@ namespace ConlangAudioHoning
                 return;
             }
             int phonemeIndex = cbx_phonemeToChange.SelectedIndex;
-            if (rbn_pulmonicConsonants.Checked)
+            if (rbn_consonants.Checked)
             {
-                string pConsonant = languageDescription.phonetic_inventory["p_consonants"][phonemeIndex].ToString();
+                string consonant;
+                {
+                    if (phonemeIndex < languageDescription.phonetic_inventory["p_consonants"].Length)
+                    {
+                        consonant = languageDescription.phonetic_inventory["p_consonants"][phonemeIndex].ToString();
+                    }
+                    else
+                    {
+                        consonant = languageDescription.phonetic_inventory["np_consonants"][phonemeIndex - languageDescription.phonetic_inventory["p_consonants"].Length].ToString();
+                    }
+                }
                 cbx_replacementPhoneme.Items.Clear();
                 List<string> replacementPhonemes;
                 if (rbn_l1.Checked)
                 {
-                    replacementPhonemes = IpaUtilities.Consonant_changes[pConsonant];
+                    replacementPhonemes = IpaUtilities.Consonant_changes[consonant];
                 }
                 else if (rbn_l2.Checked)
                 {
-                    replacementPhonemes = IpaUtilities.Consonant_changes_l2[pConsonant];
+                    replacementPhonemes = IpaUtilities.Consonant_changes_l2[consonant];
                 }
                 else if (rbn_l3.Checked)
                 {
-                    replacementPhonemes = IpaUtilities.Consonant_changes_l3[pConsonant];
+                    replacementPhonemes = IpaUtilities.Consonant_changes_l3[consonant];
                 }
                 else if (rbn_allPhonemes.Checked)
                 {
@@ -568,7 +578,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    replacementPhonemes = IpaUtilities.Consonant_changes[pConsonant];
+                    replacementPhonemes = IpaUtilities.Consonant_changes[consonant];
                 }
                 foreach (string replacement in replacementPhonemes)
                 {
@@ -580,6 +590,82 @@ namespace ConlangAudioHoning
                 cbx_replacementPhoneme.DrawMode = DrawMode.OwnerDrawFixed;
                 cbx_replacementPhoneme.MeasureItem += Cbx_replacementPhoneme_MeasureItem;
                 cbx_replacementPhoneme.DrawItem += cbx_replacementPhoneme_DrawItem;
+            }
+            else if (rbn_vowels.Checked)
+            {
+                string vowel;
+                vowel = languageDescription.phonetic_inventory["vowels"][phonemeIndex].ToString();
+                cbx_replacementPhoneme.Items.Clear();
+                if (rbn_normalVowel.Checked)
+                {
+                    foreach (string replacement in IpaUtilities.Vowels)
+                    {
+                        if (!replacement.Equals(vowel))
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            sb.AppendFormat("{0} -- ", replacement);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                }
+                else if (rbn_halfLongVowels.Checked)
+                {
+                    foreach (string replacement in IpaUtilities.Vowels)
+                    {
+                        if (!replacement.Equals(vowel))
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            sb.AppendFormat("{0}ˑ -- ", replacement);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
+                            sb.Append(" half-lengthened");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                }
+                else if (rbn_longVowels.Checked)
+                {
+                    foreach (string replacement in IpaUtilities.Vowels)
+                    {
+                        if (!replacement.Equals(vowel))
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            sb.AppendFormat("{0}ː -- ", replacement);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
+                            sb.Append(" lengthened");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                }
+                else if (rbn_normalDiphthong.Checked)
+                {
+                    foreach (string replacement in IpaUtilities.Vowels)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{1}{0} -- ", replacement,vowel);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[vowel]);
+                        sb.Append(", ");
+                        sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
+                        sb.Append(" diphthong");
+                        cbx_replacementPhoneme.Items.Add(sb.ToString());
+                    }
+                }
+                else if (rbn_semivowelDiphthong.Checked)
+                {
+                    foreach (string replacement in IpaUtilities.Vowels)
+                    {
+                        if (!replacement.Equals(vowel))
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            sb.AppendFormat("{1}̯{0} -- ", replacement, vowel);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[vowel]);
+                            sb.Append(" semivowel, ");
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
+                            sb.Append(" diphthong");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                }
             }
         }
 
@@ -594,7 +680,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if (!(rbn_pulmonicConsonants.Checked)) // TODO: Add the other options to ensure that at least one is checked
+            if (!(rbn_consonants.Checked || rbn_vowels.Checked)) // TODO: Add the other options to ensure that at least one is checked
             {
                 return;
             }
@@ -603,7 +689,7 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            if (rbn_pulmonicConsonants.Checked)
+            if ((rbn_consonants.Checked) || (rbn_vowels.Checked))
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
@@ -621,7 +707,7 @@ namespace ConlangAudioHoning
                     }
                 }
                 // Clear the combo boxes
-                rbn_pulmonicConsonants.Checked = false;
+                rbn_consonants.Checked = false;
                 cbx_phonemeToChange.Items.Clear();
                 cbx_replacementPhoneme.Items.Clear();
             }
@@ -684,7 +770,7 @@ namespace ConlangAudioHoning
             }
             bool isInInventory = false;
             string checkChar = cbxEntry.Split()[0]; // The combo boxes to be checked always have the character first, followed by whitespace
-            if (rbn_pulmonicConsonants.Checked)
+            if (rbn_consonants.Checked)
             {
                 isInInventory = languageDescription.phonetic_inventory["p_consonants"].Contains(checkChar);
             }
@@ -723,7 +809,7 @@ namespace ConlangAudioHoning
 
         private void rbn_vowels_CheckedChanged(object sender, EventArgs e)
         {
-            if(rbn_vowels.Checked)
+            if (rbn_vowels.Checked)
             {
                 if (languageDescription == null)
                 {
@@ -737,13 +823,13 @@ namespace ConlangAudioHoning
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.AppendFormat("{0} -- ", vowel);
-                    string vowelKey = vowel.Trim().Substring(0,1);
+                    string vowelKey = vowel.Trim().Substring(0, 1);
                     sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
-                    if(vowel.Contains("ː"))
+                    if (vowel.Contains("ː"))
                     {
                         sb.Append(" lengthened");
                     }
-                    else if(vowel.Contains("ˑ"))
+                    else if (vowel.Contains("ˑ"))
                     {
                         sb.Append(" half-lengthened");
                     }

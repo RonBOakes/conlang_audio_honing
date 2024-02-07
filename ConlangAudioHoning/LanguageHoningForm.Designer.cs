@@ -57,7 +57,7 @@
             pbTimer = new System.Windows.Forms.Timer(components);
             gbx_phonetics = new GroupBox();
             rbn_vowels = new RadioButton();
-            rbn_pulmonicConsonants = new RadioButton();
+            rbn_consonants = new RadioButton();
             label1 = new Label();
             label2 = new Label();
             cbx_phonemeToChange = new ComboBox();
@@ -297,7 +297,7 @@
             // gbx_phonetics
             // 
             gbx_phonetics.Controls.Add(rbn_vowels);
-            gbx_phonetics.Controls.Add(rbn_pulmonicConsonants);
+            gbx_phonetics.Controls.Add(rbn_consonants);
             gbx_phonetics.Location = new Point(15, 224);
             gbx_phonetics.Name = "gbx_phonetics";
             gbx_phonetics.Size = new Size(492, 42);
@@ -317,17 +317,17 @@
             rbn_vowels.UseVisualStyleBackColor = true;
             rbn_vowels.CheckedChanged += rbn_vowels_CheckedChanged;
             // 
-            // rbn_pulmonicConsonants
+            // rbn_consonants
             // 
-            rbn_pulmonicConsonants.AutoSize = true;
-            rbn_pulmonicConsonants.Location = new Point(12, 16);
-            rbn_pulmonicConsonants.Name = "rbn_pulmonicConsonants";
-            rbn_pulmonicConsonants.Size = new Size(88, 19);
-            rbn_pulmonicConsonants.TabIndex = 0;
-            rbn_pulmonicConsonants.TabStop = true;
-            rbn_pulmonicConsonants.Text = "Consonants";
-            rbn_pulmonicConsonants.UseVisualStyleBackColor = true;
-            rbn_pulmonicConsonants.CheckedChanged += rbn_consonants_CheckedChanged;
+            rbn_consonants.AutoSize = true;
+            rbn_consonants.Location = new Point(12, 16);
+            rbn_consonants.Name = "rbn_consonants";
+            rbn_consonants.Size = new Size(88, 19);
+            rbn_consonants.TabIndex = 0;
+            rbn_consonants.TabStop = true;
+            rbn_consonants.Text = "Consonants";
+            rbn_consonants.UseVisualStyleBackColor = true;
+            rbn_consonants.CheckedChanged += rbn_consonants_CheckedChanged;
             // 
             // label1
             // 
@@ -653,7 +653,7 @@
         private ProgressBar pb_status;
         private System.Windows.Forms.Timer pbTimer;
         private GroupBox gbx_phonetics;
-        private RadioButton rbn_pulmonicConsonants;
+        private RadioButton rbn_consonants;
         private Label label1;
         private Label label2;
         private ComboBox cbx_phonemeToChange;

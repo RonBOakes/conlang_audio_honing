@@ -58,7 +58,7 @@ namespace ConlangAudioHoning
         {
             "a", "\u00e6", "\u0251", "\u0252", "\u0250", "e", "\u025b", "\u025c", "\u025e", "\u0259", "i", "\u0268",
             "\u026a", "y", "\u028f", "\u00f8", "\u0258", "\u0275", "\u0153", "\u0276", "\u0264", "o", "\u0254", "u",
-            "\u0289", "\u028a", "\u026f", "\u028c", "\u025a", "\u02de"
+            "\u0289", "\u028a", "\u026f", "\u028c", "\u025a",
         };
 
         private static string[] _suprasegmentals =
@@ -239,6 +239,7 @@ namespace ConlangAudioHoning
             { "\u026a\u0308", new string("near-close central unrounded vowel") },
             { "\u028a\u0308", new string("near-close central rounded vowel") },
             { "\u028a", new string("near-close back rounded vowel") },
+            { "\u025a", new string("close-mid front rounded vowel rhoticity") },
             { "\u0065", new string("close-mid front unrounded vowel") },
             { "\u00f8", new string("close-mid front rounded vowel") },
             { "\u0258", new string("close-mid central unrounded vowel") },
