@@ -55,7 +55,7 @@ namespace ConlangAudioHoning
         {
             InitializeComponent();
             phoneticChanger = new PhoneticChanger();
-            //amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
+            amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
             LoadVoices();
             LoadSpeeds();
         }
@@ -525,6 +525,13 @@ namespace ConlangAudioHoning
                     sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
                     cbx_phonemeToChange.Items.Add(sb.ToString());
                 }
+                foreach (string consonant in languageDescription.phonetic_inventory["np_consonants"])
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("{0} -- ", consonant);
+                    sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
+                    cbx_phonemeToChange.Items.Add(sb.ToString());
+                }
 
                 cbx_phonemeToChange.SelectedIndex = -1;
             }
@@ -718,7 +725,36 @@ namespace ConlangAudioHoning
         {
             if(rbn_vowels.Checked)
             {
-                // TODO rest of operations
+                if (languageDescription == null)
+                {
+                    return;
+                }
+                // Ensure that there is a blank at the top of the drop down list
+                cbx_phonemeToChange.Items.Clear();
+                // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can 
+                // use it to populate the combo box of pulmonic consonants to be changed.
+                foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("{0} -- ", vowel);
+                    string vowelKey = vowel.Trim().Substring(0,1);
+                    sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
+                    if(vowel.Contains("ː"))
+                    {
+                        sb.Append(" lengthened");
+                    }
+                    else if(vowel.Contains("ˑ"))
+                    {
+                        sb.Append(" half-lengthened");
+                    }
+                    else if (vowel.Contains("\u032f"))
+                    {
+                        sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                    }
+                    cbx_phonemeToChange.Items.Add(sb.ToString());
+                }
+
+                cbx_phonemeToChange.SelectedIndex = -1;
             }
         }
     }
