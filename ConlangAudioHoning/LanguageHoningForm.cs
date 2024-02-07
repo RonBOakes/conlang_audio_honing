@@ -55,7 +55,7 @@ namespace ConlangAudioHoning
         {
             InitializeComponent();
             phoneticChanger = new PhoneticChanger();
-            amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
+            //amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
             LoadVoices();
             LoadSpeeds();
         }
@@ -64,7 +64,7 @@ namespace ConlangAudioHoning
         {
             cbx_voice.SuspendLayout();
             cbx_voice.Items.Clear();
-            foreach(string voiceName in amazonPollyVoices.Keys)
+            foreach (string voiceName in amazonPollyVoices.Keys)
             {
                 string voiceMenu = string.Format("{0} ({1}, {2})", voiceName, amazonPollyVoices[voiceName].LanguageName, amazonPollyVoices[voiceName].Gender);
                 cbx_voice.Items.Add(voiceMenu);
@@ -76,7 +76,7 @@ namespace ConlangAudioHoning
         {
             cbx_speed.SuspendLayout();
             cbx_speed.Items.Clear();
-            cbx_speed.Items.AddRange(new string[] { "x-slow","slow","medium","fast","x-fast" });
+            cbx_speed.Items.AddRange(new string[] { "x-slow", "slow", "medium", "fast", "x-fast" });
             cbx_speed.ResumeLayout();
         }
 
@@ -157,9 +157,9 @@ namespace ConlangAudioHoning
             cbx_recordings.Items.Clear();
             cbx_speed.SelectedText = "slow";
 
-            if(languageDescription.preferred_voice != null)
+            if (languageDescription.preferred_voice != null)
             {
-                string voiceMenu = string.Format("{0} ({1}, {2})", languageDescription.preferred_voice, 
+                string voiceMenu = string.Format("{0} ({1}, {2})", languageDescription.preferred_voice,
                     amazonPollyVoices[languageDescription.preferred_voice].LanguageName, amazonPollyVoices[languageDescription.preferred_voice].Gender);
                 cbx_voice.SelectedText = voiceMenu;
             }
@@ -168,7 +168,7 @@ namespace ConlangAudioHoning
             {
                 declineToolStripMenuItem.Enabled = false;
             }
-            if(languageDescription.derived)
+            if (languageDescription.derived)
             {
                 deriveToolStripMenuItem.Enabled = false;
             }
@@ -506,12 +506,10 @@ namespace ConlangAudioHoning
             player.controls.play();
         }
 
-        private void rbn_pulmonicConsonants_CheckedChanged(object sender, EventArgs e)
+        private void rbn_consonants_CheckedChanged(object sender, EventArgs e)
         {
             if (rbn_pulmonicConsonants.Checked)
             {
-                rbn_allPhonemes.Text = "All Consonants";
-
                 if (languageDescription == null)
                 {
                     return;
@@ -544,19 +542,19 @@ namespace ConlangAudioHoning
                 string pConsonant = languageDescription.phonetic_inventory["p_consonants"][phonemeIndex].ToString();
                 cbx_replacementPhoneme.Items.Clear();
                 List<string> replacementPhonemes;
-                if(rbn_l1.Checked)
+                if (rbn_l1.Checked)
                 {
                     replacementPhonemes = IpaUtilities.Consonant_changes[pConsonant];
                 }
-                else if(rbn_l2.Checked)
+                else if (rbn_l2.Checked)
                 {
                     replacementPhonemes = IpaUtilities.Consonant_changes_l2[pConsonant];
                 }
-                else if(rbn_l3.Checked)
+                else if (rbn_l3.Checked)
                 {
                     replacementPhonemes = IpaUtilities.Consonant_changes_l3[pConsonant];
                 }
-                else if(rbn_allPhonemes.Checked)
+                else if (rbn_allPhonemes.Checked)
                 {
                     replacementPhonemes = new List<string>();
                     replacementPhonemes.AddRange(IpaUtilities.Consonant_changes.Keys);
@@ -585,27 +583,27 @@ namespace ConlangAudioHoning
 
         private void btn_applyChangeToLanguage_Click(object sender, EventArgs e)
         {
-            if(languageDescription == null) 
-            { 
-                return; 
-            }
-            if(!(rbn_pulmonicConsonants.Checked)) // TODO: Add the other options to ensure that at least one is checked
+            if (languageDescription == null)
             {
                 return;
             }
-            if((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
+            if (!(rbn_pulmonicConsonants.Checked)) // TODO: Add the other options to ensure that at least one is checked
+            {
+                return;
+            }
+            if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
             {
                 return;
             }
 
-            if(rbn_pulmonicConsonants.Checked)
+            if (rbn_pulmonicConsonants.Checked)
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
                 // Make the change
                 phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme);
                 // Update sample text
-                if(sampleText != string.Empty)
+                if (sampleText != string.Empty)
                 {
                     sampleText = phoneticChanger.SampleText;
                     txt_SampleText.Text = sampleText;
@@ -631,7 +629,7 @@ namespace ConlangAudioHoning
 
         private void cbx_replacementPhoneme_DrawItem(object? sender, System.Windows.Forms.DrawItemEventArgs e)
         {
-            if(e.Index<0)
+            if (e.Index < 0)
             {
                 e.DrawBackground();
                 e.DrawFocusRectangle();
@@ -645,14 +643,14 @@ namespace ConlangAudioHoning
 #pragma warning disable CS8600
                 cbxEntry = (string)cbx_replacementPhoneme.Items[e.Index];
 #pragma warning restore CS8600
-                if(cbxEntry == null)
+                if (cbxEntry == null)
                 {
                     cbxEntry = string.Empty;
                 }
             }
             bool inInventory = IsInInventory(cbxEntry);
             bool hasSpellingMap = HasSpellingMap(cbxEntry);
-            if(inInventory && hasSpellingMap)
+            if (inInventory && hasSpellingMap)
             {
                 comboBrush = Brushes.Blue;
             }
@@ -660,22 +658,22 @@ namespace ConlangAudioHoning
             {
                 comboBrush = Brushes.Green;
             }
-            else if(hasSpellingMap)
+            else if (hasSpellingMap)
             {
                 comboBrush = Brushes.Red;
             }
 
             e.DrawBackground();
             Rectangle rectangle = new Rectangle(2, e.Bounds.Top + 2, e.Bounds.Height, e.Bounds.Height - 4);
-            e.Graphics.DrawString(cbxEntry, cbx_replacementPhoneme.Font, comboBrush, 
+            e.Graphics.DrawString(cbxEntry, cbx_replacementPhoneme.Font, comboBrush,
                 new RectangleF(e.Bounds.X + rectangle.Width, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
         }
 
         private bool IsInInventory(string cbxEntry)
         {
-            if(languageDescription == null)
-            { 
-                return false; 
+            if (languageDescription == null)
+            {
+                return false;
             }
             bool isInInventory = false;
             string checkChar = cbxEntry.Split()[0]; // The combo boxes to be checked always have the character first, followed by whitespace
@@ -688,25 +686,25 @@ namespace ConlangAudioHoning
         }
         private bool HasSpellingMap(string cbxEntry)
         {
-            if(languageDescription == null) 
-            { 
-                return false; 
+            if (languageDescription == null)
+            {
+                return false;
             }
             bool hasSpellingMap = false;
             string checkChar = cbxEntry.Split()[0]; // The combo boxes to be checked always have the character first, followed by whitespace
-            if(checkChar.Length == 1)
+            if (checkChar.Length == 1)
             {
                 char c = checkChar[0];
-                if(Char.IsLetter(c))
+                if (Char.IsLetter(c))
                 {
                     hasSpellingMap = true;
                 }
             }
             else
             {
-                foreach(SoundMap soundMap in languageDescription.sound_map_list)
+                foreach (SoundMap soundMap in languageDescription.sound_map_list)
                 {
-                    if((soundMap.phoneme.Contains(checkChar)) || (soundMap.spelling_regex.Contains(checkChar)))
+                    if ((soundMap.phoneme.Contains(checkChar)) || (soundMap.spelling_regex.Contains(checkChar)))
                     {
                         hasSpellingMap = true;
                     }
@@ -714,6 +712,14 @@ namespace ConlangAudioHoning
             }
 
             return hasSpellingMap;
+        }
+
+        private void rbn_vowels_CheckedChanged(object sender, EventArgs e)
+        {
+            if(rbn_vowels.Checked)
+            {
+                // TODO rest of operations
+            }
         }
     }
 }
