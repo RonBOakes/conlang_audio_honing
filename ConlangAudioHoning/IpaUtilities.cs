@@ -434,6 +434,10 @@ namespace ConlangAudioHoning
             "\u00a5","\u00a7","\u00a9","\u00ae","\u0394","\u039e","\u03a6","\u03a8",
         };
 
+        private static string? _consonant_pattern = null;
+        private static string? _vowel_pattern = null;
+        private static string? _diacritic_pattern = null;
+
         public static String[] PConsonants
         {
             get => _p_consonants;
@@ -462,6 +466,71 @@ namespace ConlangAudioHoning
         public static string[] Diacritics
         {
             get => _diacritics;
+        }
+
+        public static string ConsonantPattern
+        {
+            get
+            {
+                if (_consonant_pattern == null)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("[");
+                    foreach(string consonant in PConsonants)
+                    {
+                        sb.Append(consonant);
+                    }
+                    foreach(string consonant in NpConsonants)
+                    {
+                        sb.Append(consonant);
+                    }
+                    sb.Append("]");
+                    _consonant_pattern = sb.ToString();
+                }
+                return _consonant_pattern;
+            }
+        }
+
+        public static string VowelPattern
+        {
+            get
+            {
+                if(_vowel_pattern == null)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("[");
+                    foreach(string vowel in Vowels)
+                    {
+                        sb.Append(vowel);
+                    }
+                    sb.Append("]");
+                    _vowel_pattern = sb.ToString();
+                }
+                return _vowel_pattern;
+            }
+        }
+
+        public static string DiacriticPattern
+        {
+            get
+            {
+                if(_diacritic_pattern == null)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("[");
+                    foreach(string diacritic in Vowel_modifiers)
+                    {
+                        sb.Append(diacritic);
+                    }
+                    foreach(string diacritic in Diacritics)
+                    {
+                        sb.Append(diacritic);
+                    }
+                    sb.Append("]");
+                    _diacritic_pattern = sb.ToString();
+                }
+                return _diacritic_pattern;
+            }
         }
 
         public static Dictionary<string, string> IpaPhonemesMap

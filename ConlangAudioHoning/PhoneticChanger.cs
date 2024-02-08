@@ -85,6 +85,8 @@ namespace ConlangAudioHoning
                 }
             }
 
+            string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+
             // Update the Lexicon
             foreach (LexiconEntry word in Language.lexicon)
             {
@@ -105,7 +107,8 @@ namespace ConlangAudioHoning
                     }
                 }
 
-                word.phonetic = word.phonetic.Replace(oldPhoneme, newPhoneme);
+                word.phonetic = Regex.Replace(word.phonetic, replacementPattern, newPhoneme);
+                
                 // Put the replaced diphthongs back
                 foreach (string diphthong in diphthongReplacementMap.Keys)
                 {
@@ -190,6 +193,7 @@ namespace ConlangAudioHoning
             {
                 string interimReplacementSymbol = string.Format("{0}", interimReplacementSymbolInt++);
                 interimReplacementMap.Add(interimReplacementSymbol, (oldPhoneme, newPhoneme));
+                string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
                 // Update the Lexicon phase 1
                 foreach (LexiconEntry word in Language.lexicon)
                 {
@@ -208,7 +212,7 @@ namespace ConlangAudioHoning
 
                     // replace all occurrences of oldPhoneme in phonetic with newPhoneme
                     LexiconEntry oldVersion = word.copy();
-                    word.phonetic = word.phonetic.Replace(oldPhoneme, interimReplacementSymbol);
+                    word.phonetic = Regex.Replace(word.phonetic, replacementPattern, interimReplacementSymbol);
                     // Put the replaced diphthongs back
                     foreach (string diphthong in diphthongReplacementMap.Keys)
                     {
