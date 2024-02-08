@@ -24,6 +24,7 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
@@ -211,23 +212,9 @@ namespace ConlangAudioHoning
                 }
             }
 
-            // DEBUG
-            string oldSampleText = SampleText;
-            string lastWord = string.Empty;
-
             // Update the Lexicon
             foreach (LexiconEntry word in Language.lexicon)
             {
-                // DEBUG
-                if(!oldSampleText.Equals(SampleText))
-                {
-                    int i = 0; // breakpoint fodder
-                }
-                else
-                {
-                    oldSampleText = SampleText;
-                    lastWord = word.spelled;
-                }
                 LexiconEntry oldVersion = word.copy();
                 foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
                 {
@@ -263,7 +250,12 @@ namespace ConlangAudioHoning
                 {
                     string oldSpelled = word.spelled;
                     word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
-                    SampleText = SampleText.Replace(oldSpelled, word.spelled);
+                    string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
+                    SampleText = Regex.Replace(SampleText, wordPattern, "$1"+word.spelled+"$2");
+                    wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
+                    SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
+                    wordPattern = @"(\s+)" + oldSpelled + "$";
+                    SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
 
                 }
             }
