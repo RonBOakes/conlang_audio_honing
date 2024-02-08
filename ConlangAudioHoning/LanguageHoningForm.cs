@@ -52,6 +52,11 @@ namespace ConlangAudioHoning
         private Dictionary<string, PollySpeech.VoiceData> amazonPollyVoices = new Dictionary<string, PollySpeech.VoiceData>();
         private List<(string, string)> changesToBeMade = new List<(string, string)>();
 
+        public System.Windows.Forms.ProgressBar ProgressBar
+        {
+            get => pb_status;
+        }
+
         public LanguageHoningForm()
         {
             InitializeComponent();

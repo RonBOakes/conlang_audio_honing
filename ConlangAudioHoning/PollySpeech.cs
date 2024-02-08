@@ -311,6 +311,24 @@ namespace ConlangAudioHoning
             HttpClient httpClient = httpHandler.httpClient;
             StringContent content;
 
+            ProgressBar? progressBar;
+            if(caller != null)
+            {
+                progressBar = caller.ProgressBar;
+                progressBar.Style = ProgressBarStyle.Continuous;
+                progressBar.Minimum = 0;
+                progressBar.Maximum = 5;
+                progressBar.Value = 0;
+                progressBar.Step = 1;
+                progressBar.Visible = true;
+                progressBar.BringToFront();
+            }
+            else
+            {
+                progressBar = null;
+            }
+
+
             Dictionary<string, string> requestDict = new Dictionary<string, string>();
             requestDict["systemStatus"] = string.Empty;
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
@@ -320,6 +338,10 @@ namespace ConlangAudioHoning
                 {
                     return false;
                 }
+            }
+            if(progressBar != null)
+            {
+                progressBar.Value = 1;
             }
 
             requestDict.Clear();
@@ -347,6 +369,10 @@ namespace ConlangAudioHoning
 #pragma warning restore CS8602 // Possible null reference assignment.            }
 #pragma warning restore CS8600 // Possible null reference assignment.
             }
+            if(progressBar != null)
+            {
+                progressBar.Value = 2;
+            }
 
             requestDict.Clear();
             requestDict["taskStatus"] = string.Empty;
@@ -370,6 +396,10 @@ namespace ConlangAudioHoning
                     {
                         complete = true;
                     }
+                    if(progressBar != null)
+                    {
+                        progressBar.Value = 3;
+                    }
                 }
                 Thread.Sleep(5000);
 
@@ -390,6 +420,10 @@ namespace ConlangAudioHoning
                 File.WriteAllBytes(targetFile, data);
                 generated = true;
             }
+            if(progressBar != null)
+            {
+                progressBar.Value = 4;
+            }
 
             requestDict.Clear();
             requestDict["delete"] = string.Empty;
@@ -398,6 +432,12 @@ namespace ConlangAudioHoning
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
                 HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+            }
+            if(progressBar != null)
+            {
+                progressBar.Value = 5;
+                progressBar.Visible = false;
+                progressBar.SendToBack();
             }
 
             return generated;
