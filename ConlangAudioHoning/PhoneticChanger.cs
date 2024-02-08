@@ -117,7 +117,12 @@ namespace ConlangAudioHoning
                     {
                         string oldSpelled = word.spelled;
                         word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
-                        SampleText = SampleText.Replace(oldSpelled, word.spelled);
+                        string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
+                        wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
+                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
+                        wordPattern = @"(\s+)" + oldSpelled + "$";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
                     }
                     if (word.metadata == null)
                     {
@@ -256,7 +261,6 @@ namespace ConlangAudioHoning
                     SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
                     wordPattern = @"(\s+)" + oldSpelled + "$";
                     SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
-
                 }
             }
             // Update the phonetic inventory
