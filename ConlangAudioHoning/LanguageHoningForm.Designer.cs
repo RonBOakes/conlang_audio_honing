@@ -82,6 +82,10 @@
             rbn_halfLongVowels = new RadioButton();
             rbn_normalVowel = new RadioButton();
             rbn_normalDiphthong = new RadioButton();
+            txt_changeList = new TextBox();
+            label8 = new Label();
+            btn_addCurrentChangeToList = new Button();
+            btn_applyListOfChanges = new Button();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
@@ -370,22 +374,23 @@
             // 
             // btn_applyChangeToLanguage
             // 
-            btn_applyChangeToLanguage.Location = new Point(513, 364);
+            btn_applyChangeToLanguage.Location = new Point(515, 364);
             btn_applyChangeToLanguage.Name = "btn_applyChangeToLanguage";
-            btn_applyChangeToLanguage.Size = new Size(495, 23);
+            btn_applyChangeToLanguage.Size = new Size(493, 23);
             btn_applyChangeToLanguage.TabIndex = 15;
-            btn_applyChangeToLanguage.Text = "Apply This Change to the Language";
+            btn_applyChangeToLanguage.Text = "Apply Current Change to the Language";
             btn_applyChangeToLanguage.UseVisualStyleBackColor = true;
             btn_applyChangeToLanguage.Click += btn_applyChangeToLanguage_Click;
             // 
             // btn_revertLastChange
             // 
-            btn_revertLastChange.Location = new Point(515, 398);
+            btn_revertLastChange.Location = new Point(515, 451);
             btn_revertLastChange.Name = "btn_revertLastChange";
             btn_revertLastChange.Size = new Size(493, 23);
             btn_revertLastChange.TabIndex = 16;
             btn_revertLastChange.Text = "Revert the last change";
             btn_revertLastChange.UseVisualStyleBackColor = true;
+            btn_revertLastChange.Visible = false;
             // 
             // label3
             // 
@@ -578,11 +583,54 @@
             rbn_normalDiphthong.Text = "Add Vowel to create Diphtohong";
             rbn_normalDiphthong.UseVisualStyleBackColor = true;
             // 
+            // txt_changeList
+            // 
+            txt_changeList.Enabled = false;
+            txt_changeList.Location = new Point(109, 423);
+            txt_changeList.Multiline = true;
+            txt_changeList.Name = "txt_changeList";
+            txt_changeList.ScrollBars = ScrollBars.Vertical;
+            txt_changeList.Size = new Size(398, 33);
+            txt_changeList.TabIndex = 26;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(15, 423);
+            label8.Name = "label8";
+            label8.Size = new Size(88, 15);
+            label8.TabIndex = 27;
+            label8.Text = "List of Changes";
+            // 
+            // btn_addCurrentChangeToList
+            // 
+            btn_addCurrentChangeToList.Location = new Point(515, 393);
+            btn_addCurrentChangeToList.Name = "btn_addCurrentChangeToList";
+            btn_addCurrentChangeToList.Size = new Size(493, 23);
+            btn_addCurrentChangeToList.TabIndex = 28;
+            btn_addCurrentChangeToList.Text = "Add Current Change to List of Changes";
+            btn_addCurrentChangeToList.UseVisualStyleBackColor = true;
+            btn_addCurrentChangeToList.Click += btn_addCurrentChangeToList_Click;
+            // 
+            // btn_applyListOfChanges
+            // 
+            btn_applyListOfChanges.Location = new Point(515, 422);
+            btn_applyListOfChanges.Name = "btn_applyListOfChanges";
+            btn_applyListOfChanges.Size = new Size(493, 23);
+            btn_applyListOfChanges.TabIndex = 29;
+            btn_applyListOfChanges.Text = "Apply All Listed Changes to the Language (Simultaneously)";
+            btn_applyListOfChanges.UseVisualStyleBackColor = true;
+            btn_applyListOfChanges.Click += btn_applyListOfChanges_Click;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1024, 496);
+            Controls.Add(btn_applyListOfChanges);
+            Controls.Add(btn_addCurrentChangeToList);
+            Controls.Add(label8);
+            Controls.Add(txt_changeList);
             Controls.Add(gbx_replacementPhomeDepth);
             Controls.Add(label7);
             Controls.Add(cbx_speed);
@@ -679,5 +727,9 @@
         private RadioButton rbn_normalDiphthong;
         private RadioButton rbn_semivowelDiphthong;
         private RadioButton rbn_vowels;
+        private TextBox txt_changeList;
+        private Label label8;
+        private Button btn_addCurrentChangeToList;
+        private Button btn_applyListOfChanges;
     }
 }

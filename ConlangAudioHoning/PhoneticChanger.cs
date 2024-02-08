@@ -20,6 +20,7 @@ using ConlangJson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -62,13 +63,13 @@ namespace ConlangAudioHoning
             }
 
             SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
-            List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0,Language.sound_map_list.Count);
+            List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
             soundMapListEditor.PhonemeReplacementPairs.Add((oldPhoneme, newPhoneme));
             soundMapListEditor.UpdatePhonemeReplacements();
             soundMapListEditor.ShowDialog();
             // ShowDialog is modal
-            if(soundMapListEditor.SoundMapSaved)
+            if (soundMapListEditor.SoundMapSaved)
             {
                 Language.sound_map_list = soundMapListEditor.SoundMapList;
             }
@@ -93,7 +94,7 @@ namespace ConlangAudioHoning
                 // Preserve vowel diphthongs before doing the main replacement
                 Dictionary<string, string> diphthongReplacementMap = new Dictionary<string, string>();
                 int ipaReplacementIndex = 0;
-                foreach(string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
                 {
                     if (!diphthong.Equals(oldPhoneme))
                     {
@@ -105,9 +106,9 @@ namespace ConlangAudioHoning
 
                 word.phonetic = word.phonetic.Replace(oldPhoneme, newPhoneme);
                 // Put the replaced diphthongs back
-                foreach(string diphthong in diphthongReplacementMap.Keys)
+                foreach (string diphthong in diphthongReplacementMap.Keys)
                 {
-                    word.phonetic = word.phonetic.Replace(diphthongReplacementMap[diphthong],diphthong);
+                    word.phonetic = word.phonetic.Replace(diphthongReplacementMap[diphthong], diphthong);
                 }
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
@@ -121,7 +122,7 @@ namespace ConlangAudioHoning
                     {
                         word.metadata = new System.Text.Json.Nodes.JsonObject();
                     }
-                    Dictionary<string,PhoneticChangeHistory>? phoneticChangeHistories = null;
+                    Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
                     {
                         phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
@@ -134,8 +135,8 @@ namespace ConlangAudioHoning
                     pch.OldPhoneme = oldPhoneme;
                     pch.NewPhoneme = newPhoneme;
                     pch.OldVersion = oldVersion;
-                    string timestamp = string.Format("{0:s}",DateTime.Now);
-                    phoneticChangeHistories.Add(timestamp,pch);
+                    string timestamp = string.Format("{0:yyyyMMdd.hhmmss.ffff}", DateTime.Now);
+                    phoneticChangeHistories.Add(timestamp, pch);
                     string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
                     word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
                 }
@@ -146,7 +147,7 @@ namespace ConlangAudioHoning
             IpaUtilities.BuildPhoneticInventory(Language);
         }
 
-        public void PhoneticChange(List<(string oldPhoneme, string newPhoneme)>changeList)
+        public void PhoneticChange(List<(string oldPhoneme, string newPhoneme)> changeList)
         {
             if (this._language == null)
             {
@@ -154,20 +155,24 @@ namespace ConlangAudioHoning
             }
 
             // The limit is 10 changes in a list due to how the replacements are done
-            if(changeList.Count > 10)
+            if (changeList.Count > 10)
             {
                 return;
             }
 
+            // Sort the list by size and then reverse it so that the longest 
+            changeList.Sort(new stringTupleLengthComp());
+            changeList.Reverse();
+
             // TODO: Update spelling/pronunciation rules (a.k.a. sound map list)
             SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
-            List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0,Language.sound_map_list.Count);
+            List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
             soundMapListEditor.PhonemeReplacementPairs.AddRange(changeList);
             soundMapListEditor.UpdatePhonemeReplacements();
             soundMapListEditor.ShowDialog();
             // ShowDialog is modal
-            if(soundMapListEditor.SoundMapSaved)
+            if (soundMapListEditor.SoundMapSaved)
             {
                 Language.sound_map_list = soundMapListEditor.SoundMapList;
             }
@@ -177,7 +182,7 @@ namespace ConlangAudioHoning
             int interimReplacementSymbolInt = 0;
             foreach ((string oldPhoneme, string newPhoneme) in changeList)
             {
-                string interimReplacementSymbol = string.Format("{0}",interimReplacementSymbolInt++);
+                string interimReplacementSymbol = string.Format("{0}", interimReplacementSymbolInt++);
                 interimReplacementMap.Add(interimReplacementSymbol, (oldPhoneme, newPhoneme));
                 // Update the Lexicon phase 1
                 foreach (LexiconEntry word in Language.lexicon)
@@ -205,64 +210,81 @@ namespace ConlangAudioHoning
                     }
                 }
             }
-            foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
-            {
-                (string  oldPhoneme2, string newPhoneme2) = interimReplacementMap[interimReplacementSymbol];
-                bool spellingChange = false;
-                foreach (SoundMap soundMap in Language.sound_map_list)
-                {
-                    if ((soundMap.spelling_regex.Contains(newPhoneme2)) || (soundMap.phoneme.Contains(newPhoneme2)))
-                    {
-                        spellingChange = true;
-                        break;
-                    }
-                }
 
-                // Update the Lexicon
-                foreach (LexiconEntry word in Language.lexicon)
+            // DEBUG
+            string oldSampleText = SampleText;
+            string lastWord = string.Empty;
+
+            // Update the Lexicon
+            foreach (LexiconEntry word in Language.lexicon)
+            {
+                // DEBUG
+                if(!oldSampleText.Equals(SampleText))
                 {
+                    int i = 0; // breakpoint fodder
+                }
+                else
+                {
+                    oldSampleText = SampleText;
+                    lastWord = word.spelled;
+                }
+                LexiconEntry oldVersion = word.copy();
+                foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                {
+                    (string oldPhoneme2, string newPhoneme2) = interimReplacementMap[interimReplacementSymbol];
                     // replace all occurrences of oldPhoneme in phonetic with newPhoneme
-                    LexiconEntry oldVersion = word.copy();
                     // Recreate the original phonetic version.
                     oldVersion.phonetic.Replace(interimReplacementSymbol, oldPhoneme2);
-                    string oldPhonetic = word.phonetic;
                     word.phonetic = word.phonetic.Replace(interimReplacementSymbol, newPhoneme2);
-                    if (!oldPhonetic.Equals(word.phonetic))
+
+                    if (word.metadata == null)
                     {
-                        if (spellingChange)
-                        {
-                            string oldSpelled = word.spelled;
-                            word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
-                            SampleText = SampleText.Replace(oldSpelled, word.spelled);
-                        }
-                        if (word.metadata == null)
-                        {
-                            word.metadata = new System.Text.Json.Nodes.JsonObject();
-                        }
-                        Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
-                        if (word.metadata.ContainsKey("PhoneticChangeHistory"))
-                        {
-                            phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
-                        }
-                        if (phoneticChangeHistories == null)
-                        {
-                            phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
-                        }
-                        PhoneticChangeHistory pch = new PhoneticChangeHistory();
-                        pch.OldPhoneme = oldPhoneme2;
-                        pch.NewPhoneme = newPhoneme2;
-                        pch.OldVersion = oldVersion;
-                        string timestamp = string.Format("{0:s}", DateTime.Now);
-                        phoneticChangeHistories.Add(timestamp, pch);
-                        string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
-                        word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
+                        word.metadata = new System.Text.Json.Nodes.JsonObject();
                     }
+                    Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
+                    if (word.metadata.ContainsKey("PhoneticChangeHistory"))
+                    {
+                        phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
+                    }
+                    if (phoneticChangeHistories == null)
+                    {
+                        phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
+                    }
+                    PhoneticChangeHistory pch = new PhoneticChangeHistory();
+                    pch.OldPhoneme = oldPhoneme2;
+                    pch.NewPhoneme = newPhoneme2;
+                    pch.OldVersion = oldVersion;
+                    string timestamp = string.Format("{0:yyyyMMdd.hhmmssfffffff}", DateTime.Now);
+                    phoneticChangeHistories.Add(timestamp, pch);
+                    string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
+                    word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
+                }
+                if (!oldVersion.phonetic.Equals(word.phonetic))
+                {
+                    string oldSpelled = word.spelled;
+                    word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                    SampleText = SampleText.Replace(oldSpelled, word.spelled);
+
                 }
             }
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
         }
 
+        private class stringTupleLengthComp : IComparer<(string,string)>
+        {
+            private int Compare((string, string) x, (string, string) y)
+            {
+                (string x1, string x2) = x;
+                (string y1, string y2) = y;
+                return x1.Length.CompareTo(y1.Length);
+            }
+
+            int IComparer<(string, string)>.Compare((string, string) x, (string, string) y)
+            {
+                return Compare(x,y);
+            }
+        }
 
         public struct PhoneticChangeHistory
         {

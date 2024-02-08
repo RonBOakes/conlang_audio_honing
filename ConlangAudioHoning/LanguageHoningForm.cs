@@ -50,12 +50,14 @@ namespace ConlangAudioHoning
         private Dictionary<string, FileInfo> speechFiles = new Dictionary<string, FileInfo>();
         private PhoneticChanger phoneticChanger;
         private Dictionary<string, PollySpeech.VoiceData> amazonPollyVoices = new Dictionary<string, PollySpeech.VoiceData>();
+        private List<(string, string)> changesToBeMade = new List<(string, string)>();
 
         public LanguageHoningForm()
         {
             InitializeComponent();
             phoneticChanger = new PhoneticChanger();
             amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
+            changesToBeMade.Clear();
             LoadVoices();
             LoadSpeeds();
         }
@@ -181,9 +183,16 @@ namespace ConlangAudioHoning
             {
                 pollySpeech.LanguageDescription = languageDescription;
             }
-
-            // Set the default depth of replacement phonemes after loading back to one
+            // Clear the list of change and combo boxes
+            cbx_phonemeToChange.Items.Clear();
+            cbx_phonemeToChange.Items.Clear();
+            changesToBeMade.Clear();
+            txt_changeList.Text = string.Empty;
+            // Set the default settings for the language alteration selections.
+            rbn_normalVowel.Checked = true;
+            rbn_consonants.Checked = true;
             rbn_l1.Checked = true;
+
         }
 
         private void SaveLanguage(string filename)
@@ -642,7 +651,7 @@ namespace ConlangAudioHoning
                     foreach (string replacement in IpaUtilities.Vowels)
                     {
                         StringBuilder sb = new StringBuilder();
-                        sb.AppendFormat("{1}{0} -- ", replacement,vowel);
+                        sb.AppendFormat("{1}{0} -- ", replacement, vowel);
                         sb.Append(IpaUtilities.IpaPhonemesMap[vowel]);
                         sb.Append(", ");
                         sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
@@ -842,6 +851,58 @@ namespace ConlangAudioHoning
 
                 cbx_phonemeToChange.SelectedIndex = -1;
             }
+        }
+
+        private void btn_addCurrentChangeToList_Click(object sender, EventArgs e)
+        {
+            if (languageDescription == null)
+            {
+                return;
+            }
+            if (!(rbn_consonants.Checked || rbn_vowels.Checked)) // TODO: Add the other options to ensure that at least one is checked
+            {
+                return;
+            }
+            if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
+            {
+                return;
+            }
+            if ((rbn_consonants.Checked) || (rbn_vowels.Checked))
+            {
+                string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
+                string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
+
+                changesToBeMade.Add((oldPhoneme, newPhoneme));
+                StringBuilder sb = new StringBuilder();
+                foreach ((string oph, string nph) in changesToBeMade)
+                {
+                    sb.Append(oph);
+                    sb.Append(" -> ");
+                    sb.Append(nph);
+                    sb.Append(", ");
+                }
+                txt_changeList.Text = sb.ToString();
+            }
+
+        }
+
+        private void btn_applyListOfChanges_Click(object sender, EventArgs e)
+        {
+            phoneticChanger.PhoneticChange(changesToBeMade);
+            if (sampleText != string.Empty)
+            {
+                sampleText = phoneticChanger.SampleText;
+                txt_SampleText.Text = sampleText;
+                txt_phonetic.Text = string.Empty;
+                if (pollySpeech != null)
+                {
+                    pollySpeech.sampleText = sampleText;
+                }
+            }
+            // Clear the combo boxes
+            rbn_consonants.Checked = false;
+            cbx_phonemeToChange.Items.Clear();
+            cbx_replacementPhoneme.Items.Clear();
         }
     }
 }

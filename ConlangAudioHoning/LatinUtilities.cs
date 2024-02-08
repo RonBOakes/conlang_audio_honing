@@ -36,7 +36,7 @@ namespace ConlangAudioHoning
             { "\u0305", "combining overline" },
             { "\u0306", "combining breve" },
             { "\u0307", "combining dot above" },
-            { "\u0308", "combining diaeresis" },
+            { "\u0308", "combining diaresis" },
             { "\u0309", "combining hook above" },
             { "\u030a", "combining ring above" },
             { "\u030b", "combining double acute accent" },
