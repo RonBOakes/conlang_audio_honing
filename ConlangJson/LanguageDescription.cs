@@ -32,6 +32,7 @@ namespace ConlangJson
         private string? _native_name_phonetic;
         private string? _native_name_english;
         private string? _preferred_voice;
+        private Dictionary<string, string>? _preferred_voices;
         private string? _preferred_language;
         private bool? _derived;
         private bool? _declined;
@@ -62,7 +63,7 @@ namespace ConlangJson
         }
 
         public LanguageDescription(string? english_name, string? phonetic_characters, string? native_name_phonetic, string? native_name_english, List<string>? noun_gender_list, string? preferred_voice,
-            string? preferred_language, bool? derived, bool? declined, List<string>? part_of_speech_list, List<string>? phoneme_inventory, List<SoundMap>? sound_map_list,
+            Dictionary<string,string>? preferred_voices, string? preferred_language, bool? derived, bool? declined, List<string>? part_of_speech_list, List<string>? phoneme_inventory, List<SoundMap>? sound_map_list,
             List<string>? lexical_order_list, Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? affix_map, Dictionary<string, DerivationalAffix>? derivational_affix_map,
             List<LexiconEntry> lexicon, List<string>? derived_word_list, JsonObject metadata)
         {
@@ -71,6 +72,7 @@ namespace ConlangJson
             _native_name_phonetic = native_name_phonetic;
             _native_name_english = native_name_english;
             _preferred_voice = preferred_voice;
+            _preferred_voices = preferred_voices;
             _preferred_language = preferred_language;
             _noun_gender_list = noun_gender_list ?? [];
             _part_of_speech_list = part_of_speech_list ?? [];
@@ -112,6 +114,12 @@ namespace ConlangJson
         {
             get => _preferred_voice ?? string.Empty;
             set => _preferred_voice = value;
+        }
+
+        public Dictionary<string,string> preferred_voices
+        {
+            get => _preferred_voices ?? new Dictionary<string, string>();
+            set => _preferred_voices = value;
         }
 
         public string preferred_language
