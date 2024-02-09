@@ -327,6 +327,7 @@ namespace ConlangAudioHoning
             { "R", "\u0280" },
             { "H", "\u029c" },
             { "L", "\u029f" },
+            { "I", "ɪ"}
         };
 
         private static Dictionary<string, List<string>> _consonant_changes = new Dictionary<string, List<string>>()

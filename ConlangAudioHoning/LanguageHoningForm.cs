@@ -65,6 +65,8 @@ namespace ConlangAudioHoning
             changesToBeMade.Clear();
             LoadVoices();
             LoadSpeeds();
+            // Debug instantiation of the x-sampa utility maps
+            Dictionary<string, string> xSampaMap = XSampaUtilities.XSampaIpaMap;
         }
 
         private void LoadVoices()
