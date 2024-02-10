@@ -927,6 +927,16 @@ namespace ConlangAudioHoning
         private void btn_revertLastChange_Click(object sender, EventArgs e)
         {
             phoneticChanger.RevertMostRecentChange();
+            txt_phonetic.Text = string.Empty;
+            if(!string.IsNullOrEmpty(phoneticChanger.SampleText))
+            {
+                sampleText = phoneticChanger.SampleText;
+                txt_SampleText.Text = sampleText;
+            }
+            else
+            {
+                txt_SampleText.Text = string.Empty;
+            }
         }
     }
 }

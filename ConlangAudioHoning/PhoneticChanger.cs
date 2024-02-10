@@ -108,7 +108,7 @@ namespace ConlangAudioHoning
                 }
 
                 word.phonetic = Regex.Replace(word.phonetic, replacementPattern, newPhoneme);
-                
+
                 // Put the replaced diphthongs back
                 foreach (string diphthong in diphthongReplacementMap.Keys)
                 {
@@ -264,7 +264,7 @@ namespace ConlangAudioHoning
                     string oldSpelled = word.spelled;
                     word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
                     string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
-                    SampleText = Regex.Replace(SampleText, wordPattern, "$1"+word.spelled+"$2");
+                    SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
                     wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
                     SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
                     wordPattern = @"(\s+)" + oldSpelled + "$";
@@ -278,7 +278,7 @@ namespace ConlangAudioHoning
         public void RevertMostRecentChange()
         {
             Dictionary<double, string> changeHistoryKeyMap = new Dictionary<double, string>();
-            foreach(LexiconEntry lexiconEntry in Language.lexicon)
+            foreach (LexiconEntry lexiconEntry in Language.lexicon)
             {
                 if (lexiconEntry.metadata == null)
                 {
@@ -293,7 +293,7 @@ namespace ConlangAudioHoning
                 {
                     phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
                 }
-                foreach(string key in phoneticChangeHistories.Keys)
+                foreach (string key in phoneticChangeHistories.Keys)
                 {
                     double keyValue = double.Parse(key);
                     if (!changeHistoryKeyMap.ContainsKey(keyValue))
@@ -301,6 +301,10 @@ namespace ConlangAudioHoning
                         changeHistoryKeyMap.Add(keyValue, key);
                     }
                 }
+            }
+            if(changeHistoryKeyMap.Count <= 0)
+            {
+                return;
             }
             List<double> keyList = new List<double>();
             keyList.AddRange(changeHistoryKeyMap.Keys);
@@ -312,7 +316,7 @@ namespace ConlangAudioHoning
             // Having (finally) found the most recent key via this convoluted method, now go through the lexicon again, and revert any changes that have it.
             List<LexiconEntry> newLexicon = new List<LexiconEntry>();
             newLexicon.Clear();
-            foreach(LexiconEntry lexiconEntry in Language.lexicon)
+            foreach (LexiconEntry lexiconEntry in Language.lexicon)
             {
                 if (lexiconEntry.metadata == null)
                 {
@@ -327,11 +331,21 @@ namespace ConlangAudioHoning
                 {
                     phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
                 }
-                if(phoneticChangeHistories.ContainsKey(mostRecentKey))
+                if (phoneticChangeHistories.ContainsKey(mostRecentKey))
                 {
                     LexiconEntry oldVersion = phoneticChangeHistories[mostRecentKey].OldVersion;
                     newLexicon.Add(oldVersion);
-                    // TODO: Update sample text.
+                    if (!string.IsNullOrEmpty(SampleText))
+                    {
+                        string oldSpelled = lexiconEntry.spelled;
+                        string newSpelled = oldVersion.spelled;
+                        string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + newSpelled + "$2");
+                        wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
+                        SampleText = Regex.Replace(SampleText, wordPattern, newSpelled + "$1");
+                        wordPattern = @"(\s+)" + oldSpelled + "$";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + newSpelled);
+                    }
                 }
                 else
                 {
@@ -340,9 +354,11 @@ namespace ConlangAudioHoning
             }
             newLexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
             Language.lexicon = newLexicon;
+            // Update the phonetic inventory
+            IpaUtilities.BuildPhoneticInventory(Language);
         }
 
-        private class stringTupleLengthComp : IComparer<(string,string)>
+        private class stringTupleLengthComp : IComparer<(string, string)>
         {
             private int Compare((string, string) x, (string, string) y)
             {
@@ -353,7 +369,7 @@ namespace ConlangAudioHoning
 
             int IComparer<(string, string)>.Compare((string, string) x, (string, string) y)
             {
-                return Compare(x,y);
+                return Compare(x, y);
             }
         }
 
