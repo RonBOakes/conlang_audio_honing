@@ -558,7 +558,12 @@ namespace ConlangAudioHoning
                 return;
             }
             int phonemeIndex = cbx_phonemeToChange.SelectedIndex;
-            if (rbn_consonants.Checked)
+            if (phonemeIndex == -1)
+            {
+                cbx_replacementPhoneme.Items.Clear();
+                cbx_replacementPhoneme.SelectedIndex = -1;
+            } 
+            else if (rbn_consonants.Checked)
             {
                 string consonant;
                 {
@@ -872,6 +877,12 @@ namespace ConlangAudioHoning
             {
                 return;
             }
+            if(changesToBeMade.Count >= 10)
+            {
+                MessageBox.Show("No more than 10 changes can be grouped for simultaneous update.  Apply existing updates before adding additional changes", 
+                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             if ((rbn_consonants.Checked) || (rbn_vowels.Checked))
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
@@ -908,6 +919,10 @@ namespace ConlangAudioHoning
             rbn_consonants.Checked = false;
             cbx_phonemeToChange.Items.Clear();
             cbx_replacementPhoneme.Items.Clear();
+            changesToBeMade.Clear();
+            txt_changeList.Text = string.Empty;
+            cbx_phonemeToChange.SelectedIndex = -1;
+            cbx_replacementPhoneme.SelectedIndex = -1;
         }
     }
 }
