@@ -199,6 +199,7 @@ namespace ConlangAudioHoning
                 // Update the Lexicon phase 1
                 foreach (LexiconEntry word in Language.lexicon)
                 {
+                    LexiconEntry oldVersion = word.copy();
                     // Preserve vowel diphthongs before doing the main replacement
                     Dictionary<string, string> diphthongReplacementMap = new Dictionary<string, string>();
                     int ipaReplacementIndex = 0;
@@ -213,7 +214,6 @@ namespace ConlangAudioHoning
                     }
 
                     // replace all occurrences of oldPhoneme in phonetic with newPhoneme
-                    LexiconEntry oldVersion = word.copy();
                     word.phonetic = Regex.Replace(word.phonetic, replacementPattern, interimReplacementSymbol);
                     // Put the replaced diphthongs back
                     foreach (string diphthong in diphthongReplacementMap.Keys)
@@ -273,6 +273,73 @@ namespace ConlangAudioHoning
             }
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
+        }
+
+        public void RevertMostRecentChange()
+        {
+            Dictionary<double, string> changeHistoryKeyMap = new Dictionary<double, string>();
+            foreach(LexiconEntry lexiconEntry in Language.lexicon)
+            {
+                if (lexiconEntry.metadata == null)
+                {
+                    lexiconEntry.metadata = new System.Text.Json.Nodes.JsonObject();
+                }
+                Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
+                if (lexiconEntry.metadata.ContainsKey("PhoneticChangeHistory"))
+                {
+                    phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(lexiconEntry.metadata["PhoneticChangeHistory"]);
+                }
+                if (phoneticChangeHistories == null)
+                {
+                    phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
+                }
+                foreach(string key in phoneticChangeHistories.Keys)
+                {
+                    double keyValue = double.Parse(key);
+                    if (!changeHistoryKeyMap.ContainsKey(keyValue))
+                    {
+                        changeHistoryKeyMap.Add(keyValue, key);
+                    }
+                }
+            }
+            List<double> keyList = new List<double>();
+            keyList.AddRange(changeHistoryKeyMap.Keys);
+            keyList.Sort();
+            keyList.Reverse();
+            // The first entry in keyList should now be the double precision representation of the most recent key.
+            string mostRecentKey = changeHistoryKeyMap[keyList[0]];
+
+            // Having (finally) found the most recent key via this convoluted method, now go through the lexicon again, and revert any changes that have it.
+            List<LexiconEntry> newLexicon = new List<LexiconEntry>();
+            newLexicon.Clear();
+            foreach(LexiconEntry lexiconEntry in Language.lexicon)
+            {
+                if (lexiconEntry.metadata == null)
+                {
+                    lexiconEntry.metadata = new System.Text.Json.Nodes.JsonObject();
+                }
+                Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
+                if (lexiconEntry.metadata.ContainsKey("PhoneticChangeHistory"))
+                {
+                    phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(lexiconEntry.metadata["PhoneticChangeHistory"]);
+                }
+                if (phoneticChangeHistories == null)
+                {
+                    phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
+                }
+                if(phoneticChangeHistories.ContainsKey(mostRecentKey))
+                {
+                    LexiconEntry oldVersion = phoneticChangeHistories[mostRecentKey].OldVersion;
+                    newLexicon.Add(oldVersion);
+                    // TODO: Update sample text.
+                }
+                else
+                {
+                    newLexicon.Add(lexiconEntry);
+                }
+            }
+            newLexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
+            Language.lexicon = newLexicon;
         }
 
         private class stringTupleLengthComp : IComparer<(string,string)>

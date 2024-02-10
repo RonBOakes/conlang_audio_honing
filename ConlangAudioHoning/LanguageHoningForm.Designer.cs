@@ -390,7 +390,7 @@
             btn_revertLastChange.TabIndex = 16;
             btn_revertLastChange.Text = "Revert the last change";
             btn_revertLastChange.UseVisualStyleBackColor = true;
-            btn_revertLastChange.Visible = false;
+            btn_revertLastChange.Click += btn_revertLastChange_Click;
             // 
             // label3
             // 

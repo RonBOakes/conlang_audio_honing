@@ -210,7 +210,7 @@ namespace ConlangAudioHoning
             {
                 // If the language is currently declined, it might have been declined by this tool, 
                 // If so, we want to sort it before saving it.
-                if(languageDescription.declined)
+                if (languageDescription.declined)
                 {
                     languageDescription.lexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
                 }
@@ -561,7 +561,7 @@ namespace ConlangAudioHoning
             {
                 cbx_replacementPhoneme.Items.Clear();
                 cbx_replacementPhoneme.SelectedIndex = -1;
-            } 
+            }
             else if (rbn_consonants.Checked)
             {
                 string consonant;
@@ -876,9 +876,9 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if(changesToBeMade.Count >= 10)
+            if (changesToBeMade.Count >= 10)
             {
-                MessageBox.Show("No more than 10 changes can be grouped for simultaneous update.  Apply existing updates before adding additional changes", 
+                MessageBox.Show("No more than 10 changes can be grouped for simultaneous update.  Apply existing updates before adding additional changes",
                     "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -922,6 +922,11 @@ namespace ConlangAudioHoning
             txt_changeList.Text = string.Empty;
             cbx_phonemeToChange.SelectedIndex = -1;
             cbx_replacementPhoneme.SelectedIndex = -1;
+        }
+
+        private void btn_revertLastChange_Click(object sender, EventArgs e)
+        {
+            phoneticChanger.RevertMostRecentChange();
         }
     }
 }
