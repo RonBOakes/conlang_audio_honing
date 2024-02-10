@@ -173,7 +173,6 @@ namespace ConlangAudioHoning
             changeList.Sort(new stringTupleLengthComp());
             changeList.Reverse();
 
-            // TODO: Update spelling/pronunciation rules (a.k.a. sound map list)
             SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
             List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
@@ -185,6 +184,9 @@ namespace ConlangAudioHoning
             {
                 Language.sound_map_list = soundMapListEditor.SoundMapList;
             }
+
+            string changeHistoryTimestamp = string.Format("{0:yyyyMMdd.hhmmssfffffff}", DateTime.Now);
+
 
             Dictionary<string, (string oldPhoneme, string newPhoneme)> interimReplacementMap = new Dictionary<string, (string oldPhoneme, string newPhoneme)>();
 
@@ -218,6 +220,30 @@ namespace ConlangAudioHoning
                     {
                         word.phonetic = word.phonetic.Replace(diphthongReplacementMap[diphthong], diphthong);
                     }
+                    if (word.metadata == null)
+                    {
+                        word.metadata = new System.Text.Json.Nodes.JsonObject();
+                    }
+                    Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
+                    if (word.metadata.ContainsKey("PhoneticChangeHistory"))
+                    {
+                        phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
+                    }
+                    if (phoneticChangeHistories == null)
+                    {
+                        phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
+                    }
+                    if (!phoneticChangeHistories.ContainsKey(changeHistoryTimestamp))
+                    {
+                        PhoneticChangeHistory pch = new PhoneticChangeHistory();
+                        pch.OldPhoneme = oldPhoneme;
+                        pch.NewPhoneme = newPhoneme;
+                        pch.OldVersion = oldVersion;
+                        phoneticChangeHistories.Add(changeHistoryTimestamp, pch);
+                    }
+                    string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
+                    word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
+
                 }
             }
 
@@ -232,28 +258,6 @@ namespace ConlangAudioHoning
                     // Recreate the original phonetic version.
                     oldVersion.phonetic.Replace(interimReplacementSymbol, oldPhoneme2);
                     word.phonetic = word.phonetic.Replace(interimReplacementSymbol, newPhoneme2);
-
-                    if (word.metadata == null)
-                    {
-                        word.metadata = new System.Text.Json.Nodes.JsonObject();
-                    }
-                    Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
-                    if (word.metadata.ContainsKey("PhoneticChangeHistory"))
-                    {
-                        phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
-                    }
-                    if (phoneticChangeHistories == null)
-                    {
-                        phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
-                    }
-                    PhoneticChangeHistory pch = new PhoneticChangeHistory();
-                    pch.OldPhoneme = oldPhoneme2;
-                    pch.NewPhoneme = newPhoneme2;
-                    pch.OldVersion = oldVersion;
-                    string timestamp = string.Format("{0:yyyyMMdd.hhmmssfffffff}", DateTime.Now);
-                    phoneticChangeHistories.Add(timestamp, pch);
-                    string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
-                    word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
                 }
                 if (!oldVersion.phonetic.Equals(word.phonetic))
                 {
