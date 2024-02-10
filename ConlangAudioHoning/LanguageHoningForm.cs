@@ -208,7 +208,12 @@ namespace ConlangAudioHoning
             }
             else
             {
-                // TODO: Pull the form data into the structure to allow for saving.
+                // If the language is currently declined, it might have been declined by this tool, 
+                // If so, we want to sort it before saving it.
+                if(languageDescription.declined)
+                {
+                    languageDescription.lexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
+                }
 
                 DateTime now = DateTime.UtcNow;
                 string timestamp = now.ToString("o");
@@ -493,12 +498,6 @@ namespace ConlangAudioHoning
             pb_status.Minimum = 0;
             pb_status.Maximum = 100;
             language.lexicon.AddRange(addLexicon);
-            List<LexiconEntry> cleanLexicon = ConLangUtilities.deDuplicateLexicon(language.lexicon);
-            if (cleanLexicon.Count < language.lexicon.Count)
-            {
-                language.lexicon = cleanLexicon;
-            }
-            language.lexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
             pb_status.Visible = false;
             pb_status.SendToBack();
             pbTimer.Enabled = false;
