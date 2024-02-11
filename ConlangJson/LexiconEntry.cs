@@ -26,6 +26,10 @@ using System.Threading.Tasks;
 
 namespace ConlangJson
 {
+    /// <summary>
+    /// Defines the .NET/C# structure that corresponds to the individual lexicon entries.  Each object
+    /// will encapsulate a single word in the lexicon.
+    /// </summary>
     public class LexiconEntry : IEquatable<LexiconEntry?>
     {
         private string _phonetic;
@@ -39,6 +43,31 @@ namespace ConlangJson
 
         private static List<string>? _lexicalOrderList;
 
+        /// <summary>
+        /// Constructor used to build an LexiconEntry object by passing it values for all of the entries.<br/>
+        /// Note that this constructor method does not prevent invalid configurations based on the 
+        /// parameter listings below.
+        /// </summary>
+        /// <param name="phonetic">Required if spelled is not present. This string contains the phonetic 
+        /// representation of the word.  This will be expressed using the symbology specified in the phonetic_characters
+        /// field at the Top Level.<br/> Optional.  Required if spelled is not present.</param>
+        /// <param name="spelled">This string contains the Romanized or Latinized representation of the word.<br/> Optional. 
+        /// Required if phonetic is not present.</param>
+        /// <param name="english">This string contains the English or other natural language equivalent to the word or its 
+        /// definition in English or another natural language.<br/>Required.</param>
+        /// <param name="part_of_speech">This string contains the part of speech for this word.  This can, and should, be 
+        /// one of the abbreviations found in the part_of_speech_list field at the Top Level.<br/>Required.</param>
+        /// <param name="declensions">This array of strings contains the declensions used when declining this word from 
+        /// its root form.  If the word is not declined, that is, if it is the root word, this array must contain a single 
+        /// entry, the string "root."<br/>Required.</param>
+        /// <param name="derived_word">This boolean is set to true if this word was created by deriving a root word using 
+        /// words in the derived_word_list with the aid of the affixes in the derivation_affix_map}.<br/>Required.</param>
+        /// <param name="declined_word">This boolean is set to true if the word was created by declining a root word using 
+        /// the rules in the affix_map.<br/>Required.</param>
+        /// <param name="metadata">This object contains an object where any program that edits the conlang object may add 
+        /// information regarding the word's history and it's source.  There is no exact format specified for this.  Programs 
+        /// should not delete or alter metadata created by other programs but may add their own metadata or alter their metadata 
+        /// to update their content.<br/>Optional, Recommended.</param>
         public LexiconEntry(string phonetic, string spelled, string english, string part_of_speech, List<string> declensions, bool? derived_word, bool? declined_word, JsonObject? metadata)
         {
             this._phonetic = phonetic;
@@ -51,6 +80,9 @@ namespace ConlangJson
             this._metadata = metadata;
         }
 
+        /// <summary>
+        /// Constructor used to build an empty LexiconEntry object.  All of the members are set to the default values.
+        /// </summary>
         public LexiconEntry()
         {
             _phonetic = "";
@@ -62,60 +94,84 @@ namespace ConlangJson
             _declined_word = false;
         }
 
+        /// <summary>
+        /// Required if spelled is not present. This string contains the phonetic 
+        /// representation of the word.  This will be expressed using the symbology specified in the phonetic_characters
+        /// field at the Top Level.<br/> Optional.  Required if spelled is not present.
+        /// </summary>
         public string phonetic
         {
             get { return _phonetic; }
             set { _phonetic = value; }
         }
 
+        /// <summary>
+        /// This string contains the Romanized or Latinized representation of the word.<br/> Optional. 
+        /// Required if phonetic is not present.
+        /// </summary>
         public string spelled
         { 
             get { return _spelled; } 
             set { _spelled = value; } 
         }
 
+        /// <summary>
+        /// This string contains the English or other natural language equivalent to the word or its 
+        /// definition in English or another natural language.<br/>Required.
+        /// </summary>
         public string english
         { 
             get { return _english; } 
             set { _english = value; } 
         }
 
+        /// <summary>
+        /// This string contains the part of speech for this word.  This can, and should, be 
+        /// one of the abbreviations found in the part_of_speech_list field at the Top Level.<br/>Required.
+        /// </summary>
         public string part_of_speech
         {
             get { return _part_of_speech; }
             set { _part_of_speech = value; }
         }
 
+        /// <summary>
+        /// This array of strings contains the declensions used when declining this word from 
+        /// its root form.  If the word is not declined, that is, if it is the root word, this array must contain a single 
+        /// entry, the string "root."<br/>Required.
+        /// </summary>
         public List<string> declensions
         { 
             get { return _declensions; } 
             set { _declensions = value; } 
         }
 
+        /// <summary>
+        /// This boolean is set to true if this word was created by deriving a root word using 
+        /// words in the derived_word_list with the aid of the affixes in the derivation_affix_map}.<br/>Required.
+        /// </summary>
         public bool? derived_word 
         { 
             get { return _derived_word; } 
             set { _derived_word = value; } 
         }
 
+        /// <summary>
+        /// This boolean is set to true if the word was created by declining a root word using 
+        /// the rules in the affix_map.<br/>Required.
+        /// </summary>
         public bool? declined_word
         {
             get { return _declined_word; }
             set { _declined_word = value; }
         }
 
-        internal static List<string> LexicalOrderList
-        {
-            get
-            {
-                return _lexicalOrderList ?? [];
-            }
-            set
-            {
-                _lexicalOrderList = value;
-            }
-        }
-
+        /// <summary>
+        /// This object contains an object where any program that edits the conlang object may 
+        /// add information regarding the word's history and its source.  There is no exact format specified 
+        /// for this.  Programs should not delete or alter metadata created by other programs but may add their 
+        /// own metadata or alter their metadata to update their content.<br/>Optional, Recommended.
+        /// </summary>
         public JsonObject metadata
         {
             get
@@ -128,24 +184,54 @@ namespace ConlangJson
             }
         }
 
+        /// <summary>
+        /// Lexical order for sorting LexiconEntries by their spelled values.
+        /// </summary>
+        internal static List<string> LexicalOrderList
+        {
+            get
+            {
+                return _lexicalOrderList ?? [];
+            }
+            set
+            {
+                _lexicalOrderList = value;
+            }
+        }
+
+        /// <summary>
+        /// Performs a shallow copy of the LexiconEntry object.
+        /// </summary>
+        /// <returns></returns>
         public LexiconEntry copy()
         {
             LexiconEntry copy = new LexiconEntry(phonetic, spelled, english, part_of_speech, declensions, derived_word, declined_word, metadata);
             if (metadata != null)
             {
-                string metatdataString = JsonSerializer.Serialize<JsonObject>(metadata);
+                string metadataString = JsonSerializer.Serialize<JsonObject>(metadata);
 #pragma warning disable CS8601 // Possible null reference assignment.
-                copy.metadata = JsonSerializer.Deserialize<JsonObject>(metatdataString);
+                copy.metadata = JsonSerializer.Deserialize<JsonObject>(metadataString);
 #pragma warning restore CS8601 // Possible null reference assignment.
             }
             return copy;
         }
 
+        /// <summary>
+        /// Determines if this LexiconEntry is the same as another object.
+        /// </summary>
+        /// <param name="obj">Object to be compared to this LexiconEntry.</param>
+        /// <returns>true if the objects are the same, false otherwise.</returns>
         public override bool Equals(object? obj)
         {
             return Equals(obj as LexiconEntry);
         }
 
+        /// <summary>
+        /// Determines if this LexiconEntry is the same as another LexiconEntry.  This comparison is done
+        /// based on the contents of the objects, not the object's identities.
+        /// </summary>
+        /// <param name="other">LexiconEntry object to be compared to this LexiconEntry.</param>
+        /// <returns>true if the LexiconEntry objects represent the same data.</returns>
         public bool Equals(LexiconEntry? other)
         {
             return other is not null &&
@@ -159,13 +245,28 @@ namespace ConlangJson
                    EqualityComparer<JsonObject?>.Default.Equals(_metadata, other._metadata);
         }
 
+        /// <summary>
+        /// Generates a hash code for a LexiconEntry object based on its data.
+        /// </summary>
+        /// <returns>Hash Code for this LexiconEntry object.</returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(_phonetic, _spelled, _english, _part_of_speech, _declensions, _derived_word, _declined_word, _metadata);
         }
 
+        /// <summary>
+        /// Class to be used when sorting a list of LexiconEntry objects by their spelling.
+        /// </summary>
         public class LexicalOrderCompSpelling : IComparer<LexiconEntry>
         {
+            /// <summary>
+            /// Determines the ordering of the two supplied LexiconEntry objects using their spelled
+            /// property and the static LexicalOrderList property.
+            /// </summary>
+            /// <param name="x">First LexiconEntry object for the comparison</param>
+            /// <param name="y">Second LexiconEntry object for the comparison</param>
+            /// <returns>Per IComparer&lt;T&gt;.Compare.</returns>
+            /// <exception cref="NotSupportedException">If either supplied object is null.</exception>
             public int Compare(LexiconEntry? x, LexiconEntry? y)
             {
                 if(x == null || y == null)
@@ -261,8 +362,19 @@ namespace ConlangJson
             }
         }
 
+        /// <summary>
+        /// Class to be used when sorting a list of LexiconEntry objects by their English equivalent.
+        /// </summary>
         public class LexicalOrderCompEnglish : IComparer<LexiconEntry>
         {
+            /// <summary>
+            /// Determines the ordering of the two supplied LexiconEntry objects using their english
+            /// property.
+            /// </summary>
+            /// <param name="x">First LexiconEntry object for the comparison</param>
+            /// <param name="y">Second LexiconEntry object for the comparison</param>
+            /// <returns>Per IComparer&lt;T&gt;.Compare.</returns>
+            /// <exception cref="NotSupportedException">If either supplied object is null.</exception>
             int IComparer<LexiconEntry>.Compare(LexiconEntry? x, LexiconEntry? y)
             {
                 if(x == null || y == null)
@@ -275,11 +387,25 @@ namespace ConlangJson
             }
         }
 
+        /// <summary>
+        /// Operator for comparing two LexiconEntry objects.  Only know to work for comparing
+        /// with null.
+        /// </summary>
+        /// <param name="left">Left hand side</param>
+        /// <param name="right">Right hand side</param>
+        /// <returns>true if they represent the same object.</returns>
         public static bool operator ==(LexiconEntry? left, LexiconEntry? right)
         {
             return EqualityComparer<LexiconEntry>.Default.Equals(left, right);
         }
 
+        /// <summary>
+        /// Operator for comparing two LexiconEntry objects.  Only know to work for comparing
+        /// with null.
+        /// </summary>
+        /// <param name="left">Left hand side</param>
+        /// <param name="right">Right hand side</param>
+        /// <returns>true if they represent different same objects.</returns>
         public static bool operator !=(LexiconEntry? left, LexiconEntry? right)
         {
             return !(left == right);

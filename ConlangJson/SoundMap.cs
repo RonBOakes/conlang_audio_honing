@@ -18,6 +18,10 @@
  */
 namespace ConlangJson
 {
+    /// <summary>
+    /// Defines the .NET/C# structure that corresponds to the Sound Map Entries.  Each object of this class
+    /// will encapsulate one entry in the higher-level Sound Map.
+    /// </summary>
     public class SoundMap
     {
         private string _phoneme;
@@ -25,6 +29,9 @@ namespace ConlangJson
         private string _spelling_regex;
         private string _pronounciation_regex;
 
+        /// <summary>
+        /// Constructor used to build an empty SoundMap object.  All of the members are set to the default values.
+        /// </summary>
         public SoundMap()
         {
             this._phoneme = string.Empty;
@@ -33,6 +40,29 @@ namespace ConlangJson
             this._pronounciation_regex = string.Empty;
         }
 
+        /// <summary>
+        /// Constructor used to build an SoundMap object by passing it values for all of the entries.<br/>
+        /// Note that this constructor method does not prevent invalid configurations based on the 
+        /// parameter listings below.
+        /// </summary>
+        /// <param name="phoneme">This string contains the values that will be substituted for text matched 
+        /// by the pronounciation_regex when converting text from Romanized or Latinized to phonetic representation.  
+        /// This will be expressed using the symbology specified in the phonetic_characters field at the Top Level.  
+        /// The Perl standard of $n is used if group substitutions are included.<br/>Optional, Recommended, Required 
+        /// if pronounciation_regex is present.<br/>Set to an empty string if not present.</param>
+        /// <param name="romanization">This string contains the value that will be substituted for the text matched 
+        /// by the spelling_regex when converting text from phonetic representation.  The Perl standard of $n is used 
+        /// if group substitutions are included.<br/>Optional, Recommended, Required if spelling_regex is present.
+        /// <br/>Set to an empty string if not present.</param>
+        /// <param name="spelling_regex">This string contains a generalized regular expression used to match a portion 
+        /// of the phonetic representation of a word in the conlang with a specific Romanization or Latinization.  The 
+        /// matched text will then be replaced with the value from the romanization.  This will be expressed using the 
+        /// symbology specified in the phonetic_characters field at the Top Level.<br/>Optional, Recommended, Required 
+        /// if romanization is present.<br/>Set to an empty string if not present.</param>
+        /// <param name="pronounciation_regex">This string contains a generalized regular expression that matches a 
+        /// portion of a word's Romanized or Latinized version in the conlang with a specific phonetic representation.  
+        /// The matched text will then be replaced with the value from the phoneme below.<br/> Optional, Recommended, 
+        /// Required if phoneme is present.<br/>Set to an empty string if not present.</param>
         public SoundMap(string phoneme, string romanization, string spelling_regex, string pronounciation_regex)
         {
             this._phoneme = phoneme;
@@ -41,24 +71,50 @@ namespace ConlangJson
             this._pronounciation_regex = pronounciation_regex;
         }
 
+        /// <summary>
+        /// This string contains the values that will be substituted for text matched 
+        /// by the pronounciation_regex when converting text from Romanized or Latinized to phonetic representation.  
+        /// This will be expressed using the symbology specified in the phonetic_characters field at the Top Level.  
+        /// The Perl standard of $n is used if group substitutions are included.<br/>Optional, Recommended, Required 
+        /// if pronounciation_regex is present.<br/>Set to an empty string if not present.
+        /// </summary>
         public string phoneme
         {
             get { return _phoneme; }
             set { _phoneme = value; }
         }
 
+        /// <summary>
+        /// This string contains the value that will be substituted for the text matched 
+        /// by the spelling_regex when converting text from phonetic representation.  The Perl standard of $n is used 
+        /// if group substitutions are included.<br/>Optional, Recommended, Required if spelling_regex is present.
+        /// <br/>Set to an empty string if not present.
+        /// </summary>
         public string romanization
         {
             get { return _romanization; }
             set { _romanization = value; }
         }
 
+        /// <summary>
+        /// This string contains a generalized regular expression used to match a portion 
+        /// of the phonetic representation of a word in the conlang with a specific Romanization or Latinization.  The 
+        /// matched text will then be replaced with the value from the romanization.  This will be expressed using the 
+        /// symbology specified in the phonetic_characters field at the Top Level.<br/>Optional, Recommended, Required 
+        /// if romanization is present.<br/>Set to an empty string if not present.
+        /// </summary>
         public string spelling_regex
         {
             get { return _spelling_regex; }
             set { _spelling_regex = value;}
         }
 
+        /// <summary>
+        /// This string contains a generalized regular expression that matches a 
+        /// portion of a word's Romanized or Latinized version in the conlang with a specific phonetic representation.  
+        /// The matched text will then be replaced with the value from the phoneme below.<br/> Optional, Recommended, 
+        /// Required if phoneme is present.<br/>Set to an empty string if not present.
+        /// </summary>
         public string pronounciation_regex
         {
             get { return _pronounciation_regex; }
