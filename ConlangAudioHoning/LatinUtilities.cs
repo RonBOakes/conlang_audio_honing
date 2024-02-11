@@ -24,6 +24,10 @@ using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// A collection of static properties and methods for working with Latin, 
+    /// characters, specifically using Unicode.
+    /// </summary>
     internal static class LatinUtilities
     {
         private static Dictionary<string, string> _diacriticsMap = new Dictionary<string, string>()
@@ -117,6 +121,10 @@ namespace ConlangAudioHoning
             // Stopping the list here - at least for now.
         };
 
+        /// <summary>
+        /// Returns an array containing strings with all of the commonly used
+        /// Latin diacritics.
+        /// </summary>
         public static Dictionary<string,string> DiacriticsMap
         {
             get => _diacriticsMap;

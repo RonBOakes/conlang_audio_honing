@@ -26,6 +26,10 @@ using System.Windows.Forms.VisualStyles;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// A collection of static properties and methods for working with IPA, 
+    /// The International Phonetic Alphabet, specifically using Unicode.
+    /// </summary>
     public static class IpaUtilities
     {
         private static string[] _p_consonants =
@@ -38,15 +42,6 @@ namespace ConlangAudioHoning
             "\u02a8", "\u02a7", "\uab67", "v", "\u2c71", "\u028b", "x", "\u0263", "\u03c7", "\u028e",
             "z", "\u0290", "\u0292", "\u03b8", "\u00f0", "\u0294", "\u0295", "ɕ", "ʑ",
         };
-        /*
-		 * b β ʙ c ç d ɖ ᶑ ʣ ʥ ʤ ꭦ		"b", "\u03b2", "\u0299", "c", "\u00e7", "d", "\u0256", "\u1d91", "\u02a3", "\u02a5", "\u02a4", "\uab66",
-		 * f ɸ g ɢ ɰ h ɦ ħ ɧ j ʝ ɟ k	"f", "\u0278", "g", "\u0262", "\u0270", "h", "\u0266", "\u0127", "\u0267", "j", "\u029d", "\u025f", "k",
-		 * l ɫ ɬ ɮ ɭ ꞎ ʟ m				"l", "\u026b", "\u026c", "\u026e", "\u026d", "\ua78e", "\u029f", "m",
-		 * ɱ n ɳ ɲ ŋ ɴ p q r ɹ ɾ ɽ		"\u0271", "n", "\u0273", "\u0272", "\u014b", "\u0274", "p", "q", "r", "\u0279", "\u027e", "\u027d",
-		 * ɻ ɺ ʁ ʀ s ʂ ʃ t ʈ ʦ ʨ		"\u027b", "\u027a", "\u0281", "\u0280", "s", "\u0282", "\u0283", "t", "\u0288", "\u02a6",
-		 * ʧ ꭧ v ⱱ ʋ x ɣ χ ʎ			"\u02a8", "\u02a7", "\uab67", "v", "\u2c71", "\u028b", "x", "\u0263", "\u03c7", "\u028e",
-		 * z ʐ ʒ θ ð ʔ ʕ				"z", "\u0290", "\u0292", "\u03b8", "\u00f0", "\u0294", "\u0295"
-		 */
 
         private static string[] _np_consonants =
         {
@@ -439,36 +434,60 @@ namespace ConlangAudioHoning
         private static string? _vowel_pattern = null;
         private static string? _diacritic_pattern = null;
 
+        /// <summary>
+        /// Returns an array containing strings with all of the identified Pulmonic Consonants.
+        /// </summary>
         public static String[] PConsonants
         {
             get => _p_consonants;
         }
 
+        /// <summary>
+        /// Returns an array containing strings with all of the identified Nonpulmonic Consonants.
+        /// </summary>
         public static string[] NpConsonants
         {
             get => _np_consonants;
         }
 
+        /// <summary>
+        /// Returns an array containing strings with all of the vowels.
+        /// </summary>
         public static string[] Vowels
         {
             get => _vowels;
         }
 
+        /// <summary>
+        /// Returns an array containing strings with the suprasegmental symbols 
+        /// (i.e. stress marks, length marks, and tie bars).
+        /// </summary>
         public static string[] Suprasegmentals
         {
             get => _suprasegmentals;
         }
 
+        /// <summary>
+        /// Returns an array of strings with the modifiers that can be applied to vowels.
+        /// </summary>
         public static string[] Vowel_modifiers
         {
             get => _vowel_modifiers;
         }
 
+        /// <summary>
+        /// Returns an array of strings with the diacritics valid for use with IPA.
+        /// </summary>
         public static string[] Diacritics
         {
             get => _diacritics;
         }
 
+        /// <summary>
+        /// Returns a string that can be used within a generalized regular expression to match
+        /// all IPA consonants. This pattern will only match the actual phone/phoneme character, 
+        /// not any diacritics or related markings that follow it.
+        /// </summary>
         public static string ConsonantPattern
         {
             get
@@ -492,6 +511,11 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Returns a string that can be used within a generalized regular expression to match
+        /// all IPA vowels. This pattern will only match the actual phone/phoneme character, 
+        /// not any diacritics or related markings that follow it.
+        /// </summary>
         public static string VowelPattern
         {
             get
@@ -511,6 +535,10 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Returns a string that can be used within a generalized regular expression to match
+        /// all IPA Diacritics.
+        /// </summary>
         public static string DiacriticPattern
         {
             get
@@ -534,21 +562,38 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Returns a Dictionary that maps an IPA phoneme or diacritic to a textual
+        /// description of that symbol.
+        /// </summary>
         public static Dictionary<string, string> IpaPhonemesMap
         {
             get => _ipaPhonemesMap;
         }
 
+        /// <summary>
+        /// Returns a Dictionary that can be used to replace latin characters
+        /// that closely resemble IPA characters with the IPA character they can
+        /// easily be confused with.  
+        /// </summary>
         public static Dictionary<string, string> LatinIpaReplacements
         {
             get => _latinIpaReplacements;
         }
 
+        /// <summary>
+        /// Returns a Dictionary that maps the IPA consonants to a list of other consonants that
+        /// are considered to be "1 degree" away and can be used for a Level 1 substitution.
+        /// </summary>
         public static Dictionary<string, List<string>> Consonant_changes
         {
             get => _consonant_changes;
         }
 
+        /// <summary>
+        /// Returns a Dictionary that maps the IPA consonants to a list of other consonants that
+        /// are considered to be "2 degrees" away and can be used for a Level 2 substitution.
+        /// </summary>
         public static Dictionary<string, List<string>> Consonant_changes_l2
         {
             get
@@ -561,6 +606,10 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Returns a Dictionary that maps the IPA consonants to a list of other consonants that
+        /// are considered to be "3 degrees" away and can be used for a Level 3 substitution.
+        /// </summary>
         public static Dictionary<string, List<string>> Consonant_changes_l3
         {
             get
@@ -573,11 +622,25 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Returns a list of Unicode symbols that can be utilized within an IPA string
+        /// as a temporary placeholder during a multi-phase replacement operation.  These
+        /// are Unicode symbols that are not part of IPA and are distinct from any IPA character
+        /// so that if an error occurs and they remain in place the error will be noticeable.
+        /// </summary>
+        /// <returns></returns>
         public static List<string> Ipa_replacements
         { 
             get => _ipa_replacements; 
         }
 
+        /// <summary>
+        /// Returns a single string that contains all of the IPA symbols along
+        /// with their description, one symbol per line.  This listing will also
+        /// include the Unicode U+xxxx code for any non-ascii characters within
+        /// the symbol. 
+        /// </summary>
+        /// <returns>String with the list of IPA symbols for printing/debugging purposes.</returns>
         public static string IpaPhonemes()
         {
             StringBuilder sb = new StringBuilder();
@@ -603,6 +666,12 @@ namespace ConlangAudioHoning
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Searches an entire LanguageDescription object and replaces any characters within a
+        /// field that should contain IPA that are Latin characters easily used in places of similar-
+        /// looking IPA characters with the correct (or suspected to be correct) IPA character.
+        /// </summary>
+        /// <param name="language">LanguageDescription object to be updated.</param>
         public static void SubstituteLatinIpaReplacements(LanguageDescription language)
         {
             language.native_name_phonetic = SubstituteLatinIpaReplacements(language.native_name_phonetic);
@@ -934,6 +1003,12 @@ namespace ConlangAudioHoning
             languageDescription.phonetic_inventory = phonetic_inventory;
         }
 
+        /// <summary>
+        /// Replace all of the Latin characters that closely resemble IPA characters
+        /// with their matching IPA characters.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static string SubstituteLatinIpaReplacements(string text)
         {
             string fixedText = text;

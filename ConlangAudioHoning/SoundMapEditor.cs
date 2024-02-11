@@ -25,6 +25,9 @@ using ConlangJson;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// User Control used to edit a single SoundMap entry.
+    /// </summary>
     internal class SoundMapEditor : UserControl
     {
         private static Size controlSize = new(850, 50);
@@ -34,6 +37,9 @@ namespace ConlangAudioHoning
 
         private TextBox? _lastFocused = null;
 
+        /// <summary>
+        /// SoundMap object being edited in this editor.
+        /// </summary>
         public SoundMap SoundMapData
         {
             get 
@@ -59,6 +65,9 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Allows for enabling and disabling the controls within this editor.
+        /// </summary>
         public new bool Enabled
         {
             get
@@ -93,6 +102,12 @@ namespace ConlangAudioHoning
             Enabled = true;
         }
 
+        /// <summary>
+        /// Returns true if the SoundMap being edited is in a valid state.  That is
+        /// if it satisfies both of the dependency requirements found in 
+        /// https://github.com/RonBOakes/conlang_json/blob/main/doc/conlang_json_spec.pdf
+        /// section on sound_map_list entries.
+        /// </summary>
         public bool ValidMap
         {
             get
@@ -111,6 +126,11 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Append the supplied string to which of the four text boxes that most recently
+        /// had focus.
+        /// </summary>
+        /// <param name="textToAppend">string containing the text to append.</param>
         public void AppendToFocusedBox(string textToAppend)
         {
             if((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))

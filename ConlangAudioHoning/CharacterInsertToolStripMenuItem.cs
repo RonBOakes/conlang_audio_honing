@@ -181,6 +181,9 @@ namespace ConlangAudioHoning
 
         private List<ToolStripMenuItem> latinDiacriticToolStripSubMenus = new List<ToolStripMenuItem>();
 
+        /// <summary>
+        /// Constructor for a CharacterInsertToolStripMenuItem
+        /// </summary>
         public CharacterInsertToolStripMenuItem()
         {
             // Instantiate the menu items.
@@ -1173,6 +1176,12 @@ namespace ConlangAudioHoning
             });
         }
 
+        /// <summary>
+        /// Add an event handler delegate that will respond when any of the end-point menu
+        /// items is clicked on.  This handler should take the menu item and insert that character
+        /// into selected text.
+        /// </summary>
+        /// <param name="clickDelegate"></param>
         public void AddClickDelegate(EventHandler clickDelegate)
         {
             List<ToolStripMenuItem> ipaMenuItems = new List<ToolStripMenuItem>()

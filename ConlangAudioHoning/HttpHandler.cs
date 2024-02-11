@@ -24,16 +24,29 @@ using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// Class for handling all HTTP/HTTPS requests for the ConlangAudioHoning program.
+    /// </summary>
     internal sealed class HttpHandler
     {
         HttpClient _httpClient;
-        HttpHandler() 
+
+        /// <summary>
+        /// The constructor for HttpHandler is private to ensure that only one instance of this
+        /// class exists during any given application execution.
+        /// </summary>
+        private HttpHandler() 
         { 
             _httpClient = new HttpClient();
         }
 
         private static readonly object _lock = new object();
         private static HttpHandler? _instance = null;
+        
+        /// <summary>
+        /// Returns the current instance of the HttpHandler class.  If needed
+        /// it will instantiate the single allowed instance of this class.
+        /// </summary>
         public static HttpHandler Instance
         {
             get
@@ -52,6 +65,10 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Returns the HttpClient object contained within the HttpHandler.  This is the
+        /// only HttpClient that can be used in the ConlangAudioHoning application.
+        /// </summary>
         public HttpClient httpClient
         {
             get => _httpClient;

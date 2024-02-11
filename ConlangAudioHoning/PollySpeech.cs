@@ -1,5 +1,5 @@
 ﻿/*
-* Class for Processing speach using Amazon Polly.
+* Class for Processing speech using Amazon Polly.
 * 
 * Copyright (C) 2024 Ronald B. Oakes
 *
@@ -27,9 +27,14 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Reflection.Metadata;
+using System.Windows.Forms;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// Class used for interacting with Amazon Polly for speech generation and related operations.
+    /// </summary>
     internal class PollySpeech
     {
         LanguageDescription? _languageDescription;
@@ -42,33 +47,56 @@ namespace ConlangAudioHoning
         // speech on my dime.
         private static string _polyURI = "https://9ggv18yii2.execute-api.us-east-1.amazonaws.com/general_speak2";
 
+        /// <summary>
+        /// Constructor for the Amazon Polly interface.
+        /// </summary>
+        /// <param name="languageDescription">LanguageDescription object for the language to work with.</param>
         public PollySpeech(LanguageDescription languageDescription)
         {
             _languageDescription = languageDescription;
         }
 
+        /// <summary>
+        /// The LanguageDescription object being worked on.
+        /// </summary>
         public LanguageDescription LanguageDescription
         {
             get => _languageDescription ?? new LanguageDescription();
             set => _languageDescription = value;
         }
 
+        /// <summary>
+        /// The sample text being worked on.
+        /// </summary>
         public string sampleText
         {
             get => _sampleText ?? string.Empty;
             set => _sampleText = value;
         }
 
+        /// <summary>
+        /// The SSML text generated to be sent to Amazon Polly.
+        /// </summary>
         public string ssmlText
         {
             get => _ssmlText ?? string.Empty;
         }
 
+        /// <summary>
+        /// The Phonetic text produced from the SampleText and the LanguageDescription.
+        /// </summary>
         public string phoneticText
         {
             get => _phoneticText ?? string.Empty;
         }
 
+        /// <summary>
+        /// Generate the phonetic text and SSML text.
+        /// </summary>
+        /// <param name="speed">SSML &lt;prosody&gt; speed value to be used in the generated SSML.</param>
+        /// <param name="caller">Optional link to the LanguageHoningForm that called this method.  If not
+        /// null, the Decline method from that form will be used, allowing progress to be displayed.</param>
+        /// <exception cref="ConlangAudioHoningException"></exception>
         public void Generate(string speed, LanguageHoningForm? caller = null)
         {
             if (_languageDescription == null)
@@ -174,52 +202,10 @@ namespace ConlangAudioHoning
             }
         }
 
-        public struct VoiceData
-        {
-            private string _name;
-            private string _gender;
-            private string _id;
-            private string _languageCode;
-            private string _languageName;
-            private string[] _additionalLanguageCodes;
-            private string[] _supportedEngines;
-            public string Name
-            {
-                get => _name;
-                set => _name = value;
-            }
-            public string Gender
-            {
-                get => _gender;
-                set => _gender = value;
-            }
-            public string Id
-            {
-                get => _id; 
-                set => _id = value;
-            }
-            public string LanguageCode
-            {
-                get => _languageCode; 
-                set => _languageCode = value;
-            }
-            public string LanguageName
-            {
-                get => _languageName; 
-                set => _languageName = value;
-            }
-            public string[] AdditionalLanguageCodes
-            {
-                get => _additionalLanguageCodes; 
-                set => _additionalLanguageCodes = value;
-            }
-            public string[] SupportedEngines
-            {
-                get => _supportedEngines; 
-                set => _supportedEngines = value;
-            }
-        }
-
+        /// <summary>
+        /// Get all of the Amazon Polly voices from Amazon Web Services.
+        /// </summary>
+        /// <returns></returns>
         public static Dictionary<string, PollySpeech.VoiceData> getAmazonPollyVoices()
         {
             Dictionary<string, PollySpeech.VoiceData> voices = new Dictionary<string, PollySpeech.VoiceData>();
@@ -275,12 +261,22 @@ namespace ConlangAudioHoning
                     }
                 }
             }
-           
-
 
              return voices;
         }
 
+        /// <summary>
+        /// Generate Amazon Polly Speech and save it in the specified Target File.  
+        /// </summary>
+        /// <param name="targetFile">String containing the name of the file where the speech audio will be saved.</param>
+        /// <param name="voice">Optional: Amazon Polly Voice to be used.  If empty, either the preferred voice from
+        /// the language description or "Brian" will be used.</param>
+        /// <param name="speed">Optional: SSML &lt;prosody&gt; speed value to be used in the generated SSML.
+        /// If empty, "slow" will be used.</param>
+        /// <param name="caller">LanguageHoningForm used to call this method.  If not null, this method
+        /// will display the progress of getting the speech from Amazon Web Services using that form's 
+        /// ProgressBar.</param>
+        /// <returns>true if successful, false otherwise.</returns>
         public bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)
         {
             if (_languageDescription == null)
@@ -504,5 +500,87 @@ namespace ConlangAudioHoning
             return pw;
 
         }
+        
+        /// <summary>
+        /// Represents the JSON structure returned by Amazon Web Services when the list of 
+        /// Polly voices are requested.
+        /// </summary>
+        public struct VoiceData
+        {
+            private string _name;
+            private string _gender;
+            private string _id;
+            private string _languageCode;
+            private string _languageName;
+            private string[] _additionalLanguageCodes;
+            private string[] _supportedEngines;
+
+            /// <summary>
+            /// Name of the voice (for example, Salli, Kendra, etc.). This provides a human readable voice name that you might display in your application.
+            /// </summary>
+            public string Name
+            {
+                get => _name;
+                set => _name = value;
+            }
+
+            /// <summary>
+            /// Gender of the voice.
+            /// </summary>
+            public string Gender
+            {
+                get => _gender;
+                set => _gender = value;
+            }
+
+            /// <summary>
+            /// Amazon Polly assigned voice ID. This is the ID that you specify when calling the SynthesizeSpeech operation.
+            /// </summary>
+            public string Id
+            {
+                get => _id;
+                set => _id = value;
+            }
+
+            /// <summary>
+            /// Language code of the voice.
+            /// </summary>
+            public string LanguageCode
+            {
+                get => _languageCode;
+                set => _languageCode = value;
+            }
+
+            /// <summary>
+            /// Human readable name of the language in English.
+            /// </summary>
+            public string LanguageName
+            {
+                get => _languageName;
+                set => _languageName = value;
+            }
+
+            /// <summary>
+            /// Additional codes for languages available for the specified voice in addition to its default language.<br/>
+            /// For example, the default language for Aditi is Indian English(en-IN) because it was first used for that 
+            /// language.Since Aditi is bilingual and fluent in both Indian English and Hindi, this parameter would show 
+            /// the code hi-IN.
+            /// </summary>
+            public string[] AdditionalLanguageCodes
+            {
+                get => _additionalLanguageCodes;
+                set => _additionalLanguageCodes = value;
+            }
+
+            /// <summary>
+            /// Specifies which engines (standard, neural or long-form) are supported by a given voice.
+            /// </summary>
+            public string[] SupportedEngines
+            {
+                get => _supportedEngines;
+                set => _supportedEngines = value;
+            }
+        }
+
     }
 }

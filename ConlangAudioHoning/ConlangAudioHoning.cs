@@ -18,6 +18,9 @@
 */
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// Main program for launching the Conlang Audio Honing program.
+    /// </summary>
     internal static class ConlangAudioHoning
     {
         /// <summary>

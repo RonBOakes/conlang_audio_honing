@@ -29,12 +29,19 @@ using ConlangJson;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// Form for editing the SoundMap List used for spelling and pronunciation of a 
+    /// language.
+    /// </summary>
     public partial class SoundMapListEditor : Form
     {
         private List<SoundMap> _soundMapList;
         List<(string, string)> _phonemeReplacementPairs = new List<(string, string)>();
         private bool _soundMapSaved = false;
 
+        /// <summary>
+        /// List of SoundMap objects being edited.  The order of this list is important.
+        /// </summary>
         public List<SoundMap> SoundMapList
         {
             get
@@ -48,6 +55,10 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// List of Phoneme Replacement Pairs to display at the top of the editor
+        /// screen.
+        /// </summary>
         public List<(string, string)> PhonemeReplacementPairs
         {
             get => _phonemeReplacementPairs;
@@ -58,11 +69,18 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// If this is set to true, then the user has indicated that they have "saved" the changes,
+        /// if false, then the user has not saved the changes and they should not be applied.
+        /// </summary>
         public bool SoundMapSaved
         {
             get => _soundMapSaved;
         }
 
+        /// <summary>
+        /// Constructor for a SoundMapListEditor.
+        /// </summary>
         public SoundMapListEditor()
         {
             InitializeComponent();
@@ -72,6 +90,9 @@ namespace ConlangAudioHoning
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
         }
 
+        /// <summary>
+        /// Update the display showing the Phoneme Replacement List.
+        /// </summary>
         public void UpdatePhonemeReplacements()
         {
             StringBuilder sb = new StringBuilder();

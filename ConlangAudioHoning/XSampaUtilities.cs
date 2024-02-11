@@ -24,6 +24,9 @@ using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// A collection of static properties and methods for working with X-SAMPA.
+    /// </summary>
     internal static class XSampaUtilities
     {
         // Based on https://en.wikipedia.org/wiki/X-SAMPA as of 2024-02-08
@@ -61,11 +64,19 @@ namespace ConlangAudioHoning
 
         private static Dictionary<string, string>? _x_sampa_ipa_map = null;
 
+        /// <summary>
+        /// The dictionary used to map IPA characters to their (preferred)
+        /// corresponding X-SAMPA character.
+        /// </summary>
         public static Dictionary<string, string> IpaXSampaMap
         {
             get => _ipa_x_sampa_map;
         }
 
+        /// <summary>
+        /// The Dictionary used to map X-SAMPA characters to their (preferred) 
+        /// corresponding IPA character.
+        /// </summary>
         public static Dictionary<string,string> XSampaIpaMap
         {
             get

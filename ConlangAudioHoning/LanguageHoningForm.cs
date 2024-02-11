@@ -31,7 +31,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WMPLib;
 using ConlangJson;
-using LanguageEditor;
 using System.Drawing.Printing;
 using Timer = System.Windows.Forms.Timer;
 using System.Reflection.Metadata;
@@ -39,6 +38,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// Main form for the Conlang Language Honing Application.
+    /// </summary>
     public partial class LanguageHoningForm : Form
     {
         private LanguageDescription? languageDescription = null;
@@ -52,11 +54,17 @@ namespace ConlangAudioHoning
         private Dictionary<string, PollySpeech.VoiceData> amazonPollyVoices = new Dictionary<string, PollySpeech.VoiceData>();
         private List<(string, string)> changesToBeMade = new List<(string, string)>();
 
+        /// <summary>
+        /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
+        /// </summary>
         public System.Windows.Forms.ProgressBar ProgressBar
         {
             get => pb_status;
         }
 
+        /// <summary>
+        /// Constructor for the LanguageHoningForm.
+        /// </summary>
         public LanguageHoningForm()
         {
             InitializeComponent();
@@ -65,6 +73,40 @@ namespace ConlangAudioHoning
             changesToBeMade.Clear();
             LoadVoices();
             LoadSpeeds();
+        }
+
+        /// <summary>
+        /// Decline the complete Lexicon of the supplied language.
+        /// </summary>
+        /// <param name="language">Language to be declined.</param>
+        internal void DeclineLexicon(LanguageDescription language)
+        {
+            pb_status.Style = ProgressBarStyle.Continuous;
+            pb_status.BringToFront();
+            pb_status.Minimum = 0;
+            pb_status.Maximum = language.lexicon.Count;
+            pb_status.Step = 1;
+            pb_status.Font = new Font("CharisSIL", 12f);
+            pb_status.ResetText();
+            pb_status.Visible = true;
+            List<LexiconEntry> addLexicon = new List<LexiconEntry>();
+            foreach (LexiconEntry word in language.lexicon)
+            {
+                pb_status.Text = word.phonetic.ToString();
+                addLexicon.AddRange(ConLangUtilities.DeclineWord(word, language.affix_map, language.sound_map_list));
+                pb_status.PerformStep();
+            }
+            pb_status.Style = ProgressBarStyle.Marquee;
+            pbTimer.Interval = 20;
+            pbTimer.Enabled = true;
+            pb_status.MarqueeAnimationSpeed = 200;
+            pb_status.Minimum = 0;
+            pb_status.Maximum = 100;
+            language.lexicon.AddRange(addLexicon);
+            pb_status.Visible = false;
+            pb_status.SendToBack();
+            pbTimer.Enabled = false;
+            language.declined = true;
         }
 
         private void LoadVoices()
@@ -472,36 +514,6 @@ namespace ConlangAudioHoning
             }
             txt_SampleText.Text = sb.ToString();
             txt_phonetic.Text = sb.ToString();
-        }
-
-        internal void DeclineLexicon(LanguageDescription language)
-        {
-            pb_status.Style = ProgressBarStyle.Continuous;
-            pb_status.BringToFront();
-            pb_status.Minimum = 0;
-            pb_status.Maximum = language.lexicon.Count;
-            pb_status.Step = 1;
-            pb_status.Font = new Font("CharisSIL", 12f);
-            pb_status.ResetText();
-            pb_status.Visible = true;
-            List<LexiconEntry> addLexicon = new List<LexiconEntry>();
-            foreach (LexiconEntry word in language.lexicon)
-            {
-                pb_status.Text = word.phonetic.ToString();
-                addLexicon.AddRange(ConLangUtilities.DeclineWord(word, language.affix_map, language.sound_map_list));
-                pb_status.PerformStep();
-            }
-            pb_status.Style = ProgressBarStyle.Marquee;
-            pbTimer.Interval = 20;
-            pbTimer.Enabled = true;
-            pb_status.MarqueeAnimationSpeed = 200;
-            pb_status.Minimum = 0;
-            pb_status.Maximum = 100;
-            language.lexicon.AddRange(addLexicon);
-            pb_status.Visible = false;
-            pb_status.SendToBack();
-            pbTimer.Enabled = false;
-            language.declined = true;
         }
 
         private void pbTimer_Tick(object sender, EventArgs e)

@@ -29,33 +29,59 @@ using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// Handles the phonetic changes for the Conlang Honing Application.
+    /// </summary>
     internal class PhoneticChanger
     {
         private LanguageDescription _language;
         private string _sampleText;
 
+        /// <summary>
+        /// Constructs a PhoneticChanges with a known language and sample text.
+        /// </summary>
+        /// <param name="languageDescription">LanguageDescription object for the language to be worked on</param>
+        /// <param name="sampleText">string containing the sample text used for speaking and phonetic representation.</param>
         public PhoneticChanger(LanguageDescription languageDescription, string sampleText)
         {
             this._language = languageDescription;
             this._sampleText = sampleText;
         }
+
+        /// <summary>
+        /// Default constructor for a PhoneticChanges object.
+        /// </summary>
         public PhoneticChanger()
         {
             this._language = new LanguageDescription();
             this._sampleText = string.Empty;
         }
 
+        /// <summary>
+        /// LanguageDescription object of the language the phonetic changer object is working on.
+        /// </summary>
         public LanguageDescription Language
         {
             get => this._language;
             set => this._language = value;
         }
+
+        /// <summary>
+        /// String containing the sample text used for speaking and phonetic representation.
+        /// </summary>
         public string SampleText
         {
             get => this._sampleText;
             set => this._sampleText = value;
         }
 
+        /// <summary>
+        /// Update the language loaded into this PhoneticChanger by replacing the oldPhoneme with
+        /// the newPhoneme in the lexicon.  The phonetic_inventory will also be updated.  The
+        /// sound_map_list may also be updated depending on user interactions.
+        /// </summary>
+        /// <param name="oldPhoneme">Phoneme to be replaced.</param>
+        /// <param name="newPhoneme">Replacement phoneme.</param>
         public void PhoneticChange(string oldPhoneme, string newPhoneme)
         {
             if (this._language == null)
@@ -156,6 +182,16 @@ namespace ConlangAudioHoning
             IpaUtilities.BuildPhoneticInventory(Language);
         }
 
+        /// <summary>
+        /// Update the language loaded into this PhoneticChanger by replacing each of the the oldPhoneme with
+        /// the newPhoneme from the change list within the lexicon.  The phonetic_inventory will also be updated.  
+        /// The sound_map_list may also be updated depending on user interactions.
+        /// <br/>The changes will be applied so that they impact independently without any inherent sequence.  
+        /// If one entry has a value in "oldPhoneme" and it also in "newPhoneme" these changes will be made
+        /// independently and will not impact each other.  Circular changes are supported: e.g. p-&gt;b, 
+        /// b-&gt;k, k-&gt;p
+        /// </summary>
+        /// <param name="changeList"></param>
         public void PhoneticChange(List<(string oldPhoneme, string newPhoneme)> changeList)
         {
             if (this._language == null)
@@ -275,6 +311,12 @@ namespace ConlangAudioHoning
             IpaUtilities.BuildPhoneticInventory(Language);
         }
 
+        /// <summary>
+        /// Reverts the most recent phonetic change made in the current Language.  
+        /// This works off of the LexiconEntry metadata, so even changes made in
+        /// prior sessions can be reverted.  It also removes the history, so reverted
+        /// changes cannot be reapplied.
+        /// </summary>
         public void RevertMostRecentChange()
         {
             Dictionary<double, string> changeHistoryKeyMap = new Dictionary<double, string>();
