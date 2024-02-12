@@ -117,7 +117,7 @@ namespace ConlangAudioHoning
             int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
             if (index >= 0)
             {
-                SoundMapList.Insert(index, soundMapEditor.SoundMapData);
+                SoundMapList.Insert(index, soundMapEditor.SoundMapData.copy());
                 UpdateSoundMapEntries();
             }
         }
@@ -132,7 +132,7 @@ namespace ConlangAudioHoning
             index += 1;
             if (index > 0)
             {
-                SoundMapList.Insert(index, soundMapEditor.SoundMapData);
+                SoundMapList.Insert(index, soundMapEditor.SoundMapData.copy());
                 UpdateSoundMapEntries();
             }
         }
@@ -176,7 +176,7 @@ namespace ConlangAudioHoning
             if (index >= 0)
             {
                 SoundMap soundMapToEdit = SoundMapList[index];
-                this.soundMapEditor.SoundMapData = soundMapToEdit;
+                this.soundMapEditor.SoundMapData = soundMapToEdit.copy();
             }
         }
 
@@ -219,7 +219,7 @@ namespace ConlangAudioHoning
             int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
             if (index >= 0)
             {
-                SoundMapList[index] = soundMapEditor.SoundMapData;
+                SoundMapList[index] = soundMapEditor.SoundMapData.copy();
                 UpdateSoundMapEntries();
             }
 

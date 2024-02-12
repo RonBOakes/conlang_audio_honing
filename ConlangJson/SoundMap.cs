@@ -120,5 +120,15 @@ namespace ConlangJson
             get { return _pronounciation_regex; }
             set { _pronounciation_regex = value; }
         }
+
+        /// <summary>
+        /// Performs a shallow copy of the SoundMap object.
+        /// </summary>
+        /// <returns>A new SoundMap with the same data.</returns>
+        public SoundMap copy()
+        {
+            SoundMap copy = new SoundMap(this.phoneme, this.romanization, this.spelling_regex, this.pronounciation_regex);
+            return copy;
+        }
     }
 }

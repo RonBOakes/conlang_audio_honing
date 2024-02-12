@@ -202,7 +202,7 @@ namespace ConlangJson
         /// <summary>
         /// Performs a shallow copy of the LexiconEntry object.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new LexiconEntry with the same data.</returns>
         public LexiconEntry copy()
         {
             LexiconEntry copy = new LexiconEntry(phonetic, spelled, english, part_of_speech, declensions, derived_word, declined_word, metadata);
