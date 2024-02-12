@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using ConlangJson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
@@ -128,6 +130,86 @@ namespace ConlangAudioHoning
         public static Dictionary<string,string> DiacriticsMap
         {
             get => _diacriticsMap;
+        }
+
+        /// <summary>
+        /// Generate a gloss of the supplied text using the supplied language.<br/>
+        /// A gloss is a translation into a common (natural) language in the same order
+        /// as the original text, including information about the part of speech and
+        /// declension of the word.
+        /// </summary>
+        /// <param name="sampleText">Text to be glossed</param>
+        /// <param name="language">LanguageDescription of the language of the text being glossed.</param>
+        /// <param name="caller">Optional link to the LanguageHoningForm that called this method.  If not
+        /// null, the Decline method from that form will be used, allowing progress to be displayed.</param>
+        /// <returns>A string containing the glossed text.</returns>
+        public static string GlossText(string sampleText, ConlangJson.LanguageDescription language, LanguageHoningForm? caller = null)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            bool removeDeclinedWord = false;
+            if (!language.declined)
+            {
+                if (caller != null)
+                {
+                    caller.DeclineLexicon(language);
+                }
+                else
+                {
+                    ConLangUtilities.declineLexicon(language);
+                }
+                removeDeclinedWord = true;
+            }
+
+            // Build a lookup dictionary from the lexicon - spelled words to their lexicon entries
+            Dictionary<string, LexiconEntry> wordMap = new Dictionary<string, LexiconEntry>();
+            foreach (LexiconEntry entry in language.lexicon)
+            {
+                wordMap[entry.spelled.Trim().ToLower()] = entry;
+            }
+
+            using (StringReader sampleTextReader = new StringReader(sampleText))
+            {
+                string? line;
+                do
+                {
+                    line = sampleTextReader.ReadLine();
+                    if ((line != null) && (!line.Trim().Equals(string.Empty)))
+                    {
+                        foreach (string wordIterator in line.Split(null))
+                        {
+                            string word = wordIterator.Trim();
+                            Match wordMatch = Regex.Match(word, @"(\w+)[.,?!]");
+                            if (wordMatch.Success)
+                            {
+                                word = wordMatch.Groups[1].Value;
+                            }
+                            if (wordMap.ContainsKey(word))
+                            {
+                                LexiconEntry lexiconEntry = wordMap[word];
+                                sb.AppendFormat("{0}-({1} ", lexiconEntry.english, lexiconEntry.part_of_speech);
+                                foreach (string declension in lexiconEntry.declensions)
+                                {
+                                    sb.AppendFormat("[{0}]", declension);
+                                }
+                                sb.Append(") ");
+                            }
+                            else
+                            {
+                                sb.AppendFormat("Unknown Word ({0}) ", word);
+                            }
+                        }
+                    }
+                }
+                while (line != null);
+            }
+
+            if (removeDeclinedWord)
+            {
+                ConLangUtilities.removeDeclinedEntries(language);
+            }
+
+            return sb.ToString();
         }
     }
 }

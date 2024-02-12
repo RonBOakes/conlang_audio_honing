@@ -41,6 +41,8 @@
             languageToolStripMenuItem = new ToolStripMenuItem();
             declineToolStripMenuItem = new ToolStripMenuItem();
             deriveToolStripMenuItem = new ToolStripMenuItem();
+            utilitiesToolStripMenuItem = new ToolStripMenuItem();
+            displayGlossOfSampleTextToolStripMenuItem = new ToolStripMenuItem();
             debugToolStripMenuItem = new ToolStripMenuItem();
             displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripMenuItem();
@@ -86,6 +88,7 @@
             label8 = new Label();
             btn_addCurrentChangeToList = new Button();
             btn_applyListOfChanges = new Button();
+            printSampleTextSummaryToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
@@ -94,7 +97,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, debugToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, debugToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1024, 24);
@@ -175,6 +178,20 @@
             deriveToolStripMenuItem.Name = "deriveToolStripMenuItem";
             deriveToolStripMenuItem.Size = new Size(168, 22);
             deriveToolStripMenuItem.Text = "Derive Words";
+            // 
+            // utilitiesToolStripMenuItem
+            // 
+            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem });
+            utilitiesToolStripMenuItem.Name = "utilitiesToolStripMenuItem";
+            utilitiesToolStripMenuItem.Size = new Size(58, 20);
+            utilitiesToolStripMenuItem.Text = "Utilities";
+            // 
+            // displayGlossOfSampleTextToolStripMenuItem
+            // 
+            displayGlossOfSampleTextToolStripMenuItem.Name = "displayGlossOfSampleTextToolStripMenuItem";
+            displayGlossOfSampleTextToolStripMenuItem.Size = new Size(223, 22);
+            displayGlossOfSampleTextToolStripMenuItem.Text = "Display Gloss of Sample Text";
+            displayGlossOfSampleTextToolStripMenuItem.Click += displayGlossOfSampleTextToolStripMenuItem_Click;
             // 
             // debugToolStripMenuItem
             // 
@@ -622,6 +639,13 @@
             btn_applyListOfChanges.UseVisualStyleBackColor = true;
             btn_applyListOfChanges.Click += btn_applyListOfChanges_Click;
             // 
+            // printSampleTextSummaryToolStripMenuItem
+            // 
+            printSampleTextSummaryToolStripMenuItem.Name = "printSampleTextSummaryToolStripMenuItem";
+            printSampleTextSummaryToolStripMenuItem.Size = new Size(223, 22);
+            printSampleTextSummaryToolStripMenuItem.Text = "Print Sample Text Summary";
+            printSampleTextSummaryToolStripMenuItem.Click += printSampleTextSummaryToolStripMenuItem_Click;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -731,5 +755,8 @@
         private Label label8;
         private Button btn_addCurrentChangeToList;
         private Button btn_applyListOfChanges;
+        private ToolStripMenuItem utilitiesToolStripMenuItem;
+        private ToolStripMenuItem displayGlossOfSampleTextToolStripMenuItem;
+        private ToolStripMenuItem printSampleTextSummaryToolStripMenuItem;
     }
 }

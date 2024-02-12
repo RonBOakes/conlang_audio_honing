@@ -446,6 +446,42 @@ namespace ConlangAudioHoning
             txt_phonetic.Text = sb.ToString();
         }
 
+        private string WrapText(string text, int cols)
+        {
+            int col = 0;
+            StringBuilder sb = new StringBuilder();
+            using (StringReader textReader = new StringReader(text))
+            {
+                string? line;
+                do
+                {
+                    line = textReader.ReadLine();
+                    if ((line != null) && (!line.Trim().Equals(string.Empty)))
+                    {
+                        foreach (string word in line.Split(null))
+                        {
+                            sb.Append(word);
+                            col += word.Length;
+                            if(col < ((cols * 8)/10))
+                            {
+                                sb.Append(" ");
+                                col += 1;
+                            }
+                            else
+                            {
+                                sb.AppendLine();
+                                col = 0;
+                            }
+                        }
+                    }
+                }
+                while (line != null);
+            }
+
+
+            return sb.ToString();
+        }
+
         // The PrintPage event is raised for each page to be printed.
         private void pd_PrintPage(object sender, PrintPageEventArgs ev)
         {
@@ -940,7 +976,7 @@ namespace ConlangAudioHoning
         {
             phoneticChanger.RevertMostRecentChange();
             txt_phonetic.Text = string.Empty;
-            if(!string.IsNullOrEmpty(phoneticChanger.SampleText))
+            if (!string.IsNullOrEmpty(phoneticChanger.SampleText))
             {
                 sampleText = phoneticChanger.SampleText;
                 txt_SampleText.Text = sampleText;
@@ -948,6 +984,71 @@ namespace ConlangAudioHoning
             else
             {
                 txt_SampleText.Text = string.Empty;
+            }
+        }
+
+        private void displayGlossOfSampleTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(sampleText))
+            {
+                return;
+            }
+            if (languageDescription == null)
+            {
+                return;
+            }
+            string glossText = LatinUtilities.GlossText(sampleText, languageDescription, this);
+
+            MessageBox.Show(glossText, "Glossed Text", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void printSampleTextSummaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(sampleText))
+            {
+                return;
+            }
+            if (languageDescription == null)
+            {
+                return;
+            }
+            if(pollySpeech == null)
+            {
+                return;
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(WrapText(sampleText,80));
+            sb.AppendLine("\n------------------------------------------------------------------------");
+            sb.AppendLine("Gloss:");
+            string gloss = LatinUtilities.GlossText(sampleText, languageDescription, this);
+            sb.AppendLine(WrapText(gloss,80));
+            sb.AppendLine("\n------------------------------------------------------------------------");
+            sb.AppendLine("Phonetic:");
+            if(string.IsNullOrEmpty(txt_phonetic.Text))
+            {
+                string speed = cbx_speed.Text.Trim();
+                pollySpeech.Generate(speed, this);
+                txt_phonetic.Text = pollySpeech.phoneticText;
+            }
+            sb.AppendLine(txt_phonetic.Text.Trim());
+            StringReader sampleTextSummaryReader = new StringReader(sb.ToString());
+            readerToPrint = sampleTextSummaryReader;
+            printFont = new Font("Charis SIL", 12.0f);
+            try
+            {
+                PrintDialog printDialog = new PrintDialog();
+                PrintDocument pd = new PrintDocument();
+                pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
+                printDialog.Document = pd;
+                DialogResult result = printDialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    pd.Print();
+                }
+            }
+            finally
+            {
+                readerToPrint.Close();
             }
         }
     }
