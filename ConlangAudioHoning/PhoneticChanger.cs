@@ -101,16 +101,6 @@ namespace ConlangAudioHoning
                 Language.sound_map_list = soundMapListEditor.SoundMapList;
             }
 
-            bool spellingChange = false;
-            foreach (SoundMap soundMap in Language.sound_map_list)
-            {
-                if ((soundMap.spelling_regex.Contains(newPhoneme)) || (soundMap.phoneme.Contains(newPhoneme)))
-                {
-                    spellingChange = true;
-                    break;
-                }
-            }
-
             string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
 
             // Update the Lexicon
@@ -142,17 +132,14 @@ namespace ConlangAudioHoning
                 }
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
-                    if (spellingChange)
-                    {
-                        string oldSpelled = word.spelled;
-                        word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
-                        string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
-                        wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
-                        wordPattern = @"(\s+)" + oldSpelled + "$";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
-                    }
+                    string oldSpelled = word.spelled;
+                    word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                    string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
+                    SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
+                    wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
+                    SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
+                    wordPattern = @"(\s+)" + oldSpelled + "$";
+                    SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
                     if (word.metadata == null)
                     {
                         word.metadata = new System.Text.Json.Nodes.JsonObject();
@@ -344,7 +331,7 @@ namespace ConlangAudioHoning
                     }
                 }
             }
-            if(changeHistoryKeyMap.Count <= 0)
+            if (changeHistoryKeyMap.Count <= 0)
             {
                 return;
             }
