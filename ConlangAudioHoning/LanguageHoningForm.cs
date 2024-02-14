@@ -68,6 +68,17 @@ namespace ConlangAudioHoning
         public LanguageHoningForm()
         {
             InitializeComponent();
+
+            // Checks to ensure that the form from the designer doesn't exceed 1024x768
+            if(this.Width > 1024)
+            {
+                throw new ConlangAudioHoningException("The default/design width of LanguageHoningForm exceeds the 1024 small screen size limit");
+            }
+            if(this.Height > 768)
+            {
+                throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
+            }
+
             phoneticChanger = new PhoneticChanger();
             amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
             changesToBeMade.Clear();

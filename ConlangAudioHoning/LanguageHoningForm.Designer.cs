@@ -43,6 +43,7 @@
             deriveToolStripMenuItem = new ToolStripMenuItem();
             utilitiesToolStripMenuItem = new ToolStripMenuItem();
             displayGlossOfSampleTextToolStripMenuItem = new ToolStripMenuItem();
+            printSampleTextSummaryToolStripMenuItem = new ToolStripMenuItem();
             debugToolStripMenuItem = new ToolStripMenuItem();
             displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripMenuItem();
@@ -88,7 +89,6 @@
             label8 = new Label();
             btn_addCurrentChangeToList = new Button();
             btn_applyListOfChanges = new Button();
-            printSampleTextSummaryToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
@@ -100,7 +100,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, debugToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1024, 24);
+            menuStrip1.Size = new Size(1000, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -193,6 +193,13 @@
             displayGlossOfSampleTextToolStripMenuItem.Text = "Display Gloss of Sample Text";
             displayGlossOfSampleTextToolStripMenuItem.Click += displayGlossOfSampleTextToolStripMenuItem_Click;
             // 
+            // printSampleTextSummaryToolStripMenuItem
+            // 
+            printSampleTextSummaryToolStripMenuItem.Name = "printSampleTextSummaryToolStripMenuItem";
+            printSampleTextSummaryToolStripMenuItem.Size = new Size(223, 22);
+            printSampleTextSummaryToolStripMenuItem.Text = "Print Sample Text Summary";
+            printSampleTextSummaryToolStripMenuItem.Click += printSampleTextSummaryToolStripMenuItem_Click;
+            // 
             // debugToolStripMenuItem
             // 
             debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayPulmonicConsonantsToolStripMenuItem, toolStripMenuItem2, printIPAMapToolStripMenuItem });
@@ -250,7 +257,7 @@
             txt_phonetic.Name = "txt_phonetic";
             txt_phonetic.ReadOnly = true;
             txt_phonetic.ScrollBars = ScrollBars.Vertical;
-            txt_phonetic.Size = new Size(495, 109);
+            txt_phonetic.Size = new Size(478, 109);
             txt_phonetic.TabIndex = 3;
             // 
             // lbl_phonetic
@@ -307,7 +314,7 @@
             // 
             pb_status.Location = new Point(15, 224);
             pb_status.Name = "pb_status";
-            pb_status.Size = new Size(993, 34);
+            pb_status.Size = new Size(976, 34);
             pb_status.TabIndex = 9;
             pb_status.Visible = false;
             // 
@@ -393,7 +400,7 @@
             // 
             btn_applyChangeToLanguage.Location = new Point(515, 364);
             btn_applyChangeToLanguage.Name = "btn_applyChangeToLanguage";
-            btn_applyChangeToLanguage.Size = new Size(493, 23);
+            btn_applyChangeToLanguage.Size = new Size(476, 23);
             btn_applyChangeToLanguage.TabIndex = 15;
             btn_applyChangeToLanguage.Text = "Apply Current Change to the Language";
             btn_applyChangeToLanguage.UseVisualStyleBackColor = true;
@@ -403,7 +410,7 @@
             // 
             btn_revertLastChange.Location = new Point(515, 451);
             btn_revertLastChange.Name = "btn_revertLastChange";
-            btn_revertLastChange.Size = new Size(493, 23);
+            btn_revertLastChange.Size = new Size(476, 23);
             btn_revertLastChange.TabIndex = 16;
             btn_revertLastChange.Text = "Revert the last change";
             btn_revertLastChange.UseVisualStyleBackColor = true;
@@ -462,7 +469,7 @@
             cbx_speed.FormattingEnabled = true;
             cbx_speed.Location = new Point(765, 166);
             cbx_speed.Name = "cbx_speed";
-            cbx_speed.Size = new Size(239, 23);
+            cbx_speed.Size = new Size(226, 23);
             cbx_speed.TabIndex = 22;
             // 
             // label7
@@ -482,7 +489,7 @@
             gbx_replacementPhomeDepth.Controls.Add(rbn_l1);
             gbx_replacementPhomeDepth.Location = new Point(513, 224);
             gbx_replacementPhomeDepth.Name = "gbx_replacementPhomeDepth";
-            gbx_replacementPhomeDepth.Size = new Size(495, 42);
+            gbx_replacementPhomeDepth.Size = new Size(478, 42);
             gbx_replacementPhomeDepth.TabIndex = 24;
             gbx_replacementPhomeDepth.TabStop = false;
             gbx_replacementPhomeDepth.Text = "Consonant Depth of Replacement Phonemes";
@@ -540,7 +547,7 @@
             gbx_vowelReplacements.Controls.Add(rbn_normalDiphthong);
             gbx_vowelReplacements.Location = new Point(515, 272);
             gbx_vowelReplacements.Name = "gbx_vowelReplacements";
-            gbx_vowelReplacements.Size = new Size(493, 76);
+            gbx_vowelReplacements.Size = new Size(476, 76);
             gbx_vowelReplacements.TabIndex = 25;
             gbx_vowelReplacements.TabStop = false;
             gbx_vowelReplacements.Text = "Vowel Replacement Settings";
@@ -623,7 +630,7 @@
             // 
             btn_addCurrentChangeToList.Location = new Point(515, 393);
             btn_addCurrentChangeToList.Name = "btn_addCurrentChangeToList";
-            btn_addCurrentChangeToList.Size = new Size(493, 23);
+            btn_addCurrentChangeToList.Size = new Size(476, 23);
             btn_addCurrentChangeToList.TabIndex = 28;
             btn_addCurrentChangeToList.Text = "Add Current Change to List of Changes";
             btn_addCurrentChangeToList.UseVisualStyleBackColor = true;
@@ -633,24 +640,17 @@
             // 
             btn_applyListOfChanges.Location = new Point(515, 422);
             btn_applyListOfChanges.Name = "btn_applyListOfChanges";
-            btn_applyListOfChanges.Size = new Size(493, 23);
+            btn_applyListOfChanges.Size = new Size(476, 23);
             btn_applyListOfChanges.TabIndex = 29;
             btn_applyListOfChanges.Text = "Apply All Listed Changes to the Language (Simultaneously)";
             btn_applyListOfChanges.UseVisualStyleBackColor = true;
             btn_applyListOfChanges.Click += btn_applyListOfChanges_Click;
             // 
-            // printSampleTextSummaryToolStripMenuItem
-            // 
-            printSampleTextSummaryToolStripMenuItem.Name = "printSampleTextSummaryToolStripMenuItem";
-            printSampleTextSummaryToolStripMenuItem.Size = new Size(223, 22);
-            printSampleTextSummaryToolStripMenuItem.Text = "Print Sample Text Summary";
-            printSampleTextSummaryToolStripMenuItem.Click += printSampleTextSummaryToolStripMenuItem_Click;
-            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1024, 496);
+            ClientSize = new Size(1000, 496);
             Controls.Add(btn_applyListOfChanges);
             Controls.Add(btn_addCurrentChangeToList);
             Controls.Add(label8);
