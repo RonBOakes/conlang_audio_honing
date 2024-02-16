@@ -35,6 +35,7 @@ using System.Drawing.Printing;
 using Timer = System.Windows.Forms.Timer;
 using System.Reflection.Metadata;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using ESpeakWrapper;
 
 namespace ConlangAudioHoning
 {
@@ -53,6 +54,7 @@ namespace ConlangAudioHoning
         private PhoneticChanger phoneticChanger;
         private Dictionary<string, PollySpeech.VoiceData> amazonPollyVoices = new Dictionary<string, PollySpeech.VoiceData>();
         private List<(string, string)> changesToBeMade = new List<(string, string)>();
+        private ESpeakNGSpeak ESpeakNGSpeak;
 
         /// <summary>
         /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
@@ -78,6 +80,10 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
             }
+
+            ESpeakNGSpeak = new ESpeakNGSpeak();
+            List<ESpeakVoice> voices = ESpeakNGSpeak.getVoices();
+            ESpeakNGSpeak.Test();
 
             phoneticChanger = new PhoneticChanger();
             amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
