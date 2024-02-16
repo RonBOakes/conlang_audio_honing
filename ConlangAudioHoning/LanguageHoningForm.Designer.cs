@@ -89,6 +89,7 @@
             label8 = new Label();
             btn_addCurrentChangeToList = new Button();
             btn_applyListOfChanges = new Button();
+            printKiToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
@@ -202,7 +203,7 @@
             // 
             // debugToolStripMenuItem
             // 
-            debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayPulmonicConsonantsToolStripMenuItem, toolStripMenuItem2, printIPAMapToolStripMenuItem });
+            debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayPulmonicConsonantsToolStripMenuItem, toolStripMenuItem2, printIPAMapToolStripMenuItem, printKiToolStripMenuItem });
             debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             debugToolStripMenuItem.Size = new Size(54, 20);
             debugToolStripMenuItem.Text = "Debug";
@@ -646,6 +647,13 @@
             btn_applyListOfChanges.UseVisualStyleBackColor = true;
             btn_applyListOfChanges.Click += btn_applyListOfChanges_Click;
             // 
+            // printKiToolStripMenuItem
+            // 
+            printKiToolStripMenuItem.Name = "printKiToolStripMenuItem";
+            printKiToolStripMenuItem.Size = new Size(240, 22);
+            printKiToolStripMenuItem.Text = "Print Kirshenbaum Missing Info";
+            printKiToolStripMenuItem.Click += printKiToolStripMenuItem_Click;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -758,5 +766,6 @@
         private ToolStripMenuItem utilitiesToolStripMenuItem;
         private ToolStripMenuItem displayGlossOfSampleTextToolStripMenuItem;
         private ToolStripMenuItem printSampleTextSummaryToolStripMenuItem;
+        private ToolStripMenuItem printKiToolStripMenuItem;
     }
 }

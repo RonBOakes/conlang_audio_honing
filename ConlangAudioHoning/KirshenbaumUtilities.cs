@@ -43,37 +43,33 @@ namespace ConlangAudioHoning
             { "ɭ", "l." }, { "ɺ", @"*<lat>" }, { "m", "m" }, { "n", "n" }, { "ɳ", "n." }, { "o", "o" },
             { "p", "p" }, { "ɸ", @"P" }, { "q", "q" }, { "r", "r<trl>" }, { "ɽ", "r." }, { "ɹ", @"r" },
             { "ɻ", @"r." }, { "s", "s" }, { "t", "t" }, { "ʈ", "t." },
-            { "u", "u" }, { "v", "v" }, { "ʋ", @"r<lbd>" }, { "w", "w" }, { "x", "x" }, 
+            { "u", "u" }, { "v", "v" }, { "ʋ", @"r<lbd>" }, { "w", "w" }, { "x", "x" },
             { "y", "y" }, { "z", "z" }, { "ʐ", "z." }, { "ɑ", "A" }, { "β", "B" },
             { "B", @"b<trl>" }, { "ç", "C" }, { "ð", "D" }, { "ɛ", "E" }, { "ɱ", "M" }, { "ɣ", "Q" },
-            { "ɢ", "G" }, { "ʜ", "H" }, { "ɪ", "I" }, 
+            { "ɢ", "G" }, { "ʜ", "H" }, { "ɪ", "I" },
             { "ɲ", "n^" }, { "ɟ", "J" }, { "ɬ", "s<lat>" }, { "ɮ", @"z<lat>" }, { "ʎ", "l[" },
             { "ʟ", "L" }, { "ɯ", "u-" }, { "ɰ", @"j<vel>" }, { "ŋ", "N" }, { "ɴ", @"n""" }, { "ɔ", "o-" },
             { "ʁ", "g\"" }, { "ʀ", @"r""" }, { "ʃ", "S" }, { "θ", "T" },
             { "ʊ", "U" }, { "ʌ", "V" }, { "ʍ", "w<vls>" }, { "χ", "g\"" }, { "ħ", "X" },
             { "ʏ", "I." }, { "ʒ", "Z" }, { "ˈ", "'" }, { "ˌ", "," },
-            // Stopping point 2024-02-15 15:09
-            { "ː", ":" }, { "ˑ", @":\" }, { "ə", "@" }, { "ɘ", @"@\" }, { "ɚ", "@`" }, { "æ", "{" },
-            { "ʉ", "}" }, { "ɨ", "1" }, { "ø", "2" }, { "ɜ", "3" }, { "ɞ", @"3\" }, { "ɾ", "4" },
-            { "ɫ", "5" }, { "ɐ", "6" }, { "ɤ", "7" }, { "ɵ", "8" }, { "œ", "9" }, { "ɶ", "&" },
-            { "ʔ", "?" }, { "ʕ", @"?\"}, { "ʢ", @"<\" }, { "ʡ", @">\"}, { "ꜛ", "^" }, { "ꜜ", "!" },
-            { "ǃ", @"!\" }, { "|", "|" }, { "ǀ", @"|\" }, { "‖", "||" }, { "ǁ", @"|\|\" },
-            { "ǂ", @"=\" }, { "‿", @"-\" }, { "\u0308", "_\"" }, { "\u031f", "_+" }, { "\u0320", "_-" },
-            { "\u030c", @"_/" }, { "\u0325", "_0" }, { "\u0329", "_<" }, { "\u02bc", "_>" },
-            { "\u0e24", @"_?\" }, { "\u0302", @"_\" }, { "\u032f", "_^" }, { "\u031a", "_}" },
-            { "\u02de", "`" }, { "\u0303", "~" }, { "\u0318", "_A" }, { "\u033a", "_a" },
-            { "\u031c", "_c" }, { "\u032a", "_d" }, { "\u02e0", "_G" }, { "\u02b0", "_h" },
-            { "\u033b", "_m"}, { "\u033c", "_N" }, { "\u0339", "_O" }, { "\u031e", "_o" }, 
-            { "\u0319", "_q" }, { "\u0330", "_k" }, { "\u031d", "_r" }, { "\u0324", "_t" }, 
-            { "\u02b7", "_w" },
+            { "ː", "{lng}" }, { "ə", "@" }, { "ɘ", @"@<umd>" }, { "æ", "&" },
+            { "ʉ", "u\"" }, { "ɨ", "i\"" }, { "ø", "Y" }, { "ɜ", "V\"" }, { "ɞ", @"O""" }, { "ɾ", "*" },
+            { "ɫ", "l~" }, { "ɤ", "o-" }, { "œ", "Y" }, { "ɶ", "a." },
+            { "ʔ", "?" }, { "ʕ", @"H<vcd>"},
+            { "ǃ", "!" }, { "\u0308", "\"" }, { "\u0329", "`" }, { "\u02bc", "`" }, { "\u02de", "<r>" },
+            { "\u0303", "~" }, { "\u032a", "[" }, { "\u02e0", "~" }, { "\u02b0", "<h>" }, { "\u031e", "_o" },
+            { "\u0324", "<?>" }, {"ʝ","Z"}, {"ʂ","s."}, {"ɕ","s;" }, {"ɧ", "z;"}, {"ʑ", "z;"},
+            { "ɥ", "r<lbd>" }, {"ʄ", "J`"}, {"ʘ", "!"}, {"ɒ","A."}, {"ɚ","@<r>"}, {"ɐ","V\""},
+            { "ɵ", "@." }, {"ǀ","!["}, {"‖","!"}, {"ǂ","!"}
         };
 
-        private static List<String> _unmapped_phonemes = new List<string>()
+        private static List<string> _unmapped_phonemes = new List<string>()
         {
-            "ʝ", "ʂ", "ɕ", "ɧ", "ʑ", "ʛ", "ɥ", "ᵻ", "ʄ", "ʘ", "ɒ", "ᵿ", ".", "ʲ",
+              "ʛ", "ᵻ",   "ᵿ", ".", "ʲ", "ˑ",    "ʢ",
+            "ʡ", "ꜛ", "ꜜ", "|",   "ǁ",  "‿", "\u031f", "\u0320", "\u030c", "\u0325", "\u0e24",
+            "\u0302", "\u032f", "\u031a", "\u0318", "\u033a", "\u031c", "\u033b", "\u033c", "\u0339",
+            "\u0319", "\u0330", "\u031d", "\u02b7",
         };
-
-        private static Dictionary<string, string>? _kirshenbaum_ipa_map = null;
 
         /// <summary>
         /// The dictionary used to map IPA characters to their (preferred)
@@ -84,24 +80,28 @@ namespace ConlangAudioHoning
             get => _ipa_kirshenbaum_map;
         }
 
-        /// <summary>
-        /// The Dictionary used to map X-SAMPA characters to their (preferred) 
-        /// corresponding IPA character.
-        /// </summary>
-        public static Dictionary<string,string> KirshenbaumIpaMap
+        public static List<String> UnmappedPhonemes
         {
-            get
-            {
-                if(_kirshenbaum_ipa_map == null)
-                {
-                    _kirshenbaum_ipa_map= new Dictionary<string, string>();
-                    foreach(string ipa in IpaKirshenbaumMap.Keys)
-                    {
-                        _kirshenbaum_ipa_map[IpaKirshenbaumMap[ipa]] = ipa;
-                    }
-                }
-                return _kirshenbaum_ipa_map;
-            }
+            get => _unmapped_phonemes;
         }
+
+        public static string IpaWordToKirshenbaum(string word)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[[");
+
+            // All of the keys in both Kirshenbaum maps are 1 character
+            foreach (char c in word)
+            {
+                if(!UnmappedPhonemes.Contains(c.ToString()))
+                {
+                    string kirshenbaumPhoneme = IpaKirshenbaumMap[c.ToString()];
+                    sb.Append(kirshenbaumPhoneme);
+                }
+            }
+            sb.Append("]]");
+            return sb.ToString();
+        }
+
     }
 }

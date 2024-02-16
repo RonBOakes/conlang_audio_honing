@@ -54,7 +54,18 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            string text = "[[h@'loU]]. This is a test.";
+            List<string> ipaText = new List<string>()
+            {
+                "ðɪs", "ɪz", "ɐ", "tˈɛst"
+            };
+            StringBuilder sb = new StringBuilder();
+            foreach (string word in ipaText)
+            {
+                sb.Append(KirshenbaumUtilities.IpaWordToKirshenbaum(word));
+                sb.Append(" ");
+            }
+            string text = "[[h@'loU]]. This is a test. ";
+            text += sb.ToString();
             if (!ESpeakWrapper.Client.Speak(text))
             {
                 return;

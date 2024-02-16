@@ -72,11 +72,11 @@ namespace ConlangAudioHoning
             InitializeComponent();
 
             // Checks to ensure that the form from the designer doesn't exceed 1024x768
-            if(this.Width > 1024)
+            if (this.Width > 1024)
             {
                 throw new ConlangAudioHoningException("The default/design width of LanguageHoningForm exceeds the 1024 small screen size limit");
             }
-            if(this.Height > 768)
+            if (this.Height > 768)
             {
                 throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
             }
@@ -478,7 +478,7 @@ namespace ConlangAudioHoning
                         {
                             sb.Append(word);
                             col += word.Length;
-                            if(col < ((cols * 8)/10))
+                            if (col < ((cols * 8) / 10))
                             {
                                 sb.Append(" ");
                                 col += 1;
@@ -545,10 +545,16 @@ namespace ConlangAudioHoning
             readerToPrint = ipaPhonemeReader;
             try
             {
+                PrintDialog printDialog = new PrintDialog();
                 printFont = new Font("Charis SIL", 12f);
                 PrintDocument pd = new PrintDocument();
                 pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
-                pd.Print();
+                printDialog.Document = pd;
+                DialogResult result = printDialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    pd.Print();
+                }
             }
             finally
             {
@@ -1028,19 +1034,19 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if(pollySpeech == null)
+            if (pollySpeech == null)
             {
                 return;
             }
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(WrapText(sampleText,80));
+            sb.AppendLine(WrapText(sampleText, 80));
             sb.AppendLine("\n------------------------------------------------------------------------");
             sb.AppendLine("Gloss:");
             string gloss = LatinUtilities.GlossText(sampleText, languageDescription, this);
-            sb.AppendLine(WrapText(gloss,80));
+            sb.AppendLine(WrapText(gloss, 80));
             sb.AppendLine("\n------------------------------------------------------------------------");
             sb.AppendLine("Phonetic:");
-            if(string.IsNullOrEmpty(txt_phonetic.Text))
+            if (string.IsNullOrEmpty(txt_phonetic.Text))
             {
                 string speed = cbx_speed.Text.Trim();
                 pollySpeech.Generate(speed, this);
@@ -1048,6 +1054,51 @@ namespace ConlangAudioHoning
             }
             sb.AppendLine(txt_phonetic.Text.Trim());
             StringReader sampleTextSummaryReader = new StringReader(sb.ToString());
+            readerToPrint = sampleTextSummaryReader;
+            printFont = new Font("Charis SIL", 12.0f);
+            try
+            {
+                PrintDialog printDialog = new PrintDialog();
+                PrintDocument pd = new PrintDocument();
+                pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
+                printDialog.Document = pd;
+                DialogResult result = printDialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    pd.Print();
+                }
+            }
+            finally
+            {
+                readerToPrint.Close();
+            }
+        }
+
+        private void printKiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<string> missingPhonemes = KirshenbaumUtilities.UnmappedPhonemes;
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach(string phoneme in missingPhonemes)
+            {
+                if(IpaUtilities.IpaPhonemesMap.ContainsKey(phoneme))
+                {
+                    StringBuilder sb2 = new StringBuilder();
+                    foreach (char c in phoneme)
+                    {
+                        if (Char.IsAsciiLetterOrDigit(c))
+                        {
+                            sb2.Append(c);
+                        }
+                        else
+                        {
+                            int cInt = (int)c;
+                            sb2.AppendFormat("U+{0,4:x4}", cInt);
+                        }
+                    }
+                    stringBuilder.AppendFormat("\"{0} ({2}):\t{1}\n", phoneme, IpaUtilities.IpaPhonemesMap[phoneme], sb2.ToString());
+                }
+            }
+            StringReader sampleTextSummaryReader = new StringReader(stringBuilder.ToString());
             readerToPrint = sampleTextSummaryReader;
             printFont = new Font("Charis SIL", 12.0f);
             try
