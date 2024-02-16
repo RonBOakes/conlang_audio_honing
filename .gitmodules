@@ -1,0 +1,3 @@
+[submodule "espeak-ng-wrapper"]
+	path = espeak-ng-wrapper
+	url = https://github.com/parhamdoustdar/espeak-ng-wrapper.git

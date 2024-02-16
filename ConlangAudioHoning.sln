@@ -4,23 +4,46 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConlangAudioHoning", "ConlangAudioHoning\ConlangAudioHoning.csproj", "{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811} = {4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConlangJson", "ConlangJson\ConlangJson.csproj", "{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESpeakWrapper", "espeak-ng-wrapper\ESpeakWrapper\ESpeakWrapper.csproj", "{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}.Debug|x64.Build.0 = Debug|Any CPU
 		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}.Release|x64.ActiveCfg = Release|Any CPU
+		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF}.Release|x64.Build.0 = Release|Any CPU
 		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Debug|x64.Build.0 = Debug|Any CPU
 		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Release|x64.ActiveCfg = Release|Any CPU
+		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}.Release|x64.Build.0 = Release|Any CPU
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}.Debug|x64.ActiveCfg = Debug|x64
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}.Debug|x64.Build.0 = Debug|x64
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}.Release|x64.ActiveCfg = Release|x64
+		{4DB65BC4-18DF-4B5D-B0C1-AD88E5DA3811}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
