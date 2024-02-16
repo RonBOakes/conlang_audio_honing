@@ -12,6 +12,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Deterministic>False</Deterministic>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Deterministic>False</Deterministic>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
   <ItemGroup>
     <COMReference Include="WMPLib">
       <WrapperTool>tlbimp</WrapperTool>
@@ -83,6 +93,11 @@
   <ItemGroup>
     <ProjectReference Include="..\ConlangJson\ConlangJson.csproj" />
     <ProjectReference Include="..\espeak-ng-wrapper\ESpeakWrapper\ESpeakWrapper.csproj" />
+    <ProjectReference Include="..\espeak-ng\src\windows\libespeak-ng.vcxproj" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="call prebuild.bat $(Configuration) $(TargetPath)" />
+  </Target>
 
 </Project>
