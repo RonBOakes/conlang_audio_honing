@@ -54,7 +54,8 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if(!ESpeakWrapper.Client.Speak("[[h@'loU]]. This is a test."))
+            string text = "[[h@'loU]]. This is a test.";
+            if (!ESpeakWrapper.Client.Speak(text))
             {
                 return;
             }
