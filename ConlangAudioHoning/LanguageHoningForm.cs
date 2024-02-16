@@ -83,7 +83,6 @@ namespace ConlangAudioHoning
 
             ESpeakNGSpeak = new ESpeakNGSpeak();
             List<ESpeakVoice> voices = ESpeakNGSpeak.getVoices();
-            ESpeakNGSpeak.Test();
 
             phoneticChanger = new PhoneticChanger();
             amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
