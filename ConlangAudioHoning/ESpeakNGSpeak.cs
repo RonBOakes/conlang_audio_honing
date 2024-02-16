@@ -15,6 +15,7 @@ namespace ConlangAudioHoning
         public ESpeakNGSpeak()
         {
             ESpeakWrapper.Client.Initialize(ESpeakNGSpeak.ESpeakNGLibPath);
+            ESpeakWrapper.Client.SetPhonemeEvents(true, false);
         }
 
         public List<ESpeakWrapper.ESpeakVoice> getVoices()

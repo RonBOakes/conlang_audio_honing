@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConlangAudioHoning": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
