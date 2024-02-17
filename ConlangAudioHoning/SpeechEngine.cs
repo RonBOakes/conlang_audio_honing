@@ -116,6 +116,14 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
+        /// Key used to access the LanguageDescription preffered_voices dictionary.
+        /// </summary>
+        public abstract string preferredVoiceKey
+        {
+            get;
+        }
+
+        /// <summary>
         /// Generate the phonetic text and SSML text.
         /// </summary>
         /// <param name="speed">SSML &lt;prosody&gt; speed value to be used in the generated SSML.</param>

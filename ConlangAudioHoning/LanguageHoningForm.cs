@@ -139,12 +139,20 @@ namespace ConlangAudioHoning
             cbx_voice.Items.Clear();
             if (cbx_speechEngine.SelectedIndex != -1)
             {
-                string selectedVoice = cbx_speechEngine.Text.Trim();
-                Dictionary<string, SpeechEngine.VoiceData> voiceData = voices[selectedVoice];
+                string selectedEngine = cbx_speechEngine.Text.Trim();
+                Dictionary<string, SpeechEngine.VoiceData> voiceData = voices[selectedEngine];
                 foreach (string voiceName in voiceData.Keys)
                 {
                     string voiceMenu = string.Format("{0} ({1}, {2})", voiceName, voiceData[voiceName].LanguageName, voiceData[voiceName].Gender);
                     cbx_voice.Items.Add(voiceMenu);
+                }
+                if((languageDescription != null) && 
+                    (languageDescription.preferred_voices.ContainsKey(speechEngines[selectedEngine].preferredVoiceKey)) &&
+                    (!string.IsNullOrEmpty(languageDescription.preferred_voices[speechEngines[selectedEngine].preferredVoiceKey])))
+                {
+                    string preferredVoice = languageDescription.preferred_voices[speechEngines[selectedEngine].preferredVoiceKey].Trim();
+                    string voiceMenu = string.Format("{0} ({1}, {2})", preferredVoice, voiceData[preferredVoice].LanguageName, voiceData[preferredVoice].Gender);
+                    cbx_voice.Text = voiceMenu;
                 }
             }
             cbx_voice.ResumeLayout();
@@ -226,6 +234,17 @@ namespace ConlangAudioHoning
             }
             languageFileInfo = new FileInfo(filename);
 
+            // Temporary work around to put the Polly voice into the preferred voices map.  
+            // Once the JSON structure is reworked, this will not be needed.
+            if(!languageDescription.preferred_voices.ContainsKey("Polly"))
+            {
+                languageDescription.preferred_voices.Add("Polly", "Brian");
+            }
+            if(!languageDescription.preferred_voices.ContainsKey("espeak-ng"))
+            {
+                languageDescription.preferred_voices.Add("espeak-ng","en-us");
+            }
+
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
             IpaUtilities.BuildPhoneticInventory(languageDescription);
             phoneticChanger.Language = languageDescription;
@@ -265,7 +284,7 @@ namespace ConlangAudioHoning
             rbn_normalVowel.Checked = true;
             rbn_consonants.Checked = true;
             rbn_l1.Checked = true;
-
+            LoadVoices();
         }
 
         private void SaveLanguage(string filename)

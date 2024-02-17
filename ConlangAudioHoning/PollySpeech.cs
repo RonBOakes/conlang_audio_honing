@@ -60,6 +60,14 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
+        /// Key used to access the LanguageDescription preffered_voices dictionary.
+        /// </summary>
+        public override string preferredVoiceKey
+        {
+            get => "Polly";
+        }
+
+        /// <summary>
         /// Generate the phonetic text and SSML text.
         /// </summary>
         /// <param name="speed">SSML &lt;prosody&gt; speed value to be used in the generated SSML.</param>

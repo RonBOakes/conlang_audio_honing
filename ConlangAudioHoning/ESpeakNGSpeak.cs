@@ -51,6 +51,14 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
+        /// Key used to access the LanguageDescription preffered_voices dictionary.
+        /// </summary>
+        public override string preferredVoiceKey
+        {
+            get => "espeak-ng";
+        }
+
+        /// <summary>
         /// Generate the phonetic text and SSML text.
         /// </summary>
         /// <param name="speed">SSML &lt;prosody&gt; speed value to be used in the generated SSML.</param>
@@ -244,13 +252,13 @@ namespace ConlangAudioHoning
                         VoiceData voiceData = new VoiceData();
                         voiceData.Name = fields[3];
                         voiceData.LanguageCode = fields[1];
-                        voiceData.LanguageCode = fields[1]; // espeak-ng just uses code
+                        voiceData.LanguageName = fields[1]; // espeak-ng just uses code
                         voiceData.Id = fields[4];
                         string[] ageGender = fields[2].Split("/");
                         voiceData.Gender = ageGender[1];
-                        if (!voices.ContainsKey(voiceData.Name))
+                        if (!voices.ContainsKey(voiceData.LanguageCode))
                         {
-                            voices.Add(voiceData.Name, voiceData);
+                            voices.Add(voiceData.LanguageCode, voiceData);
                         }
                     }
                 }
