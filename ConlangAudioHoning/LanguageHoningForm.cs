@@ -16,26 +16,15 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
+using ConlangJson;
+using ESpeakWrapper;
+using System.Drawing.Printing;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Unicode;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using WMPLib;
-using ConlangJson;
-using System.Drawing.Printing;
-using Timer = System.Windows.Forms.Timer;
-using System.Reflection.Metadata;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using ESpeakWrapper;
 
 namespace ConlangAudioHoning
 {
@@ -47,14 +36,14 @@ namespace ConlangAudioHoning
         private LanguageDescription? languageDescription = null;
         private FileInfo? languageFileInfo = null;
         private string? sampleText = null;
-        private PollySpeech? pollySpeech = null;
+        private Dictionary<string, SpeechEngine> speechEngines = new Dictionary<string, SpeechEngine>();
+        private Dictionary<string, Dictionary<string, SpeechEngine.VoiceData>> voices =
+            new Dictionary<string, Dictionary<string, SpeechEngine.VoiceData>>();
         private Font? printFont;
         private TextReader? readerToPrint;
         private Dictionary<string, FileInfo> speechFiles = new Dictionary<string, FileInfo>();
         private PhoneticChanger phoneticChanger;
-        private Dictionary<string, PollySpeech.VoiceData> amazonPollyVoices = new Dictionary<string, PollySpeech.VoiceData>();
         private List<(string, string)> changesToBeMade = new List<(string, string)>();
-        private ESpeakNGSpeak ESpeakNGSpeak;
 
         /// <summary>
         /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
@@ -81,12 +70,19 @@ namespace ConlangAudioHoning
                 throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
             }
 
-            ESpeakNGSpeak = new ESpeakNGSpeak();
-            List<ESpeakVoice> voices = ESpeakNGSpeak.getVoices();
+            ESpeakNGSpeak ESpeakNGSpeak = new ESpeakNGSpeak();
+            Dictionary<string, SpeechEngine.VoiceData> espeakVoices = ESpeakNGSpeak.getVoices();
+            speechEngines.Add(ESpeakNGSpeak.Description, ESpeakNGSpeak);
+            voices.Add(ESpeakNGSpeak.Description, espeakVoices);
+            PollySpeech pollySpeech = new PollySpeech();
+            Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
+            speechEngines.Add(pollySpeech.Description, pollySpeech);
+            voices.Add(pollySpeech.Description, amazonPollyVoices);
 
             phoneticChanger = new PhoneticChanger();
-            amazonPollyVoices = PollySpeech.getAmazonPollyVoices();
+
             changesToBeMade.Clear();
+            LoadSpeechEngines();
             LoadVoices();
             LoadSpeeds();
         }
@@ -125,14 +121,31 @@ namespace ConlangAudioHoning
             language.declined = true;
         }
 
+        private void LoadSpeechEngines()
+        {
+            cbx_speechEngine.SuspendLayout();
+            cbx_speechEngine.Items.Clear();
+            foreach (string engineName in speechEngines.Keys)
+            {
+                cbx_speechEngine.Items.Add(engineName);
+            }
+            cbx_speechEngine.SelectedIndex = 0;
+            cbx_speechEngine.ResumeLayout();
+        }
+
         private void LoadVoices()
         {
             cbx_voice.SuspendLayout();
             cbx_voice.Items.Clear();
-            foreach (string voiceName in amazonPollyVoices.Keys)
+            if (cbx_speechEngine.SelectedIndex != -1)
             {
-                string voiceMenu = string.Format("{0} ({1}, {2})", voiceName, amazonPollyVoices[voiceName].LanguageName, amazonPollyVoices[voiceName].Gender);
-                cbx_voice.Items.Add(voiceMenu);
+                string selectedVoice = cbx_speechEngine.Text.Trim();
+                Dictionary<string, SpeechEngine.VoiceData> voiceData = voices[selectedVoice];
+                foreach (string voiceName in voiceData.Keys)
+                {
+                    string voiceMenu = string.Format("{0} ({1}, {2})", voiceName, voiceData[voiceName].LanguageName, voiceData[voiceName].Gender);
+                    cbx_voice.Items.Add(voiceMenu);
+                }
             }
             cbx_voice.ResumeLayout();
         }
@@ -222,12 +235,12 @@ namespace ConlangAudioHoning
             cbx_recordings.Items.Clear();
             cbx_speed.SelectedText = "slow";
 
-            if (languageDescription.preferred_voice != null)
-            {
-                string voiceMenu = string.Format("{0} ({1}, {2})", languageDescription.preferred_voice,
-                    amazonPollyVoices[languageDescription.preferred_voice].LanguageName, amazonPollyVoices[languageDescription.preferred_voice].Gender);
-                cbx_voice.SelectedText = voiceMenu;
-            }
+            //if (languageDescription.preferred_voice != null)
+            //{
+            //    string voiceMenu = string.Format("{0} ({1}, {2})", languageDescription.preferred_voice,
+            //        amazonPollyVoices[languageDescription.preferred_voice].LanguageName, amazonPollyVoices[languageDescription.preferred_voice].Gender);
+            //    cbx_voice.SelectedText = voiceMenu;
+            //}
 
             if (languageDescription.declined)
             {
@@ -238,14 +251,11 @@ namespace ConlangAudioHoning
                 deriveToolStripMenuItem.Enabled = false;
             }
 
-            if (pollySpeech == null)
+            foreach(string engineKey in speechEngines.Keys)
             {
-                pollySpeech = new PollySpeech(languageDescription);
+                speechEngines[engineKey].LanguageDescription = languageDescription;
             }
-            else
-            {
-                pollySpeech.LanguageDescription = languageDescription;
-            }
+
             // Clear the list of change and combo boxes
             cbx_phonemeToChange.Items.Clear();
             cbx_phonemeToChange.Items.Clear();
@@ -331,9 +341,9 @@ namespace ConlangAudioHoning
 
             sampleText = fileText;
             txt_SampleText.Text = sampleText;
-            if (pollySpeech != null)
+            foreach(string engineKey in speechEngines.Keys)
             {
-                pollySpeech.sampleText = sampleText;
+                speechEngines[engineKey].sampleText = sampleText;
             }
             phoneticChanger.SampleText = sampleText;
         }
@@ -378,11 +388,13 @@ namespace ConlangAudioHoning
 
         private void btn_generate_Click(object sender, EventArgs e)
         {
-            if ((languageDescription != null) && (pollySpeech != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
+            if ((languageDescription != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
             {
+                string engineKey = cbx_speechEngine.Text.Trim();
+                SpeechEngine engine = speechEngines[engineKey];
                 string speed = cbx_speed.Text.Trim();
-                pollySpeech.Generate(speed, this);
-                txt_phonetic.Text = pollySpeech.phoneticText;
+                engine.Generate(speed, this);
+                txt_phonetic.Text = engine.phoneticText;
             }
         }
 
@@ -408,45 +420,65 @@ namespace ConlangAudioHoning
 
         private void btn_generateSpeech_Click(object sender, EventArgs e)
         {
-            if (pollySpeech == null)
+            string engineName = cbx_speechEngine.Text.Trim();
+            if (engineName.Equals("Amazon Polly"))
             {
-                return;
+                PollySpeech pollySpeech = (PollySpeech)speechEngines[engineName];
+                DateTime now = DateTime.Now;
+                string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
+                targetFileBaseName = targetFileBaseName.Replace(":", "_");
 
+                string targetFileName;
+                if (languageFileInfo != null)
+                {
+                    targetFileName = languageFileInfo.Directory + "\\" + targetFileBaseName;
+                }
+                else
+                {
+                    targetFileName = Path.GetTempPath() + targetFileBaseName;
+                }
+
+                string voice = cbx_voice.Text.Trim().Split()[0];
+                string speed = cbx_speed.Text.Trim();
+
+                bool ok = pollySpeech.GenerateSpeech(targetFileName, voice, speed, this);
+                if (!ok)
+                {
+                    MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    txt_phonetic.Text = pollySpeech.phoneticText;
+                    // Play the audio (MP3) file with the Windows Media Player
+                    WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
+                    player.URL = targetFileName;
+                    player.controls.play();
+
+                    FileInfo fileInfo = new FileInfo(targetFileName);
+                    speechFiles.Add(fileInfo.Name, fileInfo);
+                    cbx_recordings.Items.Add(fileInfo.Name);
+                    cbx_recordings.SelectedText = fileInfo.Name;
+                }
             }
-            DateTime now = DateTime.Now;
-            string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
-            targetFileBaseName = targetFileBaseName.Replace(":", "_");
-
-            string targetFileName;
-            if (languageFileInfo != null)
+            else if (engineName.Equals("espeak-ng"))
             {
-                targetFileName = languageFileInfo.Directory + "\\" + targetFileBaseName;
-            }
-            else
-            {
-                targetFileName = Path.GetTempPath() + targetFileBaseName;
-            }
+                ESpeakNGSpeak speechEngine = (ESpeakNGSpeak)speechEngines[engineName];
+                DateTime now = DateTime.Now;
+                string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
+                targetFileBaseName = targetFileBaseName.Replace(":", "_");
 
-            string voice = cbx_voice.Text.Trim().Split()[0];
-            string speed = cbx_speed.Text.Trim();
-
-            bool ok = pollySpeech.GenerateSpeech(targetFileName, voice, speed, this);
-            if (!ok)
-            {
-                MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                txt_phonetic.Text = pollySpeech.phoneticText;
-                // Play the audio (MP3) file with the Windows Media Player
-                WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
-                player.URL = targetFileName;
-                player.controls.play();
-
-                FileInfo fileInfo = new FileInfo(targetFileName);
-                speechFiles.Add(fileInfo.Name, fileInfo);
-                cbx_recordings.Items.Add(fileInfo.Name);
-                cbx_recordings.SelectedText = fileInfo.Name;
+                string targetFileName;
+                if (languageFileInfo != null)
+                {
+                    targetFileName = languageFileInfo.Directory + "\\" + targetFileBaseName;
+                }
+                else
+                {
+                    targetFileName = Path.GetTempPath() + targetFileBaseName;
+                }
+                string voice = cbx_voice.Text.Trim().Split()[0];
+                string speed = cbx_speed.Text.Trim();
+                bool ok = speechEngine.GenerateSpeech(targetFileName,voice,speed,this);
             }
         }
 
@@ -789,9 +821,10 @@ namespace ConlangAudioHoning
                     sampleText = phoneticChanger.SampleText;
                     txt_SampleText.Text = sampleText;
                     txt_phonetic.Text = string.Empty;
-                    if (pollySpeech != null)
+                    foreach(string engineName in speechEngines.Keys)
                     {
-                        pollySpeech.sampleText = sampleText;
+                        SpeechEngine speechEngine = speechEngines[engineName];
+                        speechEngine.sampleText = sampleText;
                     }
                 }
                 // Clear the combo boxes
@@ -979,9 +1012,10 @@ namespace ConlangAudioHoning
                 sampleText = phoneticChanger.SampleText;
                 txt_SampleText.Text = sampleText;
                 txt_phonetic.Text = string.Empty;
-                if (pollySpeech != null)
+                foreach(string engineName in speechEngines.Keys)
                 {
-                    pollySpeech.sampleText = sampleText;
+                    SpeechEngine speech = speechEngines[engineName];
+                    speech.sampleText = sampleText;
                 }
             }
             // Clear the combo boxes
@@ -1034,10 +1068,6 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if (pollySpeech == null)
-            {
-                return;
-            }
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(WrapText(sampleText, 80));
             sb.AppendLine("\n------------------------------------------------------------------------");
@@ -1049,8 +1079,9 @@ namespace ConlangAudioHoning
             if (string.IsNullOrEmpty(txt_phonetic.Text))
             {
                 string speed = cbx_speed.Text.Trim();
-                pollySpeech.Generate(speed, this);
-                txt_phonetic.Text = pollySpeech.phoneticText;
+                string engineName = cbx_speechEngine.Text.Trim();
+                speechEngines[engineName].Generate(speed, this);
+                txt_phonetic.Text = speechEngines[engineName].phoneticText;
             }
             sb.AppendLine(txt_phonetic.Text.Trim());
             StringReader sampleTextSummaryReader = new StringReader(sb.ToString());
@@ -1078,9 +1109,9 @@ namespace ConlangAudioHoning
         {
             List<string> missingPhonemes = KirshenbaumUtilities.UnmappedPhonemes;
             StringBuilder stringBuilder = new StringBuilder();
-            foreach(string phoneme in missingPhonemes)
+            foreach (string phoneme in missingPhonemes)
             {
-                if(IpaUtilities.IpaPhonemesMap.ContainsKey(phoneme))
+                if (IpaUtilities.IpaPhonemesMap.ContainsKey(phoneme))
                 {
                     StringBuilder sb2 = new StringBuilder();
                     foreach (char c in phoneme)
@@ -1117,6 +1148,11 @@ namespace ConlangAudioHoning
             {
                 readerToPrint.Close();
             }
+        }
+
+        private void cbx_speechEngine_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadVoices();
         }
     }
 }

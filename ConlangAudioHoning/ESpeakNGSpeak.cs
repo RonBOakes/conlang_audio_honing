@@ -24,17 +24,18 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using ESpeakWrapper;
 using ConlangJson;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ConlangAudioHoning
 {
     /// <summary>
-    /// Class used for interacting with espeak-ng for spech generation.
+    /// Class used for interacting with espeak-ng for speech generation.
     /// </summary>
     internal class ESpeakNGSpeak : SpeechEngine
     {
         private static string ESpeakNGLibPath = @"C:\Program Files\eSpeak NG\libespeak-ng.dll";
 
-        public ESpeakNGSpeak() : base(null)
+        public ESpeakNGSpeak() : base()
         {
             ESpeakWrapper.Client.Initialize(ESpeakNGSpeak.ESpeakNGLibPath);
             ESpeakWrapper.Client.SetPhonemeEvents(true, false);
@@ -163,13 +164,35 @@ namespace ConlangAudioHoning
         /// <returns>true if successful, false otherwise.</returns>
         public override bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)
         {
-            return false;
+            if (LanguageDescription == null)
+            {
+                return false;
+            }
+            if ((sampleText == null) || (sampleText.Length == 0))
+            {
+                return false;
+            }
+            if (voice == null) 
+            {
+                voice = "English (America)";
+            }
+            if (!ESpeakWrapper.Client.SetVoiceByName(voice))
+            {
+                return false;
+            }
+            if (!ESpeakWrapper.Client.Speak(ssmlText))
+            {
+                return false;
+            }
+
+
+            return true;
         }
 
 
-        public List<ESpeakWrapper.ESpeakVoice> getVoices()
+        public override Dictionary<string, VoiceData> getVoices()
         {
-            List<ESpeakWrapper.ESpeakVoice> voices = new List<ESpeakWrapper.ESpeakVoice>();
+            Dictionary<string, VoiceData> voices = new Dictionary<string, VoiceData>();
             List<IntPtr> voicePointers = new List<IntPtr>();
 
             unsafe
@@ -189,7 +212,14 @@ namespace ConlangAudioHoning
 #pragma warning disable CS8605
                     ESpeakVoice espeakVoice = (ESpeakVoice)Marshal.PtrToStructure(voicePointer, typeof(ESpeakVoice));
 #pragma warning restore CS8605
-                    voices.Add(espeakVoice);
+                    VoiceData voiceData = new VoiceData();
+                    voiceData.Name = espeakVoice.Name;
+                    voiceData.LanguageName = espeakVoice.Languages;
+                    voiceData.Gender = espeakVoice.Gender.ToString();
+                    if (!voices.ContainsKey(voiceData.Name))
+                    {
+                        voices.Add(voiceData.Name, voiceData);
+                    }
                 }
             }
 

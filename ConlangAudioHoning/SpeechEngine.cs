@@ -43,10 +43,18 @@ namespace ConlangAudioHoning
         private string? _ssmlText = null;
         private string? _phoneticText = null;
         private string _description = "";
-        
+
 
         /// <summary>
-        /// Constructor for the Amazon Polly interface.
+        /// Constructor for the Speech Engine interface.
+        /// </summary>
+        public SpeechEngine()
+        {
+            _languageDescription = null;
+        }
+
+        /// <summary>
+        /// Constructor for the Speech Engine interface.
         /// </summary>
         /// <param name="languageDescription">LanguageDescription object for the language to work with.</param>
         public SpeechEngine(LanguageDescription? languageDescription)
@@ -127,6 +135,9 @@ namespace ConlangAudioHoning
         /// <param name="caller">LanguageHoningForm used to call this method.</param>
         /// <returns>true if successful, false otherwise.</returns>
         public abstract bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null);
+
+        public abstract Dictionary<string, VoiceData> getVoices();
+
         protected Dictionary<string, string>? pronounceWord(string word, Dictionary<string, LexiconEntry> wordMap)
         {
             if (word.Trim().Equals(string.Empty))
@@ -186,6 +197,89 @@ namespace ConlangAudioHoning
             pw.Add("punctuation", punctuation);
             pw.Add("word", word);
             return pw;
+        }
+
+        /// <summary>
+        /// Represents the JSON structure returned by Amazon Web Services when the list of 
+        /// Polly voices are requested.  Being used as the generic description of voices.
+        /// Unused fields will be set to string.Empty ("").
+        /// </summary>
+        public struct VoiceData
+        {
+            private string _name;
+            private string _gender;
+            private string _id;
+            private string _languageCode;
+            private string _languageName;
+            private string[] _additionalLanguageCodes;
+            private string[] _supportedEngines;
+
+            /// <summary>
+            /// Name of the voice. This provides a human readable voice name that you might display in your application.
+            /// </summary>
+            public string Name
+            {
+                get => _name;
+                set => _name = value;
+            }
+
+            /// <summary>
+            /// Gender of the voice.
+            /// </summary>
+            public string Gender
+            {
+                get => _gender;
+                set => _gender = value;
+            }
+
+            /// <summary>
+            /// Amazon Polly assigned voice ID. This is the ID that you specify when calling the SynthesizeSpeech operation.
+            /// Set to string.Empty for other engines.
+            /// </summary>
+            public string Id
+            {
+                get => _id;
+                set => _id = value;
+            }
+
+            /// <summary>
+            /// Language code of the voice.
+            /// </summary>
+            public string LanguageCode
+            {
+                get => _languageCode;
+                set => _languageCode = value;
+            }
+
+            /// <summary>
+            /// Human readable name of the language in English.
+            /// </summary>
+            public string LanguageName
+            {
+                get => _languageName;
+                set => _languageName = value;
+            }
+
+            /// <summary>
+            /// Additional codes for languages available for the specified voice in addition to its default language.<br/>
+            /// For example, the default language for Aditi is Indian English(en-IN) because it was first used for that 
+            /// language.Since Aditi is bilingual and fluent in both Indian English and Hindi, this parameter would show 
+            /// the code hi-IN.
+            /// </summary>
+            public string[] AdditionalLanguageCodes
+            {
+                get => _additionalLanguageCodes;
+                set => _additionalLanguageCodes = value;
+            }
+
+            /// <summary>
+            /// Specifies which engines (standard, neural or long-form) are supported by a given voice.
+            /// </summary>
+            public string[] SupportedEngines
+            {
+                get => _supportedEngines;
+                set => _supportedEngines = value;
+            }
         }
     }
 }

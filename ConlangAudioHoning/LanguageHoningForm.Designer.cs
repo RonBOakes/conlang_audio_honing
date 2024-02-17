@@ -91,7 +91,7 @@
             btn_addCurrentChangeToList = new Button();
             btn_applyListOfChanges = new Button();
             label9 = new Label();
-            comboBox1 = new ComboBox();
+            cbx_speechEngine = new ComboBox();
             label10 = new Label();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
@@ -666,13 +666,14 @@
             label9.TabIndex = 30;
             label9.Text = "Available Recordings";
             // 
-            // comboBox1
+            // cbx_speechEngine
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(515, 169);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(161, 23);
-            comboBox1.TabIndex = 31;
+            cbx_speechEngine.FormattingEnabled = true;
+            cbx_speechEngine.Location = new Point(515, 169);
+            cbx_speechEngine.Name = "cbx_speechEngine";
+            cbx_speechEngine.Size = new Size(161, 23);
+            cbx_speechEngine.TabIndex = 31;
+            cbx_speechEngine.SelectedIndexChanged += cbx_speechEngine_SelectedIndexChanged;
             // 
             // label10
             // 
@@ -689,7 +690,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1000, 496);
             Controls.Add(label10);
-            Controls.Add(comboBox1);
+            Controls.Add(cbx_speechEngine);
             Controls.Add(label9);
             Controls.Add(btn_applyListOfChanges);
             Controls.Add(btn_addCurrentChangeToList);
@@ -800,7 +801,7 @@
         private ToolStripMenuItem printSampleTextSummaryToolStripMenuItem;
         private ToolStripMenuItem printKiToolStripMenuItem;
         private Label label9;
-        private ComboBox comboBox1;
+        private ComboBox cbx_speechEngine;
         private Label label10;
     }
 }

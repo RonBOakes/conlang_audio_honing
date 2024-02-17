@@ -45,6 +45,14 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Constructor for the Amazon Polly interface.
         /// </summary>
+        public PollySpeech() : base()
+        {
+            Description = "Amazon Polly";
+        }
+
+        /// <summary>
+        /// Constructor for the Amazon Polly interface.
+        /// </summary>
         /// <param name="languageDescription">LanguageDescription object for the language to work with.</param>
         public PollySpeech(LanguageDescription languageDescription) : base(languageDescription)
         {
@@ -167,7 +175,7 @@ namespace ConlangAudioHoning
         /// Get all of the Amazon Polly voices from Amazon Web Services.
         /// </summary>
         /// <returns></returns>
-        public static Dictionary<string, PollySpeech.VoiceData> getAmazonPollyVoices()
+        public override Dictionary<string, PollySpeech.VoiceData> getVoices()
         {
             Dictionary<string, PollySpeech.VoiceData> voices = new Dictionary<string, PollySpeech.VoiceData>();
             HttpHandler httpHandler = HttpHandler.Instance;
@@ -398,87 +406,6 @@ namespace ConlangAudioHoning
             }
 
             return generated;
-        }
-
-        /// <summary>
-        /// Represents the JSON structure returned by Amazon Web Services when the list of 
-        /// Polly voices are requested.
-        /// </summary>
-        public struct VoiceData
-        {
-            private string _name;
-            private string _gender;
-            private string _id;
-            private string _languageCode;
-            private string _languageName;
-            private string[] _additionalLanguageCodes;
-            private string[] _supportedEngines;
-
-            /// <summary>
-            /// Name of the voice (for example, Salli, Kendra, etc.). This provides a human readable voice name that you might display in your application.
-            /// </summary>
-            public string Name
-            {
-                get => _name;
-                set => _name = value;
-            }
-
-            /// <summary>
-            /// Gender of the voice.
-            /// </summary>
-            public string Gender
-            {
-                get => _gender;
-                set => _gender = value;
-            }
-
-            /// <summary>
-            /// Amazon Polly assigned voice ID. This is the ID that you specify when calling the SynthesizeSpeech operation.
-            /// </summary>
-            public string Id
-            {
-                get => _id;
-                set => _id = value;
-            }
-
-            /// <summary>
-            /// Language code of the voice.
-            /// </summary>
-            public string LanguageCode
-            {
-                get => _languageCode;
-                set => _languageCode = value;
-            }
-
-            /// <summary>
-            /// Human readable name of the language in English.
-            /// </summary>
-            public string LanguageName
-            {
-                get => _languageName;
-                set => _languageName = value;
-            }
-
-            /// <summary>
-            /// Additional codes for languages available for the specified voice in addition to its default language.<br/>
-            /// For example, the default language for Aditi is Indian English(en-IN) because it was first used for that 
-            /// language.Since Aditi is bilingual and fluent in both Indian English and Hindi, this parameter would show 
-            /// the code hi-IN.
-            /// </summary>
-            public string[] AdditionalLanguageCodes
-            {
-                get => _additionalLanguageCodes;
-                set => _additionalLanguageCodes = value;
-            }
-
-            /// <summary>
-            /// Specifies which engines (standard, neural or long-form) are supported by a given voice.
-            /// </summary>
-            public string[] SupportedEngines
-            {
-                get => _supportedEngines;
-                set => _supportedEngines = value;
-            }
         }
     }
 }
