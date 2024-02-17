@@ -114,7 +114,7 @@ namespace ConlangAudioHoning
                 while (line != null);
             }
 
-            ssmlText = string.Empty;
+            StringBuilder eSpeakText = new StringBuilder();
 
             phoneticText = string.Empty;
             int wordWrap = 0;
@@ -124,25 +124,28 @@ namespace ConlangAudioHoning
                 foreach (Dictionary<string, string> pronounceMap in lineMapList)
                 {
                     // Build the text entry
-                    ssmlText += KirshenbaumUtilities.IpaWordToKirshenbaum(pronounceMap["phonetic"]);
+                    eSpeakText.Append(KirshenbaumUtilities.IpaWordToKirshenbaum(pronounceMap["phonetic"]));
                     phoneticText += pronounceMap["phonetic"];
                     wordWrap += pronounceMap["phonetic"].Length;
                     if (pronounceMap["punctuation"] != "")
                     {
-                        ssmlText += pronounceMap["punctuation"];
+                        eSpeakText.Append(pronounceMap["punctuation"]);
                         phoneticText += pronounceMap["punctuation"];
                         wordWrap += pronounceMap["punctuation"].Length;
                     }
                     phoneticText += " ";
+                    eSpeakText.Append(" ");
                     wordWrap += 1;
                     if (wordWrap >= 80)
                     {
-                        ssmlText += "\n";
+                        eSpeakText.Append("\n");
                         phoneticText += "\n";
                         wordWrap = 0;
                     }
                 }
             }
+
+            ssmlText = eSpeakText.ToString().Trim();
 
             if (removeDeclinedWord)
             {
@@ -166,18 +169,51 @@ namespace ConlangAudioHoning
             {
                 return false;
             }
-            if ((sampleText == null) || (sampleText.Length == 0))
+            if (string.IsNullOrEmpty(sampleText))
             {
                 return false;
             }
-            if (voice == null) 
+
+            if(string.IsNullOrEmpty(ssmlText))
             {
-                voice = "English (America)";
+                this.Generate(speed??"medium", caller);
             }
-            // TODO: implement.
 
 
-            return true;
+            if (string.IsNullOrEmpty(voice)) 
+            {
+                voice = "en-us";
+            }
+            int speedInt = -1;
+            if(!string.IsNullOrEmpty(speed))
+            {
+                switch(speed.ToLower())
+                {
+                    case "x-slow":
+                        speedInt = 75;
+                        break;
+                    case "slow":
+                        speedInt = 125;
+                        break;
+                    case "medium":
+                    case "default":
+                        speedInt = 175;
+                        break;
+                    case "fast":
+                        speedInt = 225;
+                        break;
+                    case "x-fast":
+                        speedInt = 275;
+                        break;
+                    default:
+                        speedInt = 175;
+                        break;
+                }
+            }
+
+            bool result = speak(text: ssmlText, waveFile: targetFile, voiceLanguage: voice, speed: speedInt);
+
+            return result;
         }
 
 
@@ -241,8 +277,45 @@ namespace ConlangAudioHoning
             string text = "[[h@'loU]]. This is a test. ";
             text += sb.ToString();
             string response = string.Empty;
-            RunConsoleCommand("-ven-us " + text, ref response);
+            speak(text:text,voiceLanguage:"en-us");
             return;
+        }
+
+        internal bool speak(string text, string waveFile = "", string voiceLanguage = "", int speed = -1)
+        {
+            StringBuilder cmdSb = new StringBuilder();
+
+            // Write the text to a temporary file
+            DateTime now = DateTime.Now;
+            string targetFileBaseName = string.Format("speech_{0:s}.txt", now);
+            targetFileBaseName = targetFileBaseName.Replace(":", "_");
+            string targetFileName = Path.GetTempPath() + targetFileBaseName;
+            FileInfo targetFile = new FileInfo(targetFileName);
+            StreamWriter fileWriter = targetFile.CreateText();
+            fileWriter.WriteLine(text);
+            fileWriter.Flush();
+            fileWriter.Close();
+
+            if(!string.IsNullOrEmpty(voiceLanguage))
+            {
+                cmdSb.AppendFormat("-v{0} ",voiceLanguage);
+            }
+            if(!string.IsNullOrEmpty(waveFile))
+            {
+                cmdSb.AppendFormat("-w \"{0}\" ", waveFile);
+            }
+            if(speed > 0)
+            {
+                cmdSb.AppendFormat("-s{0} ", speed);
+            }
+            cmdSb.AppendFormat("-f \"{0}\" ", targetFile.FullName);
+
+            string response = string.Empty;
+            bool result = RunConsoleCommand(cmdSb.ToString().Trim(), ref response);
+
+            targetFile.Delete(); // Remove temporary file.
+
+            return result;
         }
 
         private static StringBuilder stdOutBuilder = new StringBuilder();

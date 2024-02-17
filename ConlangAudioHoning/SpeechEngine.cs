@@ -103,7 +103,7 @@ namespace ConlangAudioHoning
         public string ssmlText
         {
             get => _ssmlText ?? string.Empty;
-            protected set => _sampleText = value;
+            protected set => _ssmlText = value;
         }
 
         /// <summary>

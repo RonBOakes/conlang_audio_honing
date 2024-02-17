@@ -73,6 +73,7 @@ namespace ConlangAudioHoning
             Dictionary<string, SpeechEngine.VoiceData> espeakVoices = ESpeakNGSpeak.getVoices();
             speechEngines.Add(ESpeakNGSpeak.Description, ESpeakNGSpeak);
             voices.Add(ESpeakNGSpeak.Description, espeakVoices);
+            //ESpeakNGSpeak.Test();
             PollySpeech pollySpeech = new PollySpeech();
             Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
             speechEngines.Add(pollySpeech.Description, pollySpeech);
@@ -387,7 +388,7 @@ namespace ConlangAudioHoning
 
         private void btn_generate_Click(object sender, EventArgs e)
         {
-            if ((languageDescription != null) && (sampleText != null) && (!sampleText.Trim().Equals(string.Empty)))
+            if ((languageDescription != null) && (!string.IsNullOrEmpty(sampleText)))
             {
                 string engineKey = cbx_speechEngine.Text.Trim();
                 SpeechEngine engine = speechEngines[engineKey];
@@ -419,6 +420,10 @@ namespace ConlangAudioHoning
 
         private void btn_generateSpeech_Click(object sender, EventArgs e)
         {
+            if ((languageDescription == null) || (string.IsNullOrEmpty(sampleText)))
+            {
+                return;
+            }
             string engineName = cbx_speechEngine.Text.Trim();
             if (engineName.Equals("Amazon Polly"))
             {
@@ -463,7 +468,7 @@ namespace ConlangAudioHoning
             {
                 ESpeakNGSpeak speechEngine = (ESpeakNGSpeak)speechEngines[engineName];
                 DateTime now = DateTime.Now;
-                string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
+                string targetFileBaseName = string.Format("speech_{0:s}.wav", now);
                 targetFileBaseName = targetFileBaseName.Replace(":", "_");
 
                 string targetFileName;
@@ -475,9 +480,33 @@ namespace ConlangAudioHoning
                 {
                     targetFileName = Path.GetTempPath() + targetFileBaseName;
                 }
-                string voice = cbx_voice.Text.Trim().Split()[0];
+                string voiceKey = cbx_voice.Text.Trim().Split()[0];
+                string voice = string.Empty;
+                if (voices[engineName].ContainsKey(voiceKey))
+                {
+                    SpeechEngine.VoiceData voiceData = voices[engineName][voiceKey];
+                    voice = voiceData.LanguageCode;
+                }
                 string speed = cbx_speed.Text.Trim();
+                speechEngine.sampleText = sampleText;
                 bool ok = speechEngine.GenerateSpeech(targetFileName,voice,speed,this);
+                if (!ok)
+                {
+                    MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    txt_phonetic.Text = speechEngine.phoneticText;
+                    // Play the audio (wav) file with the Windows Media Player
+                    WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
+                    player.URL = targetFileName;
+                    player.controls.play();
+
+                    FileInfo fileInfo = new FileInfo(targetFileName);
+                    speechFiles.Add(fileInfo.Name, fileInfo);
+                    cbx_recordings.Items.Add(fileInfo.Name);
+                    cbx_recordings.SelectedText = fileInfo.Name;
+                }
             }
         }
 
