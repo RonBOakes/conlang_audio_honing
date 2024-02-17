@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using ConlangJson;
 using static System.Net.Mime.MediaTypeNames;
+using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace ConlangAudioHoning
 {
@@ -184,7 +186,42 @@ namespace ConlangAudioHoning
             Dictionary<string, VoiceData> voices = new Dictionary<string, VoiceData>();
             List<IntPtr> voicePointers = new List<IntPtr>();
 
-            // TODO: Implement
+            char[] whiteSpaces = { ' ', '\t', };
+
+            string voiceList = string.Empty;
+            RunConsoleCommand("--voices", ref voiceList);
+            /* Output looks like
+             * Pty Language       Age/Gender VoiceName          File                 Other Languages
+             * 5  af              --/M      Afrikaans          gmw\af
+             * 7  af              --/M      afrikaans-mbrola-1 mb\mb-af1
+             */
+            using (StringReader sampleTextReader = new StringReader(voiceList))
+            {
+                string? line;
+                do
+                {
+                    line = sampleTextReader.ReadLine();
+                    if(!string.IsNullOrEmpty(line) && (!line.Contains("Language")))
+                    {
+
+                        string[] fields = line.Split(whiteSpaces, StringSplitOptions.RemoveEmptyEntries) ; // Split on whitespace
+                        VoiceData voiceData = new VoiceData();
+                        voiceData.Name = fields[3];
+                        voiceData.LanguageCode = fields[1];
+                        voiceData.LanguageCode = fields[1]; // espeak-ng just uses code
+                        voiceData.Id = fields[4];
+                        string[] ageGender = fields[2].Split("/");
+                        voiceData.Gender = ageGender[1];
+                        if (!voices.ContainsKey(voiceData.Name))
+                        {
+                            voices.Add(voiceData.Name, voiceData);
+                        }
+                    }
+                }
+                while (line != null);
+            }
+
+
             return voices;
         }
 
@@ -203,8 +240,71 @@ namespace ConlangAudioHoning
             }
             string text = "[[h@'loU]]. This is a test. ";
             text += sb.ToString();
-            //TODO: Implement
+            string response = string.Empty;
+            RunConsoleCommand("-ven-us " + text, ref response);
             return;
+        }
+
+        private static StringBuilder stdOutBuilder = new StringBuilder();
+        private static StringBuilder stdErrBuilder = new StringBuilder();
+        private static bool processRunning;
+
+        private static bool RunConsoleCommand(string cmd, ref string response)
+        {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.CreateNoWindow  = true;
+            startInfo.UseShellExecute = false;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            process.Exited += new EventHandler((sender, e) =>
+            {
+                processRunning = false;
+            }
+            );
+            startInfo.FileName = ESpeakNGPath;
+
+            startInfo.Arguments = cmd;
+            process.StartInfo = startInfo;
+            processRunning = true;
+            process.Start();
+            while(processRunning)
+            {
+                if(!process.HasExited)
+                {
+                    processRunning = false;
+                }
+                if(!process.Responding)
+                {
+                    processRunning = false;
+                    process.Kill();
+                }
+            }
+
+            string stdOut = process.StandardOutput.ReadToEnd();
+            string stdErr = process.StandardError.ReadToEnd();
+
+            bool noError = false;
+
+            if(process.ExitCode == 0)
+            {
+                noError = true;
+                response = stdOut;
+            }
+            else if (stdErr.Length > 0)
+            {
+                noError = false;
+                response = stdErr;
+            }
+            else
+            {
+                noError = false;
+                response = stdOut;
+            }
+            process.Close();
+            process.Dispose();
+
+            return noError;
         }
     }
 }
