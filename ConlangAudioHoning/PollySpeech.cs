@@ -35,13 +35,8 @@ namespace ConlangAudioHoning
     /// <summary>
     /// Class used for interacting with Amazon Polly for speech generation and related operations.
     /// </summary>
-    internal class PollySpeech
+    internal class PollySpeech : SpeechEngine
     {
-        LanguageDescription? _languageDescription;
-        private string? _sampleText = null;
-        private string? _ssmlText = null;
-        private string? _phoneticText = null;
-
         // URI for the Amazon REST URI for processing the Polly messages.  This needs beefing up
         // before this project can be made public since it will allow any SSML to be turned to 
         // speech on my dime.
@@ -51,43 +46,9 @@ namespace ConlangAudioHoning
         /// Constructor for the Amazon Polly interface.
         /// </summary>
         /// <param name="languageDescription">LanguageDescription object for the language to work with.</param>
-        public PollySpeech(LanguageDescription languageDescription)
+        public PollySpeech(LanguageDescription languageDescription) : base(languageDescription)
         {
-            _languageDescription = languageDescription;
-        }
-
-        /// <summary>
-        /// The LanguageDescription object being worked on.
-        /// </summary>
-        public LanguageDescription LanguageDescription
-        {
-            get => _languageDescription ?? new LanguageDescription();
-            set => _languageDescription = value;
-        }
-
-        /// <summary>
-        /// The sample text being worked on.
-        /// </summary>
-        public string sampleText
-        {
-            get => _sampleText ?? string.Empty;
-            set => _sampleText = value;
-        }
-
-        /// <summary>
-        /// The SSML text generated to be sent to Amazon Polly.
-        /// </summary>
-        public string ssmlText
-        {
-            get => _ssmlText ?? string.Empty;
-        }
-
-        /// <summary>
-        /// The Phonetic text produced from the SampleText and the LanguageDescription.
-        /// </summary>
-        public string phoneticText
-        {
-            get => _phoneticText ?? string.Empty;
+            Description = "Amazon Polly";
         }
 
         /// <summary>
@@ -97,33 +58,33 @@ namespace ConlangAudioHoning
         /// <param name="caller">Optional link to the LanguageHoningForm that called this method.  If not
         /// null, the Decline method from that form will be used, allowing progress to be displayed.</param>
         /// <exception cref="ConlangAudioHoningException"></exception>
-        public void Generate(string speed, LanguageHoningForm? caller = null)
+        public override void Generate(string speed, LanguageHoningForm? caller = null)
         {
-            if (_languageDescription == null)
+            if (LanguageDescription == null)
             {
                 throw new ConlangAudioHoningException("Cannot Generate Polly Speech without a language description");
             }
-            if ((_sampleText == null) || (sampleText.Trim().Equals(string.Empty)))
+            if ((sampleText == null) || (sampleText.Trim().Equals(string.Empty)))
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
             bool removeDeclinedWord = false;
-            if (!_languageDescription.declined)
+            if (!LanguageDescription.declined)
             {
                 if (caller != null)
                 {
-                    caller.DeclineLexicon(_languageDescription);
+                    caller.DeclineLexicon(LanguageDescription);
                 }
                 else
                 {
-                    ConLangUtilities.declineLexicon(_languageDescription);
+                    ConLangUtilities.declineLexicon(LanguageDescription);
                 }
                 removeDeclinedWord = true;
             }
 
             // Build a lookup dictionary from the lexicon - spelled words to their lexicon entries
             Dictionary<string, LexiconEntry> wordMap = new Dictionary<string, LexiconEntry>();
-            foreach (LexiconEntry entry in _languageDescription.lexicon)
+            foreach (LexiconEntry entry in LanguageDescription.lexicon)
             {
                 wordMap[entry.spelled.Trim().ToLower()] = entry;
             }
@@ -154,10 +115,10 @@ namespace ConlangAudioHoning
                 while (line != null);
             }
 
-            _ssmlText = "<speak>\n";
-            _ssmlText += "\t<prosody rate =\"" + speed + "\">\n";
+            ssmlText = "<speak>\n";
+            ssmlText += "\t<prosody rate =\"" + speed + "\">\n";
 
-            _phoneticText = string.Empty;
+            phoneticText = string.Empty;
             int wordWrap = 0;
 
             foreach (List<Dictionary<string, string>> lineMapList in pronounceMapList)
@@ -167,38 +128,38 @@ namespace ConlangAudioHoning
                     // Build the phoneme tag
                     if ((!pronounceMap["phonetic"].Trim().Equals(string.Empty)) && (pronounceMap["phonetic"] != ".") && (pronounceMap["phonetic"] != ","))
                     {
-                        _ssmlText += "\t\t<phoneme alphabet=\"ipa\" ph=\"" + pronounceMap["phonetic"] + "\">" + pronounceMap["word"] + "</phoneme>\n";
-                        _phoneticText += pronounceMap["phonetic"];
+                        ssmlText += "\t\t<phoneme alphabet=\"ipa\" ph=\"" + pronounceMap["phonetic"] + "\">" + pronounceMap["word"] + "</phoneme>\n";
+                        phoneticText += pronounceMap["phonetic"];
                         wordWrap += pronounceMap["phonetic"].Length;
                         if (pronounceMap["punctuation"] != "")
                         {
-                            _phoneticText += pronounceMap["punctuation"];
+                            phoneticText += pronounceMap["punctuation"];
                             wordWrap += pronounceMap["punctuation"].Length;
                         }
-                        _phoneticText += " ";
+                        phoneticText += " ";
                         wordWrap += 1;
                     }
                     else if (pronounceMap["punctuation"] == ".")
                     {
-                        _ssmlText += "\t\t<break strength=\"strong\"/>\n";
+                        ssmlText += "\t\t<break strength=\"strong\"/>\n";
                     }
                     else if (pronounceMap["punctuation"] == ",")
                     {
-                        _ssmlText += "\t\t<break strength=\"weak\"/>\n";
+                        ssmlText += "\t\t<break strength=\"weak\"/>\n";
                     }
                     if (wordWrap >= 80)
                     {
-                        _phoneticText += "\n";
+                        phoneticText += "\n";
                         wordWrap = 0;
                     }
                 }
             }
-            _ssmlText += "\t</prosody>\n";
-            _ssmlText += "</speak>\n";
+            ssmlText += "\t</prosody>\n";
+            ssmlText += "</speak>\n";
 
             if (removeDeclinedWord)
             {
-                ConLangUtilities.removeDeclinedEntries(_languageDescription);
+                ConLangUtilities.removeDeclinedEntries(LanguageDescription);
             }
         }
 
@@ -277,27 +238,27 @@ namespace ConlangAudioHoning
         /// will display the progress of getting the speech from Amazon Web Services using that form's 
         /// ProgressBar.</param>
         /// <returns>true if successful, false otherwise.</returns>
-        public bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)
+        public override bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)
         {
-            if (_languageDescription == null)
+            if (LanguageDescription == null)
             {
                 return false;
             }
-            if ((_sampleText == null) || (_sampleText.Length == 0))
+            if ((sampleText == null) || (sampleText.Length == 0))
             {
                 return false;
             }
 
             if(string.IsNullOrEmpty(voice))
             {
-                voice = _languageDescription.preferred_voice ?? "Brian";
+                voice = LanguageDescription.preferred_voice ?? "Brian";
             }
             if(string.IsNullOrEmpty(speed)) 
             {
                 speed = "slow";
             }
 
-            if ((_ssmlText == null) || (_ssmlText.Trim().Equals(string.Empty)))
+            if ((ssmlText == null) || (ssmlText.Trim().Equals(string.Empty)))
             {
                 Generate(speed,caller);
             }
@@ -343,7 +304,7 @@ namespace ConlangAudioHoning
             requestDict.Clear();
             requestDict["start"] = string.Empty;
 #pragma warning disable CS8601 // Possible null reference assignment.
-            requestDict["ssml"] = _ssmlText;
+            requestDict["ssml"] = ssmlText;
 #pragma warning restore CS8601 // Possible null reference assignment.            }
             requestDict["voice"] = voice;
             requestDict["filetype"] = "mp3";
@@ -439,68 +400,6 @@ namespace ConlangAudioHoning
             return generated;
         }
 
-        private Dictionary<string, string>? pronounceWord(string word, Dictionary<string, LexiconEntry> wordMap)
-        {
-            if (word.Trim().Equals(string.Empty))
-            {
-                return null;
-            }
-            Dictionary<string, string> pw = new Dictionary<string, string>();
-            pw.Clear();
-            if (word.Trim().Equals("."))
-            {
-
-                pw.Add("phonetic", string.Empty);
-                pw.Add("punctuation", ".");
-                pw.Add("word", word);
-            }
-            if (word.Trim().Equals(","))
-            {
-                pw.Add("phonetic", string.Empty);
-                pw.Add("punctuation", ",");
-                pw.Add("word", word);
-            }
-
-            string phonetic = string.Empty;
-            string punctuation = string.Empty;
-
-            word = word.Trim();
-            word = word.ToLower();
-
-            int wordLen = word.Length;
-            string lastChar = word.Substring(wordLen - 1);
-            if ((lastChar == ".") || (lastChar == ","))
-            {
-                punctuation = lastChar;
-                word = word.Substring(0, (wordLen - 1));
-            }
-            if (wordMap.ContainsKey(word))
-            {
-                phonetic = wordMap[word].phonetic;
-            }
-            else
-            {
-                phonetic = ConLangUtilities.SoundOutWord(word, LanguageDescription.sound_map_list);
-                LexiconEntry entry = new LexiconEntry();
-                entry.phonetic = phonetic;
-                entry.spelled = word;
-                entry.english = "<<unknown/undefined word sounded out by the Language Honing Application>>";
-                entry.part_of_speech = "unk";
-                entry.declensions = new List<string>() { "root" };
-                entry.declined_word = false;
-                entry.derived_word = false;
-                wordMap[word] = entry;
-                // Add this word to the lexicon so that it is available for sound changes later.
-                LanguageDescription.lexicon.Add(entry);
-            }
-
-            pw.Add("phonetic", phonetic);
-            pw.Add("punctuation", punctuation);
-            pw.Add("word", word);
-            return pw;
-
-        }
-        
         /// <summary>
         /// Represents the JSON structure returned by Amazon Web Services when the list of 
         /// Polly voices are requested.
@@ -581,6 +480,5 @@ namespace ConlangAudioHoning
                 set => _supportedEngines = value;
             }
         }
-
     }
 }
