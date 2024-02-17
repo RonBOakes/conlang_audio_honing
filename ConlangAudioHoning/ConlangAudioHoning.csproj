@@ -92,8 +92,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConlangJson\ConlangJson.csproj" />
-    <ProjectReference Include="..\espeak-ng-wrapper\ESpeakWrapper\ESpeakWrapper.csproj" />
-    <ProjectReference Include="..\espeak-ng\src\windows\libespeak-ng.vcxproj" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

@@ -1,6 +1,0 @@
-[submodule "espeak-ng-wrapper"]
-	path = espeak-ng-wrapper
-	url = https://github.com/parhamdoustdar/espeak-ng-wrapper.git
-[submodule "espeak-ng"]
-	path = espeak-ng
-	url = https://github.com/espeak-ng/espeak-ng.git
