@@ -17,7 +17,6 @@
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using ConlangJson;
-using ESpeakWrapper;
 using System.Drawing.Printing;
 using System.Security.Cryptography;
 using System.Text;

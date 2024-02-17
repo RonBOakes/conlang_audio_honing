@@ -94,8 +94,4 @@
     <ProjectReference Include="..\ConlangJson\ConlangJson.csproj" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="call prebuild.bat $(Configuration) $(TargetPath)" />
-  </Target>
-
 </Project>

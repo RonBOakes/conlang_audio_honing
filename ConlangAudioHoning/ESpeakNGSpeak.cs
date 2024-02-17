@@ -22,7 +22,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using ESpeakWrapper;
 using ConlangJson;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -34,11 +33,10 @@ namespace ConlangAudioHoning
     internal class ESpeakNGSpeak : SpeechEngine
     {
         private static string ESpeakNGLibPath = @"C:\Program Files\eSpeak NG\libespeak-ng.dll";
+        private static string ESpeakNGPath = @"C:\Program Files\eSpeak NG\espeak-ng.exe";
 
         public ESpeakNGSpeak() : base()
         {
-            ESpeakWrapper.Client.Initialize(ESpeakNGSpeak.ESpeakNGLibPath);
-            ESpeakWrapper.Client.SetPhonemeEvents(true, false);
             Description = "espeak-ng";
         }
 
@@ -47,8 +45,6 @@ namespace ConlangAudioHoning
         /// </summary>
         public ESpeakNGSpeak(LanguageDescription languageDescription) : base(languageDescription)
         {
-            ESpeakWrapper.Client.Initialize(ESpeakNGSpeak.ESpeakNGLibPath);
-            ESpeakWrapper.Client.SetPhonemeEvents(true, false);
             Description = "espeak-ng";
         }
 
@@ -176,14 +172,7 @@ namespace ConlangAudioHoning
             {
                 voice = "English (America)";
             }
-            if (!ESpeakWrapper.Client.SetVoiceByName(voice))
-            {
-                return false;
-            }
-            if (!ESpeakWrapper.Client.Speak(ssmlText))
-            {
-                return false;
-            }
+            // TODO: implement.
 
 
             return true;
@@ -195,44 +184,13 @@ namespace ConlangAudioHoning
             Dictionary<string, VoiceData> voices = new Dictionary<string, VoiceData>();
             List<IntPtr> voicePointers = new List<IntPtr>();
 
-            unsafe
-            {
-                void** voicePointerArray = (void**)espeak_ListVoices(IntPtr.Zero);
-                void* v;
-                for (int ix = 0; (v = voicePointerArray[ix]) != null; ix++)
-                {
-                    voicePointers.Add((IntPtr)v);
-                }
-            }
-
-            foreach (IntPtr voicePointer in voicePointers)
-            {
-                if (voicePointer != IntPtr.Zero)
-                {
-#pragma warning disable CS8605
-                    ESpeakVoice espeakVoice = (ESpeakVoice)Marshal.PtrToStructure(voicePointer, typeof(ESpeakVoice));
-#pragma warning restore CS8605
-                    VoiceData voiceData = new VoiceData();
-                    voiceData.Name = espeakVoice.Name;
-                    voiceData.LanguageName = espeakVoice.Languages;
-                    voiceData.Gender = espeakVoice.Gender.ToString();
-                    if (!voices.ContainsKey(voiceData.Name))
-                    {
-                        voices.Add(voiceData.Name, voiceData);
-                    }
-                }
-            }
-
+            // TODO: Implement
             return voices;
         }
 
         public void Test()
         {
             // Initialize the eSpeak-ng library via the wrapper
-            if (!ESpeakWrapper.Client.SetVoiceByName("English (America)"))
-            {
-                return;
-            }
             List<string> ipaText = new List<string>()
             {
                 "ðɪs", "ɪz", "ɐ", "tˈɛst"
@@ -245,15 +203,8 @@ namespace ConlangAudioHoning
             }
             string text = "[[h@'loU]]. This is a test. ";
             text += sb.ToString();
-            if (!ESpeakWrapper.Client.Speak(text))
-            {
-                return;
-            }
+            //TODO: Implement
+            return;
         }
-
-        // Extra espeakNG Library calls
-        [DllImport("libespeak-ng.dll", CharSet = CharSet.Auto)]
-        static extern IntPtr espeak_ListVoices(IntPtr voice_spec);
-
     }
 }
