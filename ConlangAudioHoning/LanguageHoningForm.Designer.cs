@@ -48,6 +48,7 @@
             displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripMenuItem();
             printIPAMapToolStripMenuItem = new ToolStripMenuItem();
+            printKiToolStripMenuItem = new ToolStripMenuItem();
             txt_SampleText = new TextBox();
             lbl_SampleText = new Label();
             txt_phonetic = new TextBox();
@@ -89,7 +90,9 @@
             label8 = new Label();
             btn_addCurrentChangeToList = new Button();
             btn_applyListOfChanges = new Button();
-            printKiToolStripMenuItem = new ToolStripMenuItem();
+            label9 = new Label();
+            comboBox1 = new ComboBox();
+            label10 = new Label();
             menuStrip1.SuspendLayout();
             gbx_phonetics.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
@@ -211,23 +214,30 @@
             // displayPulmonicConsonantsToolStripMenuItem
             // 
             displayPulmonicConsonantsToolStripMenuItem.Name = "displayPulmonicConsonantsToolStripMenuItem";
-            displayPulmonicConsonantsToolStripMenuItem.Size = new Size(232, 22);
+            displayPulmonicConsonantsToolStripMenuItem.Size = new Size(240, 22);
             displayPulmonicConsonantsToolStripMenuItem.Text = "Display Pulmonic Consonants";
             displayPulmonicConsonantsToolStripMenuItem.Click += displayPulmonicConsonantsToolStripMenuItem_Click;
             // 
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(232, 22);
+            toolStripMenuItem2.Size = new Size(240, 22);
             toolStripMenuItem2.Text = "Display Supersegmental";
             toolStripMenuItem2.Click += displaySupersegmentals_Click;
             // 
             // printIPAMapToolStripMenuItem
             // 
             printIPAMapToolStripMenuItem.Name = "printIPAMapToolStripMenuItem";
-            printIPAMapToolStripMenuItem.Size = new Size(232, 22);
+            printIPAMapToolStripMenuItem.Size = new Size(240, 22);
             printIPAMapToolStripMenuItem.Text = "Print IPA Map";
             printIPAMapToolStripMenuItem.Click += printIPAMapToolStripMenuItem_Click;
+            // 
+            // printKiToolStripMenuItem
+            // 
+            printKiToolStripMenuItem.Name = "printKiToolStripMenuItem";
+            printKiToolStripMenuItem.Size = new Size(240, 22);
+            printKiToolStripMenuItem.Text = "Print Kirshenbaum Missing Info";
+            printKiToolStripMenuItem.Click += printKiToolStripMenuItem_Click;
             // 
             // txt_SampleText
             // 
@@ -252,7 +262,7 @@
             // 
             // txt_phonetic
             // 
-            txt_phonetic.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txt_phonetic.Font = new Font("Charis SIL", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txt_phonetic.Location = new Point(513, 47);
             txt_phonetic.Multiline = true;
             txt_phonetic.Name = "txt_phonetic";
@@ -282,9 +292,9 @@
             // 
             // btn_generateSpeech
             // 
-            btn_generateSpeech.Location = new Point(157, 166);
+            btn_generateSpeech.Location = new Point(15, 195);
             btn_generateSpeech.Name = "btn_generateSpeech";
-            btn_generateSpeech.Size = new Size(130, 23);
+            btn_generateSpeech.Size = new Size(136, 23);
             btn_generateSpeech.TabIndex = 6;
             btn_generateSpeech.Text = "Generate Speech";
             btn_generateSpeech.UseVisualStyleBackColor = true;
@@ -295,27 +305,27 @@
             cbx_recordings.DropDownStyle = ComboBoxStyle.DropDownList;
             cbx_recordings.FormattingEnabled = true;
             cbx_recordings.ItemHeight = 15;
-            cbx_recordings.Location = new Point(293, 166);
+            cbx_recordings.Location = new Point(157, 195);
             cbx_recordings.Name = "cbx_recordings";
-            cbx_recordings.Size = new Size(214, 23);
+            cbx_recordings.Size = new Size(350, 23);
             cbx_recordings.Sorted = true;
             cbx_recordings.TabIndex = 7;
             // 
             // btn_replaySpeech
             // 
-            btn_replaySpeech.Location = new Point(293, 195);
+            btn_replaySpeech.Location = new Point(283, 168);
             btn_replaySpeech.Name = "btn_replaySpeech";
-            btn_replaySpeech.Size = new Size(145, 23);
+            btn_replaySpeech.Size = new Size(224, 23);
             btn_replaySpeech.TabIndex = 8;
-            btn_replaySpeech.Text = "Replay Selected Speech";
+            btn_replaySpeech.Text = "Replay Selected Recording";
             btn_replaySpeech.UseVisualStyleBackColor = true;
             btn_replaySpeech.Click += btn_replaySpeech_Click;
             // 
             // pb_status
             // 
-            pb_status.Location = new Point(15, 224);
+            pb_status.Location = new Point(12, 22);
             pb_status.Name = "pb_status";
-            pb_status.Size = new Size(976, 34);
+            pb_status.Size = new Size(976, 23);
             pb_status.TabIndex = 9;
             pb_status.Visible = false;
             // 
@@ -327,9 +337,9 @@
             // 
             gbx_phonetics.Controls.Add(rbn_vowels);
             gbx_phonetics.Controls.Add(rbn_consonants);
-            gbx_phonetics.Location = new Point(15, 224);
+            gbx_phonetics.Location = new Point(513, 234);
             gbx_phonetics.Name = "gbx_phonetics";
-            gbx_phonetics.Size = new Size(492, 42);
+            gbx_phonetics.Size = new Size(478, 42);
             gbx_phonetics.TabIndex = 10;
             gbx_phonetics.TabStop = false;
             gbx_phonetics.Text = "Phonetics to Alter";
@@ -399,9 +409,9 @@
             // 
             // btn_applyChangeToLanguage
             // 
-            btn_applyChangeToLanguage.Location = new Point(515, 364);
+            btn_applyChangeToLanguage.Location = new Point(513, 422);
             btn_applyChangeToLanguage.Name = "btn_applyChangeToLanguage";
-            btn_applyChangeToLanguage.Size = new Size(476, 23);
+            btn_applyChangeToLanguage.Size = new Size(246, 23);
             btn_applyChangeToLanguage.TabIndex = 15;
             btn_applyChangeToLanguage.Text = "Apply Current Change to the Language";
             btn_applyChangeToLanguage.UseVisualStyleBackColor = true;
@@ -409,9 +419,9 @@
             // 
             // btn_revertLastChange
             // 
-            btn_revertLastChange.Location = new Point(515, 451);
+            btn_revertLastChange.Location = new Point(763, 451);
             btn_revertLastChange.Name = "btn_revertLastChange";
-            btn_revertLastChange.Size = new Size(476, 23);
+            btn_revertLastChange.Size = new Size(226, 23);
             btn_revertLastChange.TabIndex = 16;
             btn_revertLastChange.Text = "Revert the last change";
             btn_revertLastChange.UseVisualStyleBackColor = true;
@@ -450,7 +460,7 @@
             // cbx_voice
             // 
             cbx_voice.FormattingEnabled = true;
-            cbx_voice.Location = new Point(513, 166);
+            cbx_voice.Location = new Point(15, 224);
             cbx_voice.Name = "cbx_voice";
             cbx_voice.Size = new Size(246, 23);
             cbx_voice.Sorted = true;
@@ -459,28 +469,28 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(513, 192);
+            label6.Location = new Point(15, 250);
             label6.Name = "label6";
-            label6.Size = new Size(35, 15);
+            label6.Size = new Size(70, 15);
             label6.TabIndex = 21;
-            label6.Text = "Voice";
+            label6.Text = "Voice to use";
             // 
             // cbx_speed
             // 
             cbx_speed.FormattingEnabled = true;
-            cbx_speed.Location = new Point(765, 166);
+            cbx_speed.Location = new Point(264, 224);
             cbx_speed.Name = "cbx_speed";
-            cbx_speed.Size = new Size(226, 23);
+            cbx_speed.Size = new Size(243, 23);
             cbx_speed.TabIndex = 22;
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(765, 192);
+            label7.Location = new Point(264, 250);
             label7.Name = "label7";
-            label7.Size = new Size(39, 15);
+            label7.Size = new Size(76, 15);
             label7.TabIndex = 23;
-            label7.Text = "Speed";
+            label7.Text = "Speed of text";
             // 
             // gbx_replacementPhomeDepth
             // 
@@ -488,7 +498,7 @@
             gbx_replacementPhomeDepth.Controls.Add(rbn_l3);
             gbx_replacementPhomeDepth.Controls.Add(rbn_l2);
             gbx_replacementPhomeDepth.Controls.Add(rbn_l1);
-            gbx_replacementPhomeDepth.Location = new Point(513, 224);
+            gbx_replacementPhomeDepth.Location = new Point(513, 282);
             gbx_replacementPhomeDepth.Name = "gbx_replacementPhomeDepth";
             gbx_replacementPhomeDepth.Size = new Size(478, 42);
             gbx_replacementPhomeDepth.TabIndex = 24;
@@ -546,7 +556,7 @@
             gbx_vowelReplacements.Controls.Add(rbn_halfLongVowels);
             gbx_vowelReplacements.Controls.Add(rbn_normalVowel);
             gbx_vowelReplacements.Controls.Add(rbn_normalDiphthong);
-            gbx_vowelReplacements.Location = new Point(515, 272);
+            gbx_vowelReplacements.Location = new Point(515, 330);
             gbx_vowelReplacements.Name = "gbx_vowelReplacements";
             gbx_vowelReplacements.Size = new Size(476, 76);
             gbx_vowelReplacements.TabIndex = 25;
@@ -615,7 +625,7 @@
             txt_changeList.Multiline = true;
             txt_changeList.Name = "txt_changeList";
             txt_changeList.ScrollBars = ScrollBars.Vertical;
-            txt_changeList.Size = new Size(398, 33);
+            txt_changeList.Size = new Size(398, 51);
             txt_changeList.TabIndex = 26;
             // 
             // label8
@@ -629,9 +639,9 @@
             // 
             // btn_addCurrentChangeToList
             // 
-            btn_addCurrentChangeToList.Location = new Point(515, 393);
+            btn_addCurrentChangeToList.Location = new Point(765, 422);
             btn_addCurrentChangeToList.Name = "btn_addCurrentChangeToList";
-            btn_addCurrentChangeToList.Size = new Size(476, 23);
+            btn_addCurrentChangeToList.Size = new Size(226, 23);
             btn_addCurrentChangeToList.TabIndex = 28;
             btn_addCurrentChangeToList.Text = "Add Current Change to List of Changes";
             btn_addCurrentChangeToList.UseVisualStyleBackColor = true;
@@ -639,26 +649,48 @@
             // 
             // btn_applyListOfChanges
             // 
-            btn_applyListOfChanges.Location = new Point(515, 422);
+            btn_applyListOfChanges.Location = new Point(513, 451);
             btn_applyListOfChanges.Name = "btn_applyListOfChanges";
-            btn_applyListOfChanges.Size = new Size(476, 23);
+            btn_applyListOfChanges.Size = new Size(244, 23);
             btn_applyListOfChanges.TabIndex = 29;
             btn_applyListOfChanges.Text = "Apply All Listed Changes to the Language (Simultaneously)";
             btn_applyListOfChanges.UseVisualStyleBackColor = true;
             btn_applyListOfChanges.Click += btn_applyListOfChanges_Click;
             // 
-            // printKiToolStripMenuItem
+            // label9
             // 
-            printKiToolStripMenuItem.Name = "printKiToolStripMenuItem";
-            printKiToolStripMenuItem.Size = new Size(240, 22);
-            printKiToolStripMenuItem.Text = "Print Kirshenbaum Missing Info";
-            printKiToolStripMenuItem.Click += printKiToolStripMenuItem_Click;
+            label9.AutoSize = true;
+            label9.Location = new Point(160, 176);
+            label9.Name = "label9";
+            label9.Size = new Size(117, 15);
+            label9.TabIndex = 30;
+            label9.Text = "Available Recordings";
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(515, 169);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(161, 23);
+            comboBox1.TabIndex = 31;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(515, 199);
+            label10.Name = "label10";
+            label10.Size = new Size(145, 15);
+            label10.TabIndex = 32;
+            label10.Text = "Speech Generation Engine";
             // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1000, 496);
+            Controls.Add(label10);
+            Controls.Add(comboBox1);
+            Controls.Add(label9);
             Controls.Add(btn_applyListOfChanges);
             Controls.Add(btn_addCurrentChangeToList);
             Controls.Add(label8);
@@ -767,5 +799,8 @@
         private ToolStripMenuItem displayGlossOfSampleTextToolStripMenuItem;
         private ToolStripMenuItem printSampleTextSummaryToolStripMenuItem;
         private ToolStripMenuItem printKiToolStripMenuItem;
+        private Label label9;
+        private ComboBox comboBox1;
+        private Label label10;
     }
 }
