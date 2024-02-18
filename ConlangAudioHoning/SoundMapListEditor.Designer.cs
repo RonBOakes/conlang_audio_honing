@@ -81,7 +81,7 @@
             soundMapEditor.Name = "soundMapEditor";
             soundMapEditor.Size = new Size(850, 80);
             soundMap2.phoneme = "";
-            soundMap2.pronounciation_regex = "";
+            soundMap2.pronunciation_regex = "";
             soundMap2.romanization = "";
             soundMap2.spelling_regex = "";
             soundMapEditor.SoundMapData = soundMap2;

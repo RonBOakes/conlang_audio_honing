@@ -70,7 +70,7 @@ namespace ConlangJson
             string phonetic = word;
             foreach (SoundMap soundMap in soundMapList)
             {
-                phonetic = Regex.Replace(phonetic, soundMap.pronounciation_regex, soundMap.phoneme);
+                phonetic = Regex.Replace(phonetic, soundMap.pronunciation_regex, soundMap.phoneme);
             }
 
             return phonetic;
@@ -317,44 +317,44 @@ namespace ConlangJson
 
                 string? newWord = null;
                 // Perform the substitution if there is a regular expression in the affix rule
-                if (rules.pronounciation_regex != null)
+                if (rules.pronunciation_regex != null)
                 {
                     if (affix.Equals("prefix"))
                     {
-                        if (Regex.IsMatch(phonetic, rules.pronounciation_regex))
+                        if (Regex.IsMatch(phonetic, rules.pronunciation_regex))
                         {
-                            newWord = rules.t_pronounciation_add + phonetic2;
+                            newWord = rules.t_pronunciation_add + phonetic2;
                         }
                         else
                         {
-                            newWord = rules.f_pronounciation_add + phonetic2;
+                            newWord = rules.f_pronunciation_add + phonetic2;
                         }
                     }
                     else if (affix.Equals("suffix"))
                     {
-                        if (Regex.IsMatch(phonetic, rules.pronounciation_regex))
+                        if (Regex.IsMatch(phonetic, rules.pronunciation_regex))
                         {
-                            newWord = phonetic2 + rules.t_pronounciation_add;
+                            newWord = phonetic2 + rules.t_pronunciation_add;
                         }
                         else
                         {
-                            newWord = phonetic2 + rules.f_pronounciation_add;
+                            newWord = phonetic2 + rules.f_pronunciation_add;
                         }
                     }
-                    else if ((affix.Equals("replacement")) && (rules.pronounciation_repl != null))
+                    else if ((affix.Equals("replacement")) && (rules.pronunciation_replacement != null))
                     {
-                        newWord = Regex.Replace(phonetic, rules.pronounciation_regex, rules.pronounciation_repl);
+                        newWord = Regex.Replace(phonetic, rules.pronunciation_regex, rules.pronunciation_replacement);
                     }
                 }
-                else if (rules.pronounciation_add != null)
+                else if (rules.pronunciation_add != null)
                 {
                     if (affix.Equals("prefix"))
                     {
-                        newWord = rules.pronounciation_add + phonetic2;
+                        newWord = rules.pronunciation_add + phonetic2;
                     }
                     else
                     {
-                        newWord = phonetic2 + rules.pronounciation_add;
+                        newWord = phonetic2 + rules.pronunciation_add;
                     }
                 }
                 else

@@ -27,7 +27,7 @@ namespace ConlangJson
         private string _phoneme;
         private string _romanization;
         private string _spelling_regex;
-        private string _pronounciation_regex;
+        private string _pronunciation_regex;
 
         /// <summary>
         /// Constructor used to build an empty SoundMap object.  All of the members are set to the default values.
@@ -37,7 +37,7 @@ namespace ConlangJson
             this._phoneme = string.Empty;
             this._romanization = string.Empty;
             this._spelling_regex = string.Empty;
-            this._pronounciation_regex = string.Empty;
+            this._pronunciation_regex = string.Empty;
         }
 
         /// <summary>
@@ -59,16 +59,16 @@ namespace ConlangJson
         /// matched text will then be replaced with the value from the romanization.  This will be expressed using the 
         /// symbology specified in the phonetic_characters field at the Top Level.<br/>Optional, Recommended, Required 
         /// if romanization is present.<br/>Set to an empty string if not present.</param>
-        /// <param name="pronounciation_regex">This string contains a generalized regular expression that matches a 
+        /// <param name="pronunciation_regex">This string contains a generalized regular expression that matches a 
         /// portion of a word's Romanized or Latinized version in the conlang with a specific phonetic representation.  
         /// The matched text will then be replaced with the value from the phoneme below.<br/> Optional, Recommended, 
         /// Required if phoneme is present.<br/>Set to an empty string if not present.</param>
-        public SoundMap(string phoneme, string romanization, string spelling_regex, string pronounciation_regex)
+        public SoundMap(string phoneme, string romanization, string spelling_regex, string pronunciation_regex)
         {
             this._phoneme = phoneme;
             this._romanization = romanization;
             this._spelling_regex = spelling_regex;
-            this._pronounciation_regex = pronounciation_regex;
+            this._pronunciation_regex = pronunciation_regex;
         }
 
         /// <summary>
@@ -115,10 +115,10 @@ namespace ConlangJson
         /// The matched text will then be replaced with the value from the phoneme below.<br/> Optional, Recommended, 
         /// Required if phoneme is present.<br/>Set to an empty string if not present.
         /// </summary>
-        public string pronounciation_regex
+        public string pronunciation_regex
         {
-            get { return _pronounciation_regex; }
-            set { _pronounciation_regex = value; }
+            get { return _pronunciation_regex; }
+            set { _pronunciation_regex = value; }
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace ConlangJson
         /// <returns>A new SoundMap with the same data.</returns>
         public SoundMap copy()
         {
-            SoundMap copy = new SoundMap(this.phoneme, this.romanization, this.spelling_regex, this.pronounciation_regex);
+            SoundMap copy = new SoundMap(this.phoneme, this.romanization, this.spelling_regex, this.pronunciation_regex);
             return copy;
         }
     }

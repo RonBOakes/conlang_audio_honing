@@ -48,7 +48,7 @@ namespace ConlangAudioHoning
                 {
                     _soundMapData = new SoundMap();
                 }
-                _soundMapData.pronounciation_regex = txt_pronunciationRegex.Text;
+                _soundMapData.pronunciation_regex = txt_pronunciationRegex.Text;
                 _soundMapData.phoneme = txt_phoneme.Text;
                 _soundMapData.romanization = txt_romanization.Text;
                 _soundMapData.spelling_regex = txt_spellingRegex.Text;
@@ -58,7 +58,7 @@ namespace ConlangAudioHoning
             set 
             { 
                 _soundMapData = value; 
-                txt_pronunciationRegex.Text = _soundMapData.pronounciation_regex;
+                txt_pronunciationRegex.Text = _soundMapData.pronunciation_regex;
                 txt_phoneme.Text = _soundMapData.phoneme;
                 txt_romanization.Text = _soundMapData.romanization;
                 txt_spellingRegex.Text = _soundMapData.spelling_regex;
@@ -114,7 +114,7 @@ namespace ConlangAudioHoning
             {
                 bool valid = false;
            
-                if ((!String.IsNullOrEmpty(SoundMapData.pronounciation_regex.Trim())) && (!String.IsNullOrEmpty(SoundMapData.phoneme.Trim())))
+                if ((!String.IsNullOrEmpty(SoundMapData.pronunciation_regex.Trim())) && (!String.IsNullOrEmpty(SoundMapData.phoneme.Trim())))
                 {
                     valid = true;
                 }

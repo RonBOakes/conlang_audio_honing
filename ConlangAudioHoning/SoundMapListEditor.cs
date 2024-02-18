@@ -212,7 +212,7 @@ namespace ConlangAudioHoning
             foreach (SoundMap map in _soundMapList)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendFormat("Phonetic Regex: {0}, ", map.pronounciation_regex);
+                sb.AppendFormat("Phonetic Regex: {0}, ", map.pronunciation_regex);
                 sb.AppendFormat("Phoneme: {0}, ", map.phoneme);
                 sb.AppendFormat("Spelling Regex: {0}, ", map.spelling_regex);
                 sb.AppendFormat("Spelling: {0}", map.romanization);
