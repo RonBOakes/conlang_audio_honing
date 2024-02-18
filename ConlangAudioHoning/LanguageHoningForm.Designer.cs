@@ -59,9 +59,6 @@
             btn_replaySpeech = new Button();
             pb_status = new ProgressBar();
             pbTimer = new System.Windows.Forms.Timer(components);
-            gbx_phonetics = new GroupBox();
-            rbn_vowels = new RadioButton();
-            rbn_consonants = new RadioButton();
             label1 = new Label();
             label2 = new Label();
             cbx_phonemeToChange = new ComboBox();
@@ -75,17 +72,6 @@
             label6 = new Label();
             cbx_speed = new ComboBox();
             label7 = new Label();
-            gbx_replacementPhomeDepth = new GroupBox();
-            rbn_allPhonemes = new RadioButton();
-            rbn_l3 = new RadioButton();
-            rbn_l2 = new RadioButton();
-            rbn_l1 = new RadioButton();
-            gbx_vowelReplacements = new GroupBox();
-            rbn_longVowels = new RadioButton();
-            rbn_semivowelDiphthong = new RadioButton();
-            rbn_halfLongVowels = new RadioButton();
-            rbn_normalVowel = new RadioButton();
-            rbn_normalDiphthong = new RadioButton();
             txt_changeList = new TextBox();
             label8 = new Label();
             btn_addCurrentChangeToList = new Button();
@@ -93,9 +79,27 @@
             label9 = new Label();
             cbx_speechEngine = new ComboBox();
             label10 = new Label();
+            tabPhoneticAlterations = new TabControl();
+            tabPageConsonants = new TabPage();
+            gbx_replacementPhomeDepth = new GroupBox();
+            rbn_allPhonemes = new RadioButton();
+            rbn_l3 = new RadioButton();
+            rbn_l2 = new RadioButton();
+            rbn_l1 = new RadioButton();
+            tabPageVowels = new TabPage();
+            gbx_vowelReplacements = new GroupBox();
+            rbn_longVowels = new RadioButton();
+            rbn_semivowelDiphthong = new RadioButton();
+            rbn_halfLongVowels = new RadioButton();
+            rbn_normalVowel = new RadioButton();
+            rbn_normalDiphthong = new RadioButton();
+            tabPageVowelDiphthongs = new TabPage();
+            tabPageSpecialOperations = new TabPage();
             menuStrip1.SuspendLayout();
-            gbx_phonetics.SuspendLayout();
+            tabPhoneticAlterations.SuspendLayout();
+            tabPageConsonants.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
+            tabPageVowels.SuspendLayout();
             gbx_vowelReplacements.SuspendLayout();
             SuspendLayout();
             // 
@@ -333,41 +337,6 @@
             // 
             pbTimer.Tick += pbTimer_Tick;
             // 
-            // gbx_phonetics
-            // 
-            gbx_phonetics.Controls.Add(rbn_vowels);
-            gbx_phonetics.Controls.Add(rbn_consonants);
-            gbx_phonetics.Location = new Point(513, 234);
-            gbx_phonetics.Name = "gbx_phonetics";
-            gbx_phonetics.Size = new Size(478, 42);
-            gbx_phonetics.TabIndex = 10;
-            gbx_phonetics.TabStop = false;
-            gbx_phonetics.Text = "Phonetics to Alter";
-            // 
-            // rbn_vowels
-            // 
-            rbn_vowels.AutoSize = true;
-            rbn_vowels.Location = new Point(106, 15);
-            rbn_vowels.Name = "rbn_vowels";
-            rbn_vowels.Size = new Size(103, 19);
-            rbn_vowels.TabIndex = 1;
-            rbn_vowels.TabStop = true;
-            rbn_vowels.Text = "Vowels (single)";
-            rbn_vowels.UseVisualStyleBackColor = true;
-            rbn_vowels.CheckedChanged += rbn_vowels_CheckedChanged;
-            // 
-            // rbn_consonants
-            // 
-            rbn_consonants.AutoSize = true;
-            rbn_consonants.Location = new Point(12, 16);
-            rbn_consonants.Name = "rbn_consonants";
-            rbn_consonants.Size = new Size(88, 19);
-            rbn_consonants.TabIndex = 0;
-            rbn_consonants.TabStop = true;
-            rbn_consonants.Text = "Consonants";
-            rbn_consonants.UseVisualStyleBackColor = true;
-            rbn_consonants.CheckedChanged += rbn_consonants_CheckedChanged;
-            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -492,132 +461,6 @@
             label7.TabIndex = 23;
             label7.Text = "Speed of text";
             // 
-            // gbx_replacementPhomeDepth
-            // 
-            gbx_replacementPhomeDepth.Controls.Add(rbn_allPhonemes);
-            gbx_replacementPhomeDepth.Controls.Add(rbn_l3);
-            gbx_replacementPhomeDepth.Controls.Add(rbn_l2);
-            gbx_replacementPhomeDepth.Controls.Add(rbn_l1);
-            gbx_replacementPhomeDepth.Location = new Point(513, 282);
-            gbx_replacementPhomeDepth.Name = "gbx_replacementPhomeDepth";
-            gbx_replacementPhomeDepth.Size = new Size(478, 42);
-            gbx_replacementPhomeDepth.TabIndex = 24;
-            gbx_replacementPhomeDepth.TabStop = false;
-            gbx_replacementPhomeDepth.Text = "Consonant Depth of Replacement Phonemes";
-            // 
-            // rbn_allPhonemes
-            // 
-            rbn_allPhonemes.AutoSize = true;
-            rbn_allPhonemes.Location = new Point(240, 15);
-            rbn_allPhonemes.Name = "rbn_allPhonemes";
-            rbn_allPhonemes.Size = new Size(105, 19);
-            rbn_allPhonemes.TabIndex = 3;
-            rbn_allPhonemes.TabStop = true;
-            rbn_allPhonemes.Text = "All Consonants";
-            rbn_allPhonemes.UseVisualStyleBackColor = true;
-            // 
-            // rbn_l3
-            // 
-            rbn_l3.AutoSize = true;
-            rbn_l3.Location = new Point(162, 16);
-            rbn_l3.Name = "rbn_l3";
-            rbn_l3.Size = new Size(72, 19);
-            rbn_l3.TabIndex = 2;
-            rbn_l3.TabStop = true;
-            rbn_l3.Text = "3-degree";
-            rbn_l3.UseVisualStyleBackColor = true;
-            // 
-            // rbn_l2
-            // 
-            rbn_l2.AutoSize = true;
-            rbn_l2.Location = new Point(84, 15);
-            rbn_l2.Name = "rbn_l2";
-            rbn_l2.Size = new Size(72, 19);
-            rbn_l2.TabIndex = 1;
-            rbn_l2.TabStop = true;
-            rbn_l2.Text = "2-degree";
-            rbn_l2.UseVisualStyleBackColor = true;
-            // 
-            // rbn_l1
-            // 
-            rbn_l1.AutoSize = true;
-            rbn_l1.Location = new Point(6, 15);
-            rbn_l1.Name = "rbn_l1";
-            rbn_l1.Size = new Size(72, 19);
-            rbn_l1.TabIndex = 0;
-            rbn_l1.TabStop = true;
-            rbn_l1.Text = "1-degree";
-            rbn_l1.UseVisualStyleBackColor = true;
-            // 
-            // gbx_vowelReplacements
-            // 
-            gbx_vowelReplacements.Controls.Add(rbn_longVowels);
-            gbx_vowelReplacements.Controls.Add(rbn_semivowelDiphthong);
-            gbx_vowelReplacements.Controls.Add(rbn_halfLongVowels);
-            gbx_vowelReplacements.Controls.Add(rbn_normalVowel);
-            gbx_vowelReplacements.Controls.Add(rbn_normalDiphthong);
-            gbx_vowelReplacements.Location = new Point(515, 330);
-            gbx_vowelReplacements.Name = "gbx_vowelReplacements";
-            gbx_vowelReplacements.Size = new Size(476, 76);
-            gbx_vowelReplacements.TabIndex = 25;
-            gbx_vowelReplacements.TabStop = false;
-            gbx_vowelReplacements.Text = "Vowel Replacement Settings";
-            // 
-            // rbn_longVowels
-            // 
-            rbn_longVowels.AutoSize = true;
-            rbn_longVowels.Location = new Point(235, 16);
-            rbn_longVowels.Name = "rbn_longVowels";
-            rbn_longVowels.Size = new Size(91, 19);
-            rbn_longVowels.TabIndex = 2;
-            rbn_longVowels.TabStop = true;
-            rbn_longVowels.Text = "Long Vowels";
-            rbn_longVowels.UseVisualStyleBackColor = true;
-            // 
-            // rbn_semivowelDiphthong
-            // 
-            rbn_semivowelDiphthong.AutoSize = true;
-            rbn_semivowelDiphthong.Location = new Point(209, 40);
-            rbn_semivowelDiphthong.Name = "rbn_semivowelDiphthong";
-            rbn_semivowelDiphthong.Size = new Size(182, 19);
-            rbn_semivowelDiphthong.TabIndex = 3;
-            rbn_semivowelDiphthong.TabStop = true;
-            rbn_semivowelDiphthong.Text = "Create semi-vowel diphthong";
-            rbn_semivowelDiphthong.UseVisualStyleBackColor = true;
-            // 
-            // rbn_halfLongVowels
-            // 
-            rbn_halfLongVowels.AutoSize = true;
-            rbn_halfLongVowels.Location = new Point(111, 15);
-            rbn_halfLongVowels.Name = "rbn_halfLongVowels";
-            rbn_halfLongVowels.Size = new Size(118, 19);
-            rbn_halfLongVowels.TabIndex = 1;
-            rbn_halfLongVowels.TabStop = true;
-            rbn_halfLongVowels.Text = "Half-Long Vowels";
-            rbn_halfLongVowels.UseVisualStyleBackColor = true;
-            // 
-            // rbn_normalVowel
-            // 
-            rbn_normalVowel.AutoSize = true;
-            rbn_normalVowel.Location = new Point(6, 16);
-            rbn_normalVowel.Name = "rbn_normalVowel";
-            rbn_normalVowel.Size = new Size(99, 19);
-            rbn_normalVowel.TabIndex = 0;
-            rbn_normalVowel.TabStop = true;
-            rbn_normalVowel.Text = "Normal Vowel";
-            rbn_normalVowel.UseVisualStyleBackColor = true;
-            // 
-            // rbn_normalDiphthong
-            // 
-            rbn_normalDiphthong.AutoSize = true;
-            rbn_normalDiphthong.Location = new Point(6, 41);
-            rbn_normalDiphthong.Name = "rbn_normalDiphthong";
-            rbn_normalDiphthong.Size = new Size(197, 19);
-            rbn_normalDiphthong.TabIndex = 3;
-            rbn_normalDiphthong.TabStop = true;
-            rbn_normalDiphthong.Text = "Add Vowel to create Diphtohong";
-            rbn_normalDiphthong.UseVisualStyleBackColor = true;
-            // 
             // txt_changeList
             // 
             txt_changeList.Enabled = false;
@@ -684,11 +527,192 @@
             label10.TabIndex = 32;
             label10.Text = "Speech Generation Engine";
             // 
+            // tabPhoneticAlterations
+            // 
+            tabPhoneticAlterations.Controls.Add(tabPageConsonants);
+            tabPhoneticAlterations.Controls.Add(tabPageVowels);
+            tabPhoneticAlterations.Controls.Add(tabPageVowelDiphthongs);
+            tabPhoneticAlterations.Controls.Add(tabPageSpecialOperations);
+            tabPhoneticAlterations.Location = new Point(515, 224);
+            tabPhoneticAlterations.Name = "tabPhoneticAlterations";
+            tabPhoneticAlterations.SelectedIndex = 0;
+            tabPhoneticAlterations.Size = new Size(473, 192);
+            tabPhoneticAlterations.TabIndex = 33;
+            // 
+            // tabPageConsonants
+            // 
+            tabPageConsonants.Controls.Add(gbx_replacementPhomeDepth);
+            tabPageConsonants.Location = new Point(4, 24);
+            tabPageConsonants.Name = "tabPageConsonants";
+            tabPageConsonants.Padding = new Padding(3);
+            tabPageConsonants.Size = new Size(465, 164);
+            tabPageConsonants.TabIndex = 0;
+            tabPageConsonants.Text = "Consonants";
+            tabPageConsonants.UseVisualStyleBackColor = true;
+            // 
+            // gbx_replacementPhomeDepth
+            // 
+            gbx_replacementPhomeDepth.Controls.Add(rbn_allPhonemes);
+            gbx_replacementPhomeDepth.Controls.Add(rbn_l3);
+            gbx_replacementPhomeDepth.Controls.Add(rbn_l2);
+            gbx_replacementPhomeDepth.Controls.Add(rbn_l1);
+            gbx_replacementPhomeDepth.Location = new Point(6, 6);
+            gbx_replacementPhomeDepth.Name = "gbx_replacementPhomeDepth";
+            gbx_replacementPhomeDepth.Size = new Size(407, 42);
+            gbx_replacementPhomeDepth.TabIndex = 25;
+            gbx_replacementPhomeDepth.TabStop = false;
+            gbx_replacementPhomeDepth.Text = "Consonant Depth of Replacement Phonemes";
+            // 
+            // rbn_allPhonemes
+            // 
+            rbn_allPhonemes.AutoSize = true;
+            rbn_allPhonemes.Location = new Point(240, 15);
+            rbn_allPhonemes.Name = "rbn_allPhonemes";
+            rbn_allPhonemes.Size = new Size(105, 19);
+            rbn_allPhonemes.TabIndex = 3;
+            rbn_allPhonemes.TabStop = true;
+            rbn_allPhonemes.Text = "All Consonants";
+            rbn_allPhonemes.UseVisualStyleBackColor = true;
+            // 
+            // rbn_l3
+            // 
+            rbn_l3.AutoSize = true;
+            rbn_l3.Location = new Point(162, 16);
+            rbn_l3.Name = "rbn_l3";
+            rbn_l3.Size = new Size(72, 19);
+            rbn_l3.TabIndex = 2;
+            rbn_l3.TabStop = true;
+            rbn_l3.Text = "3-degree";
+            rbn_l3.UseVisualStyleBackColor = true;
+            // 
+            // rbn_l2
+            // 
+            rbn_l2.AutoSize = true;
+            rbn_l2.Location = new Point(84, 15);
+            rbn_l2.Name = "rbn_l2";
+            rbn_l2.Size = new Size(72, 19);
+            rbn_l2.TabIndex = 1;
+            rbn_l2.TabStop = true;
+            rbn_l2.Text = "2-degree";
+            rbn_l2.UseVisualStyleBackColor = true;
+            // 
+            // rbn_l1
+            // 
+            rbn_l1.AutoSize = true;
+            rbn_l1.Location = new Point(6, 15);
+            rbn_l1.Name = "rbn_l1";
+            rbn_l1.Size = new Size(72, 19);
+            rbn_l1.TabIndex = 0;
+            rbn_l1.TabStop = true;
+            rbn_l1.Text = "1-degree";
+            rbn_l1.UseVisualStyleBackColor = true;
+            // 
+            // tabPageVowels
+            // 
+            tabPageVowels.Controls.Add(gbx_vowelReplacements);
+            tabPageVowels.Location = new Point(4, 24);
+            tabPageVowels.Name = "tabPageVowels";
+            tabPageVowels.Padding = new Padding(3);
+            tabPageVowels.Size = new Size(465, 164);
+            tabPageVowels.TabIndex = 1;
+            tabPageVowels.Text = "Vowels (Single)";
+            tabPageVowels.UseVisualStyleBackColor = true;
+            // 
+            // gbx_vowelReplacements
+            // 
+            gbx_vowelReplacements.Controls.Add(rbn_longVowels);
+            gbx_vowelReplacements.Controls.Add(rbn_semivowelDiphthong);
+            gbx_vowelReplacements.Controls.Add(rbn_halfLongVowels);
+            gbx_vowelReplacements.Controls.Add(rbn_normalVowel);
+            gbx_vowelReplacements.Controls.Add(rbn_normalDiphthong);
+            gbx_vowelReplacements.Location = new Point(6, 10);
+            gbx_vowelReplacements.Name = "gbx_vowelReplacements";
+            gbx_vowelReplacements.Size = new Size(453, 76);
+            gbx_vowelReplacements.TabIndex = 26;
+            gbx_vowelReplacements.TabStop = false;
+            gbx_vowelReplacements.Text = "Vowel Replacement Settings";
+            // 
+            // rbn_longVowels
+            // 
+            rbn_longVowels.AutoSize = true;
+            rbn_longVowels.Location = new Point(235, 16);
+            rbn_longVowels.Name = "rbn_longVowels";
+            rbn_longVowels.Size = new Size(91, 19);
+            rbn_longVowels.TabIndex = 2;
+            rbn_longVowels.TabStop = true;
+            rbn_longVowels.Text = "Long Vowels";
+            rbn_longVowels.UseVisualStyleBackColor = true;
+            // 
+            // rbn_semivowelDiphthong
+            // 
+            rbn_semivowelDiphthong.AutoSize = true;
+            rbn_semivowelDiphthong.Location = new Point(209, 40);
+            rbn_semivowelDiphthong.Name = "rbn_semivowelDiphthong";
+            rbn_semivowelDiphthong.Size = new Size(182, 19);
+            rbn_semivowelDiphthong.TabIndex = 3;
+            rbn_semivowelDiphthong.TabStop = true;
+            rbn_semivowelDiphthong.Text = "Create semi-vowel diphthong";
+            rbn_semivowelDiphthong.UseVisualStyleBackColor = true;
+            // 
+            // rbn_halfLongVowels
+            // 
+            rbn_halfLongVowels.AutoSize = true;
+            rbn_halfLongVowels.Location = new Point(111, 15);
+            rbn_halfLongVowels.Name = "rbn_halfLongVowels";
+            rbn_halfLongVowels.Size = new Size(118, 19);
+            rbn_halfLongVowels.TabIndex = 1;
+            rbn_halfLongVowels.TabStop = true;
+            rbn_halfLongVowels.Text = "Half-Long Vowels";
+            rbn_halfLongVowels.UseVisualStyleBackColor = true;
+            // 
+            // rbn_normalVowel
+            // 
+            rbn_normalVowel.AutoSize = true;
+            rbn_normalVowel.Location = new Point(6, 16);
+            rbn_normalVowel.Name = "rbn_normalVowel";
+            rbn_normalVowel.Size = new Size(99, 19);
+            rbn_normalVowel.TabIndex = 0;
+            rbn_normalVowel.TabStop = true;
+            rbn_normalVowel.Text = "Normal Vowel";
+            rbn_normalVowel.UseVisualStyleBackColor = true;
+            // 
+            // rbn_normalDiphthong
+            // 
+            rbn_normalDiphthong.AutoSize = true;
+            rbn_normalDiphthong.Location = new Point(6, 41);
+            rbn_normalDiphthong.Name = "rbn_normalDiphthong";
+            rbn_normalDiphthong.Size = new Size(197, 19);
+            rbn_normalDiphthong.TabIndex = 3;
+            rbn_normalDiphthong.TabStop = true;
+            rbn_normalDiphthong.Text = "Add Vowel to create Diphtohong";
+            rbn_normalDiphthong.UseVisualStyleBackColor = true;
+            // 
+            // tabPageVowelDiphthongs
+            // 
+            tabPageVowelDiphthongs.Location = new Point(4, 24);
+            tabPageVowelDiphthongs.Name = "tabPageVowelDiphthongs";
+            tabPageVowelDiphthongs.Padding = new Padding(3);
+            tabPageVowelDiphthongs.Size = new Size(465, 164);
+            tabPageVowelDiphthongs.TabIndex = 2;
+            tabPageVowelDiphthongs.Text = "Vowel Diphthongs";
+            tabPageVowelDiphthongs.UseVisualStyleBackColor = true;
+            // 
+            // tabPageSpecialOperations
+            // 
+            tabPageSpecialOperations.Location = new Point(4, 24);
+            tabPageSpecialOperations.Name = "tabPageSpecialOperations";
+            tabPageSpecialOperations.Padding = new Padding(3);
+            tabPageSpecialOperations.Size = new Size(465, 164);
+            tabPageSpecialOperations.TabIndex = 3;
+            tabPageSpecialOperations.Text = "Special Operations";
+            tabPageSpecialOperations.UseVisualStyleBackColor = true;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1000, 496);
+            Controls.Add(tabPhoneticAlterations);
             Controls.Add(label10);
             Controls.Add(cbx_speechEngine);
             Controls.Add(label9);
@@ -696,11 +720,9 @@
             Controls.Add(btn_addCurrentChangeToList);
             Controls.Add(label8);
             Controls.Add(txt_changeList);
-            Controls.Add(gbx_replacementPhomeDepth);
             Controls.Add(label7);
             Controls.Add(cbx_speed);
             Controls.Add(label6);
-            Controls.Add(gbx_vowelReplacements);
             Controls.Add(cbx_voice);
             Controls.Add(label5);
             Controls.Add(label4);
@@ -720,17 +742,17 @@
             Controls.Add(lbl_SampleText);
             Controls.Add(txt_SampleText);
             Controls.Add(menuStrip1);
-            Controls.Add(gbx_phonetics);
             Controls.Add(pb_status);
             MainMenuStrip = menuStrip1;
             Name = "LanguageHoningForm";
             Text = "LanguageHoningForm";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            gbx_phonetics.ResumeLayout(false);
-            gbx_phonetics.PerformLayout();
+            tabPhoneticAlterations.ResumeLayout(false);
+            tabPageConsonants.ResumeLayout(false);
             gbx_replacementPhomeDepth.ResumeLayout(false);
             gbx_replacementPhomeDepth.PerformLayout();
+            tabPageVowels.ResumeLayout(false);
             gbx_vowelReplacements.ResumeLayout(false);
             gbx_vowelReplacements.PerformLayout();
             ResumeLayout(false);
@@ -765,8 +787,6 @@
         private Button btn_replaySpeech;
         private ProgressBar pb_status;
         private System.Windows.Forms.Timer pbTimer;
-        private GroupBox gbx_phonetics;
-        private RadioButton rbn_consonants;
         private Label label1;
         private Label label2;
         private ComboBox cbx_phonemeToChange;
@@ -780,18 +800,6 @@
         private Label label6;
         private ComboBox cbx_speed;
         private Label label7;
-        private GroupBox gbx_replacementPhomeDepth;
-        private RadioButton rbn_l3;
-        private RadioButton rbn_l2;
-        private RadioButton rbn_l1;
-        private RadioButton rbn_allPhonemes;
-        private GroupBox gbx_vowelReplacements;
-        private RadioButton rbn_halfLongVowels;
-        private RadioButton rbn_normalVowel;
-        private RadioButton rbn_longVowels;
-        private RadioButton rbn_normalDiphthong;
-        private RadioButton rbn_semivowelDiphthong;
-        private RadioButton rbn_vowels;
         private TextBox txt_changeList;
         private Label label8;
         private Button btn_addCurrentChangeToList;
@@ -803,5 +811,21 @@
         private Label label9;
         private ComboBox cbx_speechEngine;
         private Label label10;
+        private TabControl tabPhoneticAlterations;
+        private TabPage tabPageConsonants;
+        private GroupBox gbx_replacementPhomeDepth;
+        private RadioButton rbn_allPhonemes;
+        private RadioButton rbn_l3;
+        private RadioButton rbn_l2;
+        private RadioButton rbn_l1;
+        private TabPage tabPageVowels;
+        private GroupBox gbx_vowelReplacements;
+        private RadioButton rbn_longVowels;
+        private RadioButton rbn_semivowelDiphthong;
+        private RadioButton rbn_halfLongVowels;
+        private RadioButton rbn_normalVowel;
+        private RadioButton rbn_normalDiphthong;
+        private TabPage tabPageVowelDiphthongs;
+        private TabPage tabPageSpecialOperations;
     }
 }

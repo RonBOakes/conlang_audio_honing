@@ -85,6 +85,82 @@ namespace ConlangAudioHoning
             LoadSpeechEngines();
             LoadVoices();
             LoadSpeeds();
+            tabPhoneticAlterations.SelectedIndexChanged += TabPhoneticAlterations_SelectedIndexChanged;
+        }
+
+        private void TabPhoneticAlterations_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            switch (tabPhoneticAlterations.SelectedIndex)
+            {
+                case 0:
+                    {
+                        if (languageDescription == null)
+                        {
+                            return;
+                        }
+                        // Ensure that there is a blank at the top of the drop down list
+                        cbx_phonemeToChange.Items.Clear();
+                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can 
+                        // use it to populate the combo box of pulmonic consonants to be changed.
+                        foreach (string consonant in languageDescription.phonetic_inventory["p_consonants"])
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            sb.AppendFormat("{0} -- ", consonant);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
+                            cbx_phonemeToChange.Items.Add(sb.ToString());
+                        }
+                        foreach (string consonant in languageDescription.phonetic_inventory["np_consonants"])
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            sb.AppendFormat("{0} -- ", consonant);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
+                            cbx_phonemeToChange.Items.Add(sb.ToString());
+                        }
+
+                        cbx_phonemeToChange.SelectedIndex = -1;
+                    }
+                    break;
+                case 1: // Vowels
+                    {
+                        if (languageDescription == null)
+                        {
+                            return;
+                        }
+                        // Ensure that there is a blank at the top of the drop down list
+                        cbx_phonemeToChange.Items.Clear();
+                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can 
+                        // use it to populate the combo box of pulmonic consonants to be changed.
+                        foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            sb.AppendFormat("{0} -- ", vowel);
+                            string vowelKey = vowel.Trim().Substring(0, 1);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
+                            if (vowel.Contains("ː"))
+                            {
+                                sb.Append(" lengthened");
+                            }
+                            else if (vowel.Contains("ˑ"))
+                            {
+                                sb.Append(" half-lengthened");
+                            }
+                            else if (vowel.Contains("\u032f"))
+                            {
+                                sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                            }
+                            cbx_phonemeToChange.Items.Add(sb.ToString());
+                        }
+
+                        cbx_phonemeToChange.SelectedIndex = -1;
+                    }
+                    break;
+                case 2: // Vowel Diphthongs
+                    break;
+                case 3: // Special Operations
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -146,7 +222,7 @@ namespace ConlangAudioHoning
                     string voiceMenu = string.Format("{0} ({1}, {2})", voiceName, voiceData[voiceName].LanguageName, voiceData[voiceName].Gender);
                     cbx_voice.Items.Add(voiceMenu);
                 }
-                if((languageDescription != null) && 
+                if ((languageDescription != null) &&
                     (languageDescription.preferred_voices.ContainsKey(speechEngines[selectedEngine].preferredVoiceKey)) &&
                     (!string.IsNullOrEmpty(languageDescription.preferred_voices[speechEngines[selectedEngine].preferredVoiceKey])))
                 {
@@ -233,7 +309,7 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            if(languageDescription.version != 1.0)
+            if (languageDescription.version != 1.0)
             {
                 MessageBox.Show("Incorrect language file version", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 languageDescription = new LanguageDescription();
@@ -244,13 +320,13 @@ namespace ConlangAudioHoning
 
             // Temporary work around to put the Polly voice into the preferred voices map.  
             // Once the JSON structure is reworked, this will not be needed.
-            if(!languageDescription.preferred_voices.ContainsKey("Polly"))
+            if (!languageDescription.preferred_voices.ContainsKey("Polly"))
             {
                 languageDescription.preferred_voices.Add("Polly", "Brian");
             }
-            if(!languageDescription.preferred_voices.ContainsKey("espeak-ng"))
+            if (!languageDescription.preferred_voices.ContainsKey("espeak-ng"))
             {
-                languageDescription.preferred_voices.Add("espeak-ng","en-us");
+                languageDescription.preferred_voices.Add("espeak-ng", "en-us");
             }
 
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
@@ -271,7 +347,7 @@ namespace ConlangAudioHoning
                 deriveToolStripMenuItem.Enabled = false;
             }
 
-            foreach(string engineKey in speechEngines.Keys)
+            foreach (string engineKey in speechEngines.Keys)
             {
                 speechEngines[engineKey].LanguageDescription = languageDescription;
             }
@@ -283,7 +359,8 @@ namespace ConlangAudioHoning
             txt_changeList.Text = string.Empty;
             // Set the default settings for the language alteration selections.
             rbn_normalVowel.Checked = true;
-            rbn_consonants.Checked = true;
+            //rbn_consonants.Checked = true;
+            tabPhoneticAlterations.SelectedIndex = 0; // Consonants.
             rbn_l1.Checked = true;
             LoadVoices();
         }
@@ -361,7 +438,7 @@ namespace ConlangAudioHoning
 
             sampleText = fileText;
             txt_SampleText.Text = sampleText;
-            foreach(string engineKey in speechEngines.Keys)
+            foreach (string engineKey in speechEngines.Keys)
             {
                 speechEngines[engineKey].sampleText = sampleText;
             }
@@ -509,7 +586,7 @@ namespace ConlangAudioHoning
                 }
                 string speed = cbx_speed.Text.Trim();
                 speechEngine.sampleText = sampleText;
-                bool ok = speechEngine.GenerateSpeech(targetFileName,voice,speed,this);
+                bool ok = speechEngine.GenerateSpeech(targetFileName, voice, speed, this);
                 if (!ok)
                 {
                     MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -669,37 +746,6 @@ namespace ConlangAudioHoning
             player.controls.play();
         }
 
-        private void rbn_consonants_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbn_consonants.Checked)
-            {
-                if (languageDescription == null)
-                {
-                    return;
-                }
-                // Ensure that there is a blank at the top of the drop down list
-                cbx_phonemeToChange.Items.Clear();
-                // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can 
-                // use it to populate the combo box of pulmonic consonants to be changed.
-                foreach (string consonant in languageDescription.phonetic_inventory["p_consonants"])
-                {
-                    StringBuilder sb = new StringBuilder();
-                    sb.AppendFormat("{0} -- ", consonant);
-                    sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
-                    cbx_phonemeToChange.Items.Add(sb.ToString());
-                }
-                foreach (string consonant in languageDescription.phonetic_inventory["np_consonants"])
-                {
-                    StringBuilder sb = new StringBuilder();
-                    sb.AppendFormat("{0} -- ", consonant);
-                    sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
-                    cbx_phonemeToChange.Items.Add(sb.ToString());
-                }
-
-                cbx_phonemeToChange.SelectedIndex = -1;
-            }
-        }
-
         private void cbx_phonemeToChange_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (languageDescription == null)
@@ -712,7 +758,7 @@ namespace ConlangAudioHoning
                 cbx_replacementPhoneme.Items.Clear();
                 cbx_replacementPhoneme.SelectedIndex = -1;
             }
-            else if (rbn_consonants.Checked)
+            else if (tabPhoneticAlterations.SelectedIndex == 0)
             {
                 string consonant;
                 {
@@ -759,7 +805,7 @@ namespace ConlangAudioHoning
                 cbx_replacementPhoneme.MeasureItem += Cbx_replacementPhoneme_MeasureItem;
                 cbx_replacementPhoneme.DrawItem += cbx_replacementPhoneme_DrawItem;
             }
-            else if (rbn_vowels.Checked)
+            else if (tabPhoneticAlterations.SelectedIndex == 1)
             {
                 string vowel;
                 vowel = languageDescription.phonetic_inventory["vowels"][phonemeIndex].ToString();
@@ -848,7 +894,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if (!(rbn_consonants.Checked || rbn_vowels.Checked)) // TODO: Add the other options to ensure that at least one is checked
+            if ((tabPhoneticAlterations.SelectedIndex < 0) || (tabPhoneticAlterations.SelectedIndex > 1)) 
             {
                 return;
             }
@@ -857,7 +903,7 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            if ((rbn_consonants.Checked) || (rbn_vowels.Checked))
+            if ((tabPhoneticAlterations.SelectedIndex >= 0) && (tabPhoneticAlterations.SelectedIndex <= 1))
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
@@ -869,16 +915,16 @@ namespace ConlangAudioHoning
                     sampleText = phoneticChanger.SampleText;
                     txt_SampleText.Text = sampleText;
                     txt_phonetic.Text = string.Empty;
-                    foreach(string engineName in speechEngines.Keys)
+                    foreach (string engineName in speechEngines.Keys)
                     {
                         SpeechEngine speechEngine = speechEngines[engineName];
                         speechEngine.sampleText = sampleText;
                     }
                 }
                 // Clear the combo boxes
-                rbn_consonants.Checked = false;
                 cbx_phonemeToChange.Items.Clear();
                 cbx_replacementPhoneme.Items.Clear();
+                tabPhoneticAlterations.SelectedIndex = -1;
             }
             // TODO: Add other options
         }
@@ -939,7 +985,7 @@ namespace ConlangAudioHoning
             }
             bool isInInventory = false;
             string checkChar = cbxEntry.Split()[0]; // The combo boxes to be checked always have the character first, followed by whitespace
-            if (rbn_consonants.Checked)
+            if (tabPhoneticAlterations.SelectedIndex == 0)
             {
                 isInInventory = languageDescription.phonetic_inventory["p_consonants"].Contains(checkChar);
             }
@@ -976,50 +1022,13 @@ namespace ConlangAudioHoning
             return hasSpellingMap;
         }
 
-        private void rbn_vowels_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbn_vowels.Checked)
-            {
-                if (languageDescription == null)
-                {
-                    return;
-                }
-                // Ensure that there is a blank at the top of the drop down list
-                cbx_phonemeToChange.Items.Clear();
-                // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can 
-                // use it to populate the combo box of pulmonic consonants to be changed.
-                foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
-                {
-                    StringBuilder sb = new StringBuilder();
-                    sb.AppendFormat("{0} -- ", vowel);
-                    string vowelKey = vowel.Trim().Substring(0, 1);
-                    sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
-                    if (vowel.Contains("ː"))
-                    {
-                        sb.Append(" lengthened");
-                    }
-                    else if (vowel.Contains("ˑ"))
-                    {
-                        sb.Append(" half-lengthened");
-                    }
-                    else if (vowel.Contains("\u032f"))
-                    {
-                        sb.Append(" semi-vowel");  // Probably should be part of a diphthong
-                    }
-                    cbx_phonemeToChange.Items.Add(sb.ToString());
-                }
-
-                cbx_phonemeToChange.SelectedIndex = -1;
-            }
-        }
-
         private void btn_addCurrentChangeToList_Click(object sender, EventArgs e)
         {
             if (languageDescription == null)
             {
                 return;
             }
-            if (!(rbn_consonants.Checked || rbn_vowels.Checked)) // TODO: Add the other options to ensure that at least one is checked
+            if ((tabPhoneticAlterations.SelectedIndex < 0) || (tabPhoneticAlterations.SelectedIndex > 1)) // TODO: Add the other options to ensure that at least one is checked
             {
                 return;
             }
@@ -1033,7 +1042,7 @@ namespace ConlangAudioHoning
                     "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if ((rbn_consonants.Checked) || (rbn_vowels.Checked))
+            if ((tabPhoneticAlterations.SelectedIndex >= 0) && (tabPhoneticAlterations.SelectedIndex <= 1))
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
@@ -1060,20 +1069,20 @@ namespace ConlangAudioHoning
                 sampleText = phoneticChanger.SampleText;
                 txt_SampleText.Text = sampleText;
                 txt_phonetic.Text = string.Empty;
-                foreach(string engineName in speechEngines.Keys)
+                foreach (string engineName in speechEngines.Keys)
                 {
                     SpeechEngine speech = speechEngines[engineName];
                     speech.sampleText = sampleText;
                 }
             }
             // Clear the combo boxes
-            rbn_consonants.Checked = false;
             cbx_phonemeToChange.Items.Clear();
             cbx_replacementPhoneme.Items.Clear();
             changesToBeMade.Clear();
             txt_changeList.Text = string.Empty;
             cbx_phonemeToChange.SelectedIndex = -1;
             cbx_replacementPhoneme.SelectedIndex = -1;
+            tabPhoneticAlterations.SelectedIndex = -1;
         }
 
         private void btn_revertLastChange_Click(object sender, EventArgs e)
