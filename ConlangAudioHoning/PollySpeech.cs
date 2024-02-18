@@ -93,7 +93,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    ConLangUtilities.declineLexicon(LanguageDescription);
+                    ConlangUtilities.declineLexicon(LanguageDescription);
                 }
                 removeDeclinedWord = true;
             }
@@ -175,7 +175,7 @@ namespace ConlangAudioHoning
 
             if (removeDeclinedWord)
             {
-                ConLangUtilities.removeDeclinedEntries(LanguageDescription);
+                ConlangUtilities.removeDeclinedEntries(LanguageDescription);
             }
         }
 

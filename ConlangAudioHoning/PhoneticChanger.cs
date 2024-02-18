@@ -133,7 +133,7 @@ namespace ConlangAudioHoning
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
                     string oldSpelled = word.spelled;
-                    word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                    word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
                     string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
                     SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
                     wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
@@ -285,7 +285,7 @@ namespace ConlangAudioHoning
                 if (!oldVersion.phonetic.Equals(word.phonetic))
                 {
                     string oldSpelled = word.spelled;
-                    word.spelled = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                    word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
                     string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
                     SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
                     wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
@@ -311,7 +311,7 @@ namespace ConlangAudioHoning
             foreach(LexiconEntry word in Language.lexicon)
             {
                 string oldSpelling = word.spelled;
-                string newSpelling = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                string newSpelling = ConlangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
                 LexiconEntry oldVersion = word.copy();
                 if (!oldSpelling.Equals(newSpelling))
                 {
@@ -363,7 +363,7 @@ namespace ConlangAudioHoning
             foreach (LexiconEntry word in Language.lexicon)
             {
                 string oldPhonetic = word.phonetic;
-                string newPhonetic = ConLangUtilities.SoundOutWord(word.spelled,Language.sound_map_list);
+                string newPhonetic = ConlangUtilities.SoundOutWord(word.spelled,Language.sound_map_list);
                 LexiconEntry oldVersion = word.copy();
                 if (!oldPhonetic.Equals(newPhonetic))
                 {

@@ -156,7 +156,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    ConLangUtilities.declineLexicon(language);
+                    ConlangUtilities.declineLexicon(language);
                 }
                 removeDeclinedWord = true;
             }
@@ -206,7 +206,7 @@ namespace ConlangAudioHoning
 
             if (removeDeclinedWord)
             {
-                ConLangUtilities.removeDeclinedEntries(language);
+                ConlangUtilities.removeDeclinedEntries(language);
             }
 
             return sb.ToString();

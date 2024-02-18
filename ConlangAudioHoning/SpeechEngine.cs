@@ -187,7 +187,7 @@ namespace ConlangAudioHoning
             }
             else
             {
-                phonetic = ConLangUtilities.SoundOutWord(word, LanguageDescription.sound_map_list);
+                phonetic = ConlangUtilities.SoundOutWord(word, LanguageDescription.sound_map_list);
                 LexiconEntry entry = new LexiconEntry();
                 entry.phonetic = phonetic;
                 entry.spelled = word;

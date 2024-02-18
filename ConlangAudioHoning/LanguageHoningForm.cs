@@ -181,7 +181,7 @@ namespace ConlangAudioHoning
             foreach (LexiconEntry word in language.lexicon)
             {
                 pb_status.Text = word.phonetic.ToString();
-                addLexicon.AddRange(ConLangUtilities.DeclineWord(word, language.affix_map, language.sound_map_list));
+                addLexicon.AddRange(ConlangUtilities.DeclineWord(word, language.affix_map, language.sound_map_list));
                 pb_status.PerformStep();
             }
             pb_status.Style = ProgressBarStyle.Marquee;
@@ -509,7 +509,7 @@ namespace ConlangAudioHoning
             }
             else
             {
-                ConLangUtilities.removeDeclinedEntries(languageDescription);
+                ConlangUtilities.removeDeclinedEntries(languageDescription);
                 declineToolStripMenuItem.Text = "Decline Language";
             }
 
