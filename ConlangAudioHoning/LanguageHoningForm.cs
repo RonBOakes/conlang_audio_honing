@@ -894,7 +894,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if ((tabPhoneticAlterations.SelectedIndex < 0) || (tabPhoneticAlterations.SelectedIndex > 1)) 
+            if ((tabPhoneticAlterations.SelectedIndex < 0) || (tabPhoneticAlterations.SelectedIndex > 1))
             {
                 return;
             }
@@ -1210,6 +1210,58 @@ namespace ConlangAudioHoning
         private void cbx_speechEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadVoices();
+        }
+
+        private void btn_updateSoundMapList_Click(object sender, EventArgs e)
+        {
+            if(languageDescription == null)
+            {
+                return;
+            }
+            SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
+            List<SoundMap> soundMapList = languageDescription.sound_map_list.GetRange(0, languageDescription.sound_map_list.Count);
+            soundMapListEditor.SoundMapList = languageDescription.sound_map_list;
+            soundMapListEditor.headerText = "No specific changes - editing the entire list";
+            soundMapListEditor.UpdatePhonemeReplacements();
+            soundMapListEditor.ShowDialog();
+            // ShowDialog is modal
+            if(soundMapListEditor.SoundMapSaved)
+            {
+                DialogResult result = MessageBox.Show("Preserve the spelling (Yes)?\nNo preserves the pronunciation.", "Spelling or pronunciation", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes) 
+                {
+                    languageDescription.sound_map_list = soundMapListEditor.SoundMapList;
+                    phoneticChanger.updatePronunciation();
+                    if (sampleText != string.Empty)
+                    {
+                        sampleText = phoneticChanger.SampleText;
+                        txt_SampleText.Text = sampleText;
+                        txt_phonetic.Text = string.Empty;
+                        foreach (string engineName in speechEngines.Keys)
+                        {
+                            SpeechEngine speech = speechEngines[engineName];
+                            speech.sampleText = sampleText;
+                        }
+                    }
+                }
+                else if (result == DialogResult.No)
+                {
+                    phoneticChanger.updateSpelling();
+                    languageDescription.sound_map_list = soundMapListEditor.SoundMapList;
+                    if (sampleText != string.Empty)
+                    {
+                        sampleText = phoneticChanger.SampleText;
+                        txt_SampleText.Text = sampleText;
+                        txt_phonetic.Text = string.Empty;
+                        foreach (string engineName in speechEngines.Keys)
+                        {
+                            SpeechEngine speech = speechEngines[engineName];
+                            speech.sampleText = sampleText;
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

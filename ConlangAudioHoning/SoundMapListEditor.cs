@@ -79,6 +79,23 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
+        /// Update the header text.  This will override any automatically generated text from the 
+        /// PhonemeReplacementPairs.  However, updating them will override this text.
+        /// </summary>
+        public string headerText
+        {
+            get
+            {
+                string text = txtPhonemeReplacements.Text;
+                return text;
+            }
+            set
+            {
+                txtPhonemeReplacements.Text = value;
+            }
+        }
+
+        /// <summary>
         /// Constructor for a SoundMapListEditor.
         /// </summary>
         public SoundMapListEditor()

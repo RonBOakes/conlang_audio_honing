@@ -94,13 +94,16 @@
             rbn_normalVowel = new RadioButton();
             rbn_normalDiphthong = new RadioButton();
             tabPageVowelDiphthongs = new TabPage();
+            tabPageRhoticity = new TabPage();
             tabPageSpecialOperations = new TabPage();
+            btn_updateSoundMapList = new Button();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
             tabPageVowels.SuspendLayout();
             gbx_vowelReplacements.SuspendLayout();
+            tabPageSpecialOperations.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -532,6 +535,7 @@
             tabPhoneticAlterations.Controls.Add(tabPageConsonants);
             tabPhoneticAlterations.Controls.Add(tabPageVowels);
             tabPhoneticAlterations.Controls.Add(tabPageVowelDiphthongs);
+            tabPhoneticAlterations.Controls.Add(tabPageRhoticity);
             tabPhoneticAlterations.Controls.Add(tabPageSpecialOperations);
             tabPhoneticAlterations.Location = new Point(515, 224);
             tabPhoneticAlterations.Name = "tabPhoneticAlterations";
@@ -697,8 +701,19 @@
             tabPageVowelDiphthongs.Text = "Vowel Diphthongs";
             tabPageVowelDiphthongs.UseVisualStyleBackColor = true;
             // 
+            // tabPageRhoticity
+            // 
+            tabPageRhoticity.Location = new Point(4, 24);
+            tabPageRhoticity.Name = "tabPageRhoticity";
+            tabPageRhoticity.Padding = new Padding(3);
+            tabPageRhoticity.Size = new Size(465, 164);
+            tabPageRhoticity.TabIndex = 4;
+            tabPageRhoticity.Text = "Rhoticity";
+            tabPageRhoticity.UseVisualStyleBackColor = true;
+            // 
             // tabPageSpecialOperations
             // 
+            tabPageSpecialOperations.Controls.Add(btn_updateSoundMapList);
             tabPageSpecialOperations.Location = new Point(4, 24);
             tabPageSpecialOperations.Name = "tabPageSpecialOperations";
             tabPageSpecialOperations.Padding = new Padding(3);
@@ -706,6 +721,16 @@
             tabPageSpecialOperations.TabIndex = 3;
             tabPageSpecialOperations.Text = "Special Operations";
             tabPageSpecialOperations.UseVisualStyleBackColor = true;
+            // 
+            // btn_updateSoundMapList
+            // 
+            btn_updateSoundMapList.Location = new Point(6, 13);
+            btn_updateSoundMapList.Name = "btn_updateSoundMapList";
+            btn_updateSoundMapList.Size = new Size(188, 23);
+            btn_updateSoundMapList.TabIndex = 0;
+            btn_updateSoundMapList.Text = "Update Spelling/Pronunciation";
+            btn_updateSoundMapList.UseVisualStyleBackColor = true;
+            btn_updateSoundMapList.Click += btn_updateSoundMapList_Click;
             // 
             // LanguageHoningForm
             // 
@@ -755,6 +780,7 @@
             tabPageVowels.ResumeLayout(false);
             gbx_vowelReplacements.ResumeLayout(false);
             gbx_vowelReplacements.PerformLayout();
+            tabPageSpecialOperations.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -827,5 +853,7 @@
         private RadioButton rbn_normalDiphthong;
         private TabPage tabPageVowelDiphthongs;
         private TabPage tabPageSpecialOperations;
+        private TabPage tabPageRhoticity;
+        private Button btn_updateSoundMapList;
     }
 }

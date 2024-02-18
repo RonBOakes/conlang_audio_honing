@@ -157,7 +157,7 @@ namespace ConlangAudioHoning
                     pch.OldPhoneme = oldPhoneme;
                     pch.NewPhoneme = newPhoneme;
                     pch.OldVersion = oldVersion;
-                    string timestamp = string.Format("{0:yyyyMMdd.hhmmss.ffff}", DateTime.Now);
+                    string timestamp = string.Format("{0:yyyyMMddhhmmss.ffff}", DateTime.Now);
                     phoneticChangeHistories.Add(timestamp, pch);
                     string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
                     word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
@@ -292,6 +292,109 @@ namespace ConlangAudioHoning
                     SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
                     wordPattern = @"(\s+)" + oldSpelled + "$";
                     SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
+                }
+            }
+            // Update the phonetic inventory
+            IpaUtilities.BuildPhoneticInventory(Language);
+        }
+
+        /// <summary>
+        /// Update the spelling of every word in the lexicon based on the current sound_map_list.
+        /// </summary>
+        public void updateSpelling()
+        {
+            if (this.Language == null)
+            {
+                return;
+            }
+
+            foreach(LexiconEntry word in Language.lexicon)
+            {
+                string oldSpelling = word.spelled;
+                string newSpelling = ConLangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                LexiconEntry oldVersion = word.copy();
+                if (!oldSpelling.Equals(newSpelling))
+                {
+                    Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
+                    if (word.metadata.ContainsKey("PhoneticChangeHistory"))
+                    {
+                        phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
+                    }
+                    if (phoneticChangeHistories == null)
+                    {
+                        phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
+                    }
+                    PhoneticChangeHistory pch = new PhoneticChangeHistory();
+                    pch.OldPhoneme = "n/a";
+                    pch.NewPhoneme = "n/a";
+                    pch.OldVersion = oldVersion;
+                    string timestamp = string.Format("{0:yyyyMMddhhmmss.ffff}", DateTime.Now);
+                    phoneticChangeHistories.Add(timestamp, pch);
+                    string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
+                    word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
+
+                    word.spelled = newSpelling;
+                    if(!string.IsNullOrEmpty(SampleText))
+                    {
+                        string wordPattern = @"(\s+)" + oldSpelling + @"([.,?!]?\s+)";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
+                        wordPattern = "^" + oldSpelling + @"([.,?!]?\s+)";
+                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
+                        wordPattern = @"(\s+)" + oldSpelling + "$";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
+                    }
+                }
+            }
+            // Update the phonetic inventory
+            IpaUtilities.BuildPhoneticInventory(Language);
+        }
+
+        /// <summary>
+        /// Update the pronunciation of every word in the lexicon based on the current sound_map_list.
+        /// </summary>
+        public void updatePronunciation()
+        {
+            if (this.Language == null)
+            {
+                return;
+            }
+
+
+            foreach (LexiconEntry word in Language.lexicon)
+            {
+                string oldPhonetic = word.phonetic;
+                string newPhonetic = ConLangUtilities.SoundOutWord(word.spelled,Language.sound_map_list);
+                LexiconEntry oldVersion = word.copy();
+                if (!oldPhonetic.Equals(newPhonetic))
+                {
+                    Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
+                    if (word.metadata.ContainsKey("PhoneticChangeHistory"))
+                    {
+                        phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
+                    }
+                    if (phoneticChangeHistories == null)
+                    {
+                        phoneticChangeHistories = new Dictionary<string, PhoneticChangeHistory>();
+                    }
+                    PhoneticChangeHistory pch = new PhoneticChangeHistory();
+                    pch.OldPhoneme = "n/a";
+                    pch.NewPhoneme = "n/a";
+                    pch.OldVersion = oldVersion;
+                    string timestamp = string.Format("{0:yyyyMMddhhmmss.ffff}", DateTime.Now);
+                    phoneticChangeHistories.Add(timestamp, pch);
+                    string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
+                    word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
+
+                    word.phonetic = newPhonetic;
+                    if (!string.IsNullOrEmpty(SampleText))
+                    {
+                        string wordPattern = @"(\s+)" + oldPhonetic + @"([.,?!]?\s+)";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
+                        wordPattern = "^" + oldPhonetic + @"([.,?!]?\s+)";
+                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
+                        wordPattern = @"(\s+)" + oldPhonetic + "$";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
+                    }
                 }
             }
             // Update the phonetic inventory
