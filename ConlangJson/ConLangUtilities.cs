@@ -34,7 +34,7 @@ namespace ConlangJson
     /// <summary>
     /// A collection of static utility methods used with the ConlangJson objects.
     /// </summary>
-    public static class ConLangUtilities
+    public static class ConlangUtilities
     {
         /// <summary>
         /// Spell a word - Convert its phonetic representation into a Romanized or Latinized
