@@ -290,7 +290,7 @@ namespace ConlangAudioHoning
 
             if(string.IsNullOrEmpty(voice))
             {
-                voice = _languageDescription.preferred_voice ?? "Brian";
+                voice = _languageDescription.preferred_voices["Polly"] ?? "Brian";
             }
             if(string.IsNullOrEmpty(speed)) 
             {

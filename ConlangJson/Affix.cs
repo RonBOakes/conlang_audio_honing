@@ -37,38 +37,38 @@ namespace ConlangJson
         /* Private members that represent the individual strings that may be placed
          * into the Affix structure
          */
-        private string? _pronounciation_add = null;
+        private string? _pronunciation_add = null;
         private string? _spelling_add = null;
-        private string? _pronounciation_regex = null;
+        private string? _pronunciation_regex = null;
         private string? _spelling_regex = null;
-        private string? _t_pronounciation_add = null;
+        private string? _t_pronunciation_add = null;
         private string? _t_spelling_add = null;
-        private string? _f_pronounciation_add = null;
+        private string? _f_pronunciation_add = null;
         private string? _f_spelling_add = null;
-        private string? _pronounciation_repl = null;
-        private string? _spelling_repl = null;
+        private string? _pronunciation_replacement = null;
+        private string? _spelling_replacement = null;
 
         /// <summary>
         /// Constructor used to build an Affix object by passing it values for all of the entries.<br/>
         /// Note that this constructor method does not prevent invalid configurations based on the 
         /// parameter listings below.
         /// </summary>
-        /// <param name="pronounciation_add">This string contains the value that will be added to 
+        /// <param name="pronunciation_add">This string contains the value that will be added to 
         /// the beginning of a word for a prefix or the end of a word for a suffix in its phonetic 
         /// representation.This will be expressed using the symbology specified in the phonetic_characters 
         /// field at the Top Level.<br/>Optional, Recommended, Required if spelling_add is present, Not allowed 
-        /// if pronnounciation_regex is present.<br/>Set to null if not present.</param>
+        /// if pronunciation_regex is present.<br/>Set to null if not present.</param>
         /// <param name="spelling_add">This string contains the value that will be added to the beginning of 
         /// a word for a prefix or the end of a word for a suffix in its Romanized or Latinized representation.<br/>
-        /// Optional, Recommended, Required if pronounciation_add is present, Not allowed if spelling_regex is 
+        /// Optional, Recommended, Required if pronunciation_add is present, Not allowed if spelling_regex is 
         /// present.<br/>Set to null if not present.</param>
-        /// <param name="pronounciation_regex">This string contains the generalized regular expression used to 
+        /// <param name="pronunciation_regex">This string contains the generalized regular expression used to 
         /// match against the phonetic representation of the word to determine which phonetic string to add to 
         /// the beginning or end of that phonetic representation.If the phonetic representation of the word matches 
-        /// this pattern, then the t_pronounciation_add string should be added to the appropriate end of the phonetic 
-        /// representation. The f_pronounciation_add string should be added instead if it does not match. This pattern 
+        /// this pattern, then the t_pronunciation_add string should be added to the appropriate end of the phonetic 
+        /// representation. The f_pronunciation_add string should be added instead if it does not match. This pattern 
         /// should be constructed to match the beginning or end of the string as appropriate for the type of affix 
-        /// being constructed.<br/>Optional, Recommended, Required if t_pronounciation_add, f_pronounciation_add, 
+        /// being constructed.<br/>Optional, Recommended, Required if t_pronunciation_add, f_pronunciation_add, 
         /// or spelling_regex are present, Not allowed if pronunciation_add is present.<br/>Set to null if not present.</param>
         /// <param name="spelling_regex">This string contains the generalized regular expression used to match against 
         /// the Romanized or Latinized representation of the word to determine which Romanized or Latinized string to 
@@ -77,49 +77,49 @@ namespace ConlangJson
         /// appropriate end of the phonetic representation. The f_spelling_add string should be added if it does not 
         /// match. This pattern should be constructed to match the beginning or end of the string as appropriate for 
         /// the type of affix being constructed.<br/>Optional, Recommended, Required if t_spelling_add, f_spelling_add, 
-        /// or pronounciation_regex are present, Not allowed if spelling_add is present.<br/>Set to null if not 
+        /// or pronunciation_regex are present, Not allowed if spelling_add is present.<br/>Set to null if not 
         /// present.</param>
-        /// <param name="t_pronounciation_add">The string to add to the beginning of the phonetic representation for a 
+        /// <param name="t_pronunciation_add">The string to add to the beginning of the phonetic representation for a 
         /// prefix, or the end of the phonetic representation for a suffix, when phonetic representation matches 
-        /// pronounciation_regex.This will be expressed using the symbology specified in the phonetic_characters field 
-        /// at the Top Level.<br/>Optional, Recommended, Required if pronouncation_regex is present, Not allowed if 
-        /// pronuncation_add is present.<br/>Set to null if not present.</param>
+        /// pronunciation_regex.This will be expressed using the symbology specified in the phonetic_characters field 
+        /// at the Top Level.<br/>Optional, Recommended, Required if pronunciation_regex is present, Not allowed if 
+        /// pronunciation_add is present.<br/>Set to null if not present.</param>
         /// <param name="t_spelling_add">The string to add to the beginning of the Romanized or Latinized representation 
         /// for a prefix, or the end of the phonetic representation for a suffix, when the Romanized or Latinized 
         /// representation matches spelling_regex.<br/>Optional, Recommended, Required if spelling_regex is present,
         /// Not allowed if spelling_add is present.<br/>Set to null if not present.</param>
-        /// <param name="f_pronounciation_add">The string to add to the beginning of the phonetic representation 
+        /// <param name="f_pronunciation_add">The string to add to the beginning of the phonetic representation 
         /// for a prefix, or the end of the phonetic representation for a suffix, when phonetic representation does 
-        /// not match pronounciation_regex.This will be expressed using the symbology specified in the 
-        /// phonetic_characters field at the Top Level.<br/>Optional, Recommended, Required if pronouncation_regex
-        /// is present, Not allowed if pronuncation_add is present.<br/>Set to null if not present.</param>
+        /// not match pronunciation_regex.This will be expressed using the symbology specified in the 
+        /// phonetic_characters field at the Top Level.<br/>Optional, Recommended, Required if pronunciation_regex
+        /// is present, Not allowed if pronunciation_add is present.<br/>Set to null if not present.</param>
         /// <param name="f_spelling_add">The string to add to the beginning of the phonetic representation for a 
         /// prefix, or the end of the Romanized or Latinized representation for a suffix, when the Romanized or 
         /// Latinized representation does not match spelling_regex.<br/>Optional, Recommended, Required if 
         /// spelling_regex is present, Not allowed if spelling_add is present.<br/>Set to null if not
         /// present.</param>
-        /// <param name="pronounciation_repl">This is the pattern that will be used to replace the pattern 
-        /// matched by pronounciation_regex in the phonetic representation of the word when a match occurs.  
+        /// <param name="pronunciation_replacement">This is the pattern that will be used to replace the pattern 
+        /// matched by pronunciation_regex in the phonetic representation of the word when a match occurs.  
         /// Replacement groups are represented using the Perl standard of $n.  This will be expressed using 
         /// the symbology specified in the phonetic_characters field at the Top Level.<br/>Optional, Recommended, 
-        /// Required if pronounciation_regex is present.<br/>Set to null if not present.</param>
-        /// <param name="spelling_repl"> This is the pattern that will be used to replace the pattern matched 
-        /// by \textbf{spelling\_regex} in the Romanized or Latinized representation of the word when a match 
+        /// Required if pronunciation_regex is present.<br/>Set to null if not present.</param>
+        /// <param name="spelling_replacement"> This is the pattern that will be used to replace the pattern matched 
+        /// by spelling_regex in the Romanized or Latinized representation of the word when a match 
         /// occurs.  Replacement groups are represented using the Perl standard of \$n.<br/>Optional, Recommended, 
         /// Required if spelling_regex is present.<br/>Set to null if not present.</param>
-        public Affix(string? pronounciation_add, string? spelling_add, string? pronounciation_regex, string? spelling_regex, string? t_pronounciation_add, 
-            string? t_spelling_add, string? f_pronounciation_add, string? f_spelling_add, string? pronounciation_repl, string? spelling_repl)
+        public Affix(string? pronunciation_add, string? spelling_add, string? pronunciation_regex, string? spelling_regex, string? t_pronunciation_add, 
+            string? t_spelling_add, string? f_pronunciation_add, string? f_spelling_add, string? pronunciation_replacement, string? spelling_replacement)
         {
-            this._pronounciation_add = pronounciation_add;
+            this._pronunciation_add = pronunciation_add;
             this._spelling_add = spelling_add;
-            this._pronounciation_regex = pronounciation_regex;
+            this._pronunciation_regex = pronunciation_regex;
             this._spelling_regex = spelling_regex;
-            this._t_pronounciation_add = t_pronounciation_add;
+            this._t_pronunciation_add = t_pronunciation_add;
             this._t_spelling_add = t_spelling_add;
-            this._f_pronounciation_add = f_pronounciation_add;
+            this._f_pronunciation_add = f_pronunciation_add;
             this._f_spelling_add = f_spelling_add;
-            _pronounciation_repl = pronounciation_repl;
-            _spelling_repl = spelling_repl;
+            _pronunciation_replacement = pronunciation_replacement;
+            _spelling_replacement = spelling_replacement;
         }
 
         /// <summary>
@@ -132,18 +132,18 @@ namespace ConlangJson
         /// the beginning of a word for a prefix or the end of a word for a suffix in its phonetic 
         /// representation.This will be expressed using the symbology specified in the phonetic_characters 
         /// field at the Top Level.<br/>Optional, Recommended, Required if spelling_add is present, Not allowed 
-        /// if pronnounciation_regex is present.<br/>Set to null if not present.
+        /// if pronunciation_regex is present.<br/>Set to null if not present.
         /// </summary>
-        public string? pronounciation_add
+        public string? pronunciation_add
         {
-            get { return _pronounciation_add; }
-            set { _pronounciation_add = value; }
+            get { return _pronunciation_add; }
+            set { _pronunciation_add = value; }
         }
 
         /// <summary>
         /// This string contains the value that will be added to the beginning of 
         /// a word for a prefix or the end of a word for a suffix in its Romanized or Latinized representation.<br/>
-        /// Optional, Recommended, Required if pronounciation_add is present, Not allowed if spelling_regex is 
+        /// Optional, Recommended, Required if pronunciation_add is present, Not allowed if spelling_regex is 
         /// present.<br/>Set to null if not present.
         /// </summary>
         public string? spelling_add
@@ -156,16 +156,16 @@ namespace ConlangJson
         /// This string contains the generalized regular expression used to 
         /// match against the phonetic representation of the word to determine which phonetic string to add to 
         /// the beginning or end of that phonetic representation.If the phonetic representation of the word matches 
-        /// this pattern, then the t_pronounciation_add string should be added to the appropriate end of the phonetic 
-        /// representation. The f_pronounciation_add string should be added instead if it does not match. This pattern 
+        /// this pattern, then the t_pronunciation_add string should be added to the appropriate end of the phonetic 
+        /// representation. The f_pronunciation_add string should be added instead if it does not match. This pattern 
         /// should be constructed to match the beginning or end of the string as appropriate for the type of affix 
-        /// being constructed.<br/>Optional, Recommended, Required if t_pronounciation_add, f_pronounciation_add, 
+        /// being constructed.<br/>Optional, Recommended, Required if t_pronunciation_add, f_pronunciation_add, 
         /// or spelling_regex are present, Not allowed if pronunciation_add is present.<br/>Set to null if not present.
         /// </summary>
-        public string? pronounciation_regex
+        public string? pronunciation_regex
         {
-            get { return _pronounciation_regex; }
-            set { _pronounciation_regex = value; }
+            get { return _pronunciation_regex; }
+            set { _pronunciation_regex = value; }
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace ConlangJson
         /// appropriate end of the phonetic representation. The f_spelling_add string should be added if it does not 
         /// match. This pattern should be constructed to match the beginning or end of the string as appropriate for 
         /// the type of affix being constructed.<br/>Optional, Recommended, Required if t_spelling_add, f_spelling_add, 
-        /// or pronounciation_regex are present, Not allowed if spelling_add is present.<br/>Set to null if not 
+        /// or pronunciation_regex are present, Not allowed if spelling_add is present.<br/>Set to null if not 
         /// present.
         /// </summary>
         public string? spelling_regex
@@ -188,14 +188,14 @@ namespace ConlangJson
         /// <summary>
         /// The string to add to the beginning of the phonetic representation for a 
         /// prefix, or the end of the phonetic representation for a suffix, when phonetic representation matches 
-        /// pronounciation_regex.This will be expressed using the symbology specified in the phonetic_characters field 
-        /// at the Top Level.<br/>Optional, Recommended, Required if pronouncation_regex is present, Not allowed if 
-        /// pronuncation_add is present.<br/>Set to null if not present.
+        /// pronunciation_regex.This will be expressed using the symbology specified in the phonetic_characters field 
+        /// at the Top Level.<br/>Optional, Recommended, Required if pronunciation_regex is present, Not allowed if 
+        /// pronunciation_add is present.<br/>Set to null if not present.
         /// </summary>
-        public string? t_pronounciation_add
+        public string? t_pronunciation_add
         {
-            get { return _t_pronounciation_add; }
-            set { _t_pronounciation_add = value; }
+            get { return _t_pronunciation_add; }
+            set { _t_pronunciation_add = value; }
         }
 
         /// <summary>
@@ -213,14 +213,14 @@ namespace ConlangJson
         /// <summary>
         /// The string to add to the beginning of the phonetic representation 
         /// for a prefix, or the end of the phonetic representation for a suffix, when phonetic representation does 
-        /// not match pronounciation_regex.This will be expressed using the symbology specified in the 
-        /// phonetic_characters field at the Top Level.<br/>Optional, Recommended, Required if pronouncation_regex
-        /// is present, Not allowed if pronuncation_add is present.<br/>Set to null if not present.
+        /// not match pronunciation_regex.This will be expressed using the symbology specified in the 
+        /// phonetic_characters field at the Top Level.<br/>Optional, Recommended, Required if pronunciation_regex
+        /// is present, Not allowed if pronunciation_add is present.<br/>Set to null if not present.
         /// </summary>
-        public string? f_pronounciation_add
+        public string? f_pronunciation_add
         {
-            get { return _f_pronounciation_add; }
-            set { _f_pronounciation_add = value; }
+            get { return _f_pronunciation_add; }
+            set { _f_pronunciation_add = value; }
         }
 
         /// <summary>
@@ -238,27 +238,27 @@ namespace ConlangJson
 
         /// <summary>
         /// This is the pattern that will be used to replace the pattern 
-        /// matched by pronounciation_regex in the phonetic representation of the word when a match occurs.  
+        /// matched by pronunciation_regex in the phonetic representation of the word when a match occurs.  
         /// Replacement groups are represented using the Perl standard of $n.  This will be expressed using 
         /// the symbology specified in the phonetic_characters field at the Top Level.<br/>Optional, Recommended, 
-        /// Required if pronounciation_regex is present.<br/>Set to null if not present.
+        /// Required if pronunciation_regex is present.<br/>Set to null if not present.
         /// </summary>
-        public string? pronounciation_repl
+        public string? pronunciation_replacement
         {
-            get { return _pronounciation_repl; }
-            set { _pronounciation_repl = value; }
+            get { return _pronunciation_replacement; }
+            set { _pronunciation_replacement = value; }
         }
 
         /// <summary>
         /// This is the pattern that will be used to replace the pattern matched 
-        /// by \textbf{spelling\_regex} in the Romanized or Latinized representation of the word when a match 
+        /// by spelling_regex in the Romanized or Latinized representation of the word when a match 
         /// occurs.  Replacement groups are represented using the Perl standard of \$n.<br/>Optional, Recommended, 
         /// Required if spelling_regex is present.<br/>Set to null if not present.
         /// </summary>
-        public string? spelling_repl
+        public string? spelling_replacement
         {
-            get { return _spelling_repl; }
-            set { _spelling_repl = value; }
+            get { return _spelling_replacement; }
+            set { _spelling_replacement = value; }
         }
     }
 }

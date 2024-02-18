@@ -32,13 +32,13 @@ namespace ConlangJson
     public class DerivationalAffix
     {
         private string? _type;
-        private string? _pronounciation_add = null;
+        private string? _pronunciation_add = null;
         private string? _spelling_add = null;
-        private string? _pronounciation_regex = null;
+        private string? _pronunciation_regex = null;
         private string? _spelling_regex = null;
-        private string? _t_pronounciation_add = null;
+        private string? _t_pronunciation_add = null;
         private string? _t_spelling_add = null;    
-        private string? _f_pronounciation_add = null;
+        private string? _f_pronunciation_add = null;
         private string? _f_spelling_add = null;
 
         /// <summary>
@@ -48,50 +48,50 @@ namespace ConlangJson
         /// </summary>
         /// <param name="type">This string has two valid values: “PREFIX” or “SUFFIX”. This indicates if the affix 
         /// placed on the root word when deriving the new word is a prefix or suffix.<br/>.Required.</param>
-        /// <param name="pronounciation_add">This is the string to be prepended or appended to the phonetic 
+        /// <param name="pronunciation_add">This is the string to be prepended or appended to the phonetic 
         /// representation of the root word to create the new derived word’s phonetic representation. This 
         /// will be expressed using the symbology specified in the phonetic_characters field at the Top Level.
-        /// <br/>Optional, Recommended, Not allowed if pronounciation_regex or spelling_regex is present.<br/>
+        /// <br/>Optional, Recommended, Not allowed if pronunciation_regex or spelling_regex is present.<br/>
         /// Set to null if not present.</param>
         /// <param name="spelling_add">This is the string to be prepended or appended to the Romanized or Latinized 
         /// representation of the root word to create the new derived word’s Romanized or Latinized representation.
-        /// <br/>Optional, Recommended, Not allowed if spelling_regex or pronounciation_regex is present.<br/>
+        /// <br/>Optional, Recommended, Not allowed if spelling_regex or pronunciation_regex is present.<br/>
         /// Set to null if not present.</param>
-        /// <param name="pronounciation_regex">This is the generalized regular expression used to match on the 
+        /// <param name="pronunciation_regex">This is the generalized regular expression used to match on the 
         /// phonetic representation of the root word to determine which phonetic string to prepend or append to 
-        /// that root word when creating the derived word.<br/>Optional, Recommended, Required if t_pronounciation_add
-        /// or f_pronounciation_add are present, Not allowed if pronounciation_add or spelling_add is present.<br/>
+        /// that root word when creating the derived word.<br/>Optional, Recommended, Required if t_pronunciation_add
+        /// or f_pronunciation_add are present, Not allowed if pronunciation_add or spelling_add is present.<br/>
         /// Set to null if not present.</param>
         /// <param name="spelling_regex">This is the generalized regular expression used to match on the Romanized 
         /// or Latinized representation of the root word to determine which Romanized or Latinized string to prepend 
         /// or append to that root word when creating the derived word.<br/> Optional, Recommended, Required if 
-        /// t_spelling_add or f_spelling_add are present, Not allowed if pronuncation_add or spelling_add is present.<br/>
+        /// t_spelling_add or f_spelling_add are present, Not allowed if pronunciation_add or spelling_add is present.<br/>
         /// Set to null if not present.</param>
-        /// <param name="t_pronounciation_add">This is the string to be prepended or appended to the phonetic representation 
+        /// <param name="t_pronunciation_add">This is the string to be prepended or appended to the phonetic representation 
         /// of the root word to create the new derived word's phonetic representation if the root word matches the pattern in 
-        /// pronouncation_regex.  This will be expressed using the symbology specified in the phonetic_characters field at the 
+        /// pronunciation_regex.  This will be expressed using the symbology specified in the phonetic_characters field at the 
         /// Top Level.<br/>Set to null if not present.</param>
         /// <param name="t_spelling_add"> This is the string to be prepended or appended to the Romanized or Latinized representation 
         /// of the root word to create the new word's Romanized or Latinized representation if the root word matches the pattern in 
         /// spelling_regex.<br/>Optional, Recommended, Required if spelling_regex is present, Not allowed if pronunciation_add or 
         /// spelling_add is present.<br/>Set to null if not present.</param>
-        /// <param name="f_pronounciation_add">This is the string to be prepended or appended to the phonetic representation of the 
-        /// root word to create the new derived word's phonetic representation if the root word does not match the pattern in pronouncation_regex.
+        /// <param name="f_pronunciation_add">This is the string to be prepended or appended to the phonetic representation of the 
+        /// root word to create the new derived word's phonetic representation if the root word does not match the pattern in pronunciation_regex.
         /// This will be expressed using the symbology specified in the phonetic_characters field at the Top Level.<br/>
         /// Set to null if not present.</param>
         /// <param name="f_spelling_add">This is the string to be prepended or appended to the Romanized or Latinized representation 
         /// of the root word to create the new word's Romanized or Latinized representation if the root word does not match the pattern 
         /// in spelling_regex.<br/>Set to null if not present.</param>
-        public DerivationalAffix(string? type, string? pronounciation_add, string? spelling_add, string? pronounciation_regex, string? spelling_regex, string? t_pronounciation_add, string? t_spelling_add, string? f_pronounciation_add, string? f_spelling_add)
+        public DerivationalAffix(string? type, string? pronunciation_add, string? spelling_add, string? pronunciation_regex, string? spelling_regex, string? t_pronunciation_add, string? t_spelling_add, string? f_pronunciation_add, string? f_spelling_add)
         {
             this._type = type;
-            this._pronounciation_add = pronounciation_add;
+            this._pronunciation_add = pronunciation_add;
             this._spelling_add = spelling_add;
-            this._pronounciation_regex = pronounciation_regex;
+            this._pronunciation_regex = pronunciation_regex;
             this._spelling_regex = spelling_regex;
-            this._t_pronounciation_add = t_pronounciation_add;
+            this._t_pronunciation_add = t_pronunciation_add;
             this._t_spelling_add= t_spelling_add;
-            this._f_pronounciation_add= f_pronounciation_add;
+            this._f_pronunciation_add= f_pronunciation_add;
             this._f_spelling_add = f_spelling_add;
         }
 
@@ -117,19 +117,19 @@ namespace ConlangJson
         /// This is the string to be prepended or appended to the phonetic 
         /// representation of the root word to create the new derived word’s phonetic representation. This 
         /// will be expressed using the symbology specified in the phonetic_characters field at the Top Level.
-        /// <br/>Optional, Recommended, Not allowed if pronounciation_regex or spelling_regex is present.<br/>
+        /// <br/>Optional, Recommended, Not allowed if pronunciation_regex or spelling_regex is present.<br/>
         /// Set to null if not present.
         /// </summary>
-        public string? pronounciation_add
+        public string? pronunciation_add
         {
-            get { return _pronounciation_add; }
-            set { _pronounciation_add = value; }
+            get { return _pronunciation_add; }
+            set { _pronunciation_add = value; }
         }
 
         /// <summary>
         /// This is the string to be prepended or appended to the Romanized or Latinized 
         /// representation of the root word to create the new derived word’s Romanized or Latinized representation.
-        /// <br/>Optional, Recommended, Not allowed if spelling_regex or pronounciation_regex is present.<br/>
+        /// <br/>Optional, Recommended, Not allowed if spelling_regex or pronunciation_regex is present.<br/>
         /// Set to null if not present.
         /// </summary>
         public string? spelling_add
@@ -141,21 +141,21 @@ namespace ConlangJson
         /// <summary>
         /// This is the generalized regular expression used to match on the 
         /// phonetic representation of the root word to determine which phonetic string to prepend or append to 
-        /// that root word when creating the derived word.<br/>Optional, Recommended, Required if t_pronounciation_add
-        /// or f_pronounciation_add are present, Not allowed if pronounciation_add or spelling_add is present.<br/>
+        /// that root word when creating the derived word.<br/>Optional, Recommended, Required if t_pronunciation_add
+        /// or f_pronunciation_add are present, Not allowed if pronunciation_add or spelling_add is present.<br/>
         /// Set to null if not present.
         /// </summary>
-        public string? pronounciation_regex
+        public string? pronunciation_regex
         {
-            get { return _pronounciation_regex; }
-            set { _pronounciation_regex = value; }
+            get { return _pronunciation_regex; }
+            set { _pronunciation_regex = value; }
         }
 
         /// <summary>
         /// This is the generalized regular expression used to match on the Romanized 
         /// or Latinized representation of the root word to determine which Romanized or Latinized string to prepend 
         /// or append to that root word when creating the derived word.<br/> Optional, Recommended, Required if 
-        /// t_spelling_add or f_spelling_add are present, Not allowed if pronuncation_add or spelling_add is present.<br/>
+        /// t_spelling_add or f_spelling_add are present, Not allowed if pronunciation_add or spelling_add is present.<br/>
         /// Set to null if not present.
         /// </summary>
         public string? spelling_regex
@@ -167,13 +167,13 @@ namespace ConlangJson
         /// <summary>
         /// This is the string to be prepended or appended to the phonetic representation 
         /// of the root word to create the new derived word's phonetic representation if the root word matches the pattern in 
-        /// pronouncation_regex.  This will be expressed using the symbology specified in the phonetic_characters field at the 
+        /// pronunciation_regex.  This will be expressed using the symbology specified in the phonetic_characters field at the 
         /// Top Level.<br/>Set to null if not present.
         /// </summary>
-        public string? t_pronounciation_add
+        public string? t_pronunciation_add
         {
-            get { return _t_pronounciation_add; }
-            set { _t_pronounciation_add = value; }
+            get { return _t_pronunciation_add; }
+            set { _t_pronunciation_add = value; }
         }
 
         /// <summary>
@@ -194,10 +194,10 @@ namespace ConlangJson
         /// This will be expressed using the symbology specified in the phonetic_characters field at the Top Level.<br/>
         /// Set to null if not present.
         /// </summary>
-        public string? f_pronounciation_add
+        public string? f_pronunciation_add
         {
-            get { return _f_pronounciation_add; }
-            set { _f_pronounciation_add = value; }
+            get { return _f_pronunciation_add; }
+            set { _f_pronunciation_add = value; }
         }
 
         /// <summary>

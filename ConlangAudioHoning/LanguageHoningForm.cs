@@ -206,6 +206,14 @@ namespace ConlangAudioHoning
                 MessageBox.Show("Unable to decode Language file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            if(languageDescription.version != 1.0)
+            {
+                MessageBox.Show("Incorrect language file version", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                languageDescription = new LanguageDescription();
+                return;
+            }
+
             languageFileInfo = new FileInfo(filename);
 
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
@@ -216,13 +224,6 @@ namespace ConlangAudioHoning
             speechFiles.Clear();
             cbx_recordings.Items.Clear();
             cbx_speed.SelectedText = "slow";
-
-            if (languageDescription.preferred_voice != null)
-            {
-                string voiceMenu = string.Format("{0} ({1}, {2})", languageDescription.preferred_voice,
-                    amazonPollyVoices[languageDescription.preferred_voice].LanguageName, amazonPollyVoices[languageDescription.preferred_voice].Gender);
-                cbx_voice.SelectedText = voiceMenu;
-            }
 
             if (languageDescription.declined)
             {

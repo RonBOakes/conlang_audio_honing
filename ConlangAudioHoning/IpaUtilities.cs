@@ -724,25 +724,25 @@ namespace ConlangAudioHoning
                                 foreach (string declension in affixMap.Keys)
                                 {
                                     Affix affix = affixMap[declension];
-                                    if (affix.pronounciation_add != null)
+                                    if (affix.pronunciation_add != null)
                                     {
-                                        affix.pronounciation_add = SubstituteLatinIpaReplacements(affix.pronounciation_add);
+                                        affix.pronunciation_add = SubstituteLatinIpaReplacements(affix.pronunciation_add);
                                     }
-                                    if (affix.pronounciation_regex != null)
+                                    if (affix.pronunciation_regex != null)
                                     {
-                                        affix.pronounciation_regex = SubstituteLatinIpaReplacements(affix.pronounciation_regex);
+                                        affix.pronunciation_regex = SubstituteLatinIpaReplacements(affix.pronunciation_regex);
                                     }
-                                    if (affix.t_pronounciation_add != null)
+                                    if (affix.t_pronunciation_add != null)
                                     {
-                                        affix.t_pronounciation_add = SubstituteLatinIpaReplacements(affix.t_pronounciation_add);
+                                        affix.t_pronunciation_add = SubstituteLatinIpaReplacements(affix.t_pronunciation_add);
                                     }
-                                    if (affix.f_pronounciation_add != null)
+                                    if (affix.f_pronunciation_add != null)
                                     {
-                                        affix.f_pronounciation_add = SubstituteLatinIpaReplacements(affix.f_pronounciation_add);
+                                        affix.f_pronunciation_add = SubstituteLatinIpaReplacements(affix.f_pronunciation_add);
                                     }
-                                    if (affix.pronounciation_repl != null)
+                                    if (affix.pronunciation_replacement != null)
                                     {
-                                        affix.pronounciation_repl = SubstituteLatinIpaReplacements(affix.pronounciation_repl);
+                                        affix.pronunciation_replacement = SubstituteLatinIpaReplacements(affix.pronunciation_replacement);
                                     }
                                 }
                             }
@@ -758,21 +758,21 @@ namespace ConlangAudioHoning
                 foreach (string derivationKey in language.derivational_affix_map.Keys)
                 {
                     DerivationalAffix derivationalAffix = language.derivational_affix_map[derivationKey];
-                    if (derivationalAffix.pronounciation_regex != null)
+                    if (derivationalAffix.pronunciation_regex != null)
                     {
-                        derivationalAffix.pronounciation_regex = SubstituteLatinIpaReplacements(derivationalAffix.pronounciation_regex);
+                        derivationalAffix.pronunciation_regex = SubstituteLatinIpaReplacements(derivationalAffix.pronunciation_regex);
                     }
-                    if (derivationalAffix.pronounciation_add != null)
+                    if (derivationalAffix.pronunciation_add != null)
                     {
-                        derivationalAffix.pronounciation_add = SubstituteLatinIpaReplacements(derivationalAffix.pronounciation_add);
+                        derivationalAffix.pronunciation_add = SubstituteLatinIpaReplacements(derivationalAffix.pronunciation_add);
                     }
-                    if (derivationalAffix.t_pronounciation_add != null)
+                    if (derivationalAffix.t_pronunciation_add != null)
                     {
-                        derivationalAffix.t_pronounciation_add = SubstituteLatinIpaReplacements(derivationalAffix.t_pronounciation_add);
+                        derivationalAffix.t_pronunciation_add = SubstituteLatinIpaReplacements(derivationalAffix.t_pronunciation_add);
                     }
-                    if (derivationalAffix.f_pronounciation_add != null)
+                    if (derivationalAffix.f_pronunciation_add != null)
                     {
-                        derivationalAffix.f_pronounciation_add = SubstituteLatinIpaReplacements(derivationalAffix.f_pronounciation_add);
+                        derivationalAffix.f_pronunciation_add = SubstituteLatinIpaReplacements(derivationalAffix.f_pronunciation_add);
                     }
                 }
             }
