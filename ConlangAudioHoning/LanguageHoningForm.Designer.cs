@@ -95,6 +95,10 @@
             rbn_normalDiphthong = new RadioButton();
             tabPageVowelDiphthongs = new TabPage();
             tabPageRhoticity = new TabPage();
+            rbn_replaceRhotacized = new RadioButton();
+            rbn_removeRhoticity = new RadioButton();
+            rbn_longToRhotacized = new RadioButton();
+            rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
             menuStrip1.SuspendLayout();
@@ -103,6 +107,7 @@
             gbx_replacementPhomeDepth.SuspendLayout();
             tabPageVowels.SuspendLayout();
             gbx_vowelReplacements.SuspendLayout();
+            tabPageRhoticity.SuspendLayout();
             tabPageSpecialOperations.SuspendLayout();
             SuspendLayout();
             // 
@@ -577,6 +582,7 @@
             rbn_allPhonemes.TabStop = true;
             rbn_allPhonemes.Text = "All Consonants";
             rbn_allPhonemes.UseVisualStyleBackColor = true;
+            rbn_allPhonemes.CheckedChanged += rbn_allPhonemes_CheckedChanged;
             // 
             // rbn_l3
             // 
@@ -588,6 +594,7 @@
             rbn_l3.TabStop = true;
             rbn_l3.Text = "3-degree";
             rbn_l3.UseVisualStyleBackColor = true;
+            rbn_l3.CheckedChanged += rbn_l3_CheckedChanged;
             // 
             // rbn_l2
             // 
@@ -599,6 +606,7 @@
             rbn_l2.TabStop = true;
             rbn_l2.Text = "2-degree";
             rbn_l2.UseVisualStyleBackColor = true;
+            rbn_l2.CheckedChanged += rbn_l2_CheckedChanged;
             // 
             // rbn_l1
             // 
@@ -610,6 +618,7 @@
             rbn_l1.TabStop = true;
             rbn_l1.Text = "1-degree";
             rbn_l1.UseVisualStyleBackColor = true;
+            rbn_l1.CheckedChanged += rbn_l1_CheckedChanged;
             // 
             // tabPageVowels
             // 
@@ -646,6 +655,7 @@
             rbn_longVowels.TabStop = true;
             rbn_longVowels.Text = "Long Vowels";
             rbn_longVowels.UseVisualStyleBackColor = true;
+            rbn_longVowels.CheckedChanged += rbn_longVowels_CheckedChanged;
             // 
             // rbn_semivowelDiphthong
             // 
@@ -657,6 +667,7 @@
             rbn_semivowelDiphthong.TabStop = true;
             rbn_semivowelDiphthong.Text = "Create semi-vowel diphthong";
             rbn_semivowelDiphthong.UseVisualStyleBackColor = true;
+            rbn_semivowelDiphthong.CheckedChanged += rbn_semivowelDiphthong_CheckedChanged;
             // 
             // rbn_halfLongVowels
             // 
@@ -668,6 +679,7 @@
             rbn_halfLongVowels.TabStop = true;
             rbn_halfLongVowels.Text = "Half-Long Vowels";
             rbn_halfLongVowels.UseVisualStyleBackColor = true;
+            rbn_halfLongVowels.CheckedChanged += rbn_halfLongVowels_CheckedChanged;
             // 
             // rbn_normalVowel
             // 
@@ -679,6 +691,7 @@
             rbn_normalVowel.TabStop = true;
             rbn_normalVowel.Text = "Normal Vowel";
             rbn_normalVowel.UseVisualStyleBackColor = true;
+            rbn_normalVowel.CheckedChanged += rbn_normalVowel_CheckedChanged;
             // 
             // rbn_normalDiphthong
             // 
@@ -690,6 +703,7 @@
             rbn_normalDiphthong.TabStop = true;
             rbn_normalDiphthong.Text = "Add Vowel to create Diphtohong";
             rbn_normalDiphthong.UseVisualStyleBackColor = true;
+            rbn_normalDiphthong.CheckedChanged += rbn_normalDiphthong_CheckedChanged;
             // 
             // tabPageVowelDiphthongs
             // 
@@ -703,6 +717,10 @@
             // 
             // tabPageRhoticity
             // 
+            tabPageRhoticity.Controls.Add(rbn_replaceRhotacized);
+            tabPageRhoticity.Controls.Add(rbn_removeRhoticity);
+            tabPageRhoticity.Controls.Add(rbn_longToRhotacized);
+            tabPageRhoticity.Controls.Add(rbn_addRhoticityRegular);
             tabPageRhoticity.Location = new Point(4, 24);
             tabPageRhoticity.Name = "tabPageRhoticity";
             tabPageRhoticity.Padding = new Padding(3);
@@ -710,6 +728,52 @@
             tabPageRhoticity.TabIndex = 4;
             tabPageRhoticity.Text = "Rhoticity";
             tabPageRhoticity.UseVisualStyleBackColor = true;
+            // 
+            // rbn_replaceRhotacized
+            // 
+            rbn_replaceRhotacized.AutoSize = true;
+            rbn_replaceRhotacized.Location = new Point(6, 31);
+            rbn_replaceRhotacized.Name = "rbn_replaceRhotacized";
+            rbn_replaceRhotacized.Size = new Size(204, 19);
+            rbn_replaceRhotacized.TabIndex = 3;
+            rbn_replaceRhotacized.Text = "Replace Rhoticized with Phoneme";
+            rbn_replaceRhotacized.UseVisualStyleBackColor = true;
+            rbn_replaceRhotacized.CheckedChanged += rbn_replaceRhotacized_CheckedChanged;
+            // 
+            // rbn_removeRhoticity
+            // 
+            rbn_removeRhoticity.AutoSize = true;
+            rbn_removeRhoticity.Location = new Point(312, 6);
+            rbn_removeRhoticity.Name = "rbn_removeRhoticity";
+            rbn_removeRhoticity.Size = new Size(118, 19);
+            rbn_removeRhoticity.TabIndex = 2;
+            rbn_removeRhoticity.Text = "Remove Rhoticity";
+            rbn_removeRhoticity.UseVisualStyleBackColor = true;
+            rbn_removeRhoticity.CheckedChanged += rbn_removeRhoticity_CheckedChanged;
+            // 
+            // rbn_longToRhotacized
+            // 
+            rbn_longToRhotacized.AutoSize = true;
+            rbn_longToRhotacized.Location = new Point(157, 6);
+            rbn_longToRhotacized.Name = "rbn_longToRhotacized";
+            rbn_longToRhotacized.Size = new Size(149, 19);
+            rbn_longToRhotacized.TabIndex = 1;
+            rbn_longToRhotacized.Text = "Rhotacized long vowels";
+            rbn_longToRhotacized.UseVisualStyleBackColor = true;
+            rbn_longToRhotacized.CheckedChanged += rbn_longToRhotacized_CheckedChanged;
+            // 
+            // rbn_addRhoticityRegular
+            // 
+            rbn_addRhoticityRegular.AutoSize = true;
+            rbn_addRhoticityRegular.Checked = true;
+            rbn_addRhoticityRegular.Location = new Point(6, 6);
+            rbn_addRhoticityRegular.Name = "rbn_addRhoticityRegular";
+            rbn_addRhoticityRegular.Size = new Size(145, 19);
+            rbn_addRhoticityRegular.TabIndex = 0;
+            rbn_addRhoticityRegular.TabStop = true;
+            rbn_addRhoticityRegular.Text = "Add Rhoticity (regular)";
+            rbn_addRhoticityRegular.UseVisualStyleBackColor = true;
+            rbn_addRhoticityRegular.CheckedChanged += rbn_addRhoticityRegular_CheckedChanged;
             // 
             // tabPageSpecialOperations
             // 
@@ -780,6 +844,8 @@
             tabPageVowels.ResumeLayout(false);
             gbx_vowelReplacements.ResumeLayout(false);
             gbx_vowelReplacements.PerformLayout();
+            tabPageRhoticity.ResumeLayout(false);
+            tabPageRhoticity.PerformLayout();
             tabPageSpecialOperations.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -855,5 +921,9 @@
         private TabPage tabPageSpecialOperations;
         private TabPage tabPageRhoticity;
         private Button btn_updateSoundMapList;
+        private RadioButton rbn_replaceRhotacized;
+        private RadioButton rbn_removeRhoticity;
+        private RadioButton rbn_longToRhotacized;
+        private RadioButton rbn_addRhoticityRegular;
     }
 }

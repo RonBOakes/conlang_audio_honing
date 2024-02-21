@@ -18,6 +18,7 @@
 */
 using ConlangJson;
 using System.Drawing.Printing;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -90,77 +91,7 @@ namespace ConlangAudioHoning
 
         private void TabPhoneticAlterations_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            switch (tabPhoneticAlterations.SelectedIndex)
-            {
-                case 0:
-                    {
-                        if (languageDescription == null)
-                        {
-                            return;
-                        }
-                        // Ensure that there is a blank at the top of the drop down list
-                        cbx_phonemeToChange.Items.Clear();
-                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can 
-                        // use it to populate the combo box of pulmonic consonants to be changed.
-                        foreach (string consonant in languageDescription.phonetic_inventory["p_consonants"])
-                        {
-                            StringBuilder sb = new StringBuilder();
-                            sb.AppendFormat("{0} -- ", consonant);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
-                            cbx_phonemeToChange.Items.Add(sb.ToString());
-                        }
-                        foreach (string consonant in languageDescription.phonetic_inventory["np_consonants"])
-                        {
-                            StringBuilder sb = new StringBuilder();
-                            sb.AppendFormat("{0} -- ", consonant);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
-                            cbx_phonemeToChange.Items.Add(sb.ToString());
-                        }
-
-                        cbx_phonemeToChange.SelectedIndex = -1;
-                    }
-                    break;
-                case 1: // Vowels
-                    {
-                        if (languageDescription == null)
-                        {
-                            return;
-                        }
-                        // Ensure that there is a blank at the top of the drop down list
-                        cbx_phonemeToChange.Items.Clear();
-                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can 
-                        // use it to populate the combo box of pulmonic consonants to be changed.
-                        foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
-                        {
-                            StringBuilder sb = new StringBuilder();
-                            sb.AppendFormat("{0} -- ", vowel);
-                            string vowelKey = vowel.Trim().Substring(0, 1);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
-                            if (vowel.Contains("ː"))
-                            {
-                                sb.Append(" lengthened");
-                            }
-                            else if (vowel.Contains("ˑ"))
-                            {
-                                sb.Append(" half-lengthened");
-                            }
-                            else if (vowel.Contains("\u032f"))
-                            {
-                                sb.Append(" semi-vowel");  // Probably should be part of a diphthong
-                            }
-                            cbx_phonemeToChange.Items.Add(sb.ToString());
-                        }
-
-                        cbx_phonemeToChange.SelectedIndex = -1;
-                    }
-                    break;
-                case 2: // Vowel Diphthongs
-                    break;
-                case 3: // Special Operations
-                    break;
-                default:
-                    break;
-            }
+            updatePhonemeToChangeCbx();
         }
 
         /// <summary>
@@ -359,9 +290,10 @@ namespace ConlangAudioHoning
             txt_changeList.Text = string.Empty;
             // Set the default settings for the language alteration selections.
             rbn_normalVowel.Checked = true;
-            //rbn_consonants.Checked = true;
             tabPhoneticAlterations.SelectedIndex = 0; // Consonants.
             rbn_l1.Checked = true;
+            rbn_addRhoticityRegular.Checked = true;
+            updatePhonemeToChangeCbx();
             LoadVoices();
         }
 
@@ -748,6 +680,177 @@ namespace ConlangAudioHoning
 
         private void cbx_phonemeToChange_SelectedIndexChanged(object sender, EventArgs e)
         {
+            updateReplacementPhonemeCbx();
+        }
+
+        private void updatePhonemeToChangeCbx()
+        {
+            if (languageDescription == null)
+            {
+                return;
+            }
+            switch (tabPhoneticAlterations.SelectedIndex)
+            {
+                case 0:  // Consonants
+                    // Ensure that there is a blank at the top of the drop down list
+                    cbx_phonemeToChange.Items.Clear();
+                    // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can
+                    // use it to populate the combo box of pulmonic consonants to be changed.
+                    foreach (string consonant in languageDescription.phonetic_inventory["p_consonants"])
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0} -- ", consonant);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
+                        cbx_phonemeToChange.Items.Add(sb.ToString());
+                    }
+                    foreach (string consonant in languageDescription.phonetic_inventory["np_consonants"])
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0} -- ", consonant);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
+                        cbx_phonemeToChange.Items.Add(sb.ToString());
+                    }
+                    break;
+                case 1: // Vowel (single)
+                    // Ensure that there is a blank at the top of the drop down list
+                    cbx_phonemeToChange.Items.Clear();
+                    // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can
+                    // use it to populate the combo box of pulmonic consonants to be changed.
+                    foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0} -- ", vowel);
+                        string vowelKey = vowel.Trim().Substring(0, 1);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
+                        if (vowel.Contains("ː"))
+                        {
+                            sb.Append(" lengthened");
+                        }
+                        else if (vowel.Contains("ˑ"))
+                        {
+                            sb.Append(" half-lengthened");
+                        }
+                        else if (vowel.Contains("\u032f"))
+                        {
+                            sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                        }
+                        cbx_phonemeToChange.Items.Add(sb.ToString());
+                    }
+
+                    cbx_phonemeToChange.SelectedIndex = -1;
+
+                    break;
+                case 2: // Vowel diphthongs
+                    break;
+                case 3: // Rhoticity
+                    if (rbn_addRhoticityRegular.Checked)
+                    {
+                        // Ensure that there is a blank at the top of the drop down list
+                        cbx_phonemeToChange.Items.Clear();
+                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can
+                        // use it to populate the combo box of pulmonic consonants to be changed.
+                        foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
+                        {
+                            if (!((vowel.Contains("ː")) || (vowel.Contains("ˑ")) || (vowel.Contains("\u032f")) || (vowel.Contains("˞")) || (vowel.Equals("ɚ"))))
+                            {
+                                StringBuilder sb = new StringBuilder();
+                                sb.AppendFormat("{0} -- ", vowel);
+                                string vowelKey = vowel.Trim().Substring(0, 1);
+                                sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
+                                if (vowel.Contains("ː"))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains("ˑ"))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains("\u032f"))
+                                {
+                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                }
+                                cbx_phonemeToChange.Items.Add(sb.ToString());
+                            }
+                        }
+
+                        cbx_phonemeToChange.SelectedIndex = -1;
+                    }
+                    else if (rbn_longToRhotacized.Checked)
+                    {
+                        // Ensure that there is a blank at the top of the drop down list
+                        cbx_phonemeToChange.Items.Clear();
+                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can
+                        // use it to populate the combo box of pulmonic consonants to be changed.
+                        foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
+                        {
+                            if ((vowel.Contains("ː")) || (vowel.Contains("ˑ")))
+                            {
+                                StringBuilder sb = new StringBuilder();
+                                sb.AppendFormat("{0} -- ", vowel);
+                                string vowelKey = vowel.Trim().Substring(0, 1);
+                                sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
+                                if (vowel.Contains("ː"))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains("ˑ"))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains("\u032f"))
+                                {
+                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                }
+                                cbx_phonemeToChange.Items.Add(sb.ToString());
+                            }
+                        }
+
+                        cbx_phonemeToChange.SelectedIndex = -1;
+                    }
+                    else if ((rbn_removeRhoticity.Checked) || (rbn_replaceRhotacized.Checked))
+                    {
+                        // Ensure that there is a blank at the top of the drop down list
+                        cbx_phonemeToChange.Items.Clear();
+                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can
+                        // use it to populate the combo box of pulmonic consonants to be changed.
+                        foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
+                        {
+                            if ((vowel.Contains("˞")) || (vowel.Equals("ɚ")))
+                            {
+                                StringBuilder sb = new StringBuilder();
+                                sb.AppendFormat("{0} -- ", vowel);
+                                string vowelKey = vowel.Trim().Substring(0, 1);
+                                sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
+                                if (vowel.Contains("ː"))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains("ˑ"))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains("\u032f"))
+                                {
+                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                }
+                                cbx_phonemeToChange.Items.Add(sb.ToString());
+                            }
+                        }
+
+                        cbx_phonemeToChange.SelectedIndex = -1;
+                    }
+                    break;
+                case 4: // Special Operations
+                    break;
+                default:
+                    break;
+
+            }
+
+        }
+
+        private void updateReplacementPhonemeCbx()
+        {
             if (languageDescription == null)
             {
                 return;
@@ -881,6 +984,109 @@ namespace ConlangAudioHoning
                     }
                 }
             }
+            else if (tabPhoneticAlterations.SelectedIndex == 3)  // Rhoticity
+            {
+                cbx_replacementPhoneme.Items.Clear();
+                if (rbn_addRhoticityRegular.Checked)
+                {
+                    string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
+                    string newPhoneme;
+                    string newPhonemeDescription;
+                    if (oldPhoneme.Equals("ə"))
+                    {
+                        newPhoneme = "ɚ";
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    else
+                    {
+                        newPhoneme = oldPhoneme + "\u02de";
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme[0].ToString()]);
+                        sb.Append(" Rhotacized");
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    cbx_replacementPhoneme.Items.Add(newPhoneme);
+                    cbx_replacementPhoneme.SelectedIndex = 0;
+                }
+                else if (rbn_longToRhotacized.Checked)
+                {
+                    string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
+                    string newPhoneme;
+                    string newPhonemeDescription;
+                    if (oldPhoneme.Equals("ə"))
+                    {
+                        newPhoneme = "ɚ";
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    else
+                    {
+                        newPhoneme = oldPhoneme + "\u02de";
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme[0].ToString()]);
+                        sb.Append(" Rhotacized");
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
+                    cbx_replacementPhoneme.SelectedIndex = 0;
+                }
+                else if (rbn_removeRhoticity.Checked)
+                {
+                    string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
+                    string newPhoneme;
+                    string newPhonemeDescription;
+                    if (oldPhoneme.Equals("ɚ"))
+                    {
+                        newPhoneme = "ə";
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    else
+                    {
+                        newPhoneme = oldPhoneme;
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
+                    cbx_replacementPhoneme.SelectedIndex = 0;
+                }
+                else if (rbn_replaceRhotacized.Checked)
+                {
+                    string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
+                    string newPhoneme;
+                    string newPhonemeDescription;
+                    if (oldPhoneme.Equals("ɚ"))
+                    {
+                        newPhoneme = "ə";
+                    }
+                    else
+                    {
+                        newPhoneme = oldPhoneme;
+                    }
+                    string[] rConsonants = { "ɹ", "ɾ", "ɺ", "ɽ", "ɻ", "r" };
+                    foreach (string rConsonant in rConsonants)
+                    {
+                        string newPhoneme2 = newPhoneme + rConsonant;
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme2);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[rConsonant]);
+                        newPhonemeDescription = sb.ToString();
+                        cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
+                    }
+                    cbx_replacementPhoneme.SelectedIndex = -1;
+                }
+            }
         }
 
         private void Cbx_replacementPhoneme_MeasureItem(object? sender, MeasureItemEventArgs e)
@@ -894,7 +1100,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if ((tabPhoneticAlterations.SelectedIndex < 0) || (tabPhoneticAlterations.SelectedIndex > 1))
+            if ((tabPhoneticAlterations.SelectedIndex != 0) && (tabPhoneticAlterations.SelectedIndex != 1) && (tabPhoneticAlterations.SelectedIndex != 3))
             {
                 return;
             }
@@ -903,7 +1109,7 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            if ((tabPhoneticAlterations.SelectedIndex >= 0) && (tabPhoneticAlterations.SelectedIndex <= 1))
+            if ((tabPhoneticAlterations.SelectedIndex == 0) || (tabPhoneticAlterations.SelectedIndex == 1) || (tabPhoneticAlterations.SelectedIndex == 3))
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
@@ -1028,7 +1234,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if ((tabPhoneticAlterations.SelectedIndex < 0) || (tabPhoneticAlterations.SelectedIndex > 1)) // TODO: Add the other options to ensure that at least one is checked
+            if ((tabPhoneticAlterations.SelectedIndex != 0) && (tabPhoneticAlterations.SelectedIndex != 1) && (tabPhoneticAlterations.SelectedIndex != 3))
             {
                 return;
             }
@@ -1042,7 +1248,7 @@ namespace ConlangAudioHoning
                     "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if ((tabPhoneticAlterations.SelectedIndex >= 0) && (tabPhoneticAlterations.SelectedIndex <= 1))
+            if ((tabPhoneticAlterations.SelectedIndex == 0) || (tabPhoneticAlterations.SelectedIndex == 1) || (tabPhoneticAlterations.SelectedIndex == 3))
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
@@ -1214,7 +1420,7 @@ namespace ConlangAudioHoning
 
         private void btn_updateSoundMapList_Click(object sender, EventArgs e)
         {
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
@@ -1225,10 +1431,10 @@ namespace ConlangAudioHoning
             soundMapListEditor.UpdatePhonemeReplacements();
             soundMapListEditor.ShowDialog();
             // ShowDialog is modal
-            if(soundMapListEditor.SoundMapSaved)
+            if (soundMapListEditor.SoundMapSaved)
             {
                 DialogResult result = MessageBox.Show("Preserve the spelling (Yes)?\nNo preserves the pronunciation.", "Spelling or pronunciation", MessageBoxButtons.YesNoCancel);
-                if (result == DialogResult.Yes) 
+                if (result == DialogResult.Yes)
                 {
                     languageDescription.sound_map_list = soundMapListEditor.SoundMapList;
                     phoneticChanger.updatePronunciation();
@@ -1262,6 +1468,71 @@ namespace ConlangAudioHoning
                 }
             }
 
+        }
+
+        private void rbn_l1_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_normalVowel_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_addRhoticityRegular_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_l2_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_l3_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_allPhonemes_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_halfLongVowels_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_longVowels_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_normalDiphthong_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_semivowelDiphthong_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_longToRhotacized_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_removeRhoticity_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_replaceRhotacized_CheckedChanged(object sender, EventArgs e)
+        {
+            updatePhonemeToChangeCbx();
         }
     }
 }
