@@ -430,6 +430,11 @@ namespace ConlangAudioHoning
             "\u00a5","\u00a7","\u00a9","\u00ae","\u0394","\u039e","\u03a6","\u03a8",
         };
 
+        private static string[] _rPhonemes =
+        {
+            "ɹ", "ɾ", "ɺ", "ɽ", "ɻ", "r"
+        };
+
         private static string? _consonant_pattern = null;
         private static string? _vowel_pattern = null;
         private static string? _diacritic_pattern = null;
@@ -484,6 +489,15 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
+        /// Returns an array of strings that represent (Ron Oakes') selection of
+        /// phonemes that could be used in place of rhoticity.  
+        /// </summary>
+        public static string[] RPhonemes
+        {
+            get => _rPhonemes;
+        }
+
+        /// <summary>
         /// Returns a string that can be used within a generalized regular expression to match
         /// all IPA consonants. This pattern will only match the actual phone/phoneme character, 
         /// not any diacritics or related markings that follow it.
@@ -496,11 +510,11 @@ namespace ConlangAudioHoning
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append("[");
-                    foreach(string consonant in PConsonants)
+                    foreach (string consonant in PConsonants)
                     {
                         sb.Append(consonant);
                     }
-                    foreach(string consonant in NpConsonants)
+                    foreach (string consonant in NpConsonants)
                     {
                         sb.Append(consonant);
                     }
@@ -520,11 +534,11 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if(_vowel_pattern == null)
+                if (_vowel_pattern == null)
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append("[");
-                    foreach(string vowel in Vowels)
+                    foreach (string vowel in Vowels)
                     {
                         sb.Append(vowel);
                     }
@@ -543,15 +557,15 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if(_diacritic_pattern == null)
+                if (_diacritic_pattern == null)
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append("[");
-                    foreach(string diacritic in Vowel_modifiers)
+                    foreach (string diacritic in Vowel_modifiers)
                     {
                         sb.Append(diacritic);
                     }
-                    foreach(string diacritic in Diacritics)
+                    foreach (string diacritic in Diacritics)
                     {
                         sb.Append(diacritic);
                     }
@@ -598,7 +612,7 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if(_consonant_changes_l2 == null)
+                if (_consonant_changes_l2 == null)
                 {
                     _consonant_changes_l2 = PopulateL2ConantChanges();
                 }
@@ -630,8 +644,8 @@ namespace ConlangAudioHoning
         /// </summary>
         /// <returns></returns>
         public static List<string> Ipa_replacements
-        { 
-            get => _ipa_replacements; 
+        {
+            get => _ipa_replacements;
         }
 
         /// <summary>
@@ -880,7 +894,7 @@ namespace ConlangAudioHoning
                         }
                         else if ((letter == '\u035c') || (letter == '\u0361'))
                         {
-                            if(ContainsVowels(priorChar))
+                            if (ContainsVowels(priorChar))
                             {
                                 priorChar += letter.ToString();
                             }
@@ -905,14 +919,14 @@ namespace ConlangAudioHoning
                                     int dCount = CountDiacritics(priorChar);
                                     if ((vCount >= 2) || (dCount >= 2))
                                     {
-                                        if(!vDiphthongs.Contains(priorChar))
+                                        if (!vDiphthongs.Contains(priorChar))
                                         {
                                             string workingChar = string.Empty;
-                                            foreach(char letter2 in priorChar)
+                                            foreach (char letter2 in priorChar)
                                             {
-                                                if(ContainsVowels(letter2.ToString()))
+                                                if (ContainsVowels(letter2.ToString()))
                                                 {
-                                                    if(workingChar.Length > 0)
+                                                    if (workingChar.Length > 0)
                                                     {
                                                         vowels.Add(workingChar);
                                                         workingChar = letter2.ToString();
@@ -947,7 +961,7 @@ namespace ConlangAudioHoning
                             else
                             {
                                 string lastPriorChar = priorChar.Last().ToString();
-                                if ((priorChar.Length == 1) || 
+                                if ((priorChar.Length == 1) ||
                                     ((priorChar.Length == 2) && (Vowel_modifiers.Contains(lastPriorChar))))
                                 {
                                     vowels.Add(priorChar);
@@ -1022,11 +1036,11 @@ namespace ConlangAudioHoning
         private static bool ContainsVowels(string priorChars)
         {
             bool containsVowels = false;
-            foreach(char c in priorChars) 
+            foreach (char c in priorChars)
             {
-                if(Vowels.Contains(c.ToString()))
+                if (Vowels.Contains(c.ToString()))
                 {
-                    containsVowels = true; 
+                    containsVowels = true;
                     break;
                 }
             }
@@ -1037,9 +1051,9 @@ namespace ConlangAudioHoning
         private static int CountVowels(string priorChars)
         {
             int count = 0;
-            foreach(char c in priorChars)
+            foreach (char c in priorChars)
             {
-                if(Vowels.Contains(c.ToString()))
+                if (Vowels.Contains(c.ToString()))
                 {
                     count++;
                 }
@@ -1050,13 +1064,13 @@ namespace ConlangAudioHoning
         private static int CountDiacritics(string priorChars)
         {
             int count = 0;
-            foreach(char c in priorChars)
+            foreach (char c in priorChars)
             {
-                if(Diacritics.Contains(c.ToString()))
+                if (Diacritics.Contains(c.ToString()))
                 {
                     count++;
                 }
-                else if((c == '\u02D0') || (c == '\u02D1'))
+                else if ((c == '\u02D0') || (c == '\u02D1'))
                 {
                     count++;
                 }
@@ -1068,17 +1082,17 @@ namespace ConlangAudioHoning
         {
             Dictionary<string, List<string>> pConsonantChangesL2 = new Dictionary<string, List<string>>();
 
-            foreach(string pConsonant in Consonant_changes.Keys)
+            foreach (string pConsonant in Consonant_changes.Keys)
             {
                 SortedSet<string> addedChanges = new SortedSet<string>();
-                foreach(string oldChange in Consonant_changes[pConsonant])
+                foreach (string oldChange in Consonant_changes[pConsonant])
                 {
                     // Iterate over the changes for the existing changes in this consonant and add
                     // them to the candidate set of changes if, and only if, they are not already
                     // changes
-                    foreach(string candidateChange in Consonant_changes[oldChange])
+                    foreach (string candidateChange in Consonant_changes[oldChange])
                     {
-                        if((!candidateChange.Equals(pConsonant)) && (!Consonant_changes[pConsonant].Contains(candidateChange)))
+                        if ((!candidateChange.Equals(pConsonant)) && (!Consonant_changes[pConsonant].Contains(candidateChange)))
                         {
                             addedChanges.Add(candidateChange);
                         }

@@ -16,13 +16,16 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System.Text;
+using System.Text.Json.Nodes;
+
 namespace ConlangJson
 {
     /// <summary>
     /// Defines the .NET/C# structure that corresponds to the Sound Map Entries.  Each object of this class
     /// will encapsulate one entry in the higher-level Sound Map.
     /// </summary>
-    public class SoundMap
+    public class SoundMap : IEquatable<LexiconEntry?>
     {
         private string _phoneme;
         private string _romanization;
@@ -46,10 +49,10 @@ namespace ConlangJson
         /// parameter listings below.
         /// </summary>
         /// <param name="phoneme">This string contains the values that will be substituted for text matched 
-        /// by the pronounciation_regex when converting text from Romanized or Latinized to phonetic representation.  
+        /// by the pronunciation_regex when converting text from Romanized or Latinized to phonetic representation.  
         /// This will be expressed using the symbology specified in the phonetic_characters field at the Top Level.  
         /// The Perl standard of $n is used if group substitutions are included.<br/>Optional, Recommended, Required 
-        /// if pronounciation_regex is present.<br/>Set to an empty string if not present.</param>
+        /// if pronunciation_regex is present.<br/>Set to an empty string if not present.</param>
         /// <param name="romanization">This string contains the value that will be substituted for the text matched 
         /// by the spelling_regex when converting text from phonetic representation.  The Perl standard of $n is used 
         /// if group substitutions are included.<br/>Optional, Recommended, Required if spelling_regex is present.
@@ -73,10 +76,10 @@ namespace ConlangJson
 
         /// <summary>
         /// This string contains the values that will be substituted for text matched 
-        /// by the pronounciation_regex when converting text from Romanized or Latinized to phonetic representation.  
+        /// by the pronunciation_regex when converting text from Romanized or Latinized to phonetic representation.  
         /// This will be expressed using the symbology specified in the phonetic_characters field at the Top Level.  
         /// The Perl standard of $n is used if group substitutions are included.<br/>Optional, Recommended, Required 
-        /// if pronounciation_regex is present.<br/>Set to an empty string if not present.
+        /// if pronunciation_regex is present.<br/>Set to an empty string if not present.
         /// </summary>
         public string phoneme
         {
@@ -129,6 +132,74 @@ namespace ConlangJson
         {
             SoundMap copy = new SoundMap(this.phoneme, this.romanization, this.spelling_regex, this.pronunciation_regex);
             return copy;
+        }
+
+        /// <summary>
+        /// Determines if this LexiconEntry is the same as another object.
+        /// </summary>
+        /// <param name="obj">Object to be compared to this LexiconEntry.</param>
+        /// <returns>true if the objects are the same, false otherwise.</returns>
+        public override bool Equals(object? obj)
+        {
+            return obj is not null &&
+                obj is SoundMap &&
+                _phoneme == ((SoundMap)obj).phoneme &&
+                   _romanization == ((SoundMap)obj).romanization &&
+                   _spelling_regex == ((SoundMap)obj).spelling_regex &&
+                   _pronunciation_regex == ((SoundMap)obj).pronunciation_regex;
+        }
+
+        /// <summary>
+        /// Determines if this SoundMap is the same as another SoundMap.  This comparison is done
+        /// based on the contents of the objects, not the object's identities.
+        /// </summary>
+        /// <param name="other">SoundMap object to be compared to this SoundMap.</param>
+        /// <returns>true if the SoundMap objects represent the same data.</returns>
+        public bool Equals(SoundMap? other)
+        {
+            return other is not null &&
+                   _phoneme == other.phoneme &&
+                   _romanization == other.romanization &&
+                   _spelling_regex == other.spelling_regex &&
+                   _pronunciation_regex == other.pronunciation_regex;
+        }
+
+        /// <summary>
+        /// Generates a hash code for a LexiconEntry object based on its data.
+        /// </summary>
+        /// <returns>Hash Code for this LexiconEntry object.</returns>
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_phoneme,_romanization,_spelling_regex,_pronunciation_regex);
+        }
+
+        /// <summary>
+        /// Gets a string description of the SoundMap object
+        /// </summary>
+        /// <returns>String Description showing two groupings separated by a semicolon.  
+        /// The first grouping is pronunciation regex -> phoneme.  The second is 
+        /// spelling regex -> romanization.</returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            if ((this.phoneme != null) && (this.romanization != null))
+            {
+                sb.AppendFormat("{0} -> {1}; {2} -> {3}", this.pronunciation_regex, this.phoneme, this.spelling_regex, this.romanization);
+            }
+            else if (this.phoneme != null)
+            {
+                sb.AppendFormat("{0} -> {1}; <NA> -> <NA>", this.pronunciation_regex, this.phoneme);
+            }
+            else // Should be a romanization only entry
+            {
+                sb.AppendFormat("<NA> -> <NA>; {0} -> {1}", this.spelling_regex, this.romanization);
+            }
+            return sb.ToString();
+        }
+
+        bool IEquatable<LexiconEntry?>.Equals(LexiconEntry? other)
+        {
+            return Equals(other);
         }
     }
 }

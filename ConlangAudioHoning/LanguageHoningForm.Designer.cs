@@ -59,8 +59,8 @@
             btn_replaySpeech = new Button();
             pb_status = new ProgressBar();
             pbTimer = new System.Windows.Forms.Timer(components);
-            label1 = new Label();
-            label2 = new Label();
+            lbl_choiceCbx = new Label();
+            lbl_replacementCbx = new Label();
             cbx_phonemeToChange = new ComboBox();
             cbx_replacementPhoneme = new ComboBox();
             btn_applyChangeToLanguage = new Button();
@@ -95,6 +95,7 @@
             rbn_normalDiphthong = new RadioButton();
             tabPageVowelDiphthongs = new TabPage();
             tabPageRhoticity = new TabPage();
+            rbn_replaceRSpelling = new RadioButton();
             rbn_replaceRhotacized = new RadioButton();
             rbn_removeRhoticity = new RadioButton();
             rbn_longToRhotacized = new RadioButton();
@@ -345,23 +346,23 @@
             // 
             pbTimer.Tick += pbTimer_Tick;
             // 
-            // label1
+            // lbl_choiceCbx
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(15, 269);
-            label1.Name = "label1";
-            label1.Size = new Size(114, 15);
-            label1.TabIndex = 11;
-            label1.Text = "Phoneme to change";
+            lbl_choiceCbx.AutoSize = true;
+            lbl_choiceCbx.Location = new Point(15, 269);
+            lbl_choiceCbx.Name = "lbl_choiceCbx";
+            lbl_choiceCbx.Size = new Size(114, 15);
+            lbl_choiceCbx.TabIndex = 11;
+            lbl_choiceCbx.Text = "Phoneme to change";
             // 
-            // label2
+            // lbl_replacementCbx
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(15, 319);
-            label2.Name = "label2";
-            label2.Size = new Size(130, 15);
-            label2.TabIndex = 12;
-            label2.Text = "Replacement Phoneme";
+            lbl_replacementCbx.AutoSize = true;
+            lbl_replacementCbx.Location = new Point(15, 319);
+            lbl_replacementCbx.Name = "lbl_replacementCbx";
+            lbl_replacementCbx.Size = new Size(130, 15);
+            lbl_replacementCbx.TabIndex = 12;
+            lbl_replacementCbx.Text = "Replacement Phoneme";
             // 
             // cbx_phonemeToChange
             // 
@@ -717,6 +718,7 @@
             // 
             // tabPageRhoticity
             // 
+            tabPageRhoticity.Controls.Add(rbn_replaceRSpelling);
             tabPageRhoticity.Controls.Add(rbn_replaceRhotacized);
             tabPageRhoticity.Controls.Add(rbn_removeRhoticity);
             tabPageRhoticity.Controls.Add(rbn_longToRhotacized);
@@ -728,6 +730,18 @@
             tabPageRhoticity.TabIndex = 4;
             tabPageRhoticity.Text = "Rhoticity";
             tabPageRhoticity.UseVisualStyleBackColor = true;
+            // 
+            // rbn_replaceRSpelling
+            // 
+            rbn_replaceRSpelling.AutoSize = true;
+            rbn_replaceRSpelling.Location = new Point(212, 31);
+            rbn_replaceRSpelling.Name = "rbn_replaceRSpelling";
+            rbn_replaceRSpelling.Size = new Size(168, 19);
+            rbn_replaceRSpelling.TabIndex = 4;
+            rbn_replaceRSpelling.TabStop = true;
+            rbn_replaceRSpelling.Text = "Rhoticize based on spelling";
+            rbn_replaceRSpelling.UseVisualStyleBackColor = true;
+            rbn_replaceRSpelling.CheckedChanged += rbn_replaceRSpelling_CheckedChanged;
             // 
             // rbn_replaceRhotacized
             // 
@@ -820,8 +834,8 @@
             Controls.Add(btn_applyChangeToLanguage);
             Controls.Add(cbx_replacementPhoneme);
             Controls.Add(cbx_phonemeToChange);
-            Controls.Add(label2);
-            Controls.Add(label1);
+            Controls.Add(lbl_replacementCbx);
+            Controls.Add(lbl_choiceCbx);
             Controls.Add(btn_replaySpeech);
             Controls.Add(cbx_recordings);
             Controls.Add(btn_generateSpeech);
@@ -879,8 +893,8 @@
         private Button btn_replaySpeech;
         private ProgressBar pb_status;
         private System.Windows.Forms.Timer pbTimer;
-        private Label label1;
-        private Label label2;
+        private Label lbl_choiceCbx;
+        private Label lbl_replacementCbx;
         private ComboBox cbx_phonemeToChange;
         private ComboBox cbx_replacementPhoneme;
         private Button btn_applyChangeToLanguage;
@@ -925,5 +939,6 @@
         private RadioButton rbn_removeRhoticity;
         private RadioButton rbn_longToRhotacized;
         private RadioButton rbn_addRhoticityRegular;
+        private RadioButton rbn_replaceRSpelling;
     }
 }

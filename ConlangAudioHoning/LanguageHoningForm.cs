@@ -92,6 +92,11 @@ namespace ConlangAudioHoning
         private void TabPhoneticAlterations_SelectedIndexChanged(object? sender, EventArgs e)
         {
             updatePhonemeToChangeCbx();
+            if ((tabPhoneticAlterations.SelectedIndex != 3) || ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)))
+            {
+                lbl_choiceCbx.Text = "Phoneme to change";
+                lbl_replacementCbx.Text = "Replacement Phoneme";
+            }
         }
 
         /// <summary>
@@ -839,6 +844,13 @@ namespace ConlangAudioHoning
 
                         cbx_phonemeToChange.SelectedIndex = -1;
                     }
+                    else if (rbn_replaceRSpelling.Checked)
+                    {
+                        // Ensure that there is a blank at the top of the drop down list
+                        cbx_phonemeToChange.Items.Clear();
+                        List<SoundMap> rAddingEntries = phoneticChanger.GetRAddingSoundMapEntries(languageDescription.sound_map_list);
+                        cbx_phonemeToChange.Items.AddRange(rAddingEntries.ToArray());
+                    }
                     break;
                 case 4: // Special Operations
                     break;
@@ -1074,7 +1086,7 @@ namespace ConlangAudioHoning
                     {
                         newPhoneme = oldPhoneme;
                     }
-                    string[] rConsonants = { "ɹ", "ɾ", "ɺ", "ɽ", "ɻ", "r" };
+                    string[] rConsonants = IpaUtilities.RPhonemes;
                     foreach (string rConsonant in rConsonants)
                     {
                         string newPhoneme2 = newPhoneme + rConsonant;
@@ -1085,6 +1097,21 @@ namespace ConlangAudioHoning
                         cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
                     }
                     cbx_replacementPhoneme.SelectedIndex = -1;
+                }
+                else if (rbn_replaceRSpelling.Checked)
+                {
+                    foreach (string phoneme in IpaUtilities.RPhonemes)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("{0}ˑ -- ", phoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[phoneme]);
+                        cbx_replacementPhoneme.Items.Add(sb.ToString());
+                    }
+                    string phoneme2 = "˞";
+                    StringBuilder sb2 = new StringBuilder();
+                    sb2.AppendFormat("{0}ˑ -- ", phoneme2);
+                    sb2.Append(IpaUtilities.IpaPhonemesMap[phoneme2]);
+                    cbx_replacementPhoneme.Items.Add(sb2.ToString());
                 }
             }
         }
@@ -1533,6 +1560,21 @@ namespace ConlangAudioHoning
         private void rbn_replaceRhotacized_CheckedChanged(object sender, EventArgs e)
         {
             updatePhonemeToChangeCbx();
+        }
+
+        private void rbn_replaceRSpelling_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbn_replaceRSpelling.Checked)
+            {
+                lbl_choiceCbx.Text = "Pronunciation Patter to Update";
+                lbl_replacementCbx.Text = "Phoneme to add/replace";
+                updatePhonemeToChangeCbx();
+            }
+            else
+            {
+                lbl_choiceCbx.Text = "Phoneme to change";
+                lbl_replacementCbx.Text = "Replacement Phoneme";
+            }
         }
     }
 }

@@ -223,7 +223,16 @@ namespace ConlangJson
         /// <returns>true if the objects are the same, false otherwise.</returns>
         public override bool Equals(object? obj)
         {
-            return Equals(obj as LexiconEntry);
+            return obj is not null &&
+                obj is LexiconEntry &&
+                _phonetic == ((LexiconEntry)obj)._phonetic &&
+                   _spelled == ((LexiconEntry)obj)._spelled &&
+                   _english == ((LexiconEntry)obj)._english &&
+                   _part_of_speech == ((LexiconEntry)obj)._part_of_speech &&
+                   EqualityComparer<List<string>>.Default.Equals(_declensions, ((LexiconEntry)obj)._declensions) &&
+                   _derived_word == ((LexiconEntry)obj)._derived_word &&
+                   _declined_word == ((LexiconEntry)obj)._declined_word &&
+                   EqualityComparer<JsonObject?>.Default.Equals(_metadata, ((LexiconEntry)obj)._metadata);
         }
 
         /// <summary>

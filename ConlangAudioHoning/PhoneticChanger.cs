@@ -490,6 +490,55 @@ namespace ConlangAudioHoning
             IpaUtilities.BuildPhoneticInventory(Language);
         }
 
+        /// <summary>
+        /// Get a list of sound map entries that are used to replace an "r" in a spelled
+        /// word with a non-rhotacized vowel and no consonant that sounds like an "r" to 
+        /// at least a U.S. English speaker.  Sound map entries that will take a pronunciation
+        /// without an "r" like consonant and put an "r" into the spelled version will also be
+        /// listed.
+        /// </summary>
+        /// <param name="soundMapList">List of spelling/pronunciation rules to be searched.</param>
+        /// <returns>List of rules that create non-rhotacized vowels, or add "r" to the spelled word</returns>
+        public List<SoundMap> GetRAddingSoundMapEntries(List<SoundMap> soundMapList)
+        {
+            List<SoundMap> rAddingEntries = new List<SoundMap> ();
+
+            // Build the pattern to look for "r" phonemes and rhoticity.
+            StringBuilder patternBuilder = new StringBuilder ();
+            patternBuilder.Append("[ɚ˞");
+            foreach (string phoneme in IpaUtilities.RPhonemes)
+            {
+                patternBuilder.Append(phoneme);
+            }
+            patternBuilder.Append("]");
+            Regex rPresentRegex = new Regex(patternBuilder.ToString().Trim(), RegexOptions.Compiled);
+
+            foreach (SoundMap soundMap in soundMapList)
+            {
+                if((soundMap.romanization.Contains("r")) && !rPresentRegex.IsMatch(soundMap.spelling_regex))
+                {
+                    rAddingEntries.Add(soundMap);
+                }
+                else if ((soundMap.pronunciation_regex.Contains("r")) && !rPresentRegex.IsMatch(soundMap.phoneme))
+                {
+                    rAddingEntries.Add(soundMap);
+                }
+            }
+            return rAddingEntries;
+        }
+
+        public void ReplaceSoundMapEntry(SoundMap oldEntry, SoundMap newEntry, List<SoundMap> soundMapList)
+        {
+            for(int i = 0; i < soundMapList.Count; i++)
+            {
+                if (soundMapList[i] == oldEntry)
+                {
+                    soundMapList[i] = newEntry;
+                    break;
+                }
+            }
+        }
+
         private class stringTupleLengthComp : IComparer<(string, string)>
         {
             private int Compare((string, string) x, (string, string) y)
