@@ -1110,13 +1110,13 @@ namespace ConlangAudioHoning
                     foreach (string phoneme in IpaUtilities.RPhonemes)
                     {
                         StringBuilder sb = new StringBuilder();
-                        sb.AppendFormat("{0}ˑ -- ", phoneme);
+                        sb.AppendFormat("{0} -- ", phoneme);
                         sb.Append(IpaUtilities.IpaPhonemesMap[phoneme]);
                         cbx_replacementPhoneme.Items.Add(sb.ToString());
                     }
                     string phoneme2 = "˞";
                     StringBuilder sb2 = new StringBuilder();
-                    sb2.AppendFormat("{0}ˑ -- ", phoneme2);
+                    sb2.AppendFormat("{0} -- ", phoneme2);
                     sb2.Append(IpaUtilities.IpaPhonemesMap[phoneme2]);
                     cbx_replacementPhoneme.Items.Add(sb2.ToString());
                 }
@@ -1176,7 +1176,7 @@ namespace ConlangAudioHoning
                     SoundMap replacementMap = mapToReplace.copy();
                     string phonemeToAdd = cbx_replacementPhoneme.Text.Split()[0];
                     string diacriticAtEnd = string.Format("{0}$", IpaUtilities.DiacriticPattern);
-                    if(replacementMap.spelling_regex != null)
+                    if(!string.IsNullOrEmpty(replacementMap.spelling_regex))
                     {
                         if(System.Text.RegularExpressions.Regex.IsMatch(replacementMap.spelling_regex,diacriticAtEnd))
                         {
@@ -1184,7 +1184,7 @@ namespace ConlangAudioHoning
                         }
                         replacementMap.spelling_regex += phonemeToAdd;
                     }
-                    if(replacementMap.phoneme != null)
+                    if(!string.IsNullOrEmpty(replacementMap.phoneme))
                     {
                         if (System.Text.RegularExpressions.Regex.IsMatch(replacementMap.phoneme, diacriticAtEnd))
                         {
