@@ -237,7 +237,14 @@ namespace ConlangAudioHoning
         {
             string jsonString = File.ReadAllText(filename);
 
-            languageDescription = JsonSerializer.Deserialize<LanguageDescription>(jsonString);
+            try
+            {
+                languageDescription = JsonSerializer.Deserialize<LanguageDescription>(jsonString);
+            }
+            catch (Exception)
+            {
+                languageDescription = null;
+            }
 
             if (languageDescription == null)
             {
@@ -1136,7 +1143,9 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            if ((tabPhoneticAlterations.SelectedIndex == 0) || (tabPhoneticAlterations.SelectedIndex == 1) || (tabPhoneticAlterations.SelectedIndex == 3))
+            if ((tabPhoneticAlterations.SelectedIndex == 0) || 
+                (tabPhoneticAlterations.SelectedIndex == 1) || 
+                ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)))
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
@@ -1158,6 +1167,49 @@ namespace ConlangAudioHoning
                 cbx_phonemeToChange.Items.Clear();
                 cbx_replacementPhoneme.Items.Clear();
                 tabPhoneticAlterations.SelectedIndex = -1;
+            }
+            else if ((tabPhoneticAlterations.SelectedIndex == 3) && rbn_replaceRSpelling.Checked)
+            {
+                if (cbx_phonemeToChange.SelectedItem != null)
+                {
+                    SoundMap mapToReplace = (SoundMap)cbx_phonemeToChange.SelectedItem;
+                    SoundMap replacementMap = mapToReplace.copy();
+                    string phonemeToAdd = cbx_replacementPhoneme.Text.Split()[0];
+                    string diacriticAtEnd = string.Format("{0}$", IpaUtilities.DiacriticPattern);
+                    if(replacementMap.spelling_regex != null)
+                    {
+                        if(System.Text.RegularExpressions.Regex.IsMatch(replacementMap.spelling_regex,diacriticAtEnd))
+                        {
+                            replacementMap.spelling_regex = replacementMap.spelling_regex.Remove(replacementMap.spelling_regex.Length -1, 1);
+                        }
+                        replacementMap.spelling_regex += phonemeToAdd;
+                    }
+                    if(replacementMap.phoneme != null)
+                    {
+                        if (System.Text.RegularExpressions.Regex.IsMatch(replacementMap.phoneme, diacriticAtEnd))
+                        {
+                            replacementMap.phoneme = replacementMap.phoneme.Remove(replacementMap.phoneme.Length - 1, 1);
+                        }
+                        replacementMap.phoneme += phonemeToAdd;
+                    }
+                    phoneticChanger.ReplaceSoundMapEntry(mapToReplace, replacementMap, languageDescription.sound_map_list);
+                    phoneticChanger.updatePronunciation();
+                    if (sampleText != string.Empty)
+                    {
+                        sampleText = phoneticChanger.SampleText;
+                        txt_SampleText.Text = sampleText;
+                        txt_phonetic.Text = string.Empty;
+                        foreach (string engineName in speechEngines.Keys)
+                        {
+                            SpeechEngine speech = speechEngines[engineName];
+                            speech.sampleText = sampleText;
+                        }
+                    }
+                    // Clear the combo boxes
+                    cbx_phonemeToChange.Items.Clear();
+                    cbx_replacementPhoneme.Items.Clear();
+                    tabPhoneticAlterations.SelectedIndex = -1;
+                }
             }
             // TODO: Add other options
         }
@@ -1263,6 +1315,11 @@ namespace ConlangAudioHoning
             }
             if ((tabPhoneticAlterations.SelectedIndex != 0) && (tabPhoneticAlterations.SelectedIndex != 1) && (tabPhoneticAlterations.SelectedIndex != 3))
             {
+                return;
+            }
+            if((tabPhoneticAlterations.SelectedIndex == 3) && (rbn_replaceRSpelling.Checked)) 
+            { 
+                MessageBox.Show("Rhotacize based on spelling can only be performed singly","Warning",MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))

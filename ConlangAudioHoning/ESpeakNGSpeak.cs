@@ -71,7 +71,7 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("Cannot Generate Polly Speech without a language description");
             }
-            if ((sampleText == null) || (sampleText.Trim().Equals(string.Empty)))
+            if (string.IsNullOrEmpty(sampleText))
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
@@ -99,7 +99,7 @@ namespace ConlangAudioHoning
             // Get the phonetic representations of the text - ported from Python code.
             List<List<Dictionary<string, string>>> pronounceMapList = new List<List<Dictionary<string, string>>>();
             pronounceMapList.Clear();
-            using (StringReader sampleTextReader = new StringReader(sampleText))
+            using (StringReader sampleTextReader = new StringReader(sampleText.ToLower()))
             {
                 string? line;
                 do

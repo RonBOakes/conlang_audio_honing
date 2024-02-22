@@ -736,10 +736,10 @@
             rbn_replaceRSpelling.AutoSize = true;
             rbn_replaceRSpelling.Location = new Point(212, 31);
             rbn_replaceRSpelling.Name = "rbn_replaceRSpelling";
-            rbn_replaceRSpelling.Size = new Size(168, 19);
+            rbn_replaceRSpelling.Size = new Size(171, 19);
             rbn_replaceRSpelling.TabIndex = 4;
             rbn_replaceRSpelling.TabStop = true;
-            rbn_replaceRSpelling.Text = "Rhoticize based on spelling";
+            rbn_replaceRSpelling.Text = "Rhotacize based on spelling";
             rbn_replaceRSpelling.UseVisualStyleBackColor = true;
             rbn_replaceRSpelling.CheckedChanged += rbn_replaceRSpelling_CheckedChanged;
             // 

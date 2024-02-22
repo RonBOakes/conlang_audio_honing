@@ -50,7 +50,10 @@ namespace ConlangJson
             string spelled = phonetic;
             foreach (SoundMap soundMap in soundMapList)
             {
-                spelled = Regex.Replace(spelled, soundMap.spelling_regex, soundMap.romanization);
+                if (!string.IsNullOrEmpty(soundMap.spelling_regex))
+                {
+                    spelled = Regex.Replace(spelled, soundMap.spelling_regex, soundMap.romanization);
+                }
             }
 
             return spelled;
@@ -70,7 +73,10 @@ namespace ConlangJson
             string phonetic = word;
             foreach (SoundMap soundMap in soundMapList)
             {
-                phonetic = Regex.Replace(phonetic, soundMap.pronunciation_regex, soundMap.phoneme);
+                if (!string.IsNullOrEmpty(soundMap.pronunciation_regex))
+                {
+                    phonetic = Regex.Replace(phonetic, soundMap.pronunciation_regex, soundMap.phoneme);
+                }
             }
 
             return phonetic;
