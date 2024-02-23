@@ -25,7 +25,9 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace ConlangAudioHoning
 {
@@ -37,7 +39,7 @@ namespace ConlangAudioHoning
         // TODO: replace these with empty strings or something to 
         //       indicate when the related option is not present.
         private static string DefaultPollyURI = "https://9ggv18yii2.execute-api.us-east-1.amazonaws.com/general_speak2";
-        private static string DefalultESpeakNGPath = @"C:\Program Files\eSpeak NG\espeak-ng.exe";
+        private static string DefaultESpeakNGPath = @"C:\Program Files\eSpeak NG\espeak-ng.exe";
 
         public UserConfiguration() 
         { }
@@ -52,7 +54,7 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// File Path contining the locally installed version of eSpeak-ng.
+        /// File Path containing the locally installed version of eSpeak-ng.
         /// </summary>
         public string ESpeakNgPath
         {
@@ -80,13 +82,27 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Write this configuration out as a JSON file.
         /// </summary>
-        /// <param name="filepath">Path to write the configuration file.  By default this will create the 
+        /// <param name="filePath">Path to write the configuration file.  By default this will create the 
         /// configuration file in the user's application data directory using a default name.</param>
-        public void SaveConfiguration(string filepath = "")
+        public void SaveConfiguration(string filePath = "")
         {
-            if (string.IsNullOrEmpty(filepath))
+            if (string.IsNullOrEmpty(filePath))
             {
-                filepath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
+                filePath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
+            }
+
+            Match commitInPathMatch = Regex.Match(filePath, @"\\((\d+\.\d+\.\d+)\+[0-9a-f]+)\\");
+            if (commitInPathMatch.Success)
+            {
+                filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
+            }
+
+            FileInfo fi = new FileInfo(filePath);
+
+            DirectoryInfo di = fi.Directory ?? new DirectoryInfo(Application.UserAppDataPath.Trim());
+            if (!di.Exists)
+            {
+                di.Create();
             }
 
             JsonSerializerOptions jsonSerializerOptions = new();
@@ -96,26 +112,32 @@ namespace ConlangAudioHoning
             jsonSerializerOptions.WriteIndented = true; // TODO: make an option
 
             string jsonString = JsonSerializer.Serialize<UserConfiguration>(this, jsonSerializerOptions);
-            File.WriteAllText(filepath, jsonString, System.Text.Encoding.UTF8);
+            File.WriteAllText(filePath, jsonString, System.Text.Encoding.UTF8);
         }
 
         /// <summary>
         /// Load a configuration from the specified file.
         /// </summary>
-        /// <param name="filepath">Path to write the configuration file.  By default this will use the 
+        /// <param name="filePath">Path to write the configuration file.  By default this will use the 
         /// configuration file in the user's application data directory using a default name if it exists.</param>
         /// <returns>The configuration as loaded, or a default configuration if no configuration can be loaded.</returns>
-        public static UserConfiguration LoadFromFile(string filepath = "")
+        public static UserConfiguration LoadFromFile(string filePath = "")
         {
-            if(string.IsNullOrEmpty(filepath)) 
+            if(string.IsNullOrEmpty(filePath)) 
             { 
-                filepath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
+                filePath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
+            }
+
+            Match commitInPathMatch = Regex.Match(filePath, @"\\((\d+\.\d+\.\d+)\+[0-9a-f]+)\\");
+            if(commitInPathMatch.Success)
+            {
+                filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
             }
 
             UserConfiguration configuration;
-            if (File.Exists(filepath)) 
+            if (File.Exists(filePath)) 
             {
-                string jsonString = File.ReadAllText(filepath);
+                string jsonString = File.ReadAllText(filePath);
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 configuration = JsonSerializer.Deserialize<UserConfiguration>(jsonString);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
@@ -145,7 +167,7 @@ namespace ConlangAudioHoning
         {
             UserConfiguration config = new UserConfiguration();
             config.PollyURI = DefaultPollyURI;
-            config.ESpeakNgPath = DefalultESpeakNGPath;
+            config.ESpeakNgPath = DefaultESpeakNGPath;
             return config;
         }
     }
