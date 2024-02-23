@@ -101,7 +101,7 @@ namespace ConlangAudioHoning
             tabPhoneticAlterations.SelectedIndexChanged += TabPhoneticAlterations_SelectedIndexChanged;
 
             // Handle the ApplicationExit event to know when the application is exiting.
-            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
+            Application.ApplicationExit += new EventHandler(OnApplicationExit);
         }
 
         private void TabPhoneticAlterations_SelectedIndexChanged(object? sender, EventArgs e)
@@ -443,9 +443,9 @@ namespace ConlangAudioHoning
             File.WriteAllText(filename, sampleText);
         }
 
-        private void OnApplicationExit(object sender, EventArgs e)
+        private void OnApplicationExit(object? sender, EventArgs e)
         {
-            // TODO: Add "dirty" informaton for LanguageDescription and sampleText, prompt for saving.
+            // TODO: Add "dirty" information for LanguageDescription and sampleText, prompt for saving.
             config.SaveConfiguration();
         }
 
