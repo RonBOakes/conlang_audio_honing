@@ -44,6 +44,7 @@ namespace ConlangAudioHoning
         private Dictionary<string, FileInfo> speechFiles = new Dictionary<string, FileInfo>();
         private PhoneticChanger phoneticChanger;
         private List<(string, string)> changesToBeMade = new List<(string, string)>();
+        private UserConfiguration config;
 
         /// <summary>
         /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
@@ -70,15 +71,24 @@ namespace ConlangAudioHoning
                 throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
             }
 
-            ESpeakNGSpeak ESpeakNGSpeak = new ESpeakNGSpeak();
-            Dictionary<string, SpeechEngine.VoiceData> espeakVoices = ESpeakNGSpeak.getVoices();
-            speechEngines.Add(ESpeakNGSpeak.Description, ESpeakNGSpeak);
-            voices.Add(ESpeakNGSpeak.Description, espeakVoices);
-            //ESpeakNGSpeak.Test();
-            PollySpeech pollySpeech = new PollySpeech();
-            Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
-            speechEngines.Add(pollySpeech.Description, pollySpeech);
-            voices.Add(pollySpeech.Description, amazonPollyVoices);
+            config = UserConfiguration.LoadFromFile();
+
+            if (config.IsESpeakNGSupported)
+            {
+                ESpeakNGSpeak ESpeakNGSpeak = new ESpeakNGSpeak();
+                Dictionary<string, SpeechEngine.VoiceData> espeakVoices = ESpeakNGSpeak.getVoices();
+                speechEngines.Add(ESpeakNGSpeak.Description, ESpeakNGSpeak);
+                voices.Add(ESpeakNGSpeak.Description, espeakVoices);
+                //ESpeakNGSpeak.Test();
+            }
+
+            if (config.IsPollySupported)
+            {
+                PollySpeech pollySpeech = new PollySpeech();
+                Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
+                speechEngines.Add(pollySpeech.Description, pollySpeech);
+                voices.Add(pollySpeech.Description, amazonPollyVoices);
+            }
 
             phoneticChanger = new PhoneticChanger();
 
@@ -87,6 +97,9 @@ namespace ConlangAudioHoning
             LoadVoices();
             LoadSpeeds();
             tabPhoneticAlterations.SelectedIndexChanged += TabPhoneticAlterations_SelectedIndexChanged;
+
+            // Handle the ApplicationExit event to know when the application is exiting.
+            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
         }
 
         private void TabPhoneticAlterations_SelectedIndexChanged(object? sender, EventArgs e)
@@ -141,7 +154,14 @@ namespace ConlangAudioHoning
             {
                 cbx_speechEngine.Items.Add(engineName);
             }
-            cbx_speechEngine.SelectedIndex = 0;
+            if (cbx_speechEngine.Items.Count > 0)
+            {
+                cbx_speechEngine.SelectedIndex = 0;
+            }
+            else
+            {
+                cbx_speechEngine.SelectedIndex = -1;
+            }
             cbx_speechEngine.ResumeLayout();
         }
 
@@ -421,6 +441,12 @@ namespace ConlangAudioHoning
             File.WriteAllText(filename, sampleText);
         }
 
+        private void OnApplicationExit(object sender, EventArgs e)
+        {
+            // TODO: Add "dirty" informaton for LanguageDescription and sampleText, prompt for saving.
+            config.SaveConfiguration();
+        }
+
         private void txt_SampleText_TextChanged(object sender, EventArgs e)
         {
             sampleText = txt_SampleText.Text;
@@ -466,7 +492,7 @@ namespace ConlangAudioHoning
                 return;
             }
             string engineName = cbx_speechEngine.Text.Trim();
-            if (engineName.Equals("Amazon Polly"))
+            if ((engineName.Equals("Amazon Polly")) && (config.IsPollySupported))
             {
                 PollySpeech pollySpeech = (PollySpeech)speechEngines[engineName];
                 DateTime now = DateTime.Now;
@@ -505,7 +531,7 @@ namespace ConlangAudioHoning
                     cbx_recordings.SelectedText = fileInfo.Name;
                 }
             }
-            else if (engineName.Equals("espeak-ng"))
+            else if ((engineName.Equals("espeak-ng")) && (config.IsESpeakNGSupported))
             {
                 ESpeakNGSpeak speechEngine = (ESpeakNGSpeak)speechEngines[engineName];
                 DateTime now = DateTime.Now;
