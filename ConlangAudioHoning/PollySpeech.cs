@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Reflection.Metadata;
 using System.Windows.Forms;
+using System.Net.Http;
 
 namespace ConlangAudioHoning
 {
@@ -40,7 +41,7 @@ namespace ConlangAudioHoning
         // URI for the Amazon REST URI for processing the Polly messages.  This needs beefing up
         // before this project can be made public since it will allow any SSML to be turned to 
         // speech on my dime.
-        private static string _polyURI = "https://9ggv18yii2.execute-api.us-east-1.amazonaws.com/general_speak2";
+        private static string _polyURI = "";
 
         /// <summary>
         /// Constructor for the Amazon Polly interface.
@@ -48,6 +49,12 @@ namespace ConlangAudioHoning
         public PollySpeech() : base()
         {
             Description = "Amazon Polly";
+        }
+
+        public static string PollyURI
+        {
+            get => _polyURI;
+            set => _polyURI = value;
         }
 
         /// <summary>
@@ -414,6 +421,29 @@ namespace ConlangAudioHoning
             }
 
             return generated;
+        }
+
+        /// <summary>
+        /// Test to see if the supplied URI is a valid Amazon Polly language honing URI.
+        /// </summary>
+        /// <param name="newURI"></param>
+        /// <returns></returns>
+        public static bool TestURI(string newURI)
+        {
+            HttpHandler httpHandler = HttpHandler.Instance;
+            HttpClient httpClient = httpHandler.httpClient;
+            StringContent content;
+            Dictionary<string, string> requestDict = new Dictionary<string, string>();
+            requestDict["systemStatus"] = string.Empty;
+            using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+            {
+                HttpResponseMessage result = httpClient.PostAsync(newURI, content).Result;
+                if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

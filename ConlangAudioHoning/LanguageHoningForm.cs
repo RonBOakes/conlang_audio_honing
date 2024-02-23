@@ -75,15 +75,17 @@ namespace ConlangAudioHoning
 
             if (config.IsESpeakNGSupported)
             {
-                ESpeakNGSpeak ESpeakNGSpeak = new ESpeakNGSpeak();
-                Dictionary<string, SpeechEngine.VoiceData> espeakVoices = ESpeakNGSpeak.getVoices();
-                speechEngines.Add(ESpeakNGSpeak.Description, ESpeakNGSpeak);
-                voices.Add(ESpeakNGSpeak.Description, espeakVoices);
-                //ESpeakNGSpeak.Test();
+                ESpeakNGSpeak.ESpeakNGPath = config.ESpeakNgPath;
+                ESpeakNGSpeak eSpeakNGSpeak = new ESpeakNGSpeak();
+                Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
+                speechEngines.Add(eSpeakNGSpeak.Description, eSpeakNGSpeak);
+                voices.Add(eSpeakNGSpeak.Description, espeakVoices);
+                //eSpeakNGSpeak.Test();
             }
 
             if (config.IsPollySupported)
             {
+                PollySpeech.PollyURI = config.PollyURI;
                 PollySpeech pollySpeech = new PollySpeech();
                 Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
                 speechEngines.Add(pollySpeech.Description, pollySpeech);
@@ -1169,8 +1171,8 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            if ((tabPhoneticAlterations.SelectedIndex == 0) || 
-                (tabPhoneticAlterations.SelectedIndex == 1) || 
+            if ((tabPhoneticAlterations.SelectedIndex == 0) ||
+                (tabPhoneticAlterations.SelectedIndex == 1) ||
                 ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)))
             {
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
@@ -1202,15 +1204,15 @@ namespace ConlangAudioHoning
                     SoundMap replacementMap = mapToReplace.copy();
                     string phonemeToAdd = cbx_replacementPhoneme.Text.Split()[0];
                     string diacriticAtEnd = string.Format("{0}$", IpaUtilities.DiacriticPattern);
-                    if(!string.IsNullOrEmpty(replacementMap.spelling_regex))
+                    if (!string.IsNullOrEmpty(replacementMap.spelling_regex))
                     {
-                        if(System.Text.RegularExpressions.Regex.IsMatch(replacementMap.spelling_regex,diacriticAtEnd))
+                        if (System.Text.RegularExpressions.Regex.IsMatch(replacementMap.spelling_regex, diacriticAtEnd))
                         {
-                            replacementMap.spelling_regex = replacementMap.spelling_regex.Remove(replacementMap.spelling_regex.Length -1, 1);
+                            replacementMap.spelling_regex = replacementMap.spelling_regex.Remove(replacementMap.spelling_regex.Length - 1, 1);
                         }
                         replacementMap.spelling_regex += phonemeToAdd;
                     }
-                    if(!string.IsNullOrEmpty(replacementMap.phoneme))
+                    if (!string.IsNullOrEmpty(replacementMap.phoneme))
                     {
                         if (System.Text.RegularExpressions.Regex.IsMatch(replacementMap.phoneme, diacriticAtEnd))
                         {
@@ -1343,9 +1345,9 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if((tabPhoneticAlterations.SelectedIndex == 3) && (rbn_replaceRSpelling.Checked)) 
-            { 
-                MessageBox.Show("Rhotacize based on spelling can only be performed singly","Warning",MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if ((tabPhoneticAlterations.SelectedIndex == 3) && (rbn_replaceRSpelling.Checked))
+            {
+                MessageBox.Show("Rhotacize based on spelling can only be performed singly", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
@@ -1658,6 +1660,80 @@ namespace ConlangAudioHoning
                 lbl_choiceCbx.Text = "Phoneme to change";
                 lbl_replacementCbx.Text = "Replacement Phoneme";
             }
+        }
+
+        private void setAmazonPollyURIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string pollyURI = Microsoft.VisualBasic.Interaction.InputBox("Enter the URI for Amazon Polly", "Amazon Polly URI", PollySpeech.PollyURI ?? "");
+            if (PollySpeech.TestURI(pollyURI))
+            {
+                PollySpeech.PollyURI = pollyURI;
+                PollySpeech pollySpeech = new PollySpeech();
+                Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
+                if (speechEngines.ContainsKey(pollySpeech.Description))
+                {
+                    speechEngines[pollySpeech.Description] = pollySpeech;
+                }
+                else
+                {
+                    speechEngines.Add(pollySpeech.Description, pollySpeech);
+                }
+                if (voices.ContainsKey(pollySpeech.Description))
+                {
+                    voices[pollySpeech.Description] = amazonPollyVoices;
+                }
+                else
+                {
+                    voices.Add(pollySpeech.Description, amazonPollyVoices);
+                }
+            }
+        }
+
+        private void SetESpeakNgLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new())
+            {
+                if(string.IsNullOrEmpty(ESpeakNGSpeak.ESpeakNGPath))
+                {
+                    openFileDialog.InitialDirectory = Environment.SpecialFolder.ProgramFiles.ToString();
+
+                }
+                else
+                {
+                    FileInfo fi = new FileInfo(ESpeakNGSpeak.ESpeakNGPath);
+                    openFileDialog.InitialDirectory = fi.DirectoryName;
+                }
+                openFileDialog.Filter = "Executable file (*.exe)|*.exe|All Files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.Multiselect = false;
+                openFileDialog.RestoreDirectory = false;
+                openFileDialog.CheckFileExists = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    ESpeakNGSpeak.ESpeakNGPath = openFileDialog.FileName;
+                    ESpeakNGSpeak eSpeakNGSpeak = new ESpeakNGSpeak();
+                    Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
+                    if (speechEngines.ContainsKey(eSpeakNGSpeak.Description))
+                    {
+                        speechEngines[eSpeakNGSpeak.Description] = eSpeakNGSpeak;
+                    }
+                    else
+                    {
+                        speechEngines.Add(eSpeakNGSpeak.Description, eSpeakNGSpeak);
+                    }
+                    if (voices.ContainsKey(eSpeakNGSpeak.Description))
+                    {
+                        voices[eSpeakNGSpeak.Description] = espeakVoices;
+                    }
+                    else
+                    {
+                        voices.Add(eSpeakNGSpeak.Description, espeakVoices);
+                    }
+                    //eSpeakNGSpeak.Test();
+                }
+            }
+
         }
     }
 }

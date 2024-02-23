@@ -34,12 +34,17 @@ namespace ConlangAudioHoning
     /// </summary>
     internal class ESpeakNGSpeak : SpeechEngine
     {
-        private static string ESpeakNGLibPath = @"C:\Program Files\eSpeak NG\libespeak-ng.dll";
-        private static string ESpeakNGPath = @"C:\Program Files\eSpeak NG\espeak-ng.exe";
+        private static string _ESpeakNGPath = "";
 
         public ESpeakNGSpeak() : base()
         {
             Description = "espeak-ng";
+        }
+
+        public static string ESpeakNGPath
+        {
+            get => _ESpeakNGPath;
+            set => _ESpeakNGPath = value;
         }
 
         /// <summary>
@@ -343,7 +348,7 @@ namespace ConlangAudioHoning
                 processRunning = false;
             }
             );
-            startInfo.FileName = ESpeakNGPath;
+            startInfo.FileName = _ESpeakNGPath;
 
             startInfo.Arguments = cmd;
             process.StartInfo = startInfo;

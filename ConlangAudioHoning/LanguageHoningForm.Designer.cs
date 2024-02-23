@@ -44,6 +44,9 @@
             utilitiesToolStripMenuItem = new ToolStripMenuItem();
             displayGlossOfSampleTextToolStripMenuItem = new ToolStripMenuItem();
             printSampleTextSummaryToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
+            setAmazonPollyURIToolStripMenuItem = new ToolStripMenuItem();
+            setESpeakNgLocationToolStripMenuItem = new ToolStripMenuItem();
             debugToolStripMenuItem = new ToolStripMenuItem();
             displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripMenuItem();
@@ -198,7 +201,7 @@
             // 
             // utilitiesToolStripMenuItem
             // 
-            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem });
+            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, setAmazonPollyURIToolStripMenuItem, setESpeakNgLocationToolStripMenuItem });
             utilitiesToolStripMenuItem.Name = "utilitiesToolStripMenuItem";
             utilitiesToolStripMenuItem.Size = new Size(58, 20);
             utilitiesToolStripMenuItem.Text = "Utilities";
@@ -216,6 +219,25 @@
             printSampleTextSummaryToolStripMenuItem.Size = new Size(223, 22);
             printSampleTextSummaryToolStripMenuItem.Text = "Print Sample Text Summary";
             printSampleTextSummaryToolStripMenuItem.Click += printSampleTextSummaryToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(220, 6);
+            // 
+            // setAmazonPollyURIToolStripMenuItem
+            // 
+            setAmazonPollyURIToolStripMenuItem.Name = "setAmazonPollyURIToolStripMenuItem";
+            setAmazonPollyURIToolStripMenuItem.Size = new Size(223, 22);
+            setAmazonPollyURIToolStripMenuItem.Text = "Set Amazon Polly URI";
+            setAmazonPollyURIToolStripMenuItem.Click += setAmazonPollyURIToolStripMenuItem_Click;
+            // 
+            // setESpeakNgLocationToolStripMenuItem
+            // 
+            setESpeakNgLocationToolStripMenuItem.Name = "setESpeakNgLocationToolStripMenuItem";
+            setESpeakNgLocationToolStripMenuItem.Size = new Size(223, 22);
+            setESpeakNgLocationToolStripMenuItem.Text = "Set eSpeak-ng location";
+            setESpeakNgLocationToolStripMenuItem.Click += SetESpeakNgLocationToolStripMenuItem_Click;
             // 
             // debugToolStripMenuItem
             // 
@@ -940,5 +962,8 @@
         private RadioButton rbn_longToRhotacized;
         private RadioButton rbn_addRhoticityRegular;
         private RadioButton rbn_replaceRSpelling;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripMenuItem setAmazonPollyURIToolStripMenuItem;
+        private ToolStripMenuItem setESpeakNgLocationToolStripMenuItem;
     }
 }
