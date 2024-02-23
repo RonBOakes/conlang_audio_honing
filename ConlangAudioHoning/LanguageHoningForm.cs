@@ -1686,6 +1686,7 @@ namespace ConlangAudioHoning
                 {
                     voices.Add(pollySpeech.Description, amazonPollyVoices);
                 }
+                config.PollyURI = pollyURI;
             }
         }
 
@@ -1731,6 +1732,7 @@ namespace ConlangAudioHoning
                         voices.Add(eSpeakNGSpeak.Description, espeakVoices);
                     }
                     //eSpeakNGSpeak.Test();
+                    config.ESpeakNgPath = ESpeakNGSpeak.ESpeakNGPath;
                 }
             }
 
