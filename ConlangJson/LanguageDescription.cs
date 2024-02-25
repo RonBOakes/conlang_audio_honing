@@ -18,6 +18,8 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -36,7 +38,6 @@ namespace ConlangJson
         private string? _phonetic_characters;
         private string? _native_name_phonetic;
         private string? _native_name_english;
-        private string? _preferred_voice;
         private Dictionary<string, string>? _preferred_voices;
         private string? _preferred_language;
         private bool? _derived;
@@ -44,6 +45,9 @@ namespace ConlangJson
         private List<string>? _noun_gender_list;
         private List<string>? _part_of_speech_list;
         private List<string>? _phoneme_inventory;
+        private string? _word_order;
+        private string? _adjective_position;
+        private string? _pre_post_position;
         private Dictionary<string, string[]>? _phonetic_inventory;
         private List<SoundMap>? _sound_map_list;
         private List<string>? _lexical_order_list;
@@ -76,7 +80,7 @@ namespace ConlangJson
         /// </summary>
         public double version
         {
-            get => _version; 
+            get => _version;
             set => _version = value;
         }
 
@@ -124,7 +128,7 @@ namespace ConlangJson
         /// Applications recognized at this time are: "Polly," "espeak-ng," and "Azure."  Both the key and resulting field 
         /// are capital sensitive due to the underlying programs.
         /// </summary>
-        public Dictionary<string,string> preferred_voices
+        public Dictionary<string, string> preferred_voices
         {
             get => _preferred_voices ?? new Dictionary<string, string>();
             set => _preferred_voices = value;
@@ -213,6 +217,159 @@ namespace ConlangJson
         }
 
         /// <summary>
+        /// This string will contain the language’s word order expressed using the letters “S” for subject, “V” for verb, and “O” 
+        /// for object. The language may take on any of the six possible arrangements for these.
+        /// </summary>
+        public string word_order
+        {
+            get => _word_order ?? "SVO";
+            set => _word_order = value;
+        }
+
+        /// <summary>
+        /// Defines the word orders for a language as an enum.
+        /// </summary>
+        public enum WordOrders
+        {
+            /// <summary>
+            /// Subject, Verb, Object
+            /// </summary>
+            SVO,
+            /// <summary>
+            /// Subject, Object, Verb
+            /// </summary>
+            SOV,
+            /// <summary>
+            /// Verb, Subject, Object
+            /// </summary>
+            VSO,
+            /// <summary>
+            /// Verb, Object, Subject
+            /// </summary>
+            VOS,
+            /// <summary>
+            /// Object, Subject, Verb
+            /// </summary>
+            OSV,
+            /// <summary>
+            /// Object, Verb Subject.
+            /// </summary>
+            OVS,
+        }
+
+        /// <summary>
+        /// Get the Word Order as an Enum.
+        /// </summary>
+        public LanguageDescription.WordOrders WordOrder()
+        {
+            switch (word_order)
+            {
+                case "SVO":
+                    return WordOrders.SVO;
+                case "SOV":
+                    return WordOrders.SOV;
+                case "VSO":
+                    return WordOrders.VSO;
+                case "VOS":
+                    return WordOrders.VOS;
+                case "OSV":
+                    return WordOrders.OSV;
+                case "OVS":
+                    return WordOrders.OVS;
+                default:
+                    return WordOrders.SVO;
+            }
+        }
+
+        /// <summary>
+        /// This string indicates where adjectives are placed in this language in relationship to the noun that the adjective modifies. 
+        /// “Before” indicates that the adjective precedes the noun, as occurs in English, and “After” indicates that the adjective 
+        /// follows the noun it modifies, as occurs in French.
+        /// </summary>
+        public string adjective_position
+        {
+            get => _adjective_position ?? "Before";
+            set => _adjective_position = value;
+        }
+
+        /// <summary>
+        /// Enumerated value for the Adjective Position
+        /// </summary>
+        public enum AdjectivePositions
+        {
+            /// <summary>
+            /// Adjectives come before the noun
+            /// </summary>
+            BEFORE,
+            /// <summary>
+            /// Adjectives come after the noun
+            /// </summary>
+            AFTER,
+        }
+
+        /// <summary>
+        /// Gets the adjective position as an Enum.
+        /// </summary>
+        /// <returns></returns>
+        public LanguageDescription.AdjectivePositions AdjectivePosition()
+        {
+            switch(adjective_position.ToLower())
+            {
+                case "before":
+                    return AdjectivePositions.BEFORE;
+                case "after":
+                    return AdjectivePositions.AFTER;
+                default:
+                    return AdjectivePositions.BEFORE;
+            }
+        }
+
+
+        /// <summary>
+        /// This is used to specify if the language has prepositions or postpositions for its adposition.In languages with postpositions, 
+        /// the adposition comes after the noun phrase, for example, “a key with.” In languages with prepositions, the adposition proceeds 
+        /// the noun phrase, for example, “with a key.” The valid values are “preposition,” and “postposition.”
+        /// </summary>
+        public string pre_post_position
+        {
+            get => _pre_post_position ?? "preposition";
+            set => _pre_post_position = value;
+        }
+
+        /// <summary>
+        /// Enumerated Values for adposition.
+        /// </summary>
+        public enum PrePostPositions
+        {
+            /// <summary>
+            /// Preposition
+            /// </summary>
+            PREPOSITION,
+            /// <summary>
+            /// Postposition.
+            /// </summary>
+            POSTPOSITION,
+        }
+
+
+        /// <summary>
+        /// Return the adposition as an enumerated value.
+        /// </summary>
+        /// <returns></returns>
+        public LanguageDescription.PrePostPositions PrePostPosition()
+        {
+            switch(pre_post_position.ToLower()) 
+            {
+                case "preposition":
+                    return PrePostPositions.PREPOSITION;
+                case "postposition":
+                    return PrePostPositions.POSTPOSITION;
+                default:
+                    return PrePostPositions.PREPOSITION;
+            }
+        }
+
+        /// <summary>
         /// This array of objects contains the objects described below that are used to map between 
         /// the phonetic representation of the conlang and its Romanized or Latinized representation using the Latin alphabet.  
         /// Without this entry, tools cannot translate between phonetic and Latin formats.  This list is traversed in the order 
@@ -233,8 +390,8 @@ namespace ConlangJson
         /// </summary>
         public List<string> lexical_order_list
         {
-            get => _lexical_order_list ?? []; 
-            set 
+            get => _lexical_order_list ?? [];
+            set
             {
                 _lexical_order_list = value;
                 LexiconEntry.LexicalOrderList = value;
@@ -257,7 +414,7 @@ namespace ConlangJson
         public Dictionary<string, DerivationalAffix> derivational_affix_map
         {
             get => _derivational_affix_map ?? [];
-            set =>_derivational_affix_map = value;
+            set => _derivational_affix_map = value;
         }
 
         /// <summary>
@@ -265,7 +422,7 @@ namespace ConlangJson
         /// </summary>
         public List<LexiconEntry> lexicon
         {
-            get => _lexicon ?? []; 
+            get => _lexicon ?? [];
             set => _lexicon = value;
         }
 
@@ -276,7 +433,7 @@ namespace ConlangJson
         /// </summary>
         public List<string> derived_word_list
         {
-            get => _derived_word_list ?? []; 
+            get => _derived_word_list ?? [];
             set => _derived_word_list = value;
         }
 
@@ -287,8 +444,8 @@ namespace ConlangJson
         /// update their content<br/>Optional, Recommended.
         /// </summary>
         public JsonObject metadata
-        { 
-            get => _metadata ?? []; 
+        {
+            get => _metadata ?? [];
             set => _metadata = value;
         }
 
