@@ -95,7 +95,6 @@
             rbn_semivowelDiphthong = new RadioButton();
             rbn_halfLongVowels = new RadioButton();
             rbn_normalVowel = new RadioButton();
-            rbn_normalDiphthong = new RadioButton();
             tabPageVowelDiphthongs = new TabPage();
             tabPageRhoticity = new TabPage();
             rbn_replaceRSpelling = new RadioButton();
@@ -105,12 +104,22 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
+            rbn_vowelToDipthongStart = new RadioButton();
+            rbn_VowelToDipthongEnd = new RadioButton();
+            rbn_changeStartVowel = new RadioButton();
+            rbn_ChangeEndVowel = new RadioButton();
+            rbn_dipththongReplacement = new RadioButton();
+            cbx_dipthongStart = new ComboBox();
+            label1 = new Label();
+            cbx_dipthongEnd = new ComboBox();
+            label2 = new Label();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
             gbx_replacementPhomeDepth.SuspendLayout();
             tabPageVowels.SuspendLayout();
             gbx_vowelReplacements.SuspendLayout();
+            tabPageVowelDiphthongs.SuspendLayout();
             tabPageRhoticity.SuspendLayout();
             tabPageSpecialOperations.SuspendLayout();
             SuspendLayout();
@@ -660,7 +669,6 @@
             gbx_vowelReplacements.Controls.Add(rbn_semivowelDiphthong);
             gbx_vowelReplacements.Controls.Add(rbn_halfLongVowels);
             gbx_vowelReplacements.Controls.Add(rbn_normalVowel);
-            gbx_vowelReplacements.Controls.Add(rbn_normalDiphthong);
             gbx_vowelReplacements.Location = new Point(6, 10);
             gbx_vowelReplacements.Name = "gbx_vowelReplacements";
             gbx_vowelReplacements.Size = new Size(453, 76);
@@ -683,7 +691,7 @@
             // rbn_semivowelDiphthong
             // 
             rbn_semivowelDiphthong.AutoSize = true;
-            rbn_semivowelDiphthong.Location = new Point(209, 40);
+            rbn_semivowelDiphthong.Location = new Point(6, 34);
             rbn_semivowelDiphthong.Name = "rbn_semivowelDiphthong";
             rbn_semivowelDiphthong.Size = new Size(182, 19);
             rbn_semivowelDiphthong.TabIndex = 3;
@@ -716,20 +724,17 @@
             rbn_normalVowel.UseVisualStyleBackColor = true;
             rbn_normalVowel.CheckedChanged += rbn_normalVowel_CheckedChanged;
             // 
-            // rbn_normalDiphthong
-            // 
-            rbn_normalDiphthong.AutoSize = true;
-            rbn_normalDiphthong.Location = new Point(6, 41);
-            rbn_normalDiphthong.Name = "rbn_normalDiphthong";
-            rbn_normalDiphthong.Size = new Size(197, 19);
-            rbn_normalDiphthong.TabIndex = 3;
-            rbn_normalDiphthong.TabStop = true;
-            rbn_normalDiphthong.Text = "Add Vowel to create Diphtohong";
-            rbn_normalDiphthong.UseVisualStyleBackColor = true;
-            rbn_normalDiphthong.CheckedChanged += rbn_normalDiphthong_CheckedChanged;
-            // 
             // tabPageVowelDiphthongs
             // 
+            tabPageVowelDiphthongs.Controls.Add(label2);
+            tabPageVowelDiphthongs.Controls.Add(cbx_dipthongEnd);
+            tabPageVowelDiphthongs.Controls.Add(label1);
+            tabPageVowelDiphthongs.Controls.Add(cbx_dipthongStart);
+            tabPageVowelDiphthongs.Controls.Add(rbn_dipththongReplacement);
+            tabPageVowelDiphthongs.Controls.Add(rbn_ChangeEndVowel);
+            tabPageVowelDiphthongs.Controls.Add(rbn_changeStartVowel);
+            tabPageVowelDiphthongs.Controls.Add(rbn_VowelToDipthongEnd);
+            tabPageVowelDiphthongs.Controls.Add(rbn_vowelToDipthongStart);
             tabPageVowelDiphthongs.Location = new Point(4, 24);
             tabPageVowelDiphthongs.Name = "tabPageVowelDiphthongs";
             tabPageVowelDiphthongs.Padding = new Padding(3);
@@ -832,6 +837,95 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += btn_updateSoundMapList_Click;
             // 
+            // rbn_vowelToDipthongStart
+            // 
+            rbn_vowelToDipthongStart.AutoSize = true;
+            rbn_vowelToDipthongStart.Location = new Point(6, 6);
+            rbn_vowelToDipthongStart.Name = "rbn_vowelToDipthongStart";
+            rbn_vowelToDipthongStart.Size = new Size(164, 19);
+            rbn_vowelToDipthongStart.TabIndex = 0;
+            rbn_vowelToDipthongStart.TabStop = true;
+            rbn_vowelToDipthongStart.Text = "Vowel to Start of Dipthong";
+            rbn_vowelToDipthongStart.UseVisualStyleBackColor = true;
+            // 
+            // rbn_VowelToDipthongEnd
+            // 
+            rbn_VowelToDipthongEnd.AutoSize = true;
+            rbn_VowelToDipthongEnd.Location = new Point(190, 6);
+            rbn_VowelToDipthongEnd.Name = "rbn_VowelToDipthongEnd";
+            rbn_VowelToDipthongEnd.Size = new Size(160, 19);
+            rbn_VowelToDipthongEnd.TabIndex = 1;
+            rbn_VowelToDipthongEnd.TabStop = true;
+            rbn_VowelToDipthongEnd.Text = "Vowel to End of Dipthong";
+            rbn_VowelToDipthongEnd.UseVisualStyleBackColor = true;
+            // 
+            // rbn_changeStartVowel
+            // 
+            rbn_changeStartVowel.AutoSize = true;
+            rbn_changeStartVowel.Location = new Point(6, 31);
+            rbn_changeStartVowel.Name = "rbn_changeStartVowel";
+            rbn_changeStartVowel.Size = new Size(127, 19);
+            rbn_changeStartVowel.TabIndex = 2;
+            rbn_changeStartVowel.TabStop = true;
+            rbn_changeStartVowel.Text = "Change Start Vowel";
+            rbn_changeStartVowel.UseVisualStyleBackColor = true;
+            // 
+            // rbn_ChangeEndVowel
+            // 
+            rbn_ChangeEndVowel.AutoSize = true;
+            rbn_ChangeEndVowel.Location = new Point(139, 31);
+            rbn_ChangeEndVowel.Name = "rbn_ChangeEndVowel";
+            rbn_ChangeEndVowel.Size = new Size(140, 19);
+            rbn_ChangeEndVowel.TabIndex = 3;
+            rbn_ChangeEndVowel.TabStop = true;
+            rbn_ChangeEndVowel.Text = "Change Ending Vowel";
+            rbn_ChangeEndVowel.UseVisualStyleBackColor = true;
+            // 
+            // rbn_dipththongReplacement
+            // 
+            rbn_dipththongReplacement.AutoSize = true;
+            rbn_dipththongReplacement.Location = new Point(6, 56);
+            rbn_dipththongReplacement.Name = "rbn_dipththongReplacement";
+            rbn_dipththongReplacement.Size = new Size(152, 19);
+            rbn_dipththongReplacement.TabIndex = 4;
+            rbn_dipththongReplacement.TabStop = true;
+            rbn_dipththongReplacement.Text = "Dipththong Replacemnt";
+            rbn_dipththongReplacement.UseVisualStyleBackColor = true;
+            // 
+            // cbx_dipthongStart
+            // 
+            cbx_dipthongStart.FormattingEnabled = true;
+            cbx_dipthongStart.Location = new Point(6, 94);
+            cbx_dipthongStart.Name = "cbx_dipthongStart";
+            cbx_dipthongStart.Size = new Size(222, 23);
+            cbx_dipthongStart.TabIndex = 5;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(6, 76);
+            label1.Name = "label1";
+            label1.Size = new Size(118, 15);
+            label1.TabIndex = 6;
+            label1.Text = "Dipthong Start Vowel";
+            // 
+            // cbx_dipthongEnd
+            // 
+            cbx_dipthongEnd.FormattingEnabled = true;
+            cbx_dipthongEnd.Location = new Point(234, 93);
+            cbx_dipthongEnd.Name = "cbx_dipthongEnd";
+            cbx_dipthongEnd.Size = new Size(225, 23);
+            cbx_dipthongEnd.TabIndex = 7;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(234, 76);
+            label2.Name = "label2";
+            label2.Size = new Size(114, 15);
+            label2.TabIndex = 8;
+            label2.Text = "Dipthong End Vowel";
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -880,6 +974,8 @@
             tabPageVowels.ResumeLayout(false);
             gbx_vowelReplacements.ResumeLayout(false);
             gbx_vowelReplacements.PerformLayout();
+            tabPageVowelDiphthongs.ResumeLayout(false);
+            tabPageVowelDiphthongs.PerformLayout();
             tabPageRhoticity.ResumeLayout(false);
             tabPageRhoticity.PerformLayout();
             tabPageSpecialOperations.ResumeLayout(false);
@@ -952,7 +1048,6 @@
         private RadioButton rbn_semivowelDiphthong;
         private RadioButton rbn_halfLongVowels;
         private RadioButton rbn_normalVowel;
-        private RadioButton rbn_normalDiphthong;
         private TabPage tabPageVowelDiphthongs;
         private TabPage tabPageSpecialOperations;
         private TabPage tabPageRhoticity;
@@ -965,5 +1060,14 @@
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem setAmazonPollyURIToolStripMenuItem;
         private ToolStripMenuItem setESpeakNgLocationToolStripMenuItem;
+        private RadioButton rbn_ChangeEndVowel;
+        private RadioButton rbn_changeStartVowel;
+        private RadioButton rbn_VowelToDipthongEnd;
+        private RadioButton rbn_vowelToDipthongStart;
+        private Label label2;
+        private ComboBox cbx_dipthongEnd;
+        private Label label1;
+        private ComboBox cbx_dipthongStart;
+        private RadioButton rbn_dipththongReplacement;
     }
 }

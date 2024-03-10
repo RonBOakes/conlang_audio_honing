@@ -100,6 +100,12 @@ namespace ConlangAudioHoning
             LoadSpeeds();
             tabPhoneticAlterations.SelectedIndexChanged += TabPhoneticAlterations_SelectedIndexChanged;
 
+            // Hide controls on the Diphthong tab that only show up when certain radio buttons are pressed
+            label1.Visible = false;
+            cbx_dipthongStart.Visible = false;
+            label2.Visible = false;
+            cbx_dipthongEnd.Visible = false;
+
             // Handle the ApplicationExit event to know when the application is exiting.
             Application.ApplicationExit += new EventHandler(OnApplicationExit);
         }
@@ -999,19 +1005,6 @@ namespace ConlangAudioHoning
                             sb.Append(" lengthened");
                             cbx_replacementPhoneme.Items.Add(sb.ToString());
                         }
-                    }
-                }
-                else if (rbn_normalDiphthong.Checked)
-                {
-                    foreach (string replacement in IpaUtilities.Vowels)
-                    {
-                        StringBuilder sb = new StringBuilder();
-                        sb.AppendFormat("{1}{0} -- ", replacement, vowel);
-                        sb.Append(IpaUtilities.IpaPhonemesMap[vowel]);
-                        sb.Append(", ");
-                        sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
-                        sb.Append(" diphthong");
-                        cbx_replacementPhoneme.Items.Add(sb.ToString());
                     }
                 }
                 else if (rbn_semivowelDiphthong.Checked)
