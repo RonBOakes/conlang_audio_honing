@@ -1105,6 +1105,7 @@ namespace ConlangAudioHoning
                     }
                 }
                 else if (rbn_longVowels.Checked)
+ 
                 {
                     foreach (string replacement in IpaUtilities.Vowels)
                     {
@@ -1131,6 +1132,264 @@ namespace ConlangAudioHoning
                             sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
                             sb.Append(" diphthong");
                             cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                }
+            }
+            else if (tabPhoneticAlterations.SelectedIndex == 2) // Diphthongs
+            {
+                cbx_replacementPhoneme.Items.Clear();
+                if(rbn_vowelToDiphthongStart.Checked) 
+                { 
+                    // Build a list of potential diphthongs from this vower
+                    string vowel = languageDescription.phonetic_inventory["vowels"][phonemeIndex].ToString();
+                    // Trim off any supersegmentals or diacritics
+                    string rootVowel = vowel[0..1];
+                    foreach (string replacement in IpaUtilities.Vowels)
+                    {
+                        if (!replacement.Equals(rootVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", vowel, replacement);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[rootVowel]);
+                            if(vowel.Trim().Length > 1)
+                            {
+                                if (vowel.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains('̯'))
+                                {
+                                    sb.Append(" semi-diphthong");  // Probably should be part of a diphthong
+                                }
+                            }
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
+                            sb.Append(" diphthong");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        string replacement = replacementVowel + 'ː';
+                        if (!replacementVowel.Equals(rootVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", vowel, replacement);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[rootVowel]);
+                            if (vowel.Trim().Length > 1)
+                            {
+                                if (vowel.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains('̯'))
+                                {
+                                    sb.Append(" semi-vowel");  
+                                }
+                            }
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel]);
+                            sb.Append(" lengthened");
+                            sb.Append(" diphthong");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        string replacement = replacementVowel + 'ˑ';
+                        if (!replacementVowel.Equals(rootVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", vowel, replacement);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[rootVowel]);
+                            if (vowel.Trim().Length > 1)
+                            {
+                                if (vowel.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains('̯'))
+                                {
+                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                }
+                            }
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel]);
+                            sb.Append(" half-lengthened");
+                            sb.Append(" diphthong");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    if (!vowel.Contains('̯'))
+                    {
+                        foreach (string replacementVowel in IpaUtilities.Vowels)
+                        {
+                            string replacement = replacementVowel + '̯';
+                            if (!replacement.Equals(rootVowel))
+                            {
+                                StringBuilder sb = new();
+                                sb.AppendFormat("{0}{1} -- ", vowel, replacement);
+                                sb.Append(IpaUtilities.IpaPhonemesMap[rootVowel]);
+                                if (vowel.Trim().Length > 1)
+                                {
+                                    if (vowel.Contains('ː'))
+                                    {
+                                        sb.Append(" lengthened");
+                                    }
+                                    else if (vowel.Contains('ˑ'))
+                                    {
+                                        sb.Append(" half-lengthened");
+                                    }
+                                    else if (vowel.Contains('̯'))
+                                    {
+                                        sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                    }
+                                }
+                                sb.Append(' ');
+                                sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel]);
+                                sb.Append(" semi-vowel");
+                                cbx_replacementPhoneme.Items.Add(sb.ToString());
+                            }
+                        }
+                    }
+                }
+                else if (rbn_vowelToDipthongEnd.Checked)
+                {
+                    // Build a list of potential diphthongs from this vower
+                    string vowel = languageDescription.phonetic_inventory["vowels"][phonemeIndex].ToString();
+                    // Trim off any supersegmentals or diacritics
+                    string rootVowel = vowel[0..1];
+                    foreach (string replacement in IpaUtilities.Vowels)
+                    {
+                        if (!replacement.Equals(rootVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", replacement, vowel);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[rootVowel]);
+                            if (vowel.Trim().Length > 1)
+                            {
+                                if (vowel.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains('̯'))
+                                {
+                                    sb.Append(" semi-diphthong");  // Probably should be part of a diphthong
+                                }
+                            }
+                            sb.Append(" diphthong");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        string replacement = replacementVowel + 'ː';
+                        if (!replacementVowel.Equals(rootVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", replacement, vowel);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel]);
+                            sb.Append(" lengthened");
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[rootVowel]);
+                            if (vowel.Trim().Length > 1)
+                            {
+                                if (vowel.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains('̯'))
+                                {
+                                    sb.Append(" semi-diphthong");  // Probably should be part of a diphthong
+                                }
+                            }
+                            sb.Append(" diphthong");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        string replacement = replacementVowel + 'ˑ';
+                        if (!replacementVowel.Equals(rootVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", replacement, vowel);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel]);
+                            sb.Append(" half-lengthened");
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[rootVowel]);
+                            if (vowel.Trim().Length > 1)
+                            {
+                                if (vowel.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowel.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowel.Contains('̯'))
+                                {
+                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                }
+                            }
+                            sb.Append(" diphthong");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    if (!vowel.Contains('̯'))
+                    {
+                        foreach (string replacementVowel in IpaUtilities.Vowels)
+                        {
+                            string replacement = replacementVowel + '̯';
+                            if (!replacement.Equals(rootVowel))
+                            {
+                                StringBuilder sb = new();
+                                sb.AppendFormat("{0}{1} -- ", replacement, vowel);
+                                sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel]);
+                                sb.Append(" semi-vowel");
+                                sb.Append(' ');
+                                sb.Append(IpaUtilities.IpaPhonemesMap[rootVowel]);
+                                if (vowel.Trim().Length > 1)
+                                {
+                                    if (vowel.Contains('ː'))
+                                    {
+                                        sb.Append(" lengthened");
+                                    }
+                                    else if (vowel.Contains('ˑ'))
+                                    {
+                                        sb.Append(" half-lengthened");
+                                    }
+                                    else if (vowel.Contains('̯'))
+                                    {
+                                        sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                    }
+                                }
+                                cbx_replacementPhoneme.Items.Add(sb.ToString());
+                            }
                         }
                     }
                 }

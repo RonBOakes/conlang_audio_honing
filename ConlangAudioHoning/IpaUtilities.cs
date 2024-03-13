@@ -814,7 +814,6 @@ namespace ConlangAudioHoning
         /// structure
         /// </summary>
         /// <param name="languageDescription">Conlang JSON structure read into .NET</param>
-        // TODO: fix the bug with vowel diphthongs with diacritics 
         public static void BuildPhoneticInventory(LanguageDescription languageDescription)
         {
             SortedSet<string> pConsonants = [];
