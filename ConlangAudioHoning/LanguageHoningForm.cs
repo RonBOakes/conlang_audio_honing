@@ -18,8 +18,6 @@
 */
 using ConlangJson;
 using System.Drawing.Printing;
-using System.Reflection.Metadata;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -36,14 +34,14 @@ namespace ConlangAudioHoning
         private LanguageDescription? languageDescription = null;
         private FileInfo? languageFileInfo = null;
         private string? sampleText = null;
-        private Dictionary<string, SpeechEngine> speechEngines = new Dictionary<string, SpeechEngine>();
+        private Dictionary<string, SpeechEngine> speechEngines = [];
         private Dictionary<string, Dictionary<string, SpeechEngine.VoiceData>> voices =
-            new Dictionary<string, Dictionary<string, SpeechEngine.VoiceData>>();
+            [];
         private Font? printFont;
         private TextReader? readerToPrint;
-        private Dictionary<string, FileInfo> speechFiles = new Dictionary<string, FileInfo>();
+        private Dictionary<string, FileInfo> speechFiles = [];
         private PhoneticChanger phoneticChanger;
-        private List<(string, string)> changesToBeMade = new List<(string, string)>();
+        private List<(string, string)> changesToBeMade = [];
         private UserConfiguration config;
 
         /// <summary>
@@ -134,7 +132,7 @@ namespace ConlangAudioHoning
             pb_status.Font = new Font("CharisSIL", 12f);
             pb_status.ResetText();
             pb_status.Visible = true;
-            List<LexiconEntry> addLexicon = new List<LexiconEntry>();
+            List<LexiconEntry> addLexicon = [];
             foreach (LexiconEntry word in language.lexicon)
             {
                 pb_status.Text = word.phonetic.ToString();
@@ -365,8 +363,10 @@ namespace ConlangAudioHoning
 #pragma warning restore CS8600
                 historyEntries.Add(history);
 
-                JsonSerializerOptions jsonSerializerOptions = new();
-                jsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                JsonSerializerOptions jsonSerializerOptions = new()
+                {
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+                };
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
                 jsonSerializerOptions.Encoder = encoder;
                 jsonSerializerOptions.WriteIndented = true; // TODO: make an option
@@ -529,8 +529,10 @@ namespace ConlangAudioHoning
                 {
                     txt_phonetic.Text = pollySpeech.phoneticText;
                     // Play the audio (MP3) file with the Windows Media Player
-                    WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
-                    player.URL = targetFileName;
+                    WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer
+                    {
+                        URL = targetFileName
+                    };
                     player.controls.play();
 
                     FileInfo fileInfo = new FileInfo(targetFileName);
@@ -573,8 +575,10 @@ namespace ConlangAudioHoning
                 {
                     txt_phonetic.Text = speechEngine.phoneticText;
                     // Play the audio (wav) file with the Windows Media Player
-                    WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
-                    player.URL = targetFileName;
+                    WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer
+                    {
+                        URL = targetFileName
+                    };
                     player.controls.play();
 
                     FileInfo fileInfo = new FileInfo(targetFileName);
@@ -719,8 +723,10 @@ namespace ConlangAudioHoning
             string fileName = cbx_recordings.Text;
             string targetFileName = speechFiles[fileName].FullName;
             // Play the audio (OGG) file with the default application
-            WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer();
-            player.URL = targetFileName;
+            WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer
+            {
+                URL = targetFileName
+            };
             player.controls.play();
         }
 
@@ -943,8 +949,7 @@ namespace ConlangAudioHoning
                 }
                 else if (rbn_allPhonemes.Checked)
                 {
-                    replacementPhonemes = new List<string>();
-                    replacementPhonemes.AddRange(IpaUtilities.Consonant_changes.Keys);
+                    replacementPhonemes = [.. IpaUtilities.Consonant_changes.Keys];
                 }
                 else
                 {
@@ -1490,7 +1495,7 @@ namespace ConlangAudioHoning
                         }
                         else
                         {
-                            int cInt = (int)c;
+                            int cInt = c;
                             sb2.AppendFormat("U+{0,4:x4}", cInt);
                         }
                     }
@@ -1687,7 +1692,7 @@ namespace ConlangAudioHoning
         {
             using (OpenFileDialog openFileDialog = new())
             {
-                if(string.IsNullOrEmpty(ESpeakNGSpeak.ESpeakNGPath))
+                if (string.IsNullOrEmpty(ESpeakNGSpeak.ESpeakNGPath))
                 {
                     openFileDialog.InitialDirectory = Environment.SpecialFolder.ProgramFiles.ToString();
 

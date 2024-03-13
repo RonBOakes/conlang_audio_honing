@@ -16,18 +16,10 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using ConlangJson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Unicode;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.IO;
+using System.Text.Unicode;
 
 namespace ConlangAudioHoning
 {
@@ -41,7 +33,7 @@ namespace ConlangAudioHoning
         private static string DefaultPollyURI = "https://9ggv18yii2.execute-api.us-east-1.amazonaws.com/general_speak2";
         private static string DefaultESpeakNGPath = @"C:\Program Files\eSpeak NG\espeak-ng.exe";
 
-        public UserConfiguration() 
+        public UserConfiguration()
         { }
 
         /// <summary>
@@ -61,7 +53,7 @@ namespace ConlangAudioHoning
             get => _eSpeakNgPath ?? string.Empty;
             set => _eSpeakNgPath = value;
         }
-        
+
         /// <summary>
         /// True if this configuration has settings to load and support Amazon Polly.
         /// </summary>
@@ -105,8 +97,10 @@ namespace ConlangAudioHoning
                 di.Create();
             }
 
-            JsonSerializerOptions jsonSerializerOptions = new();
-            jsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            JsonSerializerOptions jsonSerializerOptions = new()
+            {
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            };
             JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
             jsonSerializerOptions.Encoder = encoder;
             jsonSerializerOptions.WriteIndented = true; // TODO: make an option
@@ -123,25 +117,25 @@ namespace ConlangAudioHoning
         /// <returns>The configuration as loaded, or a default configuration if no configuration can be loaded.</returns>
         public static UserConfiguration LoadFromFile(string filePath = "")
         {
-            if(string.IsNullOrEmpty(filePath)) 
-            { 
+            if (string.IsNullOrEmpty(filePath))
+            {
                 filePath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
             }
 
             Match commitInPathMatch = Regex.Match(filePath, @"\\((\d+\.\d+\.\d+)\+[0-9a-f]+)\\");
-            if(commitInPathMatch.Success)
+            if (commitInPathMatch.Success)
             {
                 filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
             }
 
             UserConfiguration configuration;
-            if (File.Exists(filePath)) 
+            if (File.Exists(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 configuration = JsonSerializer.Deserialize<UserConfiguration>(jsonString);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-                if(configuration == null)
+                if (configuration == null)
                 {
                     configuration = new UserConfiguration();
                 }
@@ -165,9 +159,11 @@ namespace ConlangAudioHoning
 
         private static UserConfiguration LoadDefault()
         {
-            UserConfiguration config = new UserConfiguration();
-            config.PollyURI = DefaultPollyURI;
-            config.ESpeakNgPath = DefaultESpeakNGPath;
+            UserConfiguration config = new UserConfiguration
+            {
+                PollyURI = DefaultPollyURI,
+                ESpeakNgPath = DefaultESpeakNGPath
+            };
             return config;
         }
     }

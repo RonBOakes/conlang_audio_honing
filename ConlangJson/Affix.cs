@@ -16,16 +16,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
 namespace ConlangJson
 {
     /// <summary>
@@ -107,7 +97,7 @@ namespace ConlangJson
         /// by spelling_regex in the Romanized or Latinized representation of the word when a match 
         /// occurs.  Replacement groups are represented using the Perl standard of \$n.<br/>Optional, Recommended, 
         /// Required if spelling_regex is present.<br/>Set to null if not present.</param>
-        public Affix(string? pronunciation_add, string? spelling_add, string? pronunciation_regex, string? spelling_regex, string? t_pronunciation_add, 
+        public Affix(string? pronunciation_add, string? spelling_add, string? pronunciation_regex, string? spelling_regex, string? t_pronunciation_add,
             string? t_spelling_add, string? f_pronunciation_add, string? f_spelling_add, string? pronunciation_replacement, string? spelling_replacement)
         {
             this._pronunciation_add = pronunciation_add;

@@ -16,11 +16,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ConlangJson;
 
 namespace ConlangAudioHoning
@@ -42,7 +37,7 @@ namespace ConlangAudioHoning
         /// </summary>
         public SoundMap SoundMapData
         {
-            get 
+            get
             {
                 if (_soundMapData == null)
                 {
@@ -52,12 +47,12 @@ namespace ConlangAudioHoning
                 _soundMapData.phoneme = txt_phoneme.Text;
                 _soundMapData.romanization = txt_romanization.Text;
                 _soundMapData.spelling_regex = txt_spellingRegex.Text;
-                return _soundMapData; 
+                return _soundMapData;
             }
 
-            set 
-            { 
-                _soundMapData = value; 
+            set
+            {
+                _soundMapData = value;
                 txt_pronunciationRegex.Text = _soundMapData.pronunciation_regex;
                 txt_phoneme.Text = _soundMapData.phoneme;
                 txt_romanization.Text = _soundMapData.romanization;
@@ -113,7 +108,7 @@ namespace ConlangAudioHoning
             get
             {
                 bool valid = false;
-           
+
                 if ((!String.IsNullOrEmpty(SoundMapData.pronunciation_regex.Trim())) && (!String.IsNullOrEmpty(SoundMapData.phoneme.Trim())))
                 {
                     valid = true;
@@ -133,7 +128,7 @@ namespace ConlangAudioHoning
         /// <param name="textToAppend">string containing the text to append.</param>
         public void AppendToFocusedBox(string textToAppend)
         {
-            if((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
+            if ((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
             {
                 _lastFocused.Text += textToAppend;
                 _lastFocused.Select(_lastFocused.Text.Length, 0);
@@ -146,55 +141,71 @@ namespace ConlangAudioHoning
             this.Size = controlSize;
             this.BorderStyle = BorderStyle.FixedSingle;
 
-            lbl_phoneme = new Label();
-            lbl_phoneme.Text = "Phoneme:";
-            lbl_phoneme.Location = new Point(5, 5);
-            lbl_phoneme.Size = new Size(200, 15);
-            lbl_phoneme.TextAlign = ContentAlignment.MiddleRight;
+            lbl_phoneme = new Label
+            {
+                Text = "Phoneme:",
+                Location = new Point(5, 5),
+                Size = new Size(200, 15),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_phoneme);
 
-            txt_phoneme = new TextBox();
-            txt_phoneme.Location = new Point(205, 5);
-            txt_phoneme.Size = new Size(200, 15);
+            txt_phoneme = new TextBox
+            {
+                Location = new Point(205, 5),
+                Size = new Size(200, 15)
+            };
             txt_phoneme.GotFocus += txt_phoneme_GotFocus;
             Controls.Add(txt_phoneme);
 
-            lbl_pronunciationRegex = new Label();
-            lbl_pronunciationRegex.Text = "Pronunciation RegEx:";
-            lbl_pronunciationRegex.Location = new Point(410, 5);
-            lbl_pronunciationRegex.Size = new Size(200, 15);
-            lbl_pronunciationRegex.TextAlign = ContentAlignment.MiddleRight;
+            lbl_pronunciationRegex = new Label
+            {
+                Text = "Pronunciation RegEx:",
+                Location = new Point(410, 5),
+                Size = new Size(200, 15),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_pronunciationRegex);
 
-            txt_pronunciationRegex = new TextBox();
-            txt_pronunciationRegex.Location = new Point(615, 5);
-            txt_pronunciationRegex.Size = new Size(200, 15);
+            txt_pronunciationRegex = new TextBox
+            {
+                Location = new Point(615, 5),
+                Size = new Size(200, 15)
+            };
             txt_pronunciationRegex.GotFocus += txt_pronunciationRegex_GotFocus;
             Controls.Add(txt_pronunciationRegex);
 
-            lbl_romanization = new Label();
-            lbl_romanization.Text = "Spelling/Romanization:";
-            lbl_romanization.Location = new Point(5, 30);
-            lbl_romanization.Size = new Size(200, 15);
-            lbl_romanization.TextAlign = ContentAlignment.MiddleRight;
+            lbl_romanization = new Label
+            {
+                Text = "Spelling/Romanization:",
+                Location = new Point(5, 30),
+                Size = new Size(200, 15),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_romanization);
 
-            txt_romanization = new TextBox();
-            txt_romanization.Location = new Point(205, 30);
-            txt_romanization.Size = new Size(200, 15);
+            txt_romanization = new TextBox
+            {
+                Location = new Point(205, 30),
+                Size = new Size(200, 15)
+            };
             txt_romanization.GotFocus += txt_romanization_GotFocus;
             Controls.Add(txt_romanization);
 
-            lbl_spellingRegex = new Label();
-            lbl_spellingRegex.Text = "Spelling RegEx:";
-            lbl_spellingRegex.Location = new Point(410, 30);
-            lbl_spellingRegex.Size = new Size(200, 15);
-            lbl_spellingRegex.TextAlign = ContentAlignment.MiddleRight;
+            lbl_spellingRegex = new Label
+            {
+                Text = "Spelling RegEx:",
+                Location = new Point(410, 30),
+                Size = new Size(200, 15),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_spellingRegex);
 
-            txt_spellingRegex = new TextBox();
-            txt_spellingRegex.Location = new Point(615, 30);
-            txt_spellingRegex.Size = new Size(200, 15);
+            txt_spellingRegex = new TextBox
+            {
+                Location = new Point(615, 30),
+                Size = new Size(200, 15)
+            };
             txt_spellingRegex.GotFocus += txt_spellingRegex_GotFocus;
             Controls.Add(txt_spellingRegex);
         }

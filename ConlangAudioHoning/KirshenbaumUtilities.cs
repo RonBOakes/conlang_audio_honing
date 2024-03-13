@@ -16,11 +16,7 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
 {
@@ -63,13 +59,13 @@ namespace ConlangAudioHoning
             { "ɵ", "@." }, {"ǀ","!["}, {"‖","!"}, {"ǂ","!"}
         };
 
-        private static List<string> _unmapped_phonemes = new List<string>()
-        {
+        private static List<string> _unmapped_phonemes =
+        [
               "ʛ", "ᵻ",   "ᵿ", ".", "ʲ", "ˑ",    "ʢ",
             "ʡ", "ꜛ", "ꜜ", "|",   "ǁ",  "‿", "\u031f", "\u0320", "\u030c", "\u0325", "\u0e24",
             "\u0302", "\u032f", "\u031a", "\u0318", "\u033a", "\u031c", "\u033b", "\u033c", "\u0339",
             "\u0319", "\u0330", "\u031d", "\u02b7",
-        };
+        ];
 
         /// <summary>
         /// The dictionary used to map IPA characters to their (preferred)
@@ -93,7 +89,7 @@ namespace ConlangAudioHoning
             // All of the keys in both Kirshenbaum maps are 1 character
             foreach (char c in word)
             {
-                if(!UnmappedPhonemes.Contains(c.ToString()))
+                if (!UnmappedPhonemes.Contains(c.ToString()))
                 {
                     string kirshenbaumPhoneme = IpaKirshenbaumMap[c.ToString()];
                     sb.Append(kirshenbaumPhoneme);

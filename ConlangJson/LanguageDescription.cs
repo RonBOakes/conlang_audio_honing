@@ -16,14 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace ConlangJson
 {
@@ -130,7 +123,7 @@ namespace ConlangJson
         /// </summary>
         public Dictionary<string, string> preferred_voices
         {
-            get => _preferred_voices ?? new Dictionary<string, string>();
+            get => _preferred_voices ?? [];
             set => _preferred_voices = value;
         }
 
@@ -212,7 +205,7 @@ namespace ConlangJson
         /// </summary>
         public Dictionary<string, string[]> phonetic_inventory
         {
-            get => _phonetic_inventory ?? new Dictionary<string, string[]>();
+            get => _phonetic_inventory ?? [];
             set => _phonetic_inventory = value;
         }
 
@@ -313,7 +306,7 @@ namespace ConlangJson
         /// <returns></returns>
         public LanguageDescription.AdjectivePositions AdjectivePosition()
         {
-            switch(adjective_position.ToLower())
+            switch (adjective_position.ToLower())
             {
                 case "before":
                     return AdjectivePositions.BEFORE;
@@ -358,7 +351,7 @@ namespace ConlangJson
         /// <returns></returns>
         public LanguageDescription.PrePostPositions PrePostPosition()
         {
-            switch(pre_post_position.ToLower()) 
+            switch (pre_post_position.ToLower())
             {
                 case "preposition":
                     return PrePostPositions.PREPOSITION;

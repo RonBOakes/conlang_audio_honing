@@ -16,16 +16,8 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 using ConlangJson;
-using static System.Net.Mime.MediaTypeNames;
-using System.Security.Cryptography;
-using System.Diagnostics;
+using System.Text;
 
 namespace ConlangAudioHoning
 {
@@ -95,14 +87,14 @@ namespace ConlangAudioHoning
             }
 
             // Build a lookup dictionary from the lexicon - spelled words to their lexicon entries
-            Dictionary<string, LexiconEntry> wordMap = new Dictionary<string, LexiconEntry>();
+            Dictionary<string, LexiconEntry> wordMap = [];
             foreach (LexiconEntry entry in LanguageDescription.lexicon)
             {
                 wordMap[entry.spelled.Trim().ToLower()] = entry;
             }
 
             // Get the phonetic representations of the text - ported from Python code.
-            List<List<Dictionary<string, string>>> pronounceMapList = new List<List<Dictionary<string, string>>>();
+            List<List<Dictionary<string, string>>> pronounceMapList = [];
             pronounceMapList.Clear();
             using (StringReader sampleTextReader = new StringReader(sampleText.ToLower()))
             {
@@ -112,7 +104,7 @@ namespace ConlangAudioHoning
                     line = sampleTextReader.ReadLine();
                     if ((line != null) && (!line.Trim().Equals(string.Empty)))
                     {
-                        List<Dictionary<string, string>> lineMapList = new List<Dictionary<string, string>>();
+                        List<Dictionary<string, string>> lineMapList = [];
                         foreach (string word in line.Split(null))
                         {
                             Dictionary<string, string>? pronounceMap = pronounceWord(word, wordMap);
@@ -187,20 +179,20 @@ namespace ConlangAudioHoning
                 return false;
             }
 
-            if(string.IsNullOrEmpty(ssmlText))
+            if (string.IsNullOrEmpty(ssmlText))
             {
-                this.Generate(speed??"medium", caller);
+                this.Generate(speed ?? "medium", caller);
             }
 
 
-            if (string.IsNullOrEmpty(voice)) 
+            if (string.IsNullOrEmpty(voice))
             {
                 voice = "en-us";
             }
             int speedInt = -1;
-            if(!string.IsNullOrEmpty(speed))
+            if (!string.IsNullOrEmpty(speed))
             {
-                switch(speed.ToLower())
+                switch (speed.ToLower())
                 {
                     case "x-slow":
                         speedInt = 75;
@@ -232,8 +224,8 @@ namespace ConlangAudioHoning
 
         public override Dictionary<string, VoiceData> getVoices()
         {
-            Dictionary<string, VoiceData> voices = new Dictionary<string, VoiceData>();
-            List<IntPtr> voicePointers = new List<IntPtr>();
+            Dictionary<string, VoiceData> voices = [];
+            List<IntPtr> voicePointers = [];
 
             char[] whiteSpaces = { ' ', '\t', };
 
@@ -250,15 +242,17 @@ namespace ConlangAudioHoning
                 do
                 {
                     line = sampleTextReader.ReadLine();
-                    if(!string.IsNullOrEmpty(line) && (!line.Contains("Language")))
+                    if (!string.IsNullOrEmpty(line) && (!line.Contains("Language")))
                     {
 
-                        string[] fields = line.Split(whiteSpaces, StringSplitOptions.RemoveEmptyEntries) ; // Split on whitespace
-                        VoiceData voiceData = new VoiceData();
-                        voiceData.Name = fields[3];
-                        voiceData.LanguageCode = fields[1];
-                        voiceData.LanguageName = fields[1]; // espeak-ng just uses code
-                        voiceData.Id = fields[4];
+                        string[] fields = line.Split(whiteSpaces, StringSplitOptions.RemoveEmptyEntries); // Split on whitespace
+                        VoiceData voiceData = new VoiceData
+                        {
+                            Name = fields[3],
+                            LanguageCode = fields[1],
+                            LanguageName = fields[1], // espeak-ng just uses code
+                            Id = fields[4]
+                        };
                         string[] ageGender = fields[2].Split("/");
                         voiceData.Gender = ageGender[1];
                         if (!voices.ContainsKey(voiceData.LanguageCode))
@@ -277,10 +271,10 @@ namespace ConlangAudioHoning
         public void Test()
         {
             // Initialize the eSpeak-ng library via the wrapper
-            List<string> ipaText = new List<string>()
-            {
+            List<string> ipaText =
+            [
                 "ðɪs", "ɪz", "ɐ", "tˈɛst"
-            };
+            ];
             StringBuilder sb = new StringBuilder();
             foreach (string word in ipaText)
             {
@@ -290,7 +284,7 @@ namespace ConlangAudioHoning
             string text = "[[h@'loU]]. This is a test. ";
             text += sb.ToString();
             string response = string.Empty;
-            speak(text:text,voiceLanguage:"en-us");
+            speak(text: text, voiceLanguage: "en-us");
             return;
         }
 
@@ -309,15 +303,15 @@ namespace ConlangAudioHoning
             fileWriter.Flush();
             fileWriter.Close();
 
-            if(!string.IsNullOrEmpty(voiceLanguage))
+            if (!string.IsNullOrEmpty(voiceLanguage))
             {
-                cmdSb.AppendFormat("-v{0} ",voiceLanguage);
+                cmdSb.AppendFormat("-v{0} ", voiceLanguage);
             }
-            if(!string.IsNullOrEmpty(waveFile))
+            if (!string.IsNullOrEmpty(waveFile))
             {
                 cmdSb.AppendFormat("-w \"{0}\" ", waveFile);
             }
-            if(speed > 0)
+            if (speed > 0)
             {
                 cmdSb.AppendFormat("-s{0} ", speed);
             }
@@ -338,11 +332,13 @@ namespace ConlangAudioHoning
         private static bool RunConsoleCommand(string cmd, ref string response)
         {
             System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.CreateNoWindow  = true;
-            startInfo.UseShellExecute = false;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
             process.Exited += new EventHandler((sender, e) =>
             {
                 processRunning = false;
@@ -354,13 +350,13 @@ namespace ConlangAudioHoning
             process.StartInfo = startInfo;
             processRunning = true;
             process.Start();
-            while(processRunning)
+            while (processRunning)
             {
-                if(!process.HasExited)
+                if (!process.HasExited)
                 {
                     processRunning = false;
                 }
-                if(!process.Responding)
+                if (!process.Responding)
                 {
                     processRunning = false;
                     process.Kill();
@@ -372,7 +368,7 @@ namespace ConlangAudioHoning
 
             bool noError = false;
 
-            if(process.ExitCode == 0)
+            if (process.ExitCode == 0)
             {
                 noError = true;
                 response = stdOut;

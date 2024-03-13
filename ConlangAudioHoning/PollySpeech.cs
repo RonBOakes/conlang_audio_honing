@@ -17,19 +17,9 @@
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using ConlangJson;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json.Nodes;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Reflection.Metadata;
-using System.Windows.Forms;
-using System.Net.Http;
+using System.Text.Json.Nodes;
 
 namespace ConlangAudioHoning
 {
@@ -106,14 +96,14 @@ namespace ConlangAudioHoning
             }
 
             // Build a lookup dictionary from the lexicon - spelled words to their lexicon entries
-            Dictionary<string, LexiconEntry> wordMap = new Dictionary<string, LexiconEntry>();
+            Dictionary<string, LexiconEntry> wordMap = [];
             foreach (LexiconEntry entry in LanguageDescription.lexicon)
             {
                 wordMap[entry.spelled.Trim().ToLower()] = entry;
             }
 
             // Get the phonetic representations of the text - ported from Python code.
-            List<List<Dictionary<string, string>>> pronounceMapList = new List<List<Dictionary<string, string>>>();
+            List<List<Dictionary<string, string>>> pronounceMapList = [];
             pronounceMapList.Clear();
             using (StringReader sampleTextReader = new StringReader(sampleText.ToLower()))
             {
@@ -123,7 +113,7 @@ namespace ConlangAudioHoning
                     line = sampleTextReader.ReadLine();
                     if ((line != null) && (!line.Trim().Equals(string.Empty)))
                     {
-                        List<Dictionary<string, string>> lineMapList = new List<Dictionary<string, string>>();
+                        List<Dictionary<string, string>> lineMapList = [];
                         foreach (string word in line.Split(null))
                         {
                             Dictionary<string, string>? pronounceMap = pronounceWord(word, wordMap);
@@ -192,13 +182,15 @@ namespace ConlangAudioHoning
         /// <returns></returns>
         public override Dictionary<string, PollySpeech.VoiceData> getVoices()
         {
-            Dictionary<string, PollySpeech.VoiceData> voices = new Dictionary<string, PollySpeech.VoiceData>();
+            Dictionary<string, PollySpeech.VoiceData> voices = [];
             HttpHandler httpHandler = HttpHandler.Instance;
             HttpClient httpClient = httpHandler.httpClient;
             StringContent content;
 
-            Dictionary<string, string> requestDict = new Dictionary<string, string>();
-            requestDict["systemStatus"] = string.Empty;
+            Dictionary<string, string> requestDict = new Dictionary<string, string>
+            {
+                ["systemStatus"] = string.Empty
+            };
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
                 HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
@@ -223,20 +215,20 @@ namespace ConlangAudioHoning
                     responseData = JsonSerializer.Deserialize<JsonObject>(data);
                 }
             }
-            if(responseData == null)
+            if (responseData == null)
             {
                 return voices;
             }
-           
-            if(responseData.ContainsKey("Voices"))
+
+            if (responseData.ContainsKey("Voices"))
             {
                 JsonNode? voiceDataNode;
                 if ((responseData.TryGetPropertyValue("Voices", out voiceDataNode)) && (voiceDataNode != null))
                 {
                     JsonArray voiceData = voiceDataNode.AsArray();
-                    foreach(JsonNode? voiceDatum in voiceData)
+                    foreach (JsonNode? voiceDatum in voiceData)
                     {
-                        if(voiceDatum != null)
+                        if (voiceDatum != null)
                         {
                             // Run the AWS output through JSON serializer to convert into the structure
                             VoiceData data = JsonSerializer.Deserialize<VoiceData>(voiceDatum);
@@ -246,7 +238,7 @@ namespace ConlangAudioHoning
                 }
             }
 
-             return voices;
+            return voices;
         }
 
         /// <summary>
@@ -272,18 +264,18 @@ namespace ConlangAudioHoning
                 return false;
             }
 
-            if(string.IsNullOrEmpty(voice))
+            if (string.IsNullOrEmpty(voice))
             {
                 voice = LanguageDescription.preferred_voices["Polly"] ?? "Brian";
             }
-            if(string.IsNullOrEmpty(speed)) 
+            if (string.IsNullOrEmpty(speed))
             {
                 speed = "slow";
             }
 
             if ((ssmlText == null) || (ssmlText.Trim().Equals(string.Empty)))
             {
-                Generate(speed,caller);
+                Generate(speed, caller);
             }
 
             bool generated = false;
@@ -292,7 +284,7 @@ namespace ConlangAudioHoning
             StringContent content;
 
             ProgressBar? progressBar;
-            if(caller != null)
+            if (caller != null)
             {
                 progressBar = caller.ProgressBar;
                 progressBar.Style = ProgressBarStyle.Continuous;
@@ -309,8 +301,10 @@ namespace ConlangAudioHoning
             }
 
 
-            Dictionary<string, string> requestDict = new Dictionary<string, string>();
-            requestDict["systemStatus"] = string.Empty;
+            Dictionary<string, string> requestDict = new Dictionary<string, string>
+            {
+                ["systemStatus"] = string.Empty
+            };
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
                 HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
@@ -319,7 +313,7 @@ namespace ConlangAudioHoning
                     return false;
                 }
             }
-            if(progressBar != null)
+            if (progressBar != null)
             {
                 progressBar.Value = 1;
             }
@@ -349,7 +343,7 @@ namespace ConlangAudioHoning
 #pragma warning restore CS8602 // Possible null reference assignment.            }
 #pragma warning restore CS8600 // Possible null reference assignment.
             }
-            if(progressBar != null)
+            if (progressBar != null)
             {
                 progressBar.Value = 2;
             }
@@ -360,7 +354,7 @@ namespace ConlangAudioHoning
             bool complete = false;
             do
             {
-                using(content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
+                using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
                 {
                     HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
                     if (result.StatusCode != System.Net.HttpStatusCode.OK)
@@ -368,15 +362,15 @@ namespace ConlangAudioHoning
                         return false;
                     }
                     string data = result.Content.ReadAsStringAsync().Result;
-                    if(data.Contains("FAILED"))
+                    if (data.Contains("FAILED"))
                     {
                         return false;
                     }
-                    if(data.Contains("COMPLETE"))
+                    if (data.Contains("COMPLETE"))
                     {
                         complete = true;
                     }
-                    if(progressBar != null)
+                    if (progressBar != null)
                     {
                         progressBar.Value = 3;
                     }
@@ -384,7 +378,7 @@ namespace ConlangAudioHoning
                 Thread.Sleep(5000);
 
             }
-            while(!complete);
+            while (!complete);
 
             requestDict.Clear();
             requestDict["downloadFile"] = string.Empty;
@@ -400,7 +394,7 @@ namespace ConlangAudioHoning
                 File.WriteAllBytes(targetFile, data);
                 generated = true;
             }
-            if(progressBar != null)
+            if (progressBar != null)
             {
                 progressBar.Value = 4;
             }
@@ -413,7 +407,7 @@ namespace ConlangAudioHoning
             {
                 HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
             }
-            if(progressBar != null)
+            if (progressBar != null)
             {
                 progressBar.Value = 5;
                 progressBar.Visible = false;
@@ -433,8 +427,10 @@ namespace ConlangAudioHoning
             HttpHandler httpHandler = HttpHandler.Instance;
             HttpClient httpClient = httpHandler.httpClient;
             StringContent content;
-            Dictionary<string, string> requestDict = new Dictionary<string, string>();
-            requestDict["systemStatus"] = string.Empty;
+            Dictionary<string, string> requestDict = new Dictionary<string, string>
+            {
+                ["systemStatus"] = string.Empty
+            };
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
                 HttpResponseMessage result = httpClient.PostAsync(newURI, content).Result;

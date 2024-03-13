@@ -16,13 +16,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace ConlangJson
 {
@@ -110,9 +105,9 @@ namespace ConlangJson
         /// Required if phonetic is not present.
         /// </summary>
         public string spelled
-        { 
-            get { return _spelled; } 
-            set { _spelled = value; } 
+        {
+            get { return _spelled; }
+            set { _spelled = value; }
         }
 
         /// <summary>
@@ -120,9 +115,9 @@ namespace ConlangJson
         /// definition in English or another natural language.<br/>Required.
         /// </summary>
         public string english
-        { 
-            get { return _english; } 
-            set { _english = value; } 
+        {
+            get { return _english; }
+            set { _english = value; }
         }
 
         /// <summary>
@@ -141,19 +136,19 @@ namespace ConlangJson
         /// entry, the string "root."<br/>Required.
         /// </summary>
         public List<string> declensions
-        { 
-            get { return _declensions; } 
-            set { _declensions = value; } 
+        {
+            get { return _declensions; }
+            set { _declensions = value; }
         }
 
         /// <summary>
         /// This boolean is set to true if this word was created by deriving a root word using 
         /// words in the derived_word_list with the aid of the affixes in the derivation_affix_map}.<br/>Required.
         /// </summary>
-        public bool? derived_word 
-        { 
-            get { return _derived_word; } 
-            set { _derived_word = value; } 
+        public bool? derived_word
+        {
+            get { return _derived_word; }
+            set { _derived_word = value; }
         }
 
         /// <summary>
@@ -278,7 +273,7 @@ namespace ConlangJson
             /// <exception cref="NotSupportedException">If either supplied object is null.</exception>
             public int Compare(LexiconEntry? x, LexiconEntry? y)
             {
-                if(x == null || y == null)
+                if (x == null || y == null)
                 {
                     throw new NotSupportedException();
                 }
@@ -332,7 +327,7 @@ namespace ConlangJson
 
                     if ((evalChar != "ˈ") && ((evalChar != " ")))
                     {
-                        retVal += lexicalValue(evalChar) * Math.Pow(10.0, (double)charIndex);
+                        retVal += lexicalValue(evalChar) * Math.Pow(10.0, charIndex);
                     }
                 }
 
@@ -344,7 +339,7 @@ namespace ConlangJson
             {
                 string charBase = value.Substring(0, 1);
                 double lexVal;
-                if(LexicalOrderList.Contains(value))
+                if (LexicalOrderList.Contains(value))
                 {
                     int index = 0;
                     foreach (string s in LexicalOrderList)
@@ -355,11 +350,11 @@ namespace ConlangJson
                         }
                         index++;
                     }
-                    lexVal = index * 100.0 ;
+                    lexVal = index * 100.0;
                     if (value.Length > 1)
                     {
                         string diacritic = value.Substring(1);
-                        lexVal += Math.Round(((double)(diacritic[0] - '\u0300')) / (double)('\u036f' - '\u0300')); ;
+                        lexVal += Math.Round((diacritic[0] - '\u0300') / (double)('\u036f' - '\u0300')); ;
                     }
                 }
                 else
@@ -386,7 +381,7 @@ namespace ConlangJson
             /// <exception cref="NotSupportedException">If either supplied object is null.</exception>
             int IComparer<LexiconEntry>.Compare(LexiconEntry? x, LexiconEntry? y)
             {
-                if(x == null || y == null)
+                if (x == null || y == null)
                 {
                     throw new NotSupportedException();
                 }

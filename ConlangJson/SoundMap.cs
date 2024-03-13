@@ -17,7 +17,6 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System.Text;
-using System.Text.Json.Nodes;
 
 namespace ConlangJson
 {
@@ -109,7 +108,7 @@ namespace ConlangJson
         public string spelling_regex
         {
             get { return _spelling_regex; }
-            set { _spelling_regex = value;}
+            set { _spelling_regex = value; }
         }
 
         /// <summary>
@@ -170,7 +169,7 @@ namespace ConlangJson
         /// <returns>Hash Code for this LexiconEntry object.</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(_phoneme,_romanization,_spelling_regex,_pronunciation_regex);
+            return HashCode.Combine(_phoneme, _romanization, _spelling_regex, _pronunciation_regex);
         }
 
         /// <summary>

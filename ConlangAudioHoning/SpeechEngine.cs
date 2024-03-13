@@ -17,18 +17,6 @@
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using ConlangJson;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Reflection.Metadata;
-using System.Windows.Forms;
 
 namespace ConlangAudioHoning
 {
@@ -38,7 +26,7 @@ namespace ConlangAudioHoning
     /// </summary>
     internal abstract class SpeechEngine
     {
-        LanguageDescription? _languageDescription;
+        private LanguageDescription? _languageDescription;
         private string? _sampleText = null;
         private string? _ssmlText = null;
         private string? _phoneticText = null;
@@ -112,7 +100,7 @@ namespace ConlangAudioHoning
         public string phoneticText
         {
             get => _phoneticText ?? string.Empty;
-            protected set => _phoneticText= value;
+            protected set => _phoneticText = value;
         }
 
         /// <summary>
@@ -152,7 +140,7 @@ namespace ConlangAudioHoning
             {
                 return null;
             }
-            Dictionary<string, string> pw = new Dictionary<string, string>();
+            Dictionary<string, string> pw = [];
             pw.Clear();
             if (word.Trim().Equals("."))
             {
@@ -188,14 +176,16 @@ namespace ConlangAudioHoning
             else
             {
                 phonetic = ConlangUtilities.SoundOutWord(word, LanguageDescription.sound_map_list);
-                LexiconEntry entry = new LexiconEntry();
-                entry.phonetic = phonetic;
-                entry.spelled = word;
-                entry.english = "<<unknown/undefined word sounded out by the Language Honing Application>>";
-                entry.part_of_speech = "unk";
-                entry.declensions = new List<string>() { "root" };
-                entry.declined_word = false;
-                entry.derived_word = false;
+                LexiconEntry entry = new LexiconEntry
+                {
+                    phonetic = phonetic,
+                    spelled = word,
+                    english = "<<unknown/undefined word sounded out by the Language Honing Application>>",
+                    part_of_speech = "unk",
+                    declensions = ["root"],
+                    declined_word = false,
+                    derived_word = false
+                };
                 wordMap[word] = entry;
                 // Add this word to the lexicon so that it is available for sound changes later.
                 LanguageDescription.lexicon.Add(entry);

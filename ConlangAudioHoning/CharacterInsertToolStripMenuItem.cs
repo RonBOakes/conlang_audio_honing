@@ -16,13 +16,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
 namespace ConlangAudioHoning
 {
     /// <summary>
@@ -179,7 +172,7 @@ namespace ConlangAudioHoning
         private ToolStripMenuItem shortenedToolStripMenuItem;
         private ToolStripMenuItem rhoticityToolStripMenuItem;
 
-        private List<ToolStripMenuItem> latinDiacriticToolStripSubMenus = new List<ToolStripMenuItem>();
+        private List<ToolStripMenuItem> latinDiacriticToolStripSubMenus = [];
 
         /// <summary>
         /// Constructor for a CharacterInsertToolStripMenuItem
@@ -1140,24 +1133,28 @@ namespace ConlangAudioHoning
             latinTextDiacriticsToolStripMenuItem.Text = "Latin/Text Diacritics";
 
             int subMenuCount = (LatinUtilities.DiacriticsMap.Count / 10) + 1;
-            for ( int i = 0; i < subMenuCount; i++ )
+            for (int i = 0; i < subMenuCount; i++)
             {
-                ToolStripMenuItem menuItem = new ToolStripMenuItem();
-                menuItem.Size = new Size(50, 22);
-                menuItem.Text = string.Format("Part {0}", i+1);
+                ToolStripMenuItem menuItem = new ToolStripMenuItem
+                {
+                    Size = new Size(50, 22),
+                    Text = string.Format("Part {0}", i + 1)
+                };
                 latinTextDiacriticsToolStripMenuItem.DropDownItems.Add(menuItem);
                 latinDiacriticToolStripSubMenus.Insert(i, menuItem);
             }
             int counter = 0;
             int part = 0;
-            foreach(string latinDiacritic in LatinUtilities.DiacriticsMap.Keys)
+            foreach (string latinDiacritic in LatinUtilities.DiacriticsMap.Keys)
             {
-                ToolStripMenuItem latinToolStripMenuItem = new ToolStripMenuItem();
-                latinToolStripMenuItem.Size = new Size(211, 22);
-                latinToolStripMenuItem.Text = string.Format("{0} -- {1}",latinDiacritic, LatinUtilities.DiacriticsMap[latinDiacritic]);
+                ToolStripMenuItem latinToolStripMenuItem = new ToolStripMenuItem
+                {
+                    Size = new Size(211, 22),
+                    Text = string.Format("{0} -- {1}", latinDiacritic, LatinUtilities.DiacriticsMap[latinDiacritic])
+                };
                 latinDiacriticToolStripSubMenus[part].DropDownItems.Add(latinToolStripMenuItem);
                 counter++;
-                if(counter % 10 == 0)
+                if (counter % 10 == 0)
                 {
                     counter = 0;
                     part++;
@@ -1184,8 +1181,8 @@ namespace ConlangAudioHoning
         /// <param name="clickDelegate"></param>
         public void AddClickDelegate(EventHandler clickDelegate)
         {
-            List<ToolStripMenuItem> ipaMenuItems = new List<ToolStripMenuItem>()
-            {
+            List<ToolStripMenuItem> ipaMenuItems =
+            [
                 pToolStripMenuItem,
                 bToolStripMenuItem,
                 tToolStripMenuItem,
@@ -1294,7 +1291,7 @@ namespace ConlangAudioHoning
                 halfLengthenedToolStripMenuItem,
                 shortenedToolStripMenuItem,
                 rhoticityToolStripMenuItem,
-            };
+            ];
             foreach (ToolStripMenuItem menuItem in ipaMenuItems)
             {
                 if (!String.IsNullOrEmpty(menuItem.Text))
@@ -1306,7 +1303,7 @@ namespace ConlangAudioHoning
             }
             foreach (ToolStripMenuItem menuItem in latinTextDiacriticsToolStripMenuItem.DropDownItems)
             {
-                foreach(ToolStripMenuItem subMenuItem in menuItem.DropDownItems)
+                foreach (ToolStripMenuItem subMenuItem in menuItem.DropDownItems)
                 {
                     subMenuItem.Click += clickDelegate;
                 }

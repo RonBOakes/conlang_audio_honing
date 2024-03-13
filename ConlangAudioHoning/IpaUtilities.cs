@@ -17,12 +17,7 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using ConlangJson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
 
 namespace ConlangAudioHoning
 {
@@ -424,11 +419,11 @@ namespace ConlangAudioHoning
 
         private static Dictionary<string, List<string>>? _consonant_changes_l3 = null;
 
-        private static List<string> _ipa_replacements = new List<string>()
-        {
+        private static List<string> _ipa_replacements =
+        [
             "!","@","#","$","%","&","*","+","=","<",">","~","\u00a2","\u00a3","\u00a4",
             "\u00a5","\u00a7","\u00a9","\u00ae","\u0394","\u039e","\u03a6","\u03a8",
-        };
+        ];
 
         private static string[] _rPhonemes =
         {
@@ -670,7 +665,7 @@ namespace ConlangAudioHoning
                     }
                     else
                     {
-                        int cInt = (int)c;
+                        int cInt = c;
                         sb2.AppendFormat("U+{0,4:x4}", cInt);
                     }
                 }
@@ -692,7 +687,7 @@ namespace ConlangAudioHoning
 
             if (language.phoneme_inventory != null)
             {
-                List<string> newPhonemeInventory = new List<string>();
+                List<string> newPhonemeInventory = [];
                 foreach (string phoneme in language.phoneme_inventory)
                 {
                     newPhonemeInventory.Add(SubstituteLatinIpaReplacements(phoneme));
@@ -811,10 +806,10 @@ namespace ConlangAudioHoning
         // TODO: fix the bug with vowel diphthongs with diacritics 
         public static void BuildPhoneticInventory(LanguageDescription languageDescription)
         {
-            SortedSet<string> pConsonants = new SortedSet<string>();
-            SortedSet<string> npConsonants = new SortedSet<string>();
-            SortedSet<string> vowels = new SortedSet<string>();
-            SortedSet<string> vDiphthongs = new SortedSet<string>();
+            SortedSet<string> pConsonants = [];
+            SortedSet<string> npConsonants = [];
+            SortedSet<string> vowels = [];
+            SortedSet<string> vDiphthongs = [];
 
             // vDiphthongs will be trusted if it exists
             if ((languageDescription.phoneme_inventory != null) && (languageDescription.phoneme_inventory.Contains("v_diphthongs")))
@@ -1008,12 +1003,14 @@ namespace ConlangAudioHoning
                 }
             }
 
-            Dictionary<string, string[]> phonetic_inventory = new Dictionary<string, string[]>();
-            // TODO: Fix the spelling in the documentation and then here.
-            phonetic_inventory["p_consonants"] = pConsonants.ToArray();
-            phonetic_inventory["np_consonants"] = npConsonants.ToArray();
-            phonetic_inventory["vowels"] = vowels.ToArray();
-            phonetic_inventory["v_diphthongs"] = vDiphthongs.ToArray();
+            Dictionary<string, string[]> phonetic_inventory = new Dictionary<string, string[]>
+            {
+                // TODO: Fix the spelling in the documentation and then here.
+                ["p_consonants"] = pConsonants.ToArray(),
+                ["np_consonants"] = npConsonants.ToArray(),
+                ["vowels"] = vowels.ToArray(),
+                ["v_diphthongs"] = vDiphthongs.ToArray()
+            };
             languageDescription.phonetic_inventory = phonetic_inventory;
         }
 
@@ -1080,11 +1077,11 @@ namespace ConlangAudioHoning
 
         private static Dictionary<string, List<string>> PopulateL2ConantChanges()
         {
-            Dictionary<string, List<string>> pConsonantChangesL2 = new Dictionary<string, List<string>>();
+            Dictionary<string, List<string>> pConsonantChangesL2 = [];
 
             foreach (string pConsonant in Consonant_changes.Keys)
             {
-                SortedSet<string> addedChanges = new SortedSet<string>();
+                SortedSet<string> addedChanges = [];
                 foreach (string oldChange in Consonant_changes[pConsonant])
                 {
                     // Iterate over the changes for the existing changes in this consonant and add
@@ -1098,9 +1095,7 @@ namespace ConlangAudioHoning
                         }
                     }
                 }
-                List<string> l2changes = new List<string>();
-                l2changes.AddRange(Consonant_changes[pConsonant]);
-                l2changes.AddRange(addedChanges);
+                List<string> l2changes = [.. Consonant_changes[pConsonant], .. addedChanges];
                 pConsonantChangesL2.Add(pConsonant, l2changes);
             }
 
@@ -1108,11 +1103,11 @@ namespace ConlangAudioHoning
         }
         private static Dictionary<string, List<string>> PopulateL3ConantChanges()
         {
-            Dictionary<string, List<string>> pConsonantChangesL3 = new Dictionary<string, List<string>>();
+            Dictionary<string, List<string>> pConsonantChangesL3 = [];
 
             foreach (string pConsonant in Consonant_changes_l2.Keys)
             {
-                SortedSet<string> addedChanges = new SortedSet<string>();
+                SortedSet<string> addedChanges = [];
                 foreach (string oldChange in Consonant_changes_l2[pConsonant])
                 {
                     // Iterate over the changes for the existing changes in this consonant and add
@@ -1126,9 +1121,7 @@ namespace ConlangAudioHoning
                         }
                     }
                 }
-                List<string> l3changes = new List<string>();
-                l3changes.AddRange(Consonant_changes[pConsonant]);
-                l3changes.AddRange(addedChanges);
+                List<string> l3changes = [.. Consonant_changes[pConsonant], .. addedChanges];
                 pConsonantChangesL3.Add(pConsonant, l3changes);
             }
 

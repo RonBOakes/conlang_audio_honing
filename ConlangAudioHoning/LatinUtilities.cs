@@ -17,12 +17,8 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using ConlangJson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
 {
@@ -127,7 +123,7 @@ namespace ConlangAudioHoning
         /// Returns an array containing strings with all of the commonly used
         /// Latin diacritics.
         /// </summary>
-        public static Dictionary<string,string> DiacriticsMap
+        public static Dictionary<string, string> DiacriticsMap
         {
             get => _diacriticsMap;
         }
@@ -162,7 +158,7 @@ namespace ConlangAudioHoning
             }
 
             // Build a lookup dictionary from the lexicon - spelled words to their lexicon entries
-            Dictionary<string, LexiconEntry> wordMap = new Dictionary<string, LexiconEntry>();
+            Dictionary<string, LexiconEntry> wordMap = [];
             foreach (LexiconEntry entry in language.lexicon)
             {
                 wordMap[entry.spelled.Trim().ToLower()] = entry;

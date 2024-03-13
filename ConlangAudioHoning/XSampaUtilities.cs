@@ -16,12 +16,6 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ConlangAudioHoning
 {
     /// <summary>
@@ -57,8 +51,8 @@ namespace ConlangAudioHoning
             { "\u0e24", @"_?\" }, { "\u0302", @"_\" }, { "\u032f", "_^" }, { "\u031a", "_}" },
             { "\u02de", "`" }, { "\u0303", "~" }, { "\u0318", "_A" }, { "\u033a", "_a" },
             { "\u031c", "_c" }, { "\u032a", "_d" }, { "\u02e0", "_G" }, { "\u02b0", "_h" },
-            { "\u033b", "_m"}, { "\u033c", "_N" }, { "\u0339", "_O" }, { "\u031e", "_o" }, 
-            { "\u0319", "_q" }, { "\u0330", "_k" }, { "\u031d", "_r" }, { "\u0324", "_t" }, 
+            { "\u033b", "_m"}, { "\u033c", "_N" }, { "\u0339", "_O" }, { "\u031e", "_o" },
+            { "\u0319", "_q" }, { "\u0330", "_k" }, { "\u031d", "_r" }, { "\u0324", "_t" },
             { "\u02b7", "_w" },
         };
 
@@ -77,14 +71,14 @@ namespace ConlangAudioHoning
         /// The Dictionary used to map X-SAMPA characters to their (preferred) 
         /// corresponding IPA character.
         /// </summary>
-        public static Dictionary<string,string> XSampaIpaMap
+        public static Dictionary<string, string> XSampaIpaMap
         {
             get
             {
-                if(_x_sampa_ipa_map == null)
+                if (_x_sampa_ipa_map == null)
                 {
-                    _x_sampa_ipa_map= new Dictionary<string, string>();
-                    foreach(string ipa in IpaXSampaMap.Keys)
+                    _x_sampa_ipa_map = [];
+                    foreach (string ipa in IpaXSampaMap.Keys)
                     {
                         _x_sampa_ipa_map[IpaXSampaMap[ipa]] = ipa;
                     }

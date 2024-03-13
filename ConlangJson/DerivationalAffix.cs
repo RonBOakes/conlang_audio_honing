@@ -16,13 +16,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ConlangJson
 {
     /// <summary>
@@ -37,7 +30,7 @@ namespace ConlangJson
         private string? _pronunciation_regex = null;
         private string? _spelling_regex = null;
         private string? _t_pronunciation_add = null;
-        private string? _t_spelling_add = null;    
+        private string? _t_spelling_add = null;
         private string? _f_pronunciation_add = null;
         private string? _f_spelling_add = null;
 
@@ -90,8 +83,8 @@ namespace ConlangJson
             this._pronunciation_regex = pronunciation_regex;
             this._spelling_regex = spelling_regex;
             this._t_pronunciation_add = t_pronunciation_add;
-            this._t_spelling_add= t_spelling_add;
-            this._f_pronunciation_add= f_pronunciation_add;
+            this._t_spelling_add = t_spelling_add;
+            this._f_pronunciation_add = f_pronunciation_add;
             this._f_spelling_add = f_spelling_add;
         }
 
@@ -208,7 +201,7 @@ namespace ConlangJson
         public string? f_spelling_add
         {
             get { return _f_spelling_add; }
-            set { _f_spelling_add = value;}
+            set { _f_spelling_add = value; }
         }
 
     }

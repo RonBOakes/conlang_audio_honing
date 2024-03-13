@@ -16,12 +16,6 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ConlangAudioHoning
 {
     /// <summary>
@@ -29,20 +23,20 @@ namespace ConlangAudioHoning
     /// </summary>
     internal sealed class HttpHandler
     {
-        HttpClient _httpClient;
+        private HttpClient _httpClient;
 
         /// <summary>
         /// The constructor for HttpHandler is private to ensure that only one instance of this
         /// class exists during any given application execution.
         /// </summary>
-        private HttpHandler() 
-        { 
+        private HttpHandler()
+        {
             _httpClient = new HttpClient();
         }
 
         private static readonly object _lock = new object();
         private static HttpHandler? _instance = null;
-        
+
         /// <summary>
         /// Returns the current instance of the HttpHandler class.  If needed
         /// it will instantiate the single allowed instance of this class.

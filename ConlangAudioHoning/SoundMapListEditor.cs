@@ -16,16 +16,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using ConlangJson;
+using System.Text;
 
 namespace ConlangAudioHoning
 {
@@ -36,7 +28,7 @@ namespace ConlangAudioHoning
     public partial class SoundMapListEditor : Form
     {
         private List<SoundMap> _soundMapList;
-        List<(string, string)> _phonemeReplacementPairs = new List<(string, string)>();
+        private List<(string, string)> _phonemeReplacementPairs = [];
         private bool _soundMapSaved = false;
 
         /// <summary>
@@ -114,7 +106,7 @@ namespace ConlangAudioHoning
 
             CharacterInsertToolStripMenuItem ciMenu = new CharacterInsertToolStripMenuItem();
             menuStrip1.Items.Add(ciMenu);
-            _soundMapList = new List<SoundMap>();
+            _soundMapList = [];
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
         }
 
