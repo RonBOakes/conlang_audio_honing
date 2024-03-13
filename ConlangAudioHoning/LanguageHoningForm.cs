@@ -23,6 +23,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Unicode;
+using System.Linq;
 
 namespace ConlangAudioHoning
 {
@@ -34,15 +35,15 @@ namespace ConlangAudioHoning
         private LanguageDescription? languageDescription = null;
         private FileInfo? languageFileInfo = null;
         private string? sampleText = null;
-        private Dictionary<string, SpeechEngine> speechEngines = [];
-        private Dictionary<string, Dictionary<string, SpeechEngine.VoiceData>> voices =
+        private readonly Dictionary<string, SpeechEngine> speechEngines = [];
+        private readonly Dictionary<string, Dictionary<string, SpeechEngine.VoiceData>> voices =
             [];
         private Font? printFont;
         private TextReader? readerToPrint;
-        private Dictionary<string, FileInfo> speechFiles = [];
-        private PhoneticChanger phoneticChanger;
-        private List<(string, string)> changesToBeMade = [];
-        private UserConfiguration config;
+        private readonly Dictionary<string, FileInfo> speechFiles = [];
+        private readonly PhoneticChanger phoneticChanger;
+        private readonly List<(string, string)> changesToBeMade = [];
+        private readonly UserConfiguration config;
 
         /// <summary>
         /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
@@ -78,7 +79,6 @@ namespace ConlangAudioHoning
                 Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
                 speechEngines.Add(eSpeakNGSpeak.Description, eSpeakNGSpeak);
                 voices.Add(eSpeakNGSpeak.Description, espeakVoices);
-                //eSpeakNGSpeak.Test();
             }
 
             if (config.IsPollySupported)
@@ -369,7 +369,7 @@ namespace ConlangAudioHoning
                 };
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
                 jsonSerializerOptions.Encoder = encoder;
-                jsonSerializerOptions.WriteIndented = true; // TODO: make an option
+                jsonSerializerOptions.WriteIndented = true; 
 
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
                 File.WriteAllText(filename, jsonString, System.Text.Encoding.UTF8);
@@ -451,7 +451,6 @@ namespace ConlangAudioHoning
 
         private void OnApplicationExit(object? sender, EventArgs e)
         {
-            // TODO: Add "dirty" information for LanguageDescription and sampleText, prompt for saving.
             config.SaveConfiguration();
         }
 
@@ -482,7 +481,6 @@ namespace ConlangAudioHoning
             if (!languageDescription.declined)
             {
                 DeclineLexicon(languageDescription);
-                //MessageBox.Show("Finished Declining the Language", "Done",MessageBoxButtons.OK);
                 declineToolStripMenuItem.Text = "Remove Declensions";
             }
             else
@@ -613,7 +611,8 @@ namespace ConlangAudioHoning
                     line = textReader.ReadLine();
                     if ((line != null) && (!line.Trim().Equals(string.Empty)))
                     {
-                        foreach (string word in line.Split(null))
+#pragma warning disable S3220 // Method calls should not resolve ambiguously to overloads with "params"
+                        foreach (string word in line.Split(separator: null))
                         {
                             sb.Append(word);
                             col += word.Length;
@@ -628,6 +627,7 @@ namespace ConlangAudioHoning
                                 col = 0;
                             }
                         }
+#pragma warning restore S3220 // Method calls should not resolve ambiguously to overloads with "params"
                     }
                 }
                 while (line != null);
@@ -923,15 +923,13 @@ namespace ConlangAudioHoning
             else if (tabPhoneticAlterations.SelectedIndex == 0)
             {
                 string consonant;
+                if (phonemeIndex < languageDescription.phonetic_inventory["p_consonants"].Length)
                 {
-                    if (phonemeIndex < languageDescription.phonetic_inventory["p_consonants"].Length)
-                    {
-                        consonant = languageDescription.phonetic_inventory["p_consonants"][phonemeIndex].ToString();
-                    }
-                    else
-                    {
-                        consonant = languageDescription.phonetic_inventory["np_consonants"][phonemeIndex - languageDescription.phonetic_inventory["p_consonants"].Length].ToString();
-                    }
+                    consonant = languageDescription.phonetic_inventory["p_consonants"][phonemeIndex].ToString();
+                }
+                else
+                {
+                    consonant = languageDescription.phonetic_inventory["np_consonants"][phonemeIndex - languageDescription.phonetic_inventory["p_consonants"].Length].ToString();
                 }
                 cbx_replacementPhoneme.Items.Clear();
                 List<string> replacementPhonemes;
@@ -1037,24 +1035,22 @@ namespace ConlangAudioHoning
                     string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                     string newPhoneme;
                     string newPhonemeDescription;
+                    StringBuilder sb = new StringBuilder();
                     if (oldPhoneme.Equals("ə"))
                     {
                         newPhoneme = "ɚ";
-                        StringBuilder sb = new StringBuilder();
                         sb.AppendFormat("{0}ˑ -- ", newPhoneme);
                         sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
-                        newPhonemeDescription = sb.ToString();
                     }
                     else
                     {
                         newPhoneme = oldPhoneme + "\u02de";
-                        StringBuilder sb = new StringBuilder();
                         sb.AppendFormat("{0}ˑ -- ", newPhoneme);
                         sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme[0].ToString()]);
                         sb.Append(" Rhotacized");
-                        newPhonemeDescription = sb.ToString();
                     }
-                    cbx_replacementPhoneme.Items.Add(newPhoneme);
+                    newPhonemeDescription = sb.ToString();
+                    cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
                     cbx_replacementPhoneme.SelectedIndex = 0;
                 }
                 else if (rbn_longToRhotacized.Checked)
@@ -1194,50 +1190,47 @@ namespace ConlangAudioHoning
                 cbx_replacementPhoneme.Items.Clear();
                 tabPhoneticAlterations.SelectedIndex = -1;
             }
-            else if ((tabPhoneticAlterations.SelectedIndex == 3) && rbn_replaceRSpelling.Checked)
+            else if ((tabPhoneticAlterations.SelectedIndex == 3) && rbn_replaceRSpelling.Checked && cbx_phonemeToChange.SelectedItem != null)
             {
-                if (cbx_phonemeToChange.SelectedItem != null)
+                SoundMap mapToReplace = (SoundMap)cbx_phonemeToChange.SelectedItem;
+                SoundMap replacementMap = mapToReplace.copy();
+                string phonemeToAdd = cbx_replacementPhoneme.Text.Split()[0];
+                string diacriticAtEnd = string.Format("{0}$", IpaUtilities.DiacriticPattern);
+                if (!string.IsNullOrEmpty(replacementMap.spelling_regex))
                 {
-                    SoundMap mapToReplace = (SoundMap)cbx_phonemeToChange.SelectedItem;
-                    SoundMap replacementMap = mapToReplace.copy();
-                    string phonemeToAdd = cbx_replacementPhoneme.Text.Split()[0];
-                    string diacriticAtEnd = string.Format("{0}$", IpaUtilities.DiacriticPattern);
-                    if (!string.IsNullOrEmpty(replacementMap.spelling_regex))
+                    if (System.Text.RegularExpressions.Regex.IsMatch(replacementMap.spelling_regex, diacriticAtEnd))
                     {
-                        if (System.Text.RegularExpressions.Regex.IsMatch(replacementMap.spelling_regex, diacriticAtEnd))
-                        {
-                            replacementMap.spelling_regex = replacementMap.spelling_regex.Remove(replacementMap.spelling_regex.Length - 1, 1);
-                        }
-                        replacementMap.spelling_regex += phonemeToAdd;
+                        replacementMap.spelling_regex = replacementMap.spelling_regex.Remove(replacementMap.spelling_regex.Length - 1, 1);
                     }
-                    if (!string.IsNullOrEmpty(replacementMap.phoneme))
-                    {
-                        if (System.Text.RegularExpressions.Regex.IsMatch(replacementMap.phoneme, diacriticAtEnd))
-                        {
-                            replacementMap.phoneme = replacementMap.phoneme.Remove(replacementMap.phoneme.Length - 1, 1);
-                        }
-                        replacementMap.phoneme += phonemeToAdd;
-                    }
-                    phoneticChanger.ReplaceSoundMapEntry(mapToReplace, replacementMap, languageDescription.sound_map_list);
-                    phoneticChanger.updatePronunciation();
-                    if (sampleText != string.Empty)
-                    {
-                        sampleText = phoneticChanger.SampleText;
-                        txt_SampleText.Text = sampleText;
-                        txt_phonetic.Text = string.Empty;
-                        foreach (string engineName in speechEngines.Keys)
-                        {
-                            SpeechEngine speech = speechEngines[engineName];
-                            speech.sampleText = sampleText;
-                        }
-                    }
-                    // Clear the combo boxes
-                    cbx_phonemeToChange.Items.Clear();
-                    cbx_replacementPhoneme.Items.Clear();
-                    tabPhoneticAlterations.SelectedIndex = -1;
+                    replacementMap.spelling_regex += phonemeToAdd;
                 }
+                if (!string.IsNullOrEmpty(replacementMap.phoneme))
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(replacementMap.phoneme, diacriticAtEnd))
+                    {
+                        replacementMap.phoneme = replacementMap.phoneme.Remove(replacementMap.phoneme.Length - 1, 1);
+                    }
+                    replacementMap.phoneme += phonemeToAdd;
+                }
+                phoneticChanger.ReplaceSoundMapEntry(mapToReplace, replacementMap, languageDescription.sound_map_list);
+                phoneticChanger.updatePronunciation();
+                if (sampleText != string.Empty)
+                {
+                    sampleText = phoneticChanger.SampleText;
+                    txt_SampleText.Text = sampleText;
+                    txt_phonetic.Text = string.Empty;
+                    foreach (string engineName in speechEngines.Keys)
+                    {
+                        SpeechEngine speech = speechEngines[engineName];
+                        speech.sampleText = sampleText;
+                    }
+                }
+                // Clear the combo boxes
+                cbx_phonemeToChange.Items.Clear();
+                cbx_replacementPhoneme.Items.Clear();
+                tabPhoneticAlterations.SelectedIndex = -1;
             }
-            // TODO: Add other options
+            // Add other options as needed.
         }
 
         private void cbx_replacementPhoneme_MeasureItem(object sender, System.Windows.Forms.MeasureItemEventArgs e)
@@ -1257,15 +1250,11 @@ namespace ConlangAudioHoning
             Brush comboBrush = Brushes.Black; // Set the default color to black
 
             string cbxEntry = string.Empty;
-            if ((cbx_replacementPhoneme.Items[e.Index] != null) && (cbx_replacementPhoneme.Items[e.Index] is string))
+            if (cbx_replacementPhoneme.Items[e.Index] is string replacementPhoneme)
             {
 #pragma warning disable CS8600
-                cbxEntry = (string)cbx_replacementPhoneme.Items[e.Index];
+                cbxEntry = replacementPhoneme;
 #pragma warning restore CS8600
-                if (cbxEntry == null)
-                {
-                    cbxEntry = string.Empty;
-                }
             }
             bool inInventory = IsInInventory(cbxEntry);
             bool hasSpellingMap = HasSpellingMap(cbxEntry);
@@ -1482,26 +1471,27 @@ namespace ConlangAudioHoning
         {
             List<string> missingPhonemes = KirshenbaumUtilities.UnmappedPhonemes;
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (string phoneme in missingPhonemes)
+            foreach (var (phoneme, sb2) in from string phoneme in missingPhonemes
+                                           where IpaUtilities.IpaPhonemesMap.ContainsKey(phoneme)
+                                           let sb2 = new StringBuilder()
+                                           select (phoneme, sb2))
             {
-                if (IpaUtilities.IpaPhonemesMap.ContainsKey(phoneme))
+                foreach (char c in phoneme)
                 {
-                    StringBuilder sb2 = new StringBuilder();
-                    foreach (char c in phoneme)
+                    if (Char.IsAsciiLetterOrDigit(c))
                     {
-                        if (Char.IsAsciiLetterOrDigit(c))
-                        {
-                            sb2.Append(c);
-                        }
-                        else
-                        {
-                            int cInt = c;
-                            sb2.AppendFormat("U+{0,4:x4}", cInt);
-                        }
+                        sb2.Append(c);
                     }
-                    stringBuilder.AppendFormat("\"{0} ({2}):\t{1}\n", phoneme, IpaUtilities.IpaPhonemesMap[phoneme], sb2.ToString());
+                    else
+                    {
+                        int cInt = c;
+                        sb2.AppendFormat("U+{0,4:x4}", cInt);
+                    }
                 }
+
+                stringBuilder.AppendFormat("\"{0} ({2}):\t{1}\n", phoneme, IpaUtilities.IpaPhonemesMap[phoneme], sb2.ToString());
             }
+
             StringReader sampleTextSummaryReader = new StringReader(stringBuilder.ToString());
             readerToPrint = sampleTextSummaryReader;
             printFont = new Font("Charis SIL", 12.0f);
@@ -1535,7 +1525,6 @@ namespace ConlangAudioHoning
                 return;
             }
             SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
-            List<SoundMap> soundMapList = languageDescription.sound_map_list.GetRange(0, languageDescription.sound_map_list.Count);
             soundMapListEditor.SoundMapList = languageDescription.sound_map_list;
             soundMapListEditor.headerText = "No specific changes - editing the entire list";
             soundMapListEditor.UpdatePhonemeReplacements();
@@ -1729,7 +1718,6 @@ namespace ConlangAudioHoning
                     {
                         voices.Add(eSpeakNGSpeak.Description, espeakVoices);
                     }
-                    //eSpeakNGSpeak.Test();
                     config.ESpeakNgPath = ESpeakNGSpeak.ESpeakNGPath;
                 }
             }

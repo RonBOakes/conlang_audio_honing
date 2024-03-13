@@ -23,7 +23,7 @@ namespace ConlangAudioHoning
     /// </summary>
     internal sealed class HttpHandler
     {
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
         /// <summary>
         /// The constructor for HttpHandler is private to ensure that only one instance of this

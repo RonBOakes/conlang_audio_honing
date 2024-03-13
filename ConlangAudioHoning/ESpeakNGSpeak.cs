@@ -325,8 +325,8 @@ namespace ConlangAudioHoning
             return result;
         }
 
-        private static StringBuilder stdOutBuilder = new StringBuilder();
-        private static StringBuilder stdErrBuilder = new StringBuilder();
+        private static readonly StringBuilder stdOutBuilder = new StringBuilder();
+        private static readonly StringBuilder stdErrBuilder = new StringBuilder();
         private static bool processRunning;
 
         private static bool RunConsoleCommand(string cmd, ref string response)

@@ -30,8 +30,8 @@ namespace ConlangAudioHoning
 
         // TODO: replace these with empty strings or something to 
         //       indicate when the related option is not present.
-        private static string DefaultPollyURI = "https://9ggv18yii2.execute-api.us-east-1.amazonaws.com/general_speak2";
-        private static string DefaultESpeakNGPath = @"C:\Program Files\eSpeak NG\espeak-ng.exe";
+        private static readonly string DefaultPollyURI = "https://9ggv18yii2.execute-api.us-east-1.amazonaws.com/general_speak2";
+        private static readonly string DefaultESpeakNGPath = @"C:\Program Files\eSpeak NG\espeak-ng.exe";
 
         public UserConfiguration()
         { }

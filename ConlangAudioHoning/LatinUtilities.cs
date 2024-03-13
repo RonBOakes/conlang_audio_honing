@@ -28,7 +28,7 @@ namespace ConlangAudioHoning
     /// </summary>
     internal static class LatinUtilities
     {
-        private static Dictionary<string, string> _diacriticsMap = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _diacriticsMap = new Dictionary<string, string>()
         {
             { "\u0300", "combining grave accent" },
             { "\u0301", "combining acute accent" },

@@ -27,7 +27,7 @@ namespace ConlangAudioHoning
     /// </summary>
     public static class IpaUtilities
     {
-        private static string[] _p_consonants =
+        private static readonly string[] _p_consonants =
         {
             "b", "\u03b2", "\u0299", "c", "\u00e7", "d", "\u0256", "\u1d91", "\u02a3", "\u02a5", "\u02a4", "\uab66",
             "f", "\u0278", "g", "\u0262", "\u0270", "h", "\u0266", "\u0127", "\u0267", "j", "\u029d", "\u025f", "k",
@@ -38,30 +38,30 @@ namespace ConlangAudioHoning
             "z", "\u0290", "\u0292", "\u03b8", "\u00f0", "\u0294", "\u0295", "ɕ", "ʑ",
         };
 
-        private static string[] _np_consonants =
+        private static readonly string[] _np_consonants =
         {
             "\u0253", "\u0257", "\u0284", "\u0260", "\u029b", "w", "\u028d", "\u0265", "\u02a1", "\u02a2", "\u0255",
             "\u0291", "\u029c", "\u0298", "\u01c0", "\u01c3", "\u01c2", "\u01c1", "\ud837\udf0a"
         };
 
-        private static string[] _vowels =
+        private static readonly string[] _vowels =
         {
             "a", "\u00e6", "\u0251", "\u0252", "\u0250", "e", "\u025b", "\u025c", "\u025e", "\u0259", "i", "\u0268",
             "\u026a", "y", "\u028f", "\u00f8", "\u0258", "\u0275", "\u0153", "\u0276", "\u0264", "o", "\u0254", "u",
             "\u0289", "\u028a", "\u026f", "\u028c", "\u025a",
         };
 
-        private static string[] _suprasegmentals =
+        private static readonly string[] _suprasegmentals =
         {
             "\u02d0", "\u02d1", "\u02c8", "\u02cc", "\u035c", "\u0361"
         };
 
-        private static string[] _vowel_modifiers =
+        private static readonly string[] _vowel_modifiers =
         {
             "\u02d0", "\u02d1", "\u032f",
         };
 
-        private static string[] _diacritics =
+        private static readonly string[] _diacritics =
         {
             "\u02f3", "\u0325", "\u030a", "\u0324", "\u032a", "\u0329", "\u0c3c", "\u032c", "\u02f7", "\u0330",
             "\u02f7", "\u0330", "\u02fd", "\u033a", "\u032f", "\u02b0", "\u033c", "\u033b", "\u02d2", "\u0339", "\u20b7",
@@ -71,7 +71,7 @@ namespace ConlangAudioHoning
 
         // The following is based on the chart found at https://en.wikipedia.org/wiki/Phonetic_symbols_in_Unicode
         // As of January 29, 2024
-        private static Dictionary<string, string> _ipaPhonemesMap = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _ipaPhonemesMap = new Dictionary<string, string>()
         {
 			// Plosives
 			{ "\u0070", new string("unvoiced bilabial plosive") },
@@ -308,7 +308,7 @@ namespace ConlangAudioHoning
             { "\u02c8", new string("primary stress mark") },
         };
 
-        private static Dictionary<string, string> _latinIpaReplacements = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _latinIpaReplacements = new Dictionary<string, string>()
         {
             { "g", "\u0261" },
             { "G", "\u0262" },
@@ -320,7 +320,7 @@ namespace ConlangAudioHoning
             { "I", "ɪ"}
         };
 
-        private static Dictionary<string, List<string>> _consonant_changes = new Dictionary<string, List<string>>()
+        private static readonly Dictionary<string, List<string>> _consonant_changes = new Dictionary<string, List<string>>()
         {
             // Plosive
             { "p", new List<string>(){ "b","m","t","d","\u0271", "\u0253" } },
@@ -419,13 +419,13 @@ namespace ConlangAudioHoning
 
         private static Dictionary<string, List<string>>? _consonant_changes_l3 = null;
 
-        private static List<string> _ipa_replacements =
+        private static readonly List<string> _ipa_replacements =
         [
             "!","@","#","$","%","&","*","+","=","<",">","~","\u00a2","\u00a3","\u00a4",
             "\u00a5","\u00a7","\u00a9","\u00ae","\u0394","\u039e","\u03a6","\u03a8",
         ];
 
-        private static string[] _rPhonemes =
+        private static readonly string[] _rPhonemes =
         {
             "ɹ", "ɾ", "ɺ", "ɽ", "ɻ", "r"
         };

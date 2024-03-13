@@ -24,7 +24,7 @@ namespace ConlangAudioHoning
     internal static class XSampaUtilities
     {
         // Based on https://en.wikipedia.org/wiki/X-SAMPA as of 2024-02-08
-        private static Dictionary<string, string> _ipa_x_sampa_map = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _ipa_x_sampa_map = new Dictionary<string, string>()
         {
             { "a", "a" }, { "b", "b" }, { "ɓ", "b_<" }, { "c", "c" }, { "d", "d" }, { "ɖ", "d`" },
             { "ɗ", "d_<" }, { "e", "e" }, { "f", "f" }, { "ɡ", "g" }, { "ɠ", "g_<" }, { "h", "h" },
