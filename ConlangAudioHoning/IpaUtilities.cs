@@ -906,11 +906,13 @@ namespace ConlangAudioHoning
                         else if (PConsonants.Contains(priorChar.ToString()))
                         {
                             pConsonants.Add(priorChar.ToString());
+                            priorChar.Clear();
                             priorChar.Append(letter);
                         }
                         else if (NpConsonants.Contains(priorChar.ToString()))
                         {
                             npConsonants.Add(priorChar.ToString());
+                            priorChar.Clear();
                             priorChar.Append(letter);
                         }
                         else if (ContainsVowels(priorChar.ToString()))
@@ -1003,6 +1005,7 @@ namespace ConlangAudioHoning
                                         }
                                     }
                                 }
+                                priorChar.Clear();
                                 priorChar.Append(letter);
                             }
                         }
