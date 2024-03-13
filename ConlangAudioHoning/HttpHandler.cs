@@ -34,7 +34,7 @@ namespace ConlangAudioHoning
             _httpClient = new HttpClient();
         }
 
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
         private static HttpHandler? _instance = null;
 
         /// <summary>
@@ -49,10 +49,7 @@ namespace ConlangAudioHoning
                 {
                     lock (_lock)
                     {
-                        if (_instance == null)
-                        {
-                            _instance = new HttpHandler();
-                        }
+                        _instance ??= new HttpHandler();
                     }
                 }
                 return _instance;
@@ -63,7 +60,7 @@ namespace ConlangAudioHoning
         /// Returns the HttpClient object contained within the HttpHandler.  This is the
         /// only HttpClient that can be used in the ConlangAudioHoning application.
         /// </summary>
-        public HttpClient httpClient
+        public HttpClient HttpClient
         {
             get => _httpClient;
         }

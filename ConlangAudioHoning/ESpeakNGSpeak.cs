@@ -96,7 +96,7 @@ namespace ConlangAudioHoning
             // Get the phonetic representations of the text - ported from Python code.
             List<List<Dictionary<string, string>>> pronounceMapList = [];
             pronounceMapList.Clear();
-            using (StringReader sampleTextReader = new StringReader(sampleText.ToLower()))
+            using (StringReader sampleTextReader = new(sampleText.ToLower()))
             {
                 string? line;
                 do
@@ -119,7 +119,7 @@ namespace ConlangAudioHoning
                 while (line != null);
             }
 
-            StringBuilder eSpeakText = new StringBuilder();
+            StringBuilder eSpeakText = new();
 
             phoneticText = string.Empty;
             int wordWrap = 0;
@@ -139,11 +139,11 @@ namespace ConlangAudioHoning
                         wordWrap += pronounceMap["punctuation"].Length;
                     }
                     phoneticText += " ";
-                    eSpeakText.Append(" ");
+                    eSpeakText.Append(' ');
                     wordWrap += 1;
                     if (wordWrap >= 80)
                     {
-                        eSpeakText.Append("\n");
+                        eSpeakText.Append('\n');
                         phoneticText += "\n";
                         wordWrap = 0;
                     }
@@ -236,7 +236,7 @@ namespace ConlangAudioHoning
              * 5  af              --/M      Afrikaans          gmw\af
              * 7  af              --/M      afrikaans-mbrola-1 mb\mb-af1
              */
-            using (StringReader sampleTextReader = new StringReader(voiceList))
+            using (StringReader sampleTextReader = new(voiceList))
             {
                 string? line;
                 do
@@ -246,7 +246,7 @@ namespace ConlangAudioHoning
                     {
 
                         string[] fields = line.Split(whiteSpaces, StringSplitOptions.RemoveEmptyEntries); // Split on whitespace
-                        VoiceData voiceData = new VoiceData
+                        VoiceData voiceData = new()
                         {
                             Name = fields[3],
                             LanguageCode = fields[1],
@@ -275,29 +275,28 @@ namespace ConlangAudioHoning
             [
                 "ðɪs", "ɪz", "ɐ", "tˈɛst"
             ];
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (string word in ipaText)
             {
                 sb.Append(KirshenbaumUtilities.IpaWordToKirshenbaum(word));
-                sb.Append(" ");
+                sb.Append(' ');
             }
             string text = "[[h@'loU]]. This is a test. ";
             text += sb.ToString();
-            string response = string.Empty;
             speak(text: text, voiceLanguage: "en-us");
             return;
         }
 
         internal bool speak(string text, string waveFile = "", string voiceLanguage = "", int speed = -1)
         {
-            StringBuilder cmdSb = new StringBuilder();
+            StringBuilder cmdSb = new();
 
             // Write the text to a temporary file
             DateTime now = DateTime.Now;
             string targetFileBaseName = string.Format("speech_{0:s}.txt", now);
             targetFileBaseName = targetFileBaseName.Replace(":", "_");
             string targetFileName = Path.GetTempPath() + targetFileBaseName;
-            FileInfo targetFile = new FileInfo(targetFileName);
+            FileInfo targetFile = new(targetFileName);
             StreamWriter fileWriter = targetFile.CreateText();
             fileWriter.WriteLine(text);
             fileWriter.Flush();
@@ -324,15 +323,12 @@ namespace ConlangAudioHoning
 
             return result;
         }
-
-        private static readonly StringBuilder stdOutBuilder = new StringBuilder();
-        private static readonly StringBuilder stdErrBuilder = new StringBuilder();
         private static bool processRunning;
 
         private static bool RunConsoleCommand(string cmd, ref string response)
         {
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
+            System.Diagnostics.Process process = new();
+            System.Diagnostics.ProcessStartInfo startInfo = new()
             {
                 CreateNoWindow = true,
                 UseShellExecute = false,

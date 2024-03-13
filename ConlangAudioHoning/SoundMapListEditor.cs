@@ -104,7 +104,7 @@ namespace ConlangAudioHoning
                 throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
             }
 
-            CharacterInsertToolStripMenuItem ciMenu = new CharacterInsertToolStripMenuItem();
+            CharacterInsertToolStripMenuItem ciMenu = new();
             menuStrip1.Items.Add(ciMenu);
             _soundMapList = [];
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
@@ -115,7 +115,7 @@ namespace ConlangAudioHoning
         /// </summary>
         public void UpdatePhonemeReplacements()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach ((string phonemeToBeReplaced, string replacementPhoneme) in PhonemeReplacementPairs)
             {
                 sb.AppendFormat("{0} -> {1},", phonemeToBeReplaced, replacementPhoneme);
@@ -155,12 +155,6 @@ namespace ConlangAudioHoning
                 SoundMapList.Insert(index, soundMapEditor.SoundMapData.copy());
                 UpdateSoundMapEntries();
             }
-        }
-
-        private void addCharToSoundMap(string charToAdd)
-        {
-            soundMapEditor.AppendToFocusedBox(charToAdd);
-            soundMapEditor.Focus();
         }
 
         private void saveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -220,7 +214,7 @@ namespace ConlangAudioHoning
             lbx_soundMapListEntries.Items.Clear();
             foreach (SoundMap map in _soundMapList)
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 sb.AppendFormat("Phonetic Regex: {0}, ", map.pronunciation_regex);
                 sb.AppendFormat("Phoneme: {0}, ", map.phoneme);
                 sb.AppendFormat("Spelling Regex: {0}, ", map.spelling_regex);

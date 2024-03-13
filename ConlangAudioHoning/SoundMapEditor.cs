@@ -39,10 +39,7 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if (_soundMapData == null)
-                {
-                    _soundMapData = new SoundMap();
-                }
+                _soundMapData ??= new SoundMap();
                 _soundMapData.pronunciation_regex = txt_pronunciationRegex.Text;
                 _soundMapData.phoneme = txt_phoneme.Text;
                 _soundMapData.romanization = txt_romanization.Text;

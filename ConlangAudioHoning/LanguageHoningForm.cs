@@ -23,7 +23,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Unicode;
-using System.Linq;
 
 namespace ConlangAudioHoning
 {
@@ -75,7 +74,7 @@ namespace ConlangAudioHoning
             if (config.IsESpeakNGSupported)
             {
                 ESpeakNGSpeak.ESpeakNGPath = config.ESpeakNgPath;
-                ESpeakNGSpeak eSpeakNGSpeak = new ESpeakNGSpeak();
+                ESpeakNGSpeak eSpeakNGSpeak = new();
                 Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
                 speechEngines.Add(eSpeakNGSpeak.Description, eSpeakNGSpeak);
                 voices.Add(eSpeakNGSpeak.Description, espeakVoices);
@@ -84,7 +83,7 @@ namespace ConlangAudioHoning
             if (config.IsPollySupported)
             {
                 PollySpeech.PollyURI = config.PollyURI;
-                PollySpeech pollySpeech = new PollySpeech();
+                PollySpeech pollySpeech = new();
                 Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
                 speechEngines.Add(pollySpeech.Description, pollySpeech);
                 voices.Add(pollySpeech.Description, amazonPollyVoices);
@@ -110,7 +109,7 @@ namespace ConlangAudioHoning
 
         private void TabPhoneticAlterations_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
             if ((tabPhoneticAlterations.SelectedIndex != 3) || ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)))
             {
                 lbl_choiceCbx.Text = "Phoneme to change";
@@ -185,10 +184,10 @@ namespace ConlangAudioHoning
                     cbx_voice.Items.Add(voiceMenu);
                 }
                 if ((languageDescription != null) &&
-                    (languageDescription.preferred_voices.ContainsKey(speechEngines[selectedEngine].preferredVoiceKey)) &&
-                    (!string.IsNullOrEmpty(languageDescription.preferred_voices[speechEngines[selectedEngine].preferredVoiceKey])))
+                    (languageDescription.preferred_voices.TryGetValue(speechEngines[selectedEngine].preferredVoiceKey, out string? value)) &&
+                    (!string.IsNullOrEmpty(value)))
                 {
-                    string preferredVoice = languageDescription.preferred_voices[speechEngines[selectedEngine].preferredVoiceKey].Trim();
+                    string preferredVoice = value.Trim();
                     string voiceMenu = string.Format("{0} ({1}, {2})", preferredVoice, voiceData[preferredVoice].LanguageName, voiceData[preferredVoice].Gender);
                     cbx_voice.Text = voiceMenu;
                 }
@@ -331,7 +330,7 @@ namespace ConlangAudioHoning
             tabPhoneticAlterations.SelectedIndex = 0; // Consonants.
             rbn_l1.Checked = true;
             rbn_addRhoticityRegular.Checked = true;
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
             LoadVoices();
         }
 
@@ -369,7 +368,7 @@ namespace ConlangAudioHoning
                 };
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
                 jsonSerializerOptions.Encoder = encoder;
-                jsonSerializerOptions.WriteIndented = true; 
+                jsonSerializerOptions.WriteIndented = true;
 
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
                 File.WriteAllText(filename, jsonString, System.Text.Encoding.UTF8);
@@ -527,13 +526,13 @@ namespace ConlangAudioHoning
                 {
                     txt_phonetic.Text = pollySpeech.phoneticText;
                     // Play the audio (MP3) file with the Windows Media Player
-                    WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer
+                    WMPLib.WindowsMediaPlayer player = new()
                     {
                         URL = targetFileName
                     };
                     player.controls.play();
 
-                    FileInfo fileInfo = new FileInfo(targetFileName);
+                    FileInfo fileInfo = new(targetFileName);
                     speechFiles.Add(fileInfo.Name, fileInfo);
                     cbx_recordings.Items.Add(fileInfo.Name);
                     cbx_recordings.SelectedText = fileInfo.Name;
@@ -557,9 +556,9 @@ namespace ConlangAudioHoning
                 }
                 string voiceKey = cbx_voice.Text.Trim().Split()[0];
                 string voice = string.Empty;
-                if (voices[engineName].ContainsKey(voiceKey))
+                if (voices[engineName].TryGetValue(voiceKey, out SpeechEngine.VoiceData value))
                 {
-                    SpeechEngine.VoiceData voiceData = voices[engineName][voiceKey];
+                    SpeechEngine.VoiceData voiceData = value;
                     voice = voiceData.LanguageCode;
                 }
                 string speed = cbx_speed.Text.Trim();
@@ -573,13 +572,13 @@ namespace ConlangAudioHoning
                 {
                     txt_phonetic.Text = speechEngine.phoneticText;
                     // Play the audio (wav) file with the Windows Media Player
-                    WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer
+                    WMPLib.WindowsMediaPlayer player = new()
                     {
                         URL = targetFileName
                     };
                     player.controls.play();
 
-                    FileInfo fileInfo = new FileInfo(targetFileName);
+                    FileInfo fileInfo = new(targetFileName);
                     speechFiles.Add(fileInfo.Name, fileInfo);
                     cbx_recordings.Items.Add(fileInfo.Name);
                     cbx_recordings.SelectedText = fileInfo.Name;
@@ -587,23 +586,23 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void displayPulmonicConsonantsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DisplayPulmonicConsonantsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (string c in IpaUtilities.PConsonants)
             {
                 sb.Append(c);
-                sb.Append(" ");
+                sb.Append(' ');
             }
             txt_SampleText.Text = sb.ToString();
             txt_phonetic.Text = sb.ToString();
         }
 
-        private string WrapText(string text, int cols)
+        private static string WrapText(string text, int cols)
         {
             int col = 0;
-            StringBuilder sb = new StringBuilder();
-            using (StringReader textReader = new StringReader(text))
+            StringBuilder sb = new();
+            using (StringReader textReader = new(text))
             {
                 string? line;
                 do
@@ -618,7 +617,7 @@ namespace ConlangAudioHoning
                             col += word.Length;
                             if (col < ((cols * 8) / 10))
                             {
-                                sb.Append(" ");
+                                sb.Append(' ');
                                 col += 1;
                             }
                             else
@@ -638,15 +637,13 @@ namespace ConlangAudioHoning
         }
 
         // The PrintPage event is raised for each page to be printed.
-        private void pd_PrintPage(object sender, PrintPageEventArgs ev)
+        private void Pd_PrintPage(object sender, PrintPageEventArgs ev)
         {
             if ((readerToPrint == null) || (printFont == null) || (ev == null))
             {
                 return;
             }
 
-            float linesPerPage = 0;
-            float yPos = 0;
             int count = 0;
             float leftMargin = ev.MarginBounds.Left;
             float topMargin = ev.MarginBounds.Top;
@@ -654,14 +651,14 @@ namespace ConlangAudioHoning
 
             // Calculate the number of lines per page.
 #pragma warning disable CS8604 // Possible null reference argument.
-            linesPerPage = ev.MarginBounds.Height / printFont.GetHeight(ev.Graphics);
+            float linesPerPage = ev.MarginBounds.Height / printFont.GetHeight(ev.Graphics);
 #pragma warning restore CS8604 // Possible null reference argument.
 
             // Print each line of the file.
             while (count < linesPerPage &&
                ((line = readerToPrint.ReadLine()) != null))
             {
-                yPos = topMargin + (count * printFont.GetHeight(ev.Graphics));
+                float yPos = topMargin + (count * printFont.GetHeight(ev.Graphics));
                 ev.Graphics.DrawString(line, printFont, Brushes.Black, leftMargin, yPos, new StringFormat());
                 count++;
             }
@@ -677,17 +674,17 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void printIPAMapToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PrintIPAMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string ipaPhonemes = IpaUtilities.IpaPhonemes();
-            StringReader ipaPhonemeReader = new StringReader(ipaPhonemes);
+            StringReader ipaPhonemeReader = new(ipaPhonemes);
             readerToPrint = ipaPhonemeReader;
             try
             {
-                PrintDialog printDialog = new PrintDialog();
+                PrintDialog printDialog = new();
                 printFont = new Font("Charis SIL", 12f);
-                PrintDocument pd = new PrintDocument();
-                pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
+                PrintDocument pd = new();
+                pd.PrintPage += new PrintPageEventHandler(this.Pd_PrintPage);
                 printDialog.Document = pd;
                 DialogResult result = printDialog.ShowDialog();
                 if (result == DialogResult.OK)
@@ -701,41 +698,41 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void displaySupersegmentals_Click(object sender, EventArgs e)
+        private void DisplaySupersegmentals_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (string c in IpaUtilities.Suprasegmentals)
             {
                 sb.Append(c);
-                sb.Append(" ");
+                sb.Append(' ');
             }
             txt_SampleText.Text = sb.ToString();
             txt_phonetic.Text = sb.ToString();
         }
 
-        private void pbTimer_Tick(object sender, EventArgs e)
+        private void PbTimer_Tick(object sender, EventArgs e)
         {
             pb_status.PerformStep();
         }
 
-        private void btn_replaySpeech_Click(object sender, EventArgs e)
+        private void Btn_replaySpeech_Click(object sender, EventArgs e)
         {
             string fileName = cbx_recordings.Text;
             string targetFileName = speechFiles[fileName].FullName;
             // Play the audio (OGG) file with the default application
-            WMPLib.WindowsMediaPlayer player = new WMPLib.WindowsMediaPlayer
+            WMPLib.WindowsMediaPlayer player = new()
             {
                 URL = targetFileName
             };
             player.controls.play();
         }
 
-        private void cbx_phonemeToChange_SelectedIndexChanged(object sender, EventArgs e)
+        private void Cbx_phonemeToChange_SelectedIndexChanged(object sender, EventArgs e)
         {
-            updateReplacementPhonemeCbx();
+            UpdateReplacementPhonemeCbx();
         }
 
-        private void updatePhonemeToChangeCbx()
+        private void UpdatePhonemeToChangeCbx()
         {
             if (languageDescription == null)
             {
@@ -750,14 +747,14 @@ namespace ConlangAudioHoning
                     // use it to populate the combo box of pulmonic consonants to be changed.
                     foreach (string consonant in languageDescription.phonetic_inventory["p_consonants"])
                     {
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0} -- ", consonant);
                         sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
                         cbx_phonemeToChange.Items.Add(sb.ToString());
                     }
                     foreach (string consonant in languageDescription.phonetic_inventory["np_consonants"])
                     {
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0} -- ", consonant);
                         sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
                         cbx_phonemeToChange.Items.Add(sb.ToString());
@@ -770,19 +767,19 @@ namespace ConlangAudioHoning
                     // use it to populate the combo box of pulmonic consonants to be changed.
                     foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
                     {
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0} -- ", vowel);
-                        string vowelKey = vowel.Trim().Substring(0, 1);
+                        string vowelKey = vowel.Trim()[..1];
                         sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
-                        if (vowel.Contains("ː"))
+                        if (vowel.Contains('ː'))
                         {
                             sb.Append(" lengthened");
                         }
-                        else if (vowel.Contains("ˑ"))
+                        else if (vowel.Contains('ˑ'))
                         {
                             sb.Append(" half-lengthened");
                         }
-                        else if (vowel.Contains("\u032f"))
+                        else if (vowel.Contains('̯'))
                         {
                             sb.Append(" semi-vowel");  // Probably should be part of a diphthong
                         }
@@ -803,21 +800,21 @@ namespace ConlangAudioHoning
                         // use it to populate the combo box of pulmonic consonants to be changed.
                         foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
                         {
-                            if (!((vowel.Contains("ː")) || (vowel.Contains("ˑ")) || (vowel.Contains("\u032f")) || (vowel.Contains("˞")) || (vowel.Equals("ɚ"))))
+                            if (!((vowel.Contains('ː')) || (vowel.Contains('ˑ')) || (vowel.Contains('̯')) || (vowel.Contains('˞')) || (vowel.Equals("ɚ"))))
                             {
-                                StringBuilder sb = new StringBuilder();
+                                StringBuilder sb = new();
                                 sb.AppendFormat("{0} -- ", vowel);
-                                string vowelKey = vowel.Trim().Substring(0, 1);
+                                string vowelKey = vowel.Trim()[..1];
                                 sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
-                                if (vowel.Contains("ː"))
+                                if (vowel.Contains('ː'))
                                 {
                                     sb.Append(" lengthened");
                                 }
-                                else if (vowel.Contains("ˑ"))
+                                else if (vowel.Contains('ˑ'))
                                 {
                                     sb.Append(" half-lengthened");
                                 }
-                                else if (vowel.Contains("\u032f"))
+                                else if (vowel.Contains('̯'))
                                 {
                                     sb.Append(" semi-vowel");  // Probably should be part of a diphthong
                                 }
@@ -835,21 +832,21 @@ namespace ConlangAudioHoning
                         // use it to populate the combo box of pulmonic consonants to be changed.
                         foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
                         {
-                            if ((vowel.Contains("ː")) || (vowel.Contains("ˑ")))
+                            if ((vowel.Contains('ː')) || (vowel.Contains('ˑ')))
                             {
-                                StringBuilder sb = new StringBuilder();
+                                StringBuilder sb = new();
                                 sb.AppendFormat("{0} -- ", vowel);
-                                string vowelKey = vowel.Trim().Substring(0, 1);
+                                string vowelKey = vowel.Trim()[..1];
                                 sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
-                                if (vowel.Contains("ː"))
+                                if (vowel.Contains('ː'))
                                 {
                                     sb.Append(" lengthened");
                                 }
-                                else if (vowel.Contains("ˑ"))
+                                else if (vowel.Contains('ˑ'))
                                 {
                                     sb.Append(" half-lengthened");
                                 }
-                                else if (vowel.Contains("\u032f"))
+                                else if (vowel.Contains('̯'))
                                 {
                                     sb.Append(" semi-vowel");  // Probably should be part of a diphthong
                                 }
@@ -867,21 +864,21 @@ namespace ConlangAudioHoning
                         // use it to populate the combo box of pulmonic consonants to be changed.
                         foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
                         {
-                            if ((vowel.Contains("˞")) || (vowel.Equals("ɚ")))
+                            if ((vowel.Contains('˞')) || (vowel.Equals("ɚ")))
                             {
-                                StringBuilder sb = new StringBuilder();
+                                StringBuilder sb = new();
                                 sb.AppendFormat("{0} -- ", vowel);
-                                string vowelKey = vowel.Trim().Substring(0, 1);
+                                string vowelKey = vowel.Trim()[..1];
                                 sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
-                                if (vowel.Contains("ː"))
+                                if (vowel.Contains('ː'))
                                 {
                                     sb.Append(" lengthened");
                                 }
-                                else if (vowel.Contains("ˑ"))
+                                else if (vowel.Contains('ˑ'))
                                 {
                                     sb.Append(" half-lengthened");
                                 }
-                                else if (vowel.Contains("\u032f"))
+                                else if (vowel.Contains('̯'))
                                 {
                                     sb.Append(" semi-vowel");  // Probably should be part of a diphthong
                                 }
@@ -908,7 +905,7 @@ namespace ConlangAudioHoning
 
         }
 
-        private void updateReplacementPhonemeCbx()
+        private void UpdateReplacementPhonemeCbx()
         {
             if (languageDescription == null)
             {
@@ -955,7 +952,7 @@ namespace ConlangAudioHoning
                 }
                 foreach (string replacement in replacementPhonemes)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    StringBuilder sb = new();
                     sb.AppendFormat("{0} -- ", replacement);
                     sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
                     cbx_replacementPhoneme.Items.Add(sb.ToString());
@@ -975,7 +972,7 @@ namespace ConlangAudioHoning
                     {
                         if (!replacement.Equals(vowel))
                         {
-                            StringBuilder sb = new StringBuilder();
+                            StringBuilder sb = new();
                             sb.AppendFormat("{0} -- ", replacement);
                             sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
                             cbx_replacementPhoneme.Items.Add(sb.ToString());
@@ -988,7 +985,7 @@ namespace ConlangAudioHoning
                     {
                         if (!replacement.Equals(vowel))
                         {
-                            StringBuilder sb = new StringBuilder();
+                            StringBuilder sb = new();
                             sb.AppendFormat("{0}ˑ -- ", replacement);
                             sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
                             sb.Append(" half-lengthened");
@@ -1002,7 +999,7 @@ namespace ConlangAudioHoning
                     {
                         if (!replacement.Equals(vowel))
                         {
-                            StringBuilder sb = new StringBuilder();
+                            StringBuilder sb = new();
                             sb.AppendFormat("{0}ː -- ", replacement);
                             sb.Append(IpaUtilities.IpaPhonemesMap[replacement]);
                             sb.Append(" lengthened");
@@ -1016,7 +1013,7 @@ namespace ConlangAudioHoning
                     {
                         if (!replacement.Equals(vowel))
                         {
-                            StringBuilder sb = new StringBuilder();
+                            StringBuilder sb = new();
                             sb.AppendFormat("{1}̯{0} -- ", replacement, vowel);
                             sb.Append(IpaUtilities.IpaPhonemesMap[vowel]);
                             sb.Append(" semivowel, ");
@@ -1035,7 +1032,7 @@ namespace ConlangAudioHoning
                     string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                     string newPhoneme;
                     string newPhonemeDescription;
-                    StringBuilder sb = new StringBuilder();
+                    StringBuilder sb = new();
                     if (oldPhoneme.Equals("ə"))
                     {
                         newPhoneme = "ɚ";
@@ -1061,7 +1058,7 @@ namespace ConlangAudioHoning
                     if (oldPhoneme.Equals("ə"))
                     {
                         newPhoneme = "ɚ";
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0}ˑ -- ", newPhoneme);
                         sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
                         newPhonemeDescription = sb.ToString();
@@ -1069,7 +1066,7 @@ namespace ConlangAudioHoning
                     else
                     {
                         newPhoneme = oldPhoneme + "\u02de";
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0}ˑ -- ", newPhoneme);
                         sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme[0].ToString()]);
                         sb.Append(" Rhotacized");
@@ -1086,7 +1083,7 @@ namespace ConlangAudioHoning
                     if (oldPhoneme.Equals("ɚ"))
                     {
                         newPhoneme = "ə";
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0}ˑ -- ", newPhoneme);
                         sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
                         newPhonemeDescription = sb.ToString();
@@ -1094,7 +1091,7 @@ namespace ConlangAudioHoning
                     else
                     {
                         newPhoneme = oldPhoneme;
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0}ˑ -- ", newPhoneme);
                         sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
                         newPhonemeDescription = sb.ToString();
@@ -1119,7 +1116,7 @@ namespace ConlangAudioHoning
                     foreach (string rConsonant in rConsonants)
                     {
                         string newPhoneme2 = newPhoneme + rConsonant;
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0}ˑ -- ", newPhoneme2);
                         sb.Append(IpaUtilities.IpaPhonemesMap[rConsonant]);
                         newPhonemeDescription = sb.ToString();
@@ -1131,13 +1128,13 @@ namespace ConlangAudioHoning
                 {
                     foreach (string phoneme in IpaUtilities.RPhonemes)
                     {
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         sb.AppendFormat("{0} -- ", phoneme);
                         sb.Append(IpaUtilities.IpaPhonemesMap[phoneme]);
                         cbx_replacementPhoneme.Items.Add(sb.ToString());
                     }
                     string phoneme2 = "˞";
-                    StringBuilder sb2 = new StringBuilder();
+                    StringBuilder sb2 = new();
                     sb2.AppendFormat("{0} -- ", phoneme2);
                     sb2.Append(IpaUtilities.IpaPhonemesMap[phoneme2]);
                     cbx_replacementPhoneme.Items.Add(sb2.ToString());
@@ -1252,9 +1249,7 @@ namespace ConlangAudioHoning
             string cbxEntry = string.Empty;
             if (cbx_replacementPhoneme.Items[e.Index] is string replacementPhoneme)
             {
-#pragma warning disable CS8600
                 cbxEntry = replacementPhoneme;
-#pragma warning restore CS8600
             }
             bool inInventory = IsInInventory(cbxEntry);
             bool hasSpellingMap = HasSpellingMap(cbxEntry);
@@ -1272,7 +1267,7 @@ namespace ConlangAudioHoning
             }
 
             e.DrawBackground();
-            Rectangle rectangle = new Rectangle(2, e.Bounds.Top + 2, e.Bounds.Height, e.Bounds.Height - 4);
+            Rectangle rectangle = new(2, e.Bounds.Top + 2, e.Bounds.Height, e.Bounds.Height - 4);
             e.Graphics.DrawString(cbxEntry, cbx_replacementPhoneme.Font, comboBrush,
                 new RectangleF(e.Bounds.X + rectangle.Width, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
         }
@@ -1353,7 +1348,7 @@ namespace ConlangAudioHoning
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
 
                 changesToBeMade.Add((oldPhoneme, newPhoneme));
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 foreach ((string oph, string nph) in changesToBeMade)
                 {
                     sb.Append(oph);
@@ -1430,7 +1425,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendLine(WrapText(sampleText, 80));
             sb.AppendLine("\n------------------------------------------------------------------------");
             sb.AppendLine("Gloss:");
@@ -1446,14 +1441,14 @@ namespace ConlangAudioHoning
                 txt_phonetic.Text = speechEngines[engineName].phoneticText;
             }
             sb.AppendLine(txt_phonetic.Text.Trim());
-            StringReader sampleTextSummaryReader = new StringReader(sb.ToString());
+            StringReader sampleTextSummaryReader = new(sb.ToString());
             readerToPrint = sampleTextSummaryReader;
             printFont = new Font("Charis SIL", 12.0f);
             try
             {
-                PrintDialog printDialog = new PrintDialog();
-                PrintDocument pd = new PrintDocument();
-                pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
+                PrintDialog printDialog = new();
+                PrintDocument pd = new();
+                pd.PrintPage += new PrintPageEventHandler(this.Pd_PrintPage);
                 printDialog.Document = pd;
                 DialogResult result = printDialog.ShowDialog();
                 if (result == DialogResult.OK)
@@ -1470,7 +1465,7 @@ namespace ConlangAudioHoning
         private void printKiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<string> missingPhonemes = KirshenbaumUtilities.UnmappedPhonemes;
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
             foreach (var (phoneme, sb2) in from string phoneme in missingPhonemes
                                            where IpaUtilities.IpaPhonemesMap.ContainsKey(phoneme)
                                            let sb2 = new StringBuilder()
@@ -1492,14 +1487,14 @@ namespace ConlangAudioHoning
                 stringBuilder.AppendFormat("\"{0} ({2}):\t{1}\n", phoneme, IpaUtilities.IpaPhonemesMap[phoneme], sb2.ToString());
             }
 
-            StringReader sampleTextSummaryReader = new StringReader(stringBuilder.ToString());
+            StringReader sampleTextSummaryReader = new(stringBuilder.ToString());
             readerToPrint = sampleTextSummaryReader;
             printFont = new Font("Charis SIL", 12.0f);
             try
             {
-                PrintDialog printDialog = new PrintDialog();
-                PrintDocument pd = new PrintDocument();
-                pd.PrintPage += new PrintPageEventHandler(this.pd_PrintPage);
+                PrintDialog printDialog = new();
+                PrintDocument pd = new();
+                pd.PrintPage += new PrintPageEventHandler(this.Pd_PrintPage);
                 printDialog.Document = pd;
                 DialogResult result = printDialog.ShowDialog();
                 if (result == DialogResult.OK)
@@ -1524,9 +1519,11 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
-            soundMapListEditor.SoundMapList = languageDescription.sound_map_list;
-            soundMapListEditor.headerText = "No specific changes - editing the entire list";
+            SoundMapListEditor soundMapListEditor = new()
+            {
+                SoundMapList = languageDescription.sound_map_list,
+                headerText = "No specific changes - editing the entire list"
+            };
             soundMapListEditor.UpdatePhonemeReplacements();
             soundMapListEditor.ShowDialog();
             // ShowDialog is modal
@@ -1571,67 +1568,67 @@ namespace ConlangAudioHoning
 
         private void rbn_l1_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_normalVowel_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_addRhoticityRegular_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_l2_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_l3_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_allPhonemes_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_halfLongVowels_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_longVowels_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_normalDiphthong_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_semivowelDiphthong_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_longToRhotacized_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_removeRhoticity_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_replaceRhotacized_CheckedChanged(object sender, EventArgs e)
         {
-            updatePhonemeToChangeCbx();
+            UpdatePhonemeToChangeCbx();
         }
 
         private void rbn_replaceRSpelling_CheckedChanged(object sender, EventArgs e)
@@ -1640,7 +1637,7 @@ namespace ConlangAudioHoning
             {
                 lbl_choiceCbx.Text = "Pronunciation Patter to Update";
                 lbl_replacementCbx.Text = "Phoneme to add/replace";
-                updatePhonemeToChangeCbx();
+                UpdatePhonemeToChangeCbx();
             }
             else
             {
@@ -1655,7 +1652,7 @@ namespace ConlangAudioHoning
             if (PollySpeech.TestURI(pollyURI))
             {
                 PollySpeech.PollyURI = pollyURI;
-                PollySpeech pollySpeech = new PollySpeech();
+                PollySpeech pollySpeech = new();
                 Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
                 if (speechEngines.ContainsKey(pollySpeech.Description))
                 {
@@ -1688,7 +1685,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    FileInfo fi = new FileInfo(ESpeakNGSpeak.ESpeakNGPath);
+                    FileInfo fi = new(ESpeakNGSpeak.ESpeakNGPath);
                     openFileDialog.InitialDirectory = fi.DirectoryName;
                 }
                 openFileDialog.Filter = "Executable file (*.exe)|*.exe|All Files (*.*)|*.*";
@@ -1700,7 +1697,7 @@ namespace ConlangAudioHoning
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     ESpeakNGSpeak.ESpeakNGPath = openFileDialog.FileName;
-                    ESpeakNGSpeak eSpeakNGSpeak = new ESpeakNGSpeak();
+                    ESpeakNGSpeak eSpeakNGSpeak = new();
                     Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
                     if (speechEngines.ContainsKey(eSpeakNGSpeak.Description))
                     {

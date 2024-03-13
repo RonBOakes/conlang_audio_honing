@@ -71,7 +71,7 @@ namespace ConlangAudioHoning
 
         // The following is based on the chart found at https://en.wikipedia.org/wiki/Phonetic_symbols_in_Unicode
         // As of January 29, 2024
-        private static readonly Dictionary<string, string> _ipaPhonemesMap = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _ipaPhonemesMap = new()
         {
 			// Plosives
 			{ "\u0070", new string("unvoiced bilabial plosive") },
@@ -308,7 +308,7 @@ namespace ConlangAudioHoning
             { "\u02c8", new string("primary stress mark") },
         };
 
-        private static readonly Dictionary<string, string> _latinIpaReplacements = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _latinIpaReplacements = new()
         {
             { "g", "\u0261" },
             { "G", "\u0262" },
@@ -320,7 +320,7 @@ namespace ConlangAudioHoning
             { "I", "ɪ"}
         };
 
-        private static readonly Dictionary<string, List<string>> _consonant_changes = new Dictionary<string, List<string>>()
+        private static readonly Dictionary<string, List<string>> _consonant_changes = new()
         {
             // Plosive
             { "p", new List<string>(){ "b","m","t","d","\u0271", "\u0253" } },
@@ -503,8 +503,8 @@ namespace ConlangAudioHoning
             {
                 if (_consonant_pattern == null)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append("[");
+                    StringBuilder sb = new();
+                    sb.Append('[');
                     foreach (string consonant in PConsonants)
                     {
                         sb.Append(consonant);
@@ -513,7 +513,7 @@ namespace ConlangAudioHoning
                     {
                         sb.Append(consonant);
                     }
-                    sb.Append("]");
+                    sb.Append(']');
                     _consonant_pattern = sb.ToString();
                 }
                 return _consonant_pattern;
@@ -531,13 +531,13 @@ namespace ConlangAudioHoning
             {
                 if (_vowel_pattern == null)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append("[");
+                    StringBuilder sb = new();
+                    sb.Append('[');
                     foreach (string vowel in Vowels)
                     {
                         sb.Append(vowel);
                     }
-                    sb.Append("]");
+                    sb.Append(']');
                     _vowel_pattern = sb.ToString();
                 }
                 return _vowel_pattern;
@@ -554,8 +554,8 @@ namespace ConlangAudioHoning
             {
                 if (_diacritic_pattern == null)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append("[");
+                    StringBuilder sb = new();
+                    sb.Append('[');
                     foreach (string diacritic in Vowel_modifiers)
                     {
                         sb.Append(diacritic);
@@ -564,7 +564,7 @@ namespace ConlangAudioHoning
                     {
                         sb.Append(diacritic);
                     }
-                    sb.Append("]");
+                    sb.Append(']');
                     _diacritic_pattern = sb.ToString();
                 }
                 return _diacritic_pattern;
@@ -607,10 +607,7 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if (_consonant_changes_l2 == null)
-                {
-                    _consonant_changes_l2 = PopulateL2ConantChanges();
-                }
+                _consonant_changes_l2 ??= PopulateL2ConantChanges();
                 return _consonant_changes_l2;
             }
         }
@@ -623,10 +620,7 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if (_consonant_changes_l3 == null)
-                {
-                    _consonant_changes_l3 = PopulateL3ConantChanges();
-                }
+                _consonant_changes_l3 ??= PopulateL3ConantChanges();
                 return _consonant_changes_l3;
             }
         }
@@ -652,11 +646,11 @@ namespace ConlangAudioHoning
         /// <returns>String with the list of IPA symbols for printing/debugging purposes.</returns>
         public static string IpaPhonemes()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (string phoneme in IpaPhonemesMap.Keys)
             {
                 string description = IpaPhonemesMap[phoneme];
-                StringBuilder sb2 = new StringBuilder();
+                StringBuilder sb2 = new();
                 foreach (char c in phoneme)
                 {
                     if (Char.IsAsciiLetterOrDigit(c))
@@ -1003,7 +997,7 @@ namespace ConlangAudioHoning
                 }
             }
 
-            Dictionary<string, string[]> phonetic_inventory = new Dictionary<string, string[]>
+            Dictionary<string, string[]> phonetic_inventory = new()
             {
                 // TODO: Fix the spelling in the documentation and then here.
                 ["p_consonants"] = pConsonants.ToArray(),

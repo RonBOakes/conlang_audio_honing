@@ -140,8 +140,7 @@ namespace ConlangJson
         /// <returns>true if the objects are the same, false otherwise.</returns>
         public override bool Equals(object? obj)
         {
-            return obj is not null &&
-                obj is SoundMap &&
+            return obj is SoundMap &&
                 _phoneme == ((SoundMap)obj).phoneme &&
                    _romanization == ((SoundMap)obj).romanization &&
                    _spelling_regex == ((SoundMap)obj).spelling_regex &&

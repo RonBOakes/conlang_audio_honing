@@ -28,7 +28,7 @@ namespace ConlangAudioHoning
     /// </summary>
     internal static class LatinUtilities
     {
-        private static readonly Dictionary<string, string> _diacriticsMap = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _diacriticsMap = new()
         {
             { "\u0300", "combining grave accent" },
             { "\u0301", "combining acute accent" },
@@ -141,7 +141,7 @@ namespace ConlangAudioHoning
         /// <returns>A string containing the glossed text.</returns>
         public static string GlossText(string sampleText, ConlangJson.LanguageDescription language, LanguageHoningForm? caller = null)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             bool removeDeclinedWord = false;
             if (!language.declined)
@@ -164,7 +164,7 @@ namespace ConlangAudioHoning
                 wordMap[entry.spelled.Trim().ToLower()] = entry;
             }
 
-            using (StringReader sampleTextReader = new StringReader(sampleText))
+            using (StringReader sampleTextReader = new(sampleText))
             {
                 string? line;
                 do
@@ -180,9 +180,9 @@ namespace ConlangAudioHoning
                             {
                                 word = wordMatch.Groups[1].Value;
                             }
-                            if (wordMap.ContainsKey(word))
+                            if (wordMap.TryGetValue(word, out LexiconEntry? value))
                             {
-                                LexiconEntry lexiconEntry = wordMap[word];
+                                LexiconEntry lexiconEntry = value;
                                 sb.AppendFormat("{0}-({1} ", lexiconEntry.english, lexiconEntry.part_of_speech);
                                 foreach (string declension in lexiconEntry.declensions)
                                 {

@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace ConlangJson
 {
@@ -98,12 +99,9 @@ namespace ConlangJson
             {
                 return [];
             }
-            if (word.metadata != null)
+            if (word.metadata != null && word.metadata.ContainsKey("Source"))
             {
-                if (word.metadata.ContainsKey("Source"))
-                {
-                    return [];
-                }
+                return [];
             }
 
             List<NewWordData> phoneticList = [];
@@ -177,7 +175,6 @@ namespace ConlangJson
                 addLexicon.AddRange(DeclineWord(word, language.affix_map, language.sound_map_list));
             }
             language.lexicon.AddRange(addLexicon);
-            List<LexiconEntry> cleanLexicon = deDuplicateLexicon(language.lexicon);
             language.declined = true;
         }
 
@@ -225,29 +222,33 @@ namespace ConlangJson
 
         private struct NewWordData : IEquatable<NewWordData>
         {
-            public string NewWord;
-            public List<string> Declensions;
-            public string PartOfSpeech;
-            public string Phonetic;
+            public string NewWord { get; private set; }
+            public List<string> Declensions { get; private set; }
+            public string PartOfSpeech { get; private set; }
+            public string Phonetic { get; private set; }
+
+            public NewWordData(string NewWord, List<string> Declensions, string PartOfSpeech, string Phonetic)
+            {
+                this.NewWord = NewWord;
+                this.Declensions = Declensions;
+                this.PartOfSpeech = PartOfSpeech;
+                this.Phonetic = Phonetic;
+            }
 
             public override bool Equals([NotNullWhen(true)] object? obj)
             {
-                if (obj == null)
-                {
-                    throw new ArgumentNullException();
-                }
                 if (obj is NewWordData)
                 {
                     NewWordData nwObj = (NewWordData)obj;
                     bool comp = this.NewWord.Equals(nwObj.NewWord) &&
                         this.PartOfSpeech.Equals(nwObj.PartOfSpeech) &&
                         this.Phonetic.Equals(nwObj.Phonetic);
-                    comp &= (sameContent(this.Declensions, nwObj.Declensions));
+                    comp &= SameContent(this.Declensions, nwObj.Declensions);
                     return comp;
                 }
                 else
                 {
-                    throw new ArgumentException("Invalid Argument in NewWordData.Equals");
+                    return false;
                 }
             }
 
@@ -266,7 +267,7 @@ namespace ConlangJson
                 bool comp = this.NewWord.Equals(other.NewWord) &&
                     this.PartOfSpeech.Equals(other.PartOfSpeech) &&
                     this.Phonetic.Equals(other.Phonetic);
-                comp &= (sameContent(this.Declensions, other.Declensions));
+                comp &= SameContent(this.Declensions, other.Declensions);
                 return comp;
             }
         }
@@ -342,7 +343,7 @@ namespace ConlangJson
                             newWord = phonetic2 + rules.f_pronunciation_add;
                         }
                     }
-                    else if ((affix.Equals("replacement")) && (rules.pronunciation_replacement != null))
+                    else if (affix.Equals("replacement") && (rules.pronunciation_replacement != null))
                     {
                         newWord = Regex.Replace(phonetic, rules.pronunciation_regex, rules.pronunciation_replacement);
                     }
@@ -370,12 +371,12 @@ namespace ConlangJson
                     declensions.Add(declension);
                     phoneticList.AddRange(ProcessAffixMapTuple(nextMapTuple, newWord, partOfSpeech, declensions));
                     NewWordData newWordData = new NewWordData
-                    {
-                        NewWord = newWord,
-                        Declensions = declensions,
-                        PartOfSpeech = partOfSpeech,
-                        Phonetic = phonetic
-                    };
+                    (
+                        NewWord: newWord,
+                        Declensions: declensions,
+                        PartOfSpeech: partOfSpeech,
+                        Phonetic: phonetic
+                    );
                     phoneticList.Add(newWordData);
                 }
             }
@@ -443,13 +444,13 @@ namespace ConlangJson
             foreach (List<T> permutation in permutationList)
             {
                 bool newCombo = true;
-                foreach (List<T> combo in combos)
+                foreach (var _ in from List<T> combo in combos
+                                  where SameContent(combo, permutation)
+                                  select new { })
                 {
-                    if (sameContent(combo, permutation))
-                    {
-                        newCombo = false;
-                    }
+                    newCombo = false;
                 }
+
                 if (newCombo)
                 {
                     combos.Add(permutation);
@@ -485,7 +486,7 @@ namespace ConlangJson
                 {
                     foreach (T t in list)
                     {
-                        if (!(combo.Contains(t)))
+                        if (!combo.Contains(t))
                         {
                             List<T> newCombo = [t, .. combo];
                             permutationList.Add(newCombo);
@@ -496,7 +497,7 @@ namespace ConlangJson
             return permutationList;
         }
 
-        private static bool sameContent<T>(List<T> one, List<T> two)
+        private static bool SameContent<T>(List<T> one, List<T> two)
         {
             if (one.Count != two.Count)
             {
@@ -504,14 +505,13 @@ namespace ConlangJson
             }
             // Assumption: neither list will have duplicate entries - safe for our needs here.
             int matchCount = 0;
-            foreach (T t in one)
+            foreach (var _ in from T t in one
+                              where two.Contains(t)
+                              select new { })
             {
-                if (two.Contains(t))
-                {
-                    matchCount += 1;
-                    continue;
-                }
+                matchCount += 1;
             }
+
             return matchCount == one.Count;
         }
 

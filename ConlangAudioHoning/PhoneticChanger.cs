@@ -84,7 +84,7 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
+            SoundMapListEditor soundMapListEditor = new();
             List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
             soundMapListEditor.PhonemeReplacementPairs.Add((oldPhoneme, newPhoneme));
@@ -135,20 +135,14 @@ namespace ConlangAudioHoning
                     SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
                     wordPattern = @"(\s+)" + oldSpelled + "$";
                     SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
-                    if (word.metadata == null)
-                    {
-                        word.metadata = [];
-                    }
+                    word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
                     {
                         phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
                     }
-                    if (phoneticChangeHistories == null)
-                    {
-                        phoneticChangeHistories = [];
-                    }
-                    PhoneticChangeHistory pch = new PhoneticChangeHistory
+                    phoneticChangeHistories ??= [];
+                    PhoneticChangeHistory pch = new()
                     {
                         OldPhoneme = oldPhoneme,
                         NewPhoneme = newPhoneme,
@@ -193,7 +187,7 @@ namespace ConlangAudioHoning
             changeList.Sort(new stringTupleLengthComp());
             changeList.Reverse();
 
-            SoundMapListEditor soundMapListEditor = new SoundMapListEditor();
+            SoundMapListEditor soundMapListEditor = new();
             List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
             soundMapListEditor.PhonemeReplacementPairs.AddRange(changeList);
@@ -240,22 +234,16 @@ namespace ConlangAudioHoning
                     {
                         word.phonetic = word.phonetic.Replace(diphthongReplacementMap[diphthong], diphthong);
                     }
-                    if (word.metadata == null)
-                    {
-                        word.metadata = [];
-                    }
+                    word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
                     {
                         phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
                     }
-                    if (phoneticChangeHistories == null)
-                    {
-                        phoneticChangeHistories = [];
-                    }
+                    phoneticChangeHistories ??= [];
                     if (!phoneticChangeHistories.ContainsKey(changeHistoryTimestamp))
                     {
-                        PhoneticChangeHistory pch = new PhoneticChangeHistory
+                        PhoneticChangeHistory pch = new()
                         {
                             OldPhoneme = oldPhoneme,
                             NewPhoneme = newPhoneme,
@@ -319,11 +307,8 @@ namespace ConlangAudioHoning
                     {
                         phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
                     }
-                    if (phoneticChangeHistories == null)
-                    {
-                        phoneticChangeHistories = [];
-                    }
-                    PhoneticChangeHistory pch = new PhoneticChangeHistory
+                    phoneticChangeHistories ??= [];
+                    PhoneticChangeHistory pch = new()
                     {
                         OldPhoneme = "n/a",
                         NewPhoneme = "n/a",
@@ -373,11 +358,8 @@ namespace ConlangAudioHoning
                     {
                         phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
                     }
-                    if (phoneticChangeHistories == null)
-                    {
-                        phoneticChangeHistories = [];
-                    }
-                    PhoneticChangeHistory pch = new PhoneticChangeHistory
+                    phoneticChangeHistories ??= [];
+                    PhoneticChangeHistory pch = new()
                     {
                         OldPhoneme = "n/a",
                         NewPhoneme = "n/a",
@@ -415,19 +397,13 @@ namespace ConlangAudioHoning
             Dictionary<double, string> changeHistoryKeyMap = [];
             foreach (LexiconEntry lexiconEntry in Language.lexicon)
             {
-                if (lexiconEntry.metadata == null)
-                {
-                    lexiconEntry.metadata = [];
-                }
+                lexiconEntry.metadata ??= [];
                 Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                 if (lexiconEntry.metadata.ContainsKey("PhoneticChangeHistory"))
                 {
                     phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(lexiconEntry.metadata["PhoneticChangeHistory"]);
                 }
-                if (phoneticChangeHistories == null)
-                {
-                    phoneticChangeHistories = [];
-                }
+                phoneticChangeHistories ??= [];
                 foreach (string key in phoneticChangeHistories.Keys)
                 {
                     double keyValue = double.Parse(key);
@@ -452,22 +428,16 @@ namespace ConlangAudioHoning
             newLexicon.Clear();
             foreach (LexiconEntry lexiconEntry in Language.lexicon)
             {
-                if (lexiconEntry.metadata == null)
-                {
-                    lexiconEntry.metadata = [];
-                }
+                lexiconEntry.metadata ??= [];
                 Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                 if (lexiconEntry.metadata.ContainsKey("PhoneticChangeHistory"))
                 {
                     phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(lexiconEntry.metadata["PhoneticChangeHistory"]);
                 }
-                if (phoneticChangeHistories == null)
+                phoneticChangeHistories ??= [];
+                if (phoneticChangeHistories.TryGetValue(mostRecentKey, out PhoneticChangeHistory value))
                 {
-                    phoneticChangeHistories = [];
-                }
-                if (phoneticChangeHistories.ContainsKey(mostRecentKey))
-                {
-                    LexiconEntry oldVersion = phoneticChangeHistories[mostRecentKey].OldVersion;
+                    LexiconEntry oldVersion = value.OldVersion;
                     newLexicon.Add(oldVersion);
                     if (!string.IsNullOrEmpty(SampleText))
                     {
@@ -506,22 +476,22 @@ namespace ConlangAudioHoning
             List<SoundMap> rAddingEntries = [];
 
             // Build the pattern to look for "r" phonemes and rhoticity.
-            StringBuilder patternBuilder = new StringBuilder();
+            StringBuilder patternBuilder = new();
             patternBuilder.Append("[ɚ˞");
             foreach (string phoneme in IpaUtilities.RPhonemes)
             {
                 patternBuilder.Append(phoneme);
             }
-            patternBuilder.Append("]");
-            Regex rPresentRegex = new Regex(patternBuilder.ToString().Trim(), RegexOptions.Compiled);
+            patternBuilder.Append(']');
+            Regex rPresentRegex = new(patternBuilder.ToString().Trim(), RegexOptions.Compiled);
 
             foreach (SoundMap soundMap in soundMapList)
             {
-                if ((soundMap.romanization.Contains("r")) && !rPresentRegex.IsMatch(soundMap.spelling_regex))
+                if ((soundMap.romanization.Contains('r')) && !rPresentRegex.IsMatch(soundMap.spelling_regex))
                 {
                     rAddingEntries.Add(soundMap);
                 }
-                else if ((soundMap.pronunciation_regex.Contains("r")) && !rPresentRegex.IsMatch(soundMap.phoneme))
+                else if ((soundMap.pronunciation_regex.Contains('r')) && !rPresentRegex.IsMatch(soundMap.phoneme))
                 {
                     rAddingEntries.Add(soundMap);
                 }

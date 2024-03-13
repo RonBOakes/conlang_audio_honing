@@ -31,7 +31,7 @@ namespace ConlangAudioHoning
         // Based on https://web.archive.org/web/20160312220739/http://www.kirshenbaum.net/IPA/faq.html
         // and https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/kirshenbaum.md as of 
         // commit cd17e7c.
-        private static readonly Dictionary<string, string> _ipa_kirshenbaum_map = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _ipa_kirshenbaum_map = new()
         {
             { "a", "a" }, { "b", "b" }, { "ɓ", "b`" },{ "c", "c" }, { "d", "d" }, { "ɖ", "d." },
             { "ɗ", "d`" }, { "e", "e" }, { "f", "f" }, { "ɡ", "g" }, { "ɠ", "g`" }, { "h", "h" },
@@ -83,7 +83,7 @@ namespace ConlangAudioHoning
 
         public static string IpaWordToKirshenbaum(string word)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append("[[");
 
             // All of the keys in both Kirshenbaum maps are 1 character

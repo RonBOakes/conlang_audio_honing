@@ -28,11 +28,6 @@ namespace ConlangAudioHoning
         private static string? _pollyURI;
         private static string? _eSpeakNgPath;
 
-        // TODO: replace these with empty strings or something to 
-        //       indicate when the related option is not present.
-        private static readonly string DefaultPollyURI = "https://9ggv18yii2.execute-api.us-east-1.amazonaws.com/general_speak2";
-        private static readonly string DefaultESpeakNGPath = @"C:\Program Files\eSpeak NG\espeak-ng.exe";
-
         public UserConfiguration()
         { }
 
@@ -89,7 +84,7 @@ namespace ConlangAudioHoning
                 filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
             }
 
-            FileInfo fi = new FileInfo(filePath);
+            FileInfo fi = new(filePath);
 
             DirectoryInfo di = fi.Directory ?? new DirectoryInfo(Application.UserAppDataPath.Trim());
             if (!di.Exists)
@@ -135,10 +130,7 @@ namespace ConlangAudioHoning
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 configuration = JsonSerializer.Deserialize<UserConfiguration>(jsonString);
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-                if (configuration == null)
-                {
-                    configuration = new UserConfiguration();
-                }
+                configuration ??= new UserConfiguration();
             }
             else
             {
@@ -153,17 +145,7 @@ namespace ConlangAudioHoning
         /// <returns>The current version of the User Configuration.</returns>
         public static UserConfiguration LoadCurrent()
         {
-            UserConfiguration config = new UserConfiguration();
-            return config;
-        }
-
-        private static UserConfiguration LoadDefault()
-        {
-            UserConfiguration config = new UserConfiguration
-            {
-                PollyURI = DefaultPollyURI,
-                ESpeakNgPath = DefaultESpeakNGPath
-            };
+            UserConfiguration config = new();
             return config;
         }
     }

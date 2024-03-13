@@ -1137,7 +1137,7 @@ namespace ConlangAudioHoning
             int subMenuCount = (LatinUtilities.DiacriticsMap.Count / 10) + 1;
             for (int i = 0; i < subMenuCount; i++)
             {
-                ToolStripMenuItem menuItem = new ToolStripMenuItem
+                ToolStripMenuItem menuItem = new()
                 {
                     Size = new Size(50, 22),
                     Text = string.Format("Part {0}", i + 1)
@@ -1149,7 +1149,7 @@ namespace ConlangAudioHoning
             int part = 0;
             foreach (string latinDiacritic in LatinUtilities.DiacriticsMap.Keys)
             {
-                ToolStripMenuItem latinToolStripMenuItem = new ToolStripMenuItem
+                ToolStripMenuItem latinToolStripMenuItem = new()
                 {
                     Size = new Size(211, 22),
                     Text = string.Format("{0} -- {1}", latinDiacritic, LatinUtilities.DiacriticsMap[latinDiacritic])

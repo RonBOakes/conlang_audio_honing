@@ -105,7 +105,7 @@ namespace ConlangAudioHoning
             // Get the phonetic representations of the text - ported from Python code.
             List<List<Dictionary<string, string>>> pronounceMapList = [];
             pronounceMapList.Clear();
-            using (StringReader sampleTextReader = new StringReader(sampleText.ToLower()))
+            using (StringReader sampleTextReader = new(sampleText.ToLower()))
             {
                 string? line;
                 do
@@ -184,10 +184,10 @@ namespace ConlangAudioHoning
         {
             Dictionary<string, PollySpeech.VoiceData> voices = [];
             HttpHandler httpHandler = HttpHandler.Instance;
-            HttpClient httpClient = httpHandler.httpClient;
+            HttpClient httpClient = httpHandler.HttpClient;
             StringContent content;
 
-            Dictionary<string, string> requestDict = new Dictionary<string, string>
+            Dictionary<string, string> requestDict = new()
             {
                 ["systemStatus"] = string.Empty
             };
@@ -280,7 +280,7 @@ namespace ConlangAudioHoning
 
             bool generated = false;
             HttpHandler httpHandler = HttpHandler.Instance;
-            HttpClient httpClient = httpHandler.httpClient;
+            HttpClient httpClient = httpHandler.HttpClient;
             StringContent content;
 
             ProgressBar? progressBar;
@@ -301,7 +301,7 @@ namespace ConlangAudioHoning
             }
 
 
-            Dictionary<string, string> requestDict = new Dictionary<string, string>
+            Dictionary<string, string> requestDict = new()
             {
                 ["systemStatus"] = string.Empty
             };
@@ -425,9 +425,9 @@ namespace ConlangAudioHoning
         public static bool TestURI(string newURI)
         {
             HttpHandler httpHandler = HttpHandler.Instance;
-            HttpClient httpClient = httpHandler.httpClient;
+            HttpClient httpClient = httpHandler.HttpClient;
             StringContent content;
-            Dictionary<string, string> requestDict = new Dictionary<string, string>
+            Dictionary<string, string> requestDict = new()
             {
                 ["systemStatus"] = string.Empty
             };

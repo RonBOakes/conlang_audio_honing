@@ -156,27 +156,28 @@ namespace ConlangAudioHoning
                 pw.Add("word", word);
             }
 
-            string phonetic = string.Empty;
             string punctuation = string.Empty;
 
             word = word.Trim();
             word = word.ToLower();
 
             int wordLen = word.Length;
-            string lastChar = word.Substring(wordLen - 1);
+            string lastChar = word[(wordLen - 1)..];
             if ((lastChar == ".") || (lastChar == ","))
             {
                 punctuation = lastChar;
-                word = word.Substring(0, (wordLen - 1));
+                word = word[..(wordLen - 1)];
             }
-            if (wordMap.ContainsKey(word))
+
+            string phonetic;
+            if (wordMap.TryGetValue(word, out LexiconEntry? value))
             {
-                phonetic = wordMap[word].phonetic;
+                phonetic = value.phonetic;
             }
             else
             {
                 phonetic = ConlangUtilities.SoundOutWord(word, LanguageDescription.sound_map_list);
-                LexiconEntry entry = new LexiconEntry
+                LexiconEntry entry = new()
                 {
                     phonetic = phonetic,
                     spelled = word,

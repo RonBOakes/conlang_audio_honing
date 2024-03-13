@@ -260,21 +260,21 @@
             displayPulmonicConsonantsToolStripMenuItem.Name = "displayPulmonicConsonantsToolStripMenuItem";
             displayPulmonicConsonantsToolStripMenuItem.Size = new Size(240, 22);
             displayPulmonicConsonantsToolStripMenuItem.Text = "Display Pulmonic Consonants";
-            displayPulmonicConsonantsToolStripMenuItem.Click += displayPulmonicConsonantsToolStripMenuItem_Click;
+            displayPulmonicConsonantsToolStripMenuItem.Click += DisplayPulmonicConsonantsToolStripMenuItem_Click;
             // 
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
             toolStripMenuItem2.Size = new Size(240, 22);
             toolStripMenuItem2.Text = "Display Supersegmental";
-            toolStripMenuItem2.Click += displaySupersegmentals_Click;
+            toolStripMenuItem2.Click += DisplaySupersegmentals_Click;
             // 
             // printIPAMapToolStripMenuItem
             // 
             printIPAMapToolStripMenuItem.Name = "printIPAMapToolStripMenuItem";
             printIPAMapToolStripMenuItem.Size = new Size(240, 22);
             printIPAMapToolStripMenuItem.Text = "Print IPA Map";
-            printIPAMapToolStripMenuItem.Click += printIPAMapToolStripMenuItem_Click;
+            printIPAMapToolStripMenuItem.Click += PrintIPAMapToolStripMenuItem_Click;
             // 
             // printKiToolStripMenuItem
             // 
@@ -363,7 +363,7 @@
             btn_replaySpeech.TabIndex = 8;
             btn_replaySpeech.Text = "Replay Selected Recording";
             btn_replaySpeech.UseVisualStyleBackColor = true;
-            btn_replaySpeech.Click += btn_replaySpeech_Click;
+            btn_replaySpeech.Click += Btn_replaySpeech_Click;
             // 
             // pb_status
             // 
@@ -375,7 +375,7 @@
             // 
             // pbTimer
             // 
-            pbTimer.Tick += pbTimer_Tick;
+            pbTimer.Tick += PbTimer_Tick;
             // 
             // lbl_choiceCbx
             // 
@@ -404,7 +404,7 @@
             cbx_phonemeToChange.Name = "cbx_phonemeToChange";
             cbx_phonemeToChange.Size = new Size(492, 28);
             cbx_phonemeToChange.TabIndex = 13;
-            cbx_phonemeToChange.SelectedIndexChanged += cbx_phonemeToChange_SelectedIndexChanged;
+            cbx_phonemeToChange.SelectedIndexChanged += Cbx_phonemeToChange_SelectedIndexChanged;
             // 
             // cbx_replacementPhoneme
             // 
