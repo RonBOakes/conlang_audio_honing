@@ -181,7 +181,7 @@ namespace ConlangAudioHoning
         /// </summary>
         public CharacterInsertToolStripMenuItem()
         {
-            // Instantiate the menu items.
+            // Instantiate the menu SpeakingSpeeds.
             pulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             nonPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             vowelsToolStripMenuItem = new ToolStripMenuItem();
@@ -1177,7 +1177,7 @@ namespace ConlangAudioHoning
 
         /// <summary>
         /// Add an event handler delegate that will respond when any of the end-point menu
-        /// items is clicked on.  This handler should take the menu item and insert that character
+        /// SpeakingSpeeds is clicked on.  This handler should take the menu item and insert that character
         /// into selected text.
         /// </summary>
         /// <param name="clickDelegate"></param>

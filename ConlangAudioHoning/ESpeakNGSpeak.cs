@@ -255,10 +255,7 @@ namespace ConlangAudioHoning
                         };
                         string[] ageGender = fields[2].Split("/");
                         voiceData.Gender = ageGender[1];
-                        if (!voices.ContainsKey(voiceData.LanguageCode))
-                        {
-                            voices.Add(voiceData.LanguageCode, voiceData);
-                        }
+                        voices.TryAdd(voiceData.LanguageCode, voiceData);
                     }
                 }
                 while (line != null);

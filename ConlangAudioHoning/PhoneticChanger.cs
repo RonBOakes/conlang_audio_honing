@@ -407,10 +407,7 @@ namespace ConlangAudioHoning
                 foreach (string key in phoneticChangeHistories.Keys)
                 {
                     double keyValue = double.Parse(key);
-                    if (!changeHistoryKeyMap.ContainsKey(keyValue))
-                    {
-                        changeHistoryKeyMap.Add(keyValue, key);
-                    }
+                    changeHistoryKeyMap.TryAdd(keyValue, key);
                 }
             }
             if (changeHistoryKeyMap.Count <= 0)

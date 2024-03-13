@@ -17,6 +17,7 @@
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using ConlangJson;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing.Printing;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -51,6 +52,8 @@ namespace ConlangAudioHoning
         {
             get => pb_status;
         }
+
+        private static readonly string[] SpeakingSpeeds = ["x-slow", "slow", "medium", "fast", "x-fast"];
 
         /// <summary>
         /// Constructor for the LanguageHoningForm.
@@ -98,10 +101,10 @@ namespace ConlangAudioHoning
             tabPhoneticAlterations.SelectedIndexChanged += TabPhoneticAlterations_SelectedIndexChanged;
 
             // Hide controls on the Diphthong tab that only show up when certain radio buttons are pressed
-            label1.Visible = false;
-            cbx_dipthongStart.Visible = false;
-            label2.Visible = false;
-            cbx_dipthongEnd.Visible = false;
+            lbl_diphthongStartVowel.Visible = false;
+            cbx_dipthongStartVowel.Visible = false;
+            lbl_DiphthongEndVowel.Visible = false;
+            cbx_dipthongEndVowel.Visible = false;
 
             // Handle the ApplicationExit event to know when the application is exiting.
             Application.ApplicationExit += new EventHandler(OnApplicationExit);
@@ -199,61 +202,57 @@ namespace ConlangAudioHoning
         {
             cbx_speed.SuspendLayout();
             cbx_speed.Items.Clear();
-            cbx_speed.Items.AddRange(new string[] { "x-slow", "slow", "medium", "fast", "x-fast" });
+            cbx_speed.Items.AddRange(SpeakingSpeeds);
             cbx_speed.ResumeLayout();
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new())
+            using OpenFileDialog openFileDialog = new();
+            if (languageFileInfo == null)
             {
-                if (languageFileInfo == null)
-                {
-                    openFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
-                }
-                else
-                {
-                    openFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
-                }
-                openFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.Multiselect = false;
-                openFileDialog.RestoreDirectory = true;
-                openFileDialog.CheckFileExists = true;
+                openFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            }
+            else
+            {
+                openFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+            }
+            openFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = false;
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.CheckFileExists = true;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    LoadLanguage(openFileDialog.FileName);
-                }
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                LoadLanguage(openFileDialog.FileName);
             }
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (SaveFileDialog saveFileDialog = new())
+            using SaveFileDialog saveFileDialog = new();
+            if (languageFileInfo == null)
             {
-                if (languageFileInfo == null)
-                {
-                    saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
-                }
-                else
-                {
-                    saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
-                }
-                saveFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
-                saveFileDialog.FilterIndex = 1;
-                saveFileDialog.RestoreDirectory = true;
-                saveFileDialog.CheckFileExists = false;
-                saveFileDialog.OverwritePrompt = true;
+                saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            }
+            else
+            {
+                saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+            }
+            saveFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.CheckFileExists = false;
+            saveFileDialog.OverwritePrompt = true;
 
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    SaveLanguage(saveFileDialog.FileName);
-                }
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                SaveLanguage(saveFileDialog.FileName);
             }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
@@ -288,15 +287,8 @@ namespace ConlangAudioHoning
 
             // Temporary work around to put the Polly voice into the preferred voices map.  
             // Once the JSON structure is reworked, this will not be needed.
-            if (!languageDescription.preferred_voices.ContainsKey("Polly"))
-            {
-                languageDescription.preferred_voices.Add("Polly", "Brian");
-            }
-            if (!languageDescription.preferred_voices.ContainsKey("espeak-ng"))
-            {
-                languageDescription.preferred_voices.Add("espeak-ng", "en-us");
-            }
-
+            languageDescription.preferred_voices.TryAdd("Polly", "Brian");
+            languageDescription.preferred_voices.TryAdd("espeak-ng", "en-us");
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
             IpaUtilities.BuildPhoneticInventory(languageDescription);
             phoneticChanger.Language = languageDescription;
@@ -330,9 +322,15 @@ namespace ConlangAudioHoning
             tabPhoneticAlterations.SelectedIndex = 0; // Consonants.
             rbn_l1.Checked = true;
             rbn_addRhoticityRegular.Checked = true;
+            rbn_vowelToDiphthongStart.Checked = true;
             UpdatePhonemeToChangeCbx();
             LoadVoices();
         }
+
+        private readonly JsonSerializerOptions JsonSerializerOptions = new()
+        {
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        };
 
         private void SaveLanguage(string filename)
         {
@@ -362,10 +360,7 @@ namespace ConlangAudioHoning
 #pragma warning restore CS8600
                 historyEntries.Add(history);
 
-                JsonSerializerOptions jsonSerializerOptions = new()
-                {
-                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-                };
+                JsonSerializerOptions jsonSerializerOptions = JsonSerializerOptions;
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
                 jsonSerializerOptions.Encoder = encoder;
                 jsonSerializerOptions.WriteIndented = true;
@@ -375,31 +370,29 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void loadSampleTextFile_Click(object sender, EventArgs e)
+        private void LoadSampleTextFile_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new())
+            using OpenFileDialog openFileDialog = new();
+            if (languageFileInfo == null)
             {
-                if (languageFileInfo == null)
-                {
-                    openFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
-                }
-                else
-                {
-                    openFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
-                }
-                openFileDialog.Filter = "txt file (*.txt)|*.txt|All Files (*.*)|*.*";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.Multiselect = false;
-                openFileDialog.RestoreDirectory = true;
-                openFileDialog.CheckFileExists = true;
+                openFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            }
+            else
+            {
+                openFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+            }
+            openFileDialog.Filter = "txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = false;
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.CheckFileExists = true;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    LoadSampleText(openFileDialog.FileName);
-                    // Empty the speech files and list box
-                    speechFiles.Clear();
-                    cbx_recordings.Items.Clear();
-                }
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                LoadSampleText(openFileDialog.FileName);
+                // Empty the speech files and list box
+                speechFiles.Clear();
+                cbx_recordings.Items.Clear();
             }
         }
 
@@ -416,28 +409,26 @@ namespace ConlangAudioHoning
             phoneticChanger.SampleText = sampleText;
         }
 
-        private void saveSampleMenu_Click(object sender, EventArgs e)
+        private void SaveSampleMenu_Click(object sender, EventArgs e)
         {
-            using (SaveFileDialog saveFileDialog = new())
+            using SaveFileDialog saveFileDialog = new();
+            if (languageFileInfo == null)
             {
-                if (languageFileInfo == null)
-                {
-                    saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
-                }
-                else
-                {
-                    saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
-                }
-                saveFileDialog.Filter = "txt file (*.txt)|*.txt|All Files (*.*)|*.*";
-                saveFileDialog.FilterIndex = 1;
-                saveFileDialog.RestoreDirectory = true;
-                saveFileDialog.CheckFileExists = false;
-                saveFileDialog.OverwritePrompt = true;
+                saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            }
+            else
+            {
+                saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+            }
+            saveFileDialog.Filter = "txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.CheckFileExists = false;
+            saveFileDialog.OverwritePrompt = true;
 
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    SaveSampleText(saveFileDialog.FileName);
-                }
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                SaveSampleText(saveFileDialog.FileName);
             }
         }
 
@@ -453,13 +444,13 @@ namespace ConlangAudioHoning
             config.SaveConfiguration();
         }
 
-        private void txt_SampleText_TextChanged(object sender, EventArgs e)
+        private void Txt_SampleText_TextChanged(object sender, EventArgs e)
         {
             sampleText = txt_SampleText.Text;
             sampleText = sampleText.Trim();
         }
 
-        private void btn_generate_Click(object sender, EventArgs e)
+        private void Btn_generate_Click(object sender, EventArgs e)
         {
             if ((languageDescription != null) && (!string.IsNullOrEmpty(sampleText)))
             {
@@ -471,7 +462,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void declineToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeclineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (languageDescription == null)
             {
@@ -490,7 +481,7 @@ namespace ConlangAudioHoning
 
         }
 
-        private void btn_generateSpeech_Click(object sender, EventArgs e)
+        private void Btn_generateSpeech_Click(object sender, EventArgs e)
         {
             if ((languageDescription == null) || (string.IsNullOrEmpty(sampleText)))
             {
@@ -759,6 +750,12 @@ namespace ConlangAudioHoning
                         sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
                         cbx_phonemeToChange.Items.Add(sb.ToString());
                     }
+                    cbx_dipthongStartVowel.Visible = false;
+                    lbl_diphthongStartVowel.Visible = false;
+                    cbx_dipthongEndVowel.Visible = false;
+                    lbl_DiphthongEndVowel.Visible = false;
+                    cbx_replacementPhoneme.Visible = true;
+                    lbl_replacementCbx.Visible = true;
                     break;
                 case 1: // Vowel (single)
                     // Ensure that there is a blank at the top of the drop down list
@@ -781,15 +778,117 @@ namespace ConlangAudioHoning
                         }
                         else if (vowel.Contains('̯'))
                         {
-                            sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                            sb.Append(" semi-diphthong");  // Probably should be part of a diphthong
                         }
                         cbx_phonemeToChange.Items.Add(sb.ToString());
                     }
+
+                    cbx_dipthongStartVowel.Visible = false;
+                    lbl_diphthongStartVowel.Visible = false;
+                    cbx_dipthongEndVowel.Visible = false;
+                    lbl_DiphthongEndVowel.Visible = false;
+                    cbx_replacementPhoneme.Visible = true;
+                    lbl_replacementCbx.Visible = true;
 
                     cbx_phonemeToChange.SelectedIndex = -1;
 
                     break;
                 case 2: // Vowel diphthongs
+                    cbx_phonemeToChange.Items.Clear();
+                    // The SpeakingSpeeds to go into the combo box depend on the selected radio button
+                    if (rbn_vowelToDiphthongStart.Checked || rbn_vowelToDipthongEnd.Checked)
+                    {
+                        // Populate with vowels
+                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can
+                        // use it to populate the combo box of pulmonic consonants to be changed.
+                        foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0} -- ", vowel);
+                            string vowelKey = vowel.Trim()[..1];
+                            sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
+                            if (vowel.Contains('ː'))
+                            {
+                                sb.Append(" lengthened");
+                            }
+                            else if (vowel.Contains('ˑ'))
+                            {
+                                sb.Append(" half-lengthened");
+                            }
+                            else if (vowel.Contains('̯'))
+                            {
+                                sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                            }
+                            cbx_phonemeToChange.Items.Add(sb.ToString());
+                        }
+                    }
+                    else
+                    {
+                        // populate with diphthongs
+                        // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can
+                        // use it to populate the combo box of pulmonic consonants to be changed.
+                        foreach (string diphthong in languageDescription.phonetic_inventory["v_diphthongs"])
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0} -- ", diphthong);
+                            string vowelKey = diphthong.Trim()[..1];
+                            sb.Append(IpaUtilities.IpaPhonemesMap[vowelKey]);
+                            vowelKey = diphthong.Trim()[1..2];
+                            if (IpaUtilities.Suprasegmentals.Contains(vowelKey)) // If this is an IPA suprasegmental
+                            {
+                                if (vowelKey == "ː")
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowelKey == "ˑ")
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowelKey == "\u032f")
+                                {
+                                    sb.Append(" semi-vowel");
+                                }
+                                vowelKey = diphthong.Trim()[2..3];
+                            }
+                            sb.AppendFormat(" to {0}", IpaUtilities.IpaPhonemesMap[vowelKey]);
+                            if ((diphthong.Trim().Length > 3) || ((diphthong.Trim().Length == 3) && (diphthong.Trim()[1..2].Equals(vowelKey))))
+                            {
+                                vowelKey = diphthong.Trim()[^1..];
+                                if (vowelKey == "ː")
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (vowelKey == "ˑ")
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (vowelKey == "\u032f")
+                                {
+                                    sb.Append(" semi-vowel");
+                                }
+                            }
+                            cbx_phonemeToChange.Items.Add(sb.ToString());
+                        }
+                    }
+
+                    if (rbn_diphthongReplacement.Checked)
+                    {
+                        cbx_dipthongStartVowel.Visible = true;
+                        lbl_diphthongStartVowel.Visible = true;
+                        cbx_dipthongEndVowel.Visible = true;
+                        lbl_DiphthongEndVowel.Visible = true;
+                        cbx_replacementPhoneme.Visible = false;
+                        lbl_replacementCbx.Visible = false;
+                    }
+                    else
+                    {
+                        cbx_dipthongStartVowel.Visible = false;
+                        lbl_diphthongStartVowel.Visible = false;
+                        cbx_dipthongEndVowel.Visible = false;
+                        lbl_DiphthongEndVowel.Visible = false;
+                        cbx_replacementPhoneme.Visible = true;
+                        lbl_replacementCbx.Visible = true;
+                    }
                     break;
                 case 3: // Rhoticity
                     if (rbn_addRhoticityRegular.Checked)
@@ -816,7 +915,7 @@ namespace ConlangAudioHoning
                                 }
                                 else if (vowel.Contains('̯'))
                                 {
-                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                    sb.Append(" semi-diphthong");  // Probably should be part of a diphthong
                                 }
                                 cbx_phonemeToChange.Items.Add(sb.ToString());
                             }
@@ -848,7 +947,7 @@ namespace ConlangAudioHoning
                                 }
                                 else if (vowel.Contains('̯'))
                                 {
-                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                    sb.Append(" semi-diphthong");  // Probably should be part of a diphthong
                                 }
                                 cbx_phonemeToChange.Items.Add(sb.ToString());
                             }
@@ -880,13 +979,12 @@ namespace ConlangAudioHoning
                                 }
                                 else if (vowel.Contains('̯'))
                                 {
-                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                    sb.Append(" semi-diphthong");  // Probably should be part of a diphthong
                                 }
                                 cbx_phonemeToChange.Items.Add(sb.ToString());
                             }
                         }
 
-                        cbx_phonemeToChange.SelectedIndex = -1;
                     }
                     else if (rbn_replaceRSpelling.Checked)
                     {
@@ -895,13 +993,26 @@ namespace ConlangAudioHoning
                         List<SoundMap> rAddingEntries = phoneticChanger.GetRAddingSoundMapEntries(languageDescription.sound_map_list);
                         cbx_phonemeToChange.Items.AddRange(rAddingEntries.ToArray());
                     }
+                    cbx_dipthongStartVowel.Visible = false;
+                    lbl_diphthongStartVowel.Visible = false;
+                    cbx_dipthongEndVowel.Visible = false;
+                    lbl_DiphthongEndVowel.Visible = false;
+                    cbx_replacementPhoneme.Visible = true;
+                    lbl_replacementCbx.Visible = true;
                     break;
                 case 4: // Special Operations
+                    cbx_dipthongStartVowel.Visible = false;
+                    lbl_diphthongStartVowel.Visible = false;
+                    cbx_dipthongEndVowel.Visible = false;
+                    lbl_DiphthongEndVowel.Visible = false;
+                    cbx_replacementPhoneme.Visible = true;
+                    lbl_replacementCbx.Visible = true;
                     break;
                 default:
                     break;
 
             }
+            cbx_phonemeToChange.SelectedIndex = -1;
 
         }
 
@@ -959,7 +1070,7 @@ namespace ConlangAudioHoning
                 }
                 cbx_replacementPhoneme.DrawMode = DrawMode.OwnerDrawFixed;
                 cbx_replacementPhoneme.MeasureItem += Cbx_replacementPhoneme_MeasureItem;
-                cbx_replacementPhoneme.DrawItem += cbx_replacementPhoneme_DrawItem;
+                cbx_replacementPhoneme.DrawItem += Cbx_replacementPhoneme_DrawItem;
             }
             else if (tabPhoneticAlterations.SelectedIndex == 1)
             {
@@ -1142,12 +1253,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void Cbx_replacementPhoneme_MeasureItem(object? sender, MeasureItemEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void btn_applyChangeToLanguage_Click(object sender, EventArgs e)
+        private void Btn_applyChangeToLanguage_Click(object sender, EventArgs e)
         {
             if (languageDescription == null)
             {
@@ -1230,13 +1336,13 @@ namespace ConlangAudioHoning
             // Add other options as needed.
         }
 
-        private void cbx_replacementPhoneme_MeasureItem(object sender, System.Windows.Forms.MeasureItemEventArgs e)
+        private void Cbx_replacementPhoneme_MeasureItem(object? sender, System.Windows.Forms.MeasureItemEventArgs e)
         {
             e.ItemWidth = cbx_phonemeToChange.DropDownWidth;
             e.ItemHeight = cbx_replacementPhoneme.Font.Height + 10;
         }
 
-        private void cbx_replacementPhoneme_DrawItem(object? sender, System.Windows.Forms.DrawItemEventArgs e)
+        private void Cbx_replacementPhoneme_DrawItem(object? sender, System.Windows.Forms.DrawItemEventArgs e)
         {
             if (e.Index < 0)
             {
@@ -1317,7 +1423,7 @@ namespace ConlangAudioHoning
             return hasSpellingMap;
         }
 
-        private void btn_addCurrentChangeToList_Click(object sender, EventArgs e)
+        private void Btn_addCurrentChangeToList_Click(object sender, EventArgs e)
         {
             if (languageDescription == null)
             {
@@ -1361,7 +1467,7 @@ namespace ConlangAudioHoning
 
         }
 
-        private void btn_applyListOfChanges_Click(object sender, EventArgs e)
+        private void Btn_applyListOfChanges_Click(object sender, EventArgs e)
         {
             phoneticChanger.PhoneticChange(changesToBeMade);
             if (sampleText != string.Empty)
@@ -1385,7 +1491,7 @@ namespace ConlangAudioHoning
             tabPhoneticAlterations.SelectedIndex = -1;
         }
 
-        private void btn_revertLastChange_Click(object sender, EventArgs e)
+        private void Btn_revertLastChange_Click(object sender, EventArgs e)
         {
             phoneticChanger.RevertMostRecentChange();
             txt_phonetic.Text = string.Empty;
@@ -1400,7 +1506,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void displayGlossOfSampleTextToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DisplayGlossOfSampleTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(sampleText))
             {
@@ -1415,7 +1521,7 @@ namespace ConlangAudioHoning
             MessageBox.Show(glossText, "Glossed Text", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void printSampleTextSummaryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PrintSampleTextSummaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(sampleText))
             {
@@ -1462,7 +1568,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void printKiToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PrintKiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<string> missingPhonemes = KirshenbaumUtilities.UnmappedPhonemes;
             StringBuilder stringBuilder = new();
@@ -1508,12 +1614,12 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void cbx_speechEngine_SelectedIndexChanged(object sender, EventArgs e)
+        private void Cbx_speechEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadVoices();
         }
 
-        private void btn_updateSoundMapList_Click(object sender, EventArgs e)
+        private void Btn_updateSoundMapList_Click(object sender, EventArgs e)
         {
             if (languageDescription == null)
             {
@@ -1566,72 +1672,72 @@ namespace ConlangAudioHoning
 
         }
 
-        private void rbn_l1_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_l1_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_normalVowel_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_normalVowel_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_addRhoticityRegular_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_addRhoticityRegular_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_l2_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_l2_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_l3_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_l3_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_allPhonemes_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_allPhonemes_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_halfLongVowels_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_halfLongVowels_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_longVowels_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_longVowels_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_normalDiphthong_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_normalDiphthong_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_semivowelDiphthong_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_semivowelDiphthong_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_longToRhotacized_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_longToRhotacized_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_removeRhoticity_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_removeRhoticity_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_replaceRhotacized_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_replaceRhotacized_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
 
-        private void rbn_replaceRSpelling_CheckedChanged(object sender, EventArgs e)
+        private void Rbn_replaceRSpelling_CheckedChanged(object sender, EventArgs e)
         {
             if (rbn_replaceRSpelling.Checked)
             {
@@ -1646,7 +1752,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void setAmazonPollyURIToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetAmazonPollyURIToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string pollyURI = Microsoft.VisualBasic.Interaction.InputBox("Enter the URI for Amazon Polly", "Amazon Polly URI", PollySpeech.PollyURI ?? "");
             if (PollySpeech.TestURI(pollyURI))
@@ -1662,63 +1768,80 @@ namespace ConlangAudioHoning
                 {
                     speechEngines.Add(pollySpeech.Description, pollySpeech);
                 }
-                if (voices.ContainsKey(pollySpeech.Description))
+                if (!voices.TryAdd(pollySpeech.Description, amazonPollyVoices))
                 {
                     voices[pollySpeech.Description] = amazonPollyVoices;
                 }
-                else
-                {
-                    voices.Add(pollySpeech.Description, amazonPollyVoices);
-                }
+
                 config.PollyURI = pollyURI;
             }
         }
 
         private void SetESpeakNgLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new())
+            using OpenFileDialog openFileDialog = new();
+            if (string.IsNullOrEmpty(ESpeakNGSpeak.ESpeakNGPath))
             {
-                if (string.IsNullOrEmpty(ESpeakNGSpeak.ESpeakNGPath))
-                {
-                    openFileDialog.InitialDirectory = Environment.SpecialFolder.ProgramFiles.ToString();
+                openFileDialog.InitialDirectory = Environment.SpecialFolder.ProgramFiles.ToString();
 
+            }
+            else
+            {
+                FileInfo fi = new(ESpeakNGSpeak.ESpeakNGPath);
+                openFileDialog.InitialDirectory = fi.DirectoryName;
+            }
+            openFileDialog.Filter = "Executable file (*.exe)|*.exe|All Files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = false;
+            openFileDialog.RestoreDirectory = false;
+            openFileDialog.CheckFileExists = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                ESpeakNGSpeak.ESpeakNGPath = openFileDialog.FileName;
+                ESpeakNGSpeak eSpeakNGSpeak = new();
+                Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
+                if (speechEngines.ContainsKey(eSpeakNGSpeak.Description))
+                {
+                    speechEngines[eSpeakNGSpeak.Description] = eSpeakNGSpeak;
                 }
                 else
                 {
-                    FileInfo fi = new(ESpeakNGSpeak.ESpeakNGPath);
-                    openFileDialog.InitialDirectory = fi.DirectoryName;
+                    speechEngines.Add(eSpeakNGSpeak.Description, eSpeakNGSpeak);
                 }
-                openFileDialog.Filter = "Executable file (*.exe)|*.exe|All Files (*.*)|*.*";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.Multiselect = false;
-                openFileDialog.RestoreDirectory = false;
-                openFileDialog.CheckFileExists = true;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                if (!voices.TryAdd(eSpeakNGSpeak.Description, espeakVoices))
                 {
-                    ESpeakNGSpeak.ESpeakNGPath = openFileDialog.FileName;
-                    ESpeakNGSpeak eSpeakNGSpeak = new();
-                    Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
-                    if (speechEngines.ContainsKey(eSpeakNGSpeak.Description))
-                    {
-                        speechEngines[eSpeakNGSpeak.Description] = eSpeakNGSpeak;
-                    }
-                    else
-                    {
-                        speechEngines.Add(eSpeakNGSpeak.Description, eSpeakNGSpeak);
-                    }
-                    if (voices.ContainsKey(eSpeakNGSpeak.Description))
-                    {
-                        voices[eSpeakNGSpeak.Description] = espeakVoices;
-                    }
-                    else
-                    {
-                        voices.Add(eSpeakNGSpeak.Description, espeakVoices);
-                    }
-                    config.ESpeakNgPath = ESpeakNGSpeak.ESpeakNGPath;
+                    voices[eSpeakNGSpeak.Description] = espeakVoices;
                 }
+
+                config.ESpeakNgPath = ESpeakNGSpeak.ESpeakNGPath;
             }
 
+        }
+
+        private void Rbn_vowelToDiphthongStart_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_vowelToDiphthongEnd_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_changeStartVowel_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_ChangeEndVowel_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_diphthongReplacement_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
         }
     }
 }
