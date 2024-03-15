@@ -101,7 +101,7 @@
             lbl_diphthongStartVowel = new Label();
             cbx_dipthongStartVowel = new ComboBox();
             rbn_diphthongReplacement = new RadioButton();
-            rbn_ChangeEndVowel = new RadioButton();
+            rbn_changeEndVowel = new RadioButton();
             rbn_changeStartVowel = new RadioButton();
             rbn_vowelToDipthongEnd = new RadioButton();
             rbn_vowelToDiphthongStart = new RadioButton();
@@ -731,7 +731,7 @@
             tabPageVowelDiphthongs.Controls.Add(lbl_diphthongStartVowel);
             tabPageVowelDiphthongs.Controls.Add(cbx_dipthongStartVowel);
             tabPageVowelDiphthongs.Controls.Add(rbn_diphthongReplacement);
-            tabPageVowelDiphthongs.Controls.Add(rbn_ChangeEndVowel);
+            tabPageVowelDiphthongs.Controls.Add(rbn_changeEndVowel);
             tabPageVowelDiphthongs.Controls.Add(rbn_changeStartVowel);
             tabPageVowelDiphthongs.Controls.Add(rbn_vowelToDipthongEnd);
             tabPageVowelDiphthongs.Controls.Add(rbn_vowelToDiphthongStart);
@@ -788,16 +788,16 @@
             rbn_diphthongReplacement.UseVisualStyleBackColor = true;
             rbn_diphthongReplacement.CheckedChanged += Rbn_diphthongReplacement_CheckedChanged;
             // 
-            // rbn_ChangeEndVowel
+            // rbn_changeEndVowel
             // 
-            rbn_ChangeEndVowel.AutoSize = true;
-            rbn_ChangeEndVowel.Location = new Point(139, 31);
-            rbn_ChangeEndVowel.Name = "rbn_ChangeEndVowel";
-            rbn_ChangeEndVowel.Size = new Size(140, 19);
-            rbn_ChangeEndVowel.TabIndex = 3;
-            rbn_ChangeEndVowel.Text = "Change Ending Vowel";
-            rbn_ChangeEndVowel.UseVisualStyleBackColor = true;
-            rbn_ChangeEndVowel.CheckedChanged += Rbn_ChangeEndVowel_CheckedChanged;
+            rbn_changeEndVowel.AutoSize = true;
+            rbn_changeEndVowel.Location = new Point(139, 31);
+            rbn_changeEndVowel.Name = "rbn_changeEndVowel";
+            rbn_changeEndVowel.Size = new Size(140, 19);
+            rbn_changeEndVowel.TabIndex = 3;
+            rbn_changeEndVowel.Text = "Change Ending Vowel";
+            rbn_changeEndVowel.UseVisualStyleBackColor = true;
+            rbn_changeEndVowel.CheckedChanged += Rbn_ChangeEndVowel_CheckedChanged;
             // 
             // rbn_changeStartVowel
             // 
@@ -1062,7 +1062,7 @@
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem setAmazonPollyURIToolStripMenuItem;
         private ToolStripMenuItem setESpeakNgLocationToolStripMenuItem;
-        private RadioButton rbn_ChangeEndVowel;
+        private RadioButton rbn_changeEndVowel;
         private RadioButton rbn_changeStartVowel;
         private RadioButton rbn_vowelToDipthongEnd;
         private RadioButton rbn_vowelToDiphthongStart;

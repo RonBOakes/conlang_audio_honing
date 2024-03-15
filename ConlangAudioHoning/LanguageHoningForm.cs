@@ -1397,7 +1397,140 @@ namespace ConlangAudioHoning
                 {
                     string diphthong = languageDescription.phonetic_inventory["v_diphthongs"][phonemeIndex];
                     string endVowel = diphthong[^1..];
-                    if ((IpaUtilities.Suprasegmentals.Contains(endVowel))||(IpaUtilities.Diacritics.Contains(endVowel)))
+                    if ((IpaUtilities.Suprasegmentals.Contains(endVowel)) || (IpaUtilities.Diacritics.Contains(endVowel)))
+                    {
+                        endVowel = diphthong[^2..];
+                    }
+                    string startVowel = diphthong[0..1];
+                    if ((IpaUtilities.Suprasegmentals.Contains(diphthong[1..2])) || (IpaUtilities.Diacritics.Contains(diphthong[1..2])))
+                    {
+                        startVowel = diphthong[0..2];
+                    }
+
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        string replacement = replacementVowel;
+                        if ((replacementVowel != endVowel[0..1]) && (replacement != startVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", replacement, endVowel);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement[0..1]]);
+                            if (replacement.Trim().Length > 1)
+                            {
+                                if (replacement.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (replacement.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (replacement.Contains('̯'))
+                                {
+                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                }
+                            }
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[endVowel[0..1]]);
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        string replacement = replacementVowel + 'ː';
+                        if ((replacementVowel != endVowel[0..1]) && (replacement != startVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", replacement, endVowel);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement[0..1]]);
+                            if (replacement.Trim().Length > 1)
+                            {
+                                if (replacement.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (replacement.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (replacement.Contains('̯'))
+                                {
+                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                }
+                            }
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[endVowel[0..1]]);
+                            sb.Append(" lengthened");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        string replacement = replacementVowel + 'ˑ';
+                        if ((replacementVowel != endVowel[0..1]) && (replacement != startVowel))
+                        {
+                            StringBuilder sb = new();
+                            sb.AppendFormat("{0}{1} -- ", replacement, endVowel);
+                            sb.Append(IpaUtilities.IpaPhonemesMap[replacement[0..1]]);
+                            if (replacement.Trim().Length > 1)
+                            {
+                                if (replacement.Contains('ː'))
+                                {
+                                    sb.Append(" lengthened");
+                                }
+                                else if (replacement.Contains('ˑ'))
+                                {
+                                    sb.Append(" half-lengthened");
+                                }
+                                else if (replacement.Contains('̯'))
+                                {
+                                    sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                }
+                            }
+                            sb.Append(' ');
+                            sb.Append(IpaUtilities.IpaPhonemesMap[endVowel[0..1]]);
+                            sb.Append(" half-lengthened");
+                            cbx_replacementPhoneme.Items.Add(sb.ToString());
+                        }
+                    }
+                    if (!endVowel.Contains('̯'))
+                    {
+                        foreach (string replacementVowel in IpaUtilities.Vowels)
+                        {
+                            string replacement = replacementVowel + '̯';
+                            if ((replacementVowel != endVowel[0..1]) && (replacement != startVowel))
+                            {
+                                StringBuilder sb = new();
+                                sb.AppendFormat("{0}{1} -- ", replacement, endVowel);
+                                sb.Append(IpaUtilities.IpaPhonemesMap[replacement[0..1]]);
+                                if (startVowel.Trim().Length > 1)
+                                {
+                                    if (startVowel.Contains('ː'))
+                                    {
+                                        sb.Append(" lengthened");
+                                    }
+                                    else if (startVowel.Contains('ˑ'))
+                                    {
+                                        sb.Append(" half-lengthened");
+                                    }
+                                    else if (startVowel.Contains('̯'))
+                                    {
+                                        sb.Append(" semi-vowel");  // Probably should be part of a diphthong
+                                    }
+                                }
+                                sb.Append(' ');
+                                sb.Append(IpaUtilities.IpaPhonemesMap[endVowel[0..1]]);
+                                sb.Append(" half-lengthened");
+                                cbx_replacementPhoneme.Items.Add(sb.ToString());
+                            }
+                        }
+                    }
+                }
+                else if (rbn_changeEndVowel.Checked)
+                {
+                    string diphthong = languageDescription.phonetic_inventory["v_diphthongs"][phonemeIndex];
+                    string endVowel = diphthong[^1..];
+                    if ((IpaUtilities.Suprasegmentals.Contains(endVowel)) || (IpaUtilities.Diacritics.Contains(endVowel)))
                     {
                         endVowel = diphthong[^2..];
                     }
@@ -1526,123 +1659,123 @@ namespace ConlangAudioHoning
                         }
                     }
                 }
-                else if (tabPhoneticAlterations.SelectedIndex == 3)  // Rhoticity
+            }
+            else if (tabPhoneticAlterations.SelectedIndex == 3)  // Rhoticity
+            {
+                cbx_replacementPhoneme.Items.Clear();
+                if (rbn_addRhoticityRegular.Checked)
                 {
-                    cbx_replacementPhoneme.Items.Clear();
-                    if (rbn_addRhoticityRegular.Checked)
+                    string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
+                    string newPhoneme;
+                    string newPhonemeDescription;
+                    StringBuilder sb = new();
+                    if (oldPhoneme.Equals("ə"))
                     {
-                        string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
-                        string newPhoneme;
-                        string newPhonemeDescription;
+                        newPhoneme = "ɚ";
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
+                    }
+                    else
+                    {
+                        newPhoneme = oldPhoneme + "\u02de";
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme[0].ToString()]);
+                        sb.Append(" Rhotacized");
+                    }
+                    newPhonemeDescription = sb.ToString();
+                    cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
+                    cbx_replacementPhoneme.SelectedIndex = 0;
+                }
+                else if (rbn_longToRhotacized.Checked)
+                {
+                    string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
+                    string newPhoneme;
+                    string newPhonemeDescription;
+                    if (oldPhoneme.Equals("ə"))
+                    {
+                        newPhoneme = "ɚ";
                         StringBuilder sb = new();
-                        if (oldPhoneme.Equals("ə"))
-                        {
-                            newPhoneme = "ɚ";
-                            sb.AppendFormat("{0}ˑ -- ", newPhoneme);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
-                        }
-                        else
-                        {
-                            newPhoneme = oldPhoneme + "\u02de";
-                            sb.AppendFormat("{0}ˑ -- ", newPhoneme);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme[0].ToString()]);
-                            sb.Append(" Rhotacized");
-                        }
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    else
+                    {
+                        newPhoneme = oldPhoneme + "\u02de";
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme[0].ToString()]);
+                        sb.Append(" Rhotacized");
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
+                    cbx_replacementPhoneme.SelectedIndex = 0;
+                }
+                else if (rbn_removeRhoticity.Checked)
+                {
+                    string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
+                    string newPhoneme;
+                    string newPhonemeDescription;
+                    if (oldPhoneme.Equals("ɚ"))
+                    {
+                        newPhoneme = "ə";
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    else
+                    {
+                        newPhoneme = oldPhoneme;
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
+                        newPhonemeDescription = sb.ToString();
+                    }
+                    cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
+                    cbx_replacementPhoneme.SelectedIndex = 0;
+                }
+                else if (rbn_replaceRhotacized.Checked)
+                {
+                    string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
+                    string newPhoneme;
+                    string newPhonemeDescription;
+                    if (oldPhoneme.Equals("ɚ"))
+                    {
+                        newPhoneme = "ə";
+                    }
+                    else
+                    {
+                        newPhoneme = oldPhoneme;
+                    }
+                    string[] rConsonants = IpaUtilities.RPhonemes;
+                    foreach (string rConsonant in rConsonants)
+                    {
+                        string newPhoneme2 = newPhoneme + rConsonant;
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0}ˑ -- ", newPhoneme2);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[rConsonant]);
                         newPhonemeDescription = sb.ToString();
                         cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
-                        cbx_replacementPhoneme.SelectedIndex = 0;
                     }
-                    else if (rbn_longToRhotacized.Checked)
-                    {
-                        string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
-                        string newPhoneme;
-                        string newPhonemeDescription;
-                        if (oldPhoneme.Equals("ə"))
-                        {
-                            newPhoneme = "ɚ";
-                            StringBuilder sb = new();
-                            sb.AppendFormat("{0}ˑ -- ", newPhoneme);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
-                            newPhonemeDescription = sb.ToString();
-                        }
-                        else
-                        {
-                            newPhoneme = oldPhoneme + "\u02de";
-                            StringBuilder sb = new();
-                            sb.AppendFormat("{0}ˑ -- ", newPhoneme);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme[0].ToString()]);
-                            sb.Append(" Rhotacized");
-                            newPhonemeDescription = sb.ToString();
-                        }
-                        cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
-                        cbx_replacementPhoneme.SelectedIndex = 0;
-                    }
-                    else if (rbn_removeRhoticity.Checked)
-                    {
-                        string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
-                        string newPhoneme;
-                        string newPhonemeDescription;
-                        if (oldPhoneme.Equals("ɚ"))
-                        {
-                            newPhoneme = "ə";
-                            StringBuilder sb = new();
-                            sb.AppendFormat("{0}ˑ -- ", newPhoneme);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
-                            newPhonemeDescription = sb.ToString();
-                        }
-                        else
-                        {
-                            newPhoneme = oldPhoneme;
-                            StringBuilder sb = new();
-                            sb.AppendFormat("{0}ˑ -- ", newPhoneme);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[newPhoneme]);
-                            newPhonemeDescription = sb.ToString();
-                        }
-                        cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
-                        cbx_replacementPhoneme.SelectedIndex = 0;
-                    }
-                    else if (rbn_replaceRhotacized.Checked)
-                    {
-                        string oldPhoneme = cbx_phonemeToChange.Text.Split()[0].Trim()[0].ToString();
-                        string newPhoneme;
-                        string newPhonemeDescription;
-                        if (oldPhoneme.Equals("ɚ"))
-                        {
-                            newPhoneme = "ə";
-                        }
-                        else
-                        {
-                            newPhoneme = oldPhoneme;
-                        }
-                        string[] rConsonants = IpaUtilities.RPhonemes;
-                        foreach (string rConsonant in rConsonants)
-                        {
-                            string newPhoneme2 = newPhoneme + rConsonant;
-                            StringBuilder sb = new();
-                            sb.AppendFormat("{0}ˑ -- ", newPhoneme2);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[rConsonant]);
-                            newPhonemeDescription = sb.ToString();
-                            cbx_replacementPhoneme.Items.Add(newPhonemeDescription);
-                        }
-                        cbx_replacementPhoneme.SelectedIndex = -1;
-                    }
-                    else if (rbn_replaceRSpelling.Checked)
-                    {
-                        foreach (string phoneme in IpaUtilities.RPhonemes)
-                        {
-                            StringBuilder sb = new();
-                            sb.AppendFormat("{0} -- ", phoneme);
-                            sb.Append(IpaUtilities.IpaPhonemesMap[phoneme]);
-                            cbx_replacementPhoneme.Items.Add(sb.ToString());
-                        }
-                        string phoneme2 = "˞";
-                        StringBuilder sb2 = new();
-                        sb2.AppendFormat("{0} -- ", phoneme2);
-                        sb2.Append(IpaUtilities.IpaPhonemesMap[phoneme2]);
-                        cbx_replacementPhoneme.Items.Add(sb2.ToString());
-                    }
+                    cbx_replacementPhoneme.SelectedIndex = -1;
                 }
-            }
+                else if (rbn_replaceRSpelling.Checked)
+                {
+                    foreach (string phoneme in IpaUtilities.RPhonemes)
+                    {
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0} -- ", phoneme);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[phoneme]);
+                        cbx_replacementPhoneme.Items.Add(sb.ToString());
+                    }
+                    string phoneme2 = "˞";
+                    StringBuilder sb2 = new();
+                    sb2.AppendFormat("{0} -- ", phoneme2);
+                    sb2.Append(IpaUtilities.IpaPhonemesMap[phoneme2]);
+                    cbx_replacementPhoneme.Items.Add(sb2.ToString());
+                }
+            }           
         }
 
         private void Btn_applyChangeToLanguage_Click(object sender, EventArgs e)
