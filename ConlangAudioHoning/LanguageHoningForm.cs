@@ -42,7 +42,7 @@ namespace ConlangAudioHoning
         private readonly Dictionary<string, FileInfo> speechFiles = [];
         private readonly PhoneticChanger phoneticChanger;
         private readonly List<(string, string)> changesToBeMade = [];
-        private readonly UserConfiguration config;
+        private readonly UserConfiguration UserConfiguration;
 
         /// <summary>
         /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
@@ -68,22 +68,22 @@ namespace ConlangAudioHoning
                 throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
             }
 
-            config = UserConfiguration.LoadFromFile();
+            UserConfiguration = UserConfiguration.LoadFromFile();
 
-            if (config.IsESpeakNGSupported)
+            if (UserConfiguration.IsESpeakNGSupported)
             {
-                ESpeakNGSpeak.ESpeakNGPath = config.ESpeakNgPath;
+                ESpeakNGSpeak.ESpeakNGPath = UserConfiguration.ESpeakNgPath;
                 ESpeakNGSpeak eSpeakNGSpeak = new();
-                Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.GetVoices();
+                Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
                 speechEngines.Add(eSpeakNGSpeak.Description, eSpeakNGSpeak);
                 voices.Add(eSpeakNGSpeak.Description, espeakVoices);
             }
 
-            if (config.IsPollySupported)
+            if (UserConfiguration.IsPollySupported)
             {
-                PollySpeech.PollyURI = config.PollyURI;
+                PollySpeech.PollyURI = UserConfiguration.PollyURI;
                 PollySpeech pollySpeech = new();
-                Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
+                Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
                 speechEngines.Add(pollySpeech.Description, pollySpeech);
                 voices.Add(pollySpeech.Description, amazonPollyVoices);
             }
@@ -185,7 +185,7 @@ namespace ConlangAudioHoning
                     _ = cbx_voice.Items.Add(voiceMenu);
                 }
                 if ((languageDescription != null) &&
-                    (languageDescription.preferred_voices.TryGetValue(speechEngines[selectedEngine].PreferredVoiceKey, out string? value)) &&
+                    (languageDescription.preferred_voices.TryGetValue(speechEngines[selectedEngine].preferredVoiceKey, out string? value)) &&
                     (!string.IsNullOrEmpty(value)))
                 {
                     string preferredVoice = value.Trim();
@@ -402,7 +402,7 @@ namespace ConlangAudioHoning
             txt_SampleText.Text = sampleText;
             foreach (string engineKey in speechEngines.Keys)
             {
-                speechEngines[engineKey].SampleText = sampleText;
+                speechEngines[engineKey].sampleText = sampleText;
             }
             phoneticChanger.SampleText = sampleText;
         }
@@ -439,7 +439,7 @@ namespace ConlangAudioHoning
 
         private void OnApplicationExit(object? sender, EventArgs e)
         {
-            config.SaveConfiguration();
+            UserConfiguration.SaveConfiguration(            UserConfiguration.GetJsonSerializerOptions());
         }
 
         private void Txt_SampleText_TextChanged(object sender, EventArgs e)
@@ -456,7 +456,7 @@ namespace ConlangAudioHoning
                 SpeechEngine engine = speechEngines[engineKey];
                 string speed = cbx_speed.Text.Trim();
                 engine.Generate(speed, this);
-                txt_phonetic.Text = engine.PhoneticText;
+                txt_phonetic.Text = engine.phoneticText;
             }
         }
 
@@ -473,7 +473,7 @@ namespace ConlangAudioHoning
             }
             else
             {
-                ConlangUtilities.removeDeclinedEntries(languageDescription);
+                ConlangUtilities.RemoveDeclinedEntries(languageDescription);
                 declineToolStripMenuItem.Text = "Decline Language";
             }
 
@@ -486,7 +486,7 @@ namespace ConlangAudioHoning
                 return;
             }
             string engineName = cbx_speechEngine.Text.Trim();
-            if ((engineName.Equals("Amazon Polly")) && (config.IsPollySupported))
+            if ((engineName.Equals("Amazon Polly")) && (UserConfiguration.IsPollySupported))
             {
                 PollySpeech pollySpeech = (PollySpeech)speechEngines[engineName];
                 DateTime now = DateTime.Now;
@@ -513,7 +513,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    txt_phonetic.Text = pollySpeech.PhoneticText;
+                    txt_phonetic.Text = pollySpeech.phoneticText;
                     // Play the audio (MP3) file with the Windows Media Player
                     WMPLib.WindowsMediaPlayer player = new()
                     {
@@ -527,7 +527,7 @@ namespace ConlangAudioHoning
                     cbx_recordings.SelectedText = fileInfo.Name;
                 }
             }
-            else if ((engineName.Equals("espeak-ng")) && (config.IsESpeakNGSupported))
+            else if ((engineName.Equals("espeak-ng")) && (UserConfiguration.IsESpeakNGSupported))
             {
                 ESpeakNGSpeak speechEngine = (ESpeakNGSpeak)speechEngines[engineName];
                 DateTime now = DateTime.Now;
@@ -551,7 +551,7 @@ namespace ConlangAudioHoning
                     voice = voiceData.LanguageCode;
                 }
                 string speed = cbx_speed.Text.Trim();
-                speechEngine.SampleText = sampleText;
+                speechEngine.sampleText = sampleText;
                 bool ok = speechEngine.GenerateSpeech(targetFileName, voice, speed, this);
                 if (!ok)
                 {
@@ -559,7 +559,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    txt_phonetic.Text = speechEngine.PhoneticText;
+                    txt_phonetic.Text = speechEngine.phoneticText;
                     // Play the audio (wav) file with the Windows Media Player
                     WMPLib.WindowsMediaPlayer player = new()
                     {
@@ -1854,7 +1854,7 @@ namespace ConlangAudioHoning
                     foreach (string engineName in speechEngines.Keys)
                     {
                         SpeechEngine speechEngine = speechEngines[engineName];
-                        speechEngine.SampleText = sampleText;
+                        speechEngine.sampleText = sampleText;
                     }
                 }
                 // Clear the combo boxes
@@ -1894,7 +1894,7 @@ namespace ConlangAudioHoning
                     foreach (string engineName in speechEngines.Keys)
                     {
                         SpeechEngine speech = speechEngines[engineName];
-                        speech.SampleText = sampleText;
+                        speech.sampleText = sampleText;
                     }
                 }
                 // Clear the combo boxes
@@ -1922,7 +1922,7 @@ namespace ConlangAudioHoning
                         foreach (string engineName in speechEngines.Keys)
                         {
                             SpeechEngine speechEngine = speechEngines[engineName];
-                            speechEngine.SampleText = sampleText;
+                            speechEngine.sampleText = sampleText;
                         }
                     }
                     // Clear the combo boxes
@@ -2109,7 +2109,7 @@ namespace ConlangAudioHoning
                 foreach (string engineName in speechEngines.Keys)
                 {
                     SpeechEngine speech = speechEngines[engineName];
-                    speech.SampleText = sampleText;
+                    speech.sampleText = sampleText;
                 }
             }
             // Clear the combo boxes
@@ -2175,7 +2175,7 @@ namespace ConlangAudioHoning
                 string speed = cbx_speed.Text.Trim();
                 string engineName = cbx_speechEngine.Text.Trim();
                 speechEngines[engineName].Generate(speed, this);
-                txt_phonetic.Text = speechEngines[engineName].PhoneticText;
+                txt_phonetic.Text = speechEngines[engineName].phoneticText;
             }
             _ = sb.AppendLine(txt_phonetic.Text.Trim());
             StringReader sampleTextSummaryReader = new(sb.ToString());
@@ -2259,7 +2259,7 @@ namespace ConlangAudioHoning
             SoundMapListEditor soundMapListEditor = new()
             {
                 SoundMapList = languageDescription.sound_map_list,
-                headerText = "No specific changes - editing the entire list"
+                HeaderText = "No specific changes - editing the entire list"
             };
             soundMapListEditor.UpdatePhonemeReplacements();
             _ = soundMapListEditor.ShowDialog();
@@ -2279,7 +2279,7 @@ namespace ConlangAudioHoning
                         foreach (string engineName in speechEngines.Keys)
                         {
                             SpeechEngine speech = speechEngines[engineName];
-                            speech.SampleText = sampleText;
+                            speech.sampleText = sampleText;
                         }
                     }
                 }
@@ -2295,7 +2295,7 @@ namespace ConlangAudioHoning
                         foreach (string engineName in speechEngines.Keys)
                         {
                             SpeechEngine speech = speechEngines[engineName];
-                            speech.SampleText = sampleText;
+                            speech.sampleText = sampleText;
                         }
                     }
                 }
@@ -2390,7 +2390,7 @@ namespace ConlangAudioHoning
             {
                 PollySpeech.PollyURI = pollyURI;
                 PollySpeech pollySpeech = new();
-                Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
+                Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.getVoices();
                 if (speechEngines.ContainsKey(pollySpeech.Description))
                 {
                     speechEngines[pollySpeech.Description] = pollySpeech;
@@ -2404,7 +2404,7 @@ namespace ConlangAudioHoning
                     voices[pollySpeech.Description] = amazonPollyVoices;
                 }
 
-                config.PollyURI = pollyURI;
+                UserConfiguration.PollyURI = pollyURI;
             }
         }
 
@@ -2431,7 +2431,7 @@ namespace ConlangAudioHoning
             {
                 ESpeakNGSpeak.ESpeakNGPath = openFileDialog.FileName;
                 ESpeakNGSpeak eSpeakNGSpeak = new();
-                Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.GetVoices();
+                Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.getVoices();
                 if (speechEngines.ContainsKey(eSpeakNGSpeak.Description))
                 {
                     speechEngines[eSpeakNGSpeak.Description] = eSpeakNGSpeak;
@@ -2445,7 +2445,7 @@ namespace ConlangAudioHoning
                     voices[eSpeakNGSpeak.Description] = espeakVoices;
                 }
 
-                config.ESpeakNgPath = ESpeakNGSpeak.ESpeakNGPath;
+                UserConfiguration.ESpeakNgPath = ESpeakNGSpeak.ESpeakNGPath;
             }
 
         }

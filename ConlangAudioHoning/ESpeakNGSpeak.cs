@@ -26,7 +26,34 @@ namespace ConlangAudioHoning
     /// </summary>
     internal class ESpeakNGSpeak : SpeechEngine
     {
-        public ESpeakNGSpeak() : base() => Description = "espeak-ng";
+        private static string _ESpeakNGPath = "";
+
+        public ESpeakNGSpeak() : base()
+        {
+            Description = "espeak-ng";
+        }
+
+        public static string ESpeakNGPath
+        {
+            get => _ESpeakNGPath;
+            set => _ESpeakNGPath = value;
+        }
+
+        /// <summary>
+        /// Constructor for the ESpeakNGSpeak class.
+        /// </summary>
+        public ESpeakNGSpeak(LanguageDescription languageDescription) : base(languageDescription)
+        {
+            Description = "espeak-ng";
+        }
+
+        /// <summary>
+        /// Key used to access the LanguageDescription preffered_voices dictionary.
+        /// </summary>
+        public override string preferredVoiceKey
+        {
+            get => "espeak-ng";
+        }
 
         /// <summary>
         /// Generate the phonetic text and SSML text.
@@ -41,7 +68,7 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("Cannot Generate Polly Speech without a language description");
             }
-            if (string.IsNullOrEmpty(SampleText))
+            if (string.IsNullOrEmpty(sampleText))
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
@@ -54,7 +81,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    ConlangUtilities.declineLexicon(LanguageDescription);
+                    ConlangUtilities.DeclineLexicon(LanguageDescription);
                 }
                 removeDeclinedWord = true;
             }
@@ -69,7 +96,7 @@ namespace ConlangAudioHoning
             // Get the phonetic representations of the text - ported from Python code.
             List<List<Dictionary<string, string>>> pronounceMapList = [];
             pronounceMapList.Clear();
-            using (StringReader sampleTextReader = new(SampleText.ToLower()))
+            using (StringReader sampleTextReader = new(sampleText.ToLower()))
             {
                 string? line;
                 do
@@ -78,9 +105,9 @@ namespace ConlangAudioHoning
                     if ((line != null) && (!line.Trim().Equals(string.Empty)))
                     {
                         List<Dictionary<string, string>> lineMapList = [];
-                        foreach (string word in line.Split())
+                        foreach (string word in line.Split(null))
                         {
-                            Dictionary<string, string>? pronounceMap = PronounceWord(word, wordMap);
+                            Dictionary<string, string>? pronounceMap = pronounceWord(word, wordMap);
                             if (pronounceMap != null)
                             {
                                 lineMapList.Add(pronounceMap);
@@ -94,7 +121,7 @@ namespace ConlangAudioHoning
 
             StringBuilder eSpeakText = new();
 
-            PhoneticText = string.Empty;
+            phoneticText = string.Empty;
             int wordWrap = 0;
 
             foreach (List<Dictionary<string, string>> lineMapList in pronounceMapList)
@@ -102,32 +129,32 @@ namespace ConlangAudioHoning
                 foreach (Dictionary<string, string> pronounceMap in lineMapList)
                 {
                     // Build the text entry
-                    _ = eSpeakText.Append(KirshenbaumUtilities.IpaWordToKirshenbaum(pronounceMap["phonetic"]));
-                    PhoneticText += pronounceMap["phonetic"];
+                    eSpeakText.Append(KirshenbaumUtilities.IpaWordToKirshenbaum(pronounceMap["phonetic"]));
+                    phoneticText += pronounceMap["phonetic"];
                     wordWrap += pronounceMap["phonetic"].Length;
                     if (pronounceMap["punctuation"] != "")
                     {
-                        _ = eSpeakText.Append(pronounceMap["punctuation"]);
-                        PhoneticText += pronounceMap["punctuation"];
+                        eSpeakText.Append(pronounceMap["punctuation"]);
+                        phoneticText += pronounceMap["punctuation"];
                         wordWrap += pronounceMap["punctuation"].Length;
                     }
-                    PhoneticText += " ";
-                    _ = eSpeakText.Append(' ');
+                    phoneticText += " ";
+                    eSpeakText.Append(' ');
                     wordWrap += 1;
                     if (wordWrap >= 80)
                     {
-                        _ = eSpeakText.Append('\n');
-                        PhoneticText += "\n";
+                        eSpeakText.Append('\n');
+                        phoneticText += "\n";
                         wordWrap = 0;
                     }
                 }
             }
 
-            SsmlText = eSpeakText.ToString().Trim();
+            ssmlText = eSpeakText.ToString().Trim();
 
             if (removeDeclinedWord)
             {
-                ConlangUtilities.removeDeclinedEntries(LanguageDescription);
+                ConlangUtilities.RemoveDeclinedEntries(LanguageDescription);
             }
         }
 
@@ -147,12 +174,12 @@ namespace ConlangAudioHoning
             {
                 return false;
             }
-            if (string.IsNullOrEmpty(SampleText))
+            if (string.IsNullOrEmpty(sampleText))
             {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(SsmlText))
+            if (string.IsNullOrEmpty(ssmlText))
             {
                 this.Generate(speed ?? "medium", caller);
             }
@@ -165,31 +192,45 @@ namespace ConlangAudioHoning
             int speedInt = -1;
             if (!string.IsNullOrEmpty(speed))
             {
-                speedInt = speed.ToLower() switch
+                switch (speed.ToLower())
                 {
-                    "x-slow" => 75,
-                    "slow" => 125,
-                    "medium" or "default" => 175,
-                    "fast" => 225,
-                    "x-fast" => 275,
-                    _ => 175,
-                };
+                    case "x-slow":
+                        speedInt = 75;
+                        break;
+                    case "slow":
+                        speedInt = 125;
+                        break;
+                    case "medium":
+                    case "default":
+                        speedInt = 175;
+                        break;
+                    case "fast":
+                        speedInt = 225;
+                        break;
+                    case "x-fast":
+                        speedInt = 275;
+                        break;
+                    default:
+                        speedInt = 175;
+                        break;
+                }
             }
 
-            bool result = Speak(text: SsmlText, waveFile: targetFile, voiceLanguage: voice, speed: speedInt);
+            bool result = speak(text: ssmlText, waveFile: targetFile, voiceLanguage: voice, speed: speedInt);
 
             return result;
         }
 
 
-        public override Dictionary<string, VoiceData> GetVoices()
+        public override Dictionary<string, VoiceData> getVoices()
         {
             Dictionary<string, VoiceData> voices = [];
+            List<IntPtr> voicePointers = [];
 
-            char[] whiteSpaces = [' ', '\t',];
+            char[] whiteSpaces = { ' ', '\t', };
 
             string voiceList = string.Empty;
-            _ = RunConsoleCommand("--voices", ref voiceList);
+            RunConsoleCommand("--voices", ref voiceList);
             /* Output looks like
              * Pty Language       Age/Gender VoiceName          File                 Other Languages
              * 5  af              --/M      Afrikaans          gmw\af
@@ -214,7 +255,7 @@ namespace ConlangAudioHoning
                         };
                         string[] ageGender = fields[2].Split("/");
                         voiceData.Gender = ageGender[1];
-                        _ = voices.TryAdd(voiceData.LanguageCode, voiceData);
+                        voices.TryAdd(voiceData.LanguageCode, voiceData);
                     }
                 }
                 while (line != null);
@@ -224,22 +265,7 @@ namespace ConlangAudioHoning
             return voices;
         }
 
-        /// <summary>
-        /// Key used to access the LanguageDescription preferred_voices dictionary.
-        /// </summary>
-        public override string PreferredVoiceKey
-        {
-            get => "espeak-ng";
-        }
-
-        public static string ESpeakNGPath { get; set; } = "";
-
-        /// <summary>
-        /// Constructor for the ESpeakNGSpeak class.
-        /// </summary>
-        public ESpeakNGSpeak(LanguageDescription languageDescription) : base(languageDescription) => Description = "espeak-ng";
-
-        public static void Test()
+        public void Test()
         {
             // Initialize the eSpeak-ng library via the wrapper
             List<string> ipaText =
@@ -249,16 +275,16 @@ namespace ConlangAudioHoning
             StringBuilder sb = new();
             foreach (string word in ipaText)
             {
-                _ = sb.Append(KirshenbaumUtilities.IpaWordToKirshenbaum(word));
-                _ = sb.Append(' ');
+                sb.Append(KirshenbaumUtilities.IpaWordToKirshenbaum(word));
+                sb.Append(' ');
             }
             string text = "[[h@'loU]]. This is a test. ";
             text += sb.ToString();
-            _ = Speak(text: text, voiceLanguage: "en-us");
+            speak(text: text, voiceLanguage: "en-us");
             return;
         }
 
-        internal static bool Speak(string text, string waveFile = "", string voiceLanguage = "", int speed = -1)
+        internal bool speak(string text, string waveFile = "", string voiceLanguage = "", int speed = -1)
         {
             StringBuilder cmdSb = new();
 
@@ -275,17 +301,17 @@ namespace ConlangAudioHoning
 
             if (!string.IsNullOrEmpty(voiceLanguage))
             {
-                _ = cmdSb.AppendFormat("-v{0} ", voiceLanguage);
+                cmdSb.AppendFormat("-v{0} ", voiceLanguage);
             }
             if (!string.IsNullOrEmpty(waveFile))
             {
-                _ = cmdSb.AppendFormat("-w \"{0}\" ", waveFile);
+                cmdSb.AppendFormat("-w \"{0}\" ", waveFile);
             }
             if (speed > 0)
             {
-                _ = cmdSb.AppendFormat("-s{0} ", speed);
+                cmdSb.AppendFormat("-s{0} ", speed);
             }
-            _ = cmdSb.AppendFormat("-f \"{0}\" ", targetFile.FullName);
+            cmdSb.AppendFormat("-f \"{0}\" ", targetFile.FullName);
 
             string response = string.Empty;
             bool result = RunConsoleCommand(cmdSb.ToString().Trim(), ref response);
@@ -294,10 +320,10 @@ namespace ConlangAudioHoning
 
             return result;
         }
+        private static bool processRunning;
 
         private static bool RunConsoleCommand(string cmd, ref string response)
         {
-            bool processRunning;
             System.Diagnostics.Process process = new();
             System.Diagnostics.ProcessStartInfo startInfo = new()
             {
@@ -311,12 +337,12 @@ namespace ConlangAudioHoning
                 processRunning = false;
             }
             );
-            startInfo.FileName = ESpeakNGPath;
+            startInfo.FileName = _ESpeakNGPath;
 
             startInfo.Arguments = cmd;
             process.StartInfo = startInfo;
             processRunning = true;
-            _ = process.Start();
+            process.Start();
             while (processRunning)
             {
                 if (!process.HasExited)

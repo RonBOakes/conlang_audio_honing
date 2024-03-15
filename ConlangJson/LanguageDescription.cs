@@ -26,7 +26,6 @@ namespace ConlangJson
     /// </summary>
     public class LanguageDescription
     {
-        private double _version;
         private string? _english_name;
         private string? _phonetic_characters;
         private string? _native_name_phonetic;
@@ -55,7 +54,7 @@ namespace ConlangJson
         /// </summary>
         public LanguageDescription()
         {
-            _version = double.MinValue;
+            version = double.MinValue;
             _noun_gender_list = [];
             _part_of_speech_list = [];
             _phoneme_inventory = [];
@@ -71,17 +70,17 @@ namespace ConlangJson
         /// <summary>
         /// The structure version read in from the JSON object.
         /// </summary>
-        public double version
-        {
-            get => _version;
-            set => _version = value;
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public double version { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This specifies the name of the conlang in English or another natural language.<br/>
         /// Required.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string english_name
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _english_name ?? string.Empty;
             set => _english_name = value;
@@ -91,7 +90,9 @@ namespace ConlangJson
         /// This specifies the symbols being used to express the phonetics for the conlang.  
         /// The valid values for this are ipa, x-sampa, and sampa.  The default value if this field is not present is ipa.<br/>
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string phonetic_characters
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _phonetic_characters ?? "ipa";
             set => _phonetic_characters = value;
@@ -100,7 +101,9 @@ namespace ConlangJson
         /// <summary>
         /// This specifies the name of the conlang phonetically.  This will be expressed using the symbology specified in the phonetic_characters field.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string native_name_phonetic
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _native_name_phonetic ?? string.Empty;
             set => _native_name_phonetic = value;
@@ -110,7 +113,9 @@ namespace ConlangJson
         /// This species is the Romanized (Latinized) name of the conlang, which is how the 
         /// conlang is expressed using characters in the Latin alphabet, possibly including diacritics.<br/>Optional.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string native_name_english
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _native_name_english ?? string.Empty;
             set => _native_name_english = value;
@@ -121,7 +126,9 @@ namespace ConlangJson
         /// Applications recognized at this time are: "Polly," "espeak-ng," and "Azure."  Both the key and resulting field 
         /// are capital sensitive due to the underlying programs.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public Dictionary<string, string> preferred_voices
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _preferred_voices ?? [];
             set => _preferred_voices = value;
@@ -132,7 +139,9 @@ namespace ConlangJson
         /// speaking this conlang.  This should be specified using the XML:Lang specification from 
         /// https://www.ietf.org/rfc/rfc4267.txt<br/>Optional.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string preferred_language
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _preferred_language ?? string.Empty;
             set => _preferred_language = value;
@@ -144,7 +153,9 @@ namespace ConlangJson
         /// refrain from further attempts to derive these words.  If set to false, these words may need to be derived 
         /// before processing any conlang text.  The default value is "false."
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public bool derived
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _derived ?? false;
             set => _derived = value;
@@ -156,7 +167,9 @@ namespace ConlangJson
         /// It is application-dependent if words are sensibly declined.  For example, a declined lexicon may contain 
         /// declensions for nouns that do not properly match their gender.  The default value is "false."
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public bool declined
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _declined ?? false;
             set => _declined = value;
@@ -167,7 +180,9 @@ namespace ConlangJson
         /// that two to three letters in this list be capitalized to be used as a short form for the gender in the affix_map.
         /// <br/>Optional. Recommended.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public List<string> noun_gender_list
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _noun_gender_list ?? [];
             set => _noun_gender_list = value;
@@ -178,7 +193,9 @@ namespace ConlangJson
         /// of speech that are contained within the lexicon.  Applications can use this to help index or search the 
         /// lexicon for key parts of speech.<br/>Optional.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public List<string> part_of_speech_list
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _part_of_speech_list ?? [];
             set => _part_of_speech_list = value;
@@ -189,7 +206,9 @@ namespace ConlangJson
         /// phonemes in the conlang.  These strings will be expressed using the symbology specified in the phonetic_characters
         /// field.<br/>Optional.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public List<string> phoneme_inventory
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _phoneme_inventory ?? [];
             set => _phoneme_inventory = value;
@@ -203,7 +222,9 @@ namespace ConlangJson
         /// pair of characters that may or may not be linked.  These strings will be expressed using the symbology specified in the 
         /// phonetic_characters field.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public Dictionary<string, string[]> phonetic_inventory
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _phonetic_inventory ?? [];
             set => _phonetic_inventory = value;
@@ -213,7 +234,9 @@ namespace ConlangJson
         /// This string will contain the language’s word order expressed using the letters “S” for subject, “V” for verb, and “O” 
         /// for object. The language may take on any of the six possible arrangements for these.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string word_order
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _word_order ?? "SVO";
             set => _word_order = value;
@@ -272,7 +295,9 @@ namespace ConlangJson
         /// “Before” indicates that the adjective precedes the noun, as occurs in English, and “After” indicates that the adjective 
         /// follows the noun it modifies, as occurs in French.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string adjective_position
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _adjective_position ?? "Before";
             set => _adjective_position = value;
@@ -313,7 +338,9 @@ namespace ConlangJson
         /// the adposition comes after the noun phrase, for example, “a key with.” In languages with prepositions, the adposition proceeds 
         /// the noun phrase, for example, “with a key.” The valid values are “preposition,” and “postposition.”
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string pre_post_position
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _pre_post_position ?? "preposition";
             set => _pre_post_position = value;
@@ -357,7 +384,9 @@ namespace ConlangJson
         /// phonetic version of the word from the Latin alphabet version, it is traversed in the reverse of the order presented.
         /// <br/>Optional, Recommended.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public List<SoundMap> sound_map_list
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _sound_map_list ?? [];
             set => _sound_map_list = value;
@@ -368,7 +397,9 @@ namespace ConlangJson
         /// after they have been converted into the Latin alphabet.  If not provided, then the natural lexical order provided by 
         /// the strings will be used for sorting.<br/>Optional. Recommended.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public List<string> lexical_order_list
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _lexical_order_list ?? [];
             set
@@ -382,7 +413,9 @@ namespace ConlangJson
         /// This object maps parts of speech, usually their abbreviations as listed in part_of_speech_list,
         /// to a list of objects described below that are used to decline root words of that part of speech.<br/>Optional, Recommended.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>> affix_map
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _affix_map ?? [];
             set => _affix_map = value;
@@ -391,7 +424,9 @@ namespace ConlangJson
         /// <summary>
         /// This object contains keys that are used to aid in creating derived words.<br/>Optional. Recommended.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public Dictionary<string, DerivationalAffix> derivational_affix_map
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _derivational_affix_map ?? [];
             set => _derivational_affix_map = value;
@@ -400,7 +435,9 @@ namespace ConlangJson
         /// <summary>
         /// This list of objects contains the lexicon, or dictionary, of the conlang.<br/>Required.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public List<LexiconEntry> lexicon
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _lexicon ?? [];
             set => _lexicon = value;
@@ -411,7 +448,9 @@ namespace ConlangJson
         /// format for these strings is borrowed from Vulgarlang (https://www.vulgarlang.com/), 
         /// and may be updated later.<br/>Optional, Recommended.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public List<string> derived_word_list
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _derived_word_list ?? [];
             set => _derived_word_list = value;
@@ -423,7 +462,9 @@ namespace ConlangJson
         /// should not delete or alter metadata created by other programs but may add their own metadata or alter their metadata to 
         /// update their content<br/>Optional, Recommended.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public JsonObject metadata
+#pragma warning restore IDE1006 // Naming Styles
         {
             get => _metadata ?? [];
             set => _metadata = value;

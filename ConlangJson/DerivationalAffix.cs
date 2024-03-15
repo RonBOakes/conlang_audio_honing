@@ -24,15 +24,6 @@ namespace ConlangJson
     /// </summary>
     public class DerivationalAffix
     {
-        private string? _type;
-        private string? _pronunciation_add = null;
-        private string? _spelling_add = null;
-        private string? _pronunciation_regex = null;
-        private string? _spelling_regex = null;
-        private string? _t_pronunciation_add = null;
-        private string? _t_spelling_add = null;
-        private string? _f_pronunciation_add = null;
-        private string? _f_spelling_add = null;
 
         /// <summary>
         /// Constructor used to build an DerivationalAffix object by passing it values for all of the entries.<br/>
@@ -77,15 +68,15 @@ namespace ConlangJson
         /// in spelling_regex.<br/>Set to null if not present.</param>
         public DerivationalAffix(string? type, string? pronunciation_add, string? spelling_add, string? pronunciation_regex, string? spelling_regex, string? t_pronunciation_add, string? t_spelling_add, string? f_pronunciation_add, string? f_spelling_add)
         {
-            this._type = type;
-            this._pronunciation_add = pronunciation_add;
-            this._spelling_add = spelling_add;
-            this._pronunciation_regex = pronunciation_regex;
-            this._spelling_regex = spelling_regex;
-            this._t_pronunciation_add = t_pronunciation_add;
-            this._t_spelling_add = t_spelling_add;
-            this._f_pronunciation_add = f_pronunciation_add;
-            this._f_spelling_add = f_spelling_add;
+            this.type = type;
+            this.pronunciation_add = pronunciation_add;
+            this.spelling_add = spelling_add;
+            this.pronunciation_regex = pronunciation_regex;
+            this.spelling_regex = spelling_regex;
+            this.t_pronunciation_add = t_pronunciation_add;
+            this.t_spelling_add = t_spelling_add;
+            this.f_pronunciation_add = f_pronunciation_add;
+            this.f_spelling_add = f_spelling_add;
         }
 
         /// <summary>
@@ -100,11 +91,9 @@ namespace ConlangJson
         /// This string has two valid values: “PREFIX” or “SUFFIX”. This indicates if the affix 
         /// placed on the root word when deriving the new word is a prefix or suffix.<br/>.Required.
         /// </summary>
-        public string? type
-        {
-            get { return _type; }
-            set { _type = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? type { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This is the string to be prepended or appended to the phonetic 
@@ -113,11 +102,9 @@ namespace ConlangJson
         /// <br/>Optional, Recommended, Not allowed if pronunciation_regex or spelling_regex is present.<br/>
         /// Set to null if not present.
         /// </summary>
-        public string? pronunciation_add
-        {
-            get { return _pronunciation_add; }
-            set { _pronunciation_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? pronunciation_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This is the string to be prepended or appended to the Romanized or Latinized 
@@ -125,11 +112,9 @@ namespace ConlangJson
         /// <br/>Optional, Recommended, Not allowed if spelling_regex or pronunciation_regex is present.<br/>
         /// Set to null if not present.
         /// </summary>
-        public string? spelling_add
-        {
-            get { return _spelling_add; }
-            set { _spelling_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? spelling_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This is the generalized regular expression used to match on the 
@@ -138,11 +123,9 @@ namespace ConlangJson
         /// or f_pronunciation_add are present, Not allowed if pronunciation_add or spelling_add is present.<br/>
         /// Set to null if not present.
         /// </summary>
-        public string? pronunciation_regex
-        {
-            get { return _pronunciation_regex; }
-            set { _pronunciation_regex = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? pronunciation_regex { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This is the generalized regular expression used to match on the Romanized 
@@ -151,11 +134,9 @@ namespace ConlangJson
         /// t_spelling_add or f_spelling_add are present, Not allowed if pronunciation_add or spelling_add is present.<br/>
         /// Set to null if not present.
         /// </summary>
-        public string? spelling_regex
-        {
-            get { return _spelling_regex; }
-            set { _spelling_regex = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? spelling_regex { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This is the string to be prepended or appended to the phonetic representation 
@@ -163,11 +144,9 @@ namespace ConlangJson
         /// pronunciation_regex.  This will be expressed using the symbology specified in the phonetic_characters field at the 
         /// Top Level.<br/>Set to null if not present.
         /// </summary>
-        public string? t_pronunciation_add
-        {
-            get { return _t_pronunciation_add; }
-            set { _t_pronunciation_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? t_pronunciation_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This is the string to be prepended or appended to the Romanized or Latinized representation 
@@ -175,34 +154,30 @@ namespace ConlangJson
         /// spelling_regex.<br/>Optional, Recommended, Required if spelling_regex is present, Not allowed if pronunciation_add or 
         /// spelling_add is present.<br/>Set to null if not present.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string? t_spelling_add
-        {
-            get { return _t_spelling_add; }
-            set { _t_spelling_add = value; }
-        }
+#pragma warning restore IDE1006 // Naming Styles
+        { get; set; } = null;
 
         /// <summary>
         /// This is the string to be prepended or appended to the phonetic representation of the 
-        /// root word to create the new derived word's phonetic representation if the root word does not match the pattern in pronouncation_regex.
+        /// root word to create the new derived word's phonetic representation if the root word does not match the pattern in pronunciation_regex.
         /// This will be expressed using the symbology specified in the phonetic_characters field at the Top Level.<br/>
         /// Set to null if not present.
         /// </summary>
-        public string? f_pronunciation_add
-        {
-            get { return _f_pronunciation_add; }
-            set { _f_pronunciation_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? f_pronunciation_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This is the string to be prepended or appended to the Romanized or Latinized representation 
         /// of the root word to create the new word's Romanized or Latinized representation if the root word does not match the pattern 
         /// in spelling_regex.<br/>Set to null if not present.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string? f_spelling_add
-        {
-            get { return _f_spelling_add; }
-            set { _f_spelling_add = value; }
-        }
+#pragma warning restore IDE1006 // Naming Styles
+        { get; set; } = null;
 
     }
 }

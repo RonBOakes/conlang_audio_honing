@@ -26,7 +26,7 @@ namespace ConlangAudioHoning
     /// A collection of static properties and methods for working with Latin, 
     /// characters, specifically using Unicode.
     /// </summary>
-    internal static class LatinUtilities
+    internal static partial class LatinUtilities
     {
         /// <summary>
         /// Returns an array containing strings with all of the commonly used
@@ -147,7 +147,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    ConlangUtilities.declineLexicon(language);
+                    ConlangUtilities.DeclineLexicon(language);
                 }
                 removeDeclinedWord = true;
             }
@@ -170,7 +170,7 @@ namespace ConlangAudioHoning
                         foreach (string wordIterator in line.Split(null))
                         {
                             string word = wordIterator.Trim();
-                            Match wordMatch = Regex.Match(word, @"(\w+)[.,?!]");
+                            Match wordMatch = MyRegex().Match(word);
                             if (wordMatch.Success)
                             {
                                 word = wordMatch.Groups[1].Value;
@@ -197,10 +197,13 @@ namespace ConlangAudioHoning
 
             if (removeDeclinedWord)
             {
-                ConlangUtilities.removeDeclinedEntries(language);
+                ConlangUtilities.RemoveDeclinedEntries(language);
             }
 
             return sb.ToString();
         }
+
+        [GeneratedRegex(@"(\w+)[.,?!]")]
+        private static partial Regex MyRegex();
     }
 }

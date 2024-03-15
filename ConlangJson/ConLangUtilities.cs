@@ -117,9 +117,9 @@ namespace ConlangJson
             // Search the affixMap for a matching part of speech.  If one is found then
             // there are rules for declining this part of speech, so apply them to this word,
             // using its phonetic representation.
-            if (affixMap.Keys.Contains(partOfSpeech))
+            if (affixMap.TryGetValue(partOfSpeech, out List<Dictionary<string, List<Dictionary<string, Affix>>>>? value))
             {
-                List<Dictionary<string, List<Dictionary<string, Affix>>>> affixMapList = affixMap[partOfSpeech];
+                List<Dictionary<string, List<Dictionary<string, Affix>>>> affixMapList = value;
                 affixMapList.Sort(AffixListComparison);
                 phoneticList.AddRange(ProcessAffixListLayer(affixMapList, phonetic, partOfSpeech));
             }
@@ -152,7 +152,7 @@ namespace ConlangJson
                 }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 newMetadata.Add("Source", declinedWordData);
-                LexiconEntry entry = new LexiconEntry(phoneticEntry.Phonetic, spelled, english, phoneticEntry.PartOfSpeech, phoneticEntry.Declensions, derivedWord, true, newMetadata)
+                LexiconEntry entry = new(phoneticEntry.Phonetic, spelled, english, phoneticEntry.PartOfSpeech, phoneticEntry.Declensions, derivedWord, true, newMetadata)
                 {
                     declined_word = true
                 };
@@ -166,7 +166,7 @@ namespace ConlangJson
         /// Decline the complete Lexicon of the supplied language.
         /// </summary>
         /// <param name="language">Language to be declined.</param>
-        public static void declineLexicon(LanguageDescription language)
+        public static void DeclineLexicon(LanguageDescription language)
         {
             List<LexiconEntry> addLexicon = [];
             foreach (LexiconEntry word in language.lexicon)
@@ -182,7 +182,7 @@ namespace ConlangJson
         /// as the result of a programmatic declension of the language.  
         /// </summary>
         /// <param name="language">Language to have its declined words removed from the lexicon</param>
-        public static void removeDeclinedEntries(LanguageDescription language)
+        public static void RemoveDeclinedEntries(LanguageDescription language)
         {
             List<LexiconEntry> cleanLexicon = [];
             foreach (LexiconEntry word in language.lexicon)
@@ -206,7 +206,7 @@ namespace ConlangJson
         /// </summary>
         /// <param name="lexicon">List of LexiconEntry objects.</param>
         /// <returns>A list of LexiconEntry objects with any duplicates removed.</returns>
-        public static List<LexiconEntry> deDuplicateLexicon(List<LexiconEntry> lexicon)
+        public static List<LexiconEntry> DeDuplicateLexicon(List<LexiconEntry> lexicon)
         {
             List<LexiconEntry> newLexicon = [];
             foreach (LexiconEntry lexiconEntry in lexicon)
@@ -219,26 +219,17 @@ namespace ConlangJson
             return newLexicon;
         }
 
-        private struct NewWordData : IEquatable<NewWordData>
+        private struct NewWordData(string NewWord, List<string> Declensions, string PartOfSpeech, string Phonetic) : IEquatable<NewWordData>
         {
-            public string NewWord { get; private set; }
-            public List<string> Declensions { get; private set; }
-            public string PartOfSpeech { get; private set; }
-            public string Phonetic { get; private set; }
+            public string NewWord { get; private set; } = NewWord;
+            public List<string> Declensions { get; private set; } = Declensions;
+            public string PartOfSpeech { get; private set; } = PartOfSpeech;
+            public string Phonetic { get; private set; } = Phonetic;
 
-            public NewWordData(string NewWord, List<string> Declensions, string PartOfSpeech, string Phonetic)
+            public override readonly bool Equals([NotNullWhen(true)] object? obj)
             {
-                this.NewWord = NewWord;
-                this.Declensions = Declensions;
-                this.PartOfSpeech = PartOfSpeech;
-                this.Phonetic = Phonetic;
-            }
-
-            public override bool Equals([NotNullWhen(true)] object? obj)
-            {
-                if (obj is NewWordData)
+                if (obj is NewWordData nwObj)
                 {
-                    NewWordData nwObj = (NewWordData)obj;
                     bool comp = this.NewWord.Equals(nwObj.NewWord) &&
                         this.PartOfSpeech.Equals(nwObj.PartOfSpeech) &&
                         this.Phonetic.Equals(nwObj.Phonetic);
@@ -251,17 +242,17 @@ namespace ConlangJson
                 }
             }
 
-            public override int GetHashCode()
+            public override readonly int GetHashCode()
             {
                 return Phonetic.GetHashCode() & NewWord.GetHashCode() & PartOfSpeech.GetHashCode();
             }
 
-            public override string? ToString()
+            public override readonly string? ToString()
             {
                 return NewWord;
             }
 
-            bool IEquatable<NewWordData>.Equals(NewWordData other)
+            readonly bool IEquatable<NewWordData>.Equals(NewWordData other)
             {
                 bool comp = this.NewWord.Equals(other.NewWord) &&
                     this.PartOfSpeech.Equals(other.PartOfSpeech) &&
@@ -276,20 +267,17 @@ namespace ConlangJson
          * the affix_map_tuple generated during declining a word based on its
          * part of speech.
          */
-        private static List<NewWordData> ProcessAffixMapTuple(List<Dictionary<string, List<Dictionary<string, Affix>>>> affixMapTupple, string phonetic, string partOfSpeech, List<string>? priorDeclensions = null)
+        private static List<NewWordData> ProcessAffixMapTuple(List<Dictionary<string, List<Dictionary<string, Affix>>>> affixMapTuple, string phonetic, string partOfSpeech, List<string>? priorDeclensions = null)
         {
             List<NewWordData> phoneticList = [];
-            if (affixMapTupple.Count == 0)
+            if (affixMapTuple.Count == 0)
             {
                 return phoneticList;
             }
 
-            if (priorDeclensions == null)
-            {
-                priorDeclensions = [];
-            }
+            priorDeclensions ??= [];
 
-            Dictionary<string, List<Dictionary<string, Affix>>> affixMap = affixMapTupple[0];
+            Dictionary<string, List<Dictionary<string, Affix>>> affixMap = affixMapTuple[0];
             // affixMap will have only one entry, the key is the affix type, the value is the list of rules.
             string affix = affixMap.Keys.First();
 
@@ -301,9 +289,9 @@ namespace ConlangJson
 
             // Remove the emphasis mark off the beginning of the phonetic string.
             string phonetic2;
-            if (phonetic.Substring(0, 1).Equals("ˈ"))
+            if (phonetic[..1].Equals("ˈ"))
             {
-                phonetic2 = phonetic.Substring(1, phonetic.Length - 1);
+                phonetic2 = phonetic[1..];
             }
             else
             {
@@ -365,12 +353,11 @@ namespace ConlangJson
                 // Recurse (yes, we are in the for loop but this is where we recurse)
                 if (newWord != null)
                 {
-                    List<Dictionary<string, List<Dictionary<string, Affix>>>> nextMapTuple = affixMapTupple.GetRange(1, affixMapTupple.Count - 1);
+                    List<Dictionary<string, List<Dictionary<string, Affix>>>> nextMapTuple = affixMapTuple.GetRange(1, affixMapTuple.Count - 1);
                     List<string> declensions = priorDeclensions.GetRange(0, priorDeclensions.Count);
                     declensions.Add(declension);
                     phoneticList.AddRange(ProcessAffixMapTuple(nextMapTuple, newWord, partOfSpeech, declensions));
-                    NewWordData newWordData = new NewWordData
-                    (
+                    NewWordData newWordData = new (
                         NewWord: newWord,
                         Declensions: declensions,
                         PartOfSpeech: partOfSpeech,
@@ -391,13 +378,13 @@ namespace ConlangJson
         {
             List<NewWordData> phoneticList = [];
 
-            List<List<Dictionary<string, List<Dictionary<string, Affix>>>>> affixMapCombos = allCombinations(affixMapList);
+            List<List<Dictionary<string, List<Dictionary<string, Affix>>>>> affixMapCombos = AllCombinations(affixMapList);
             foreach (List<Dictionary<string, List<Dictionary<string, Affix>>>> affixMapTuple in affixMapCombos)
             {
                 phoneticList.AddRange(ProcessAffixMapTuple(affixMapTuple, phonetic, partOfSpeech));
             }
 
-            phoneticList = deDuplicatePhoneticList(phoneticList);
+            phoneticList = DeDuplicatePhoneticList(phoneticList);
 
             return phoneticList;
         }
@@ -407,18 +394,18 @@ namespace ConlangJson
          * This function is part of the declension process, and is used to process
          * a single layer of the affix map list.
          */
-        private static List<List<T>> allCombinations<T>(List<T> list)
+        private static List<List<T>> AllCombinations<T>(List<T> list)
         {
             List<List<T>> allCombos = [];
             for (int i = 0; i < list.Count; i++)
             {
-                List<List<T>> combos = combinations(list, i + 1);
+                List<List<T>> combos = Combinations(list, i + 1);
                 allCombos.AddRange(combos);
             }
             return allCombos;
         }
 
-        private static List<NewWordData> deDuplicatePhoneticList(List<NewWordData> phoneticList)
+        private static List<NewWordData> DeDuplicatePhoneticList(List<NewWordData> phoneticList)
         {
             List<NewWordData> newPhoneticList = [];
             foreach (NewWordData entry in phoneticList)
@@ -432,13 +419,10 @@ namespace ConlangJson
             return newPhoneticList;
         }
 
-        private static List<List<T>> combinations<T>(List<T> list, int count)
+        private static List<List<T>> Combinations<T>(List<T> list, int count)
         {
-            if (list == null)
-            {
-                throw new ArgumentNullException("list");
-            }
-            List<List<T>> permutationList = permutations<T>(list, count);
+            ArgumentNullException.ThrowIfNull(list);
+            List<List<T>> permutationList = Permutations<T>(list, count);
             List<List<T>> combos = [];
             foreach (List<T> permutation in permutationList)
             {
@@ -462,12 +446,9 @@ namespace ConlangJson
             return combos;
         }
 
-        private static List<List<T>> permutations<T>(List<T> list, int count)
+        private static List<List<T>> Permutations<T>(List<T> list, int count)
         {
-            if (list == null)
-            {
-                throw new ArgumentNullException("list");
-            }
+            ArgumentNullException.ThrowIfNull(list);
             List<List<T>> permutationList = [];
 
             if (count == 1)
@@ -480,7 +461,7 @@ namespace ConlangJson
             }
             else
             {
-                List<List<T>> partialCombos = permutations<T>(list, count - 1);
+                List<List<T>> partialCombos = Permutations<T>(list, count - 1);
                 foreach (List<T> combo in partialCombos)
                 {
                     foreach (T t in list)

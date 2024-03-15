@@ -53,7 +53,7 @@
             btnAddAbove.TabIndex = 3;
             btnAddAbove.Text = "Add Above Selected";
             btnAddAbove.UseVisualStyleBackColor = true;
-            btnAddAbove.Click += btnAddAbove_Click;
+            btnAddAbove.Click += BtnAddAbove_Click;
             // 
             // btnAddBelow
             // 
@@ -63,7 +63,7 @@
             btnAddBelow.TabIndex = 4;
             btnAddBelow.Text = "Add Below Selected";
             btnAddBelow.UseVisualStyleBackColor = true;
-            btnAddBelow.Click += btnAddBelow_Click;
+            btnAddBelow.Click += BtnAddBelow_Click;
             // 
             // lbx_soundMapListEntries
             // 
@@ -108,14 +108,14 @@
             saveAndCloseToolStripMenuItem.Name = "saveAndCloseToolStripMenuItem";
             saveAndCloseToolStripMenuItem.Size = new Size(184, 22);
             saveAndCloseToolStripMenuItem.Text = "Save and Close";
-            saveAndCloseToolStripMenuItem.Click += saveAndCloseToolStripMenuItem_Click;
+            saveAndCloseToolStripMenuItem.Click += SaveAndCloseToolStripMenuItem_Click;
             // 
             // closeWithoutSavingToolStripMenuItem
             // 
             closeWithoutSavingToolStripMenuItem.Name = "closeWithoutSavingToolStripMenuItem";
             closeWithoutSavingToolStripMenuItem.Size = new Size(184, 22);
             closeWithoutSavingToolStripMenuItem.Text = "Close without saving";
-            closeWithoutSavingToolStripMenuItem.Click += closeWithoutSavingToolStripMenuItem_Click;
+            closeWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;
             // 
             // btnReplaceSelected
             // 
@@ -125,7 +125,7 @@
             btnReplaceSelected.TabIndex = 8;
             btnReplaceSelected.Text = "Replace Selected";
             btnReplaceSelected.UseVisualStyleBackColor = true;
-            btnReplaceSelected.Click += btnReplaceSelected_Click;
+            btnReplaceSelected.Click += BtnReplaceSelected_Click;
             // 
             // btnEditSelected
             // 
@@ -135,7 +135,7 @@
             btnEditSelected.TabIndex = 9;
             btnEditSelected.Text = "Load Selected Into Editor";
             btnEditSelected.UseVisualStyleBackColor = true;
-            btnEditSelected.Click += btnEditSelected_Click;
+            btnEditSelected.Click += BtnEditSelected_Click;
             // 
             // btnDeleteSelected
             // 
@@ -145,7 +145,7 @@
             btnDeleteSelected.TabIndex = 10;
             btnDeleteSelected.Text = "Delete Selected Entry";
             btnDeleteSelected.UseVisualStyleBackColor = true;
-            btnDeleteSelected.Click += btnDeleteSelected_Click;
+            btnDeleteSelected.Click += BtnDeleteSelected_Click;
             // 
             // txtPhonemeReplacements
             // 

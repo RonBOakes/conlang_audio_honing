@@ -24,19 +24,6 @@ namespace ConlangJson
     /// </summary>
     public class Affix
     {
-        /* Private members that represent the individual strings that may be placed
-         * into the Affix structure
-         */
-        private string? _pronunciation_add = null;
-        private string? _spelling_add = null;
-        private string? _pronunciation_regex = null;
-        private string? _spelling_regex = null;
-        private string? _t_pronunciation_add = null;
-        private string? _t_spelling_add = null;
-        private string? _f_pronunciation_add = null;
-        private string? _f_spelling_add = null;
-        private string? _pronunciation_replacement = null;
-        private string? _spelling_replacement = null;
 
         /// <summary>
         /// Constructor used to build an Affix object by passing it values for all of the entries.<br/>
@@ -100,16 +87,16 @@ namespace ConlangJson
         public Affix(string? pronunciation_add, string? spelling_add, string? pronunciation_regex, string? spelling_regex, string? t_pronunciation_add,
             string? t_spelling_add, string? f_pronunciation_add, string? f_spelling_add, string? pronunciation_replacement, string? spelling_replacement)
         {
-            this._pronunciation_add = pronunciation_add;
-            this._spelling_add = spelling_add;
-            this._pronunciation_regex = pronunciation_regex;
-            this._spelling_regex = spelling_regex;
-            this._t_pronunciation_add = t_pronunciation_add;
-            this._t_spelling_add = t_spelling_add;
-            this._f_pronunciation_add = f_pronunciation_add;
-            this._f_spelling_add = f_spelling_add;
-            _pronunciation_replacement = pronunciation_replacement;
-            _spelling_replacement = spelling_replacement;
+            this.pronunciation_add = pronunciation_add;
+            this.spelling_add = spelling_add;
+            this.pronunciation_regex = pronunciation_regex;
+            this.spelling_regex = spelling_regex;
+            this.t_pronunciation_add = t_pronunciation_add;
+            this.t_spelling_add = t_spelling_add;
+            this.f_pronunciation_add = f_pronunciation_add;
+            this.f_spelling_add = f_spelling_add;
+            this.pronunciation_replacement = pronunciation_replacement;
+            this.spelling_replacement = spelling_replacement;
         }
 
         /// <summary>
@@ -124,11 +111,9 @@ namespace ConlangJson
         /// field at the Top Level.<br/>Optional, Recommended, Required if spelling_add is present, Not allowed 
         /// if pronunciation_regex is present.<br/>Set to null if not present.
         /// </summary>
-        public string? pronunciation_add
-        {
-            get { return _pronunciation_add; }
-            set { _pronunciation_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? pronunciation_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This string contains the value that will be added to the beginning of 
@@ -136,11 +121,9 @@ namespace ConlangJson
         /// Optional, Recommended, Required if pronunciation_add is present, Not allowed if spelling_regex is 
         /// present.<br/>Set to null if not present.
         /// </summary>
-        public string? spelling_add
-        {
-            get { return _spelling_add; }
-            set { _spelling_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? spelling_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This string contains the generalized regular expression used to 
@@ -152,11 +135,9 @@ namespace ConlangJson
         /// being constructed.<br/>Optional, Recommended, Required if t_pronunciation_add, f_pronunciation_add, 
         /// or spelling_regex are present, Not allowed if pronunciation_add is present.<br/>Set to null if not present.
         /// </summary>
-        public string? pronunciation_regex
-        {
-            get { return _pronunciation_regex; }
-            set { _pronunciation_regex = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? pronunciation_regex { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This string contains the generalized regular expression used to match against 
@@ -169,11 +150,9 @@ namespace ConlangJson
         /// or pronunciation_regex are present, Not allowed if spelling_add is present.<br/>Set to null if not 
         /// present.
         /// </summary>
-        public string? spelling_regex
-        {
-            get { return _spelling_regex; }
-            set { _spelling_regex = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? spelling_regex { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// The string to add to the beginning of the phonetic representation for a 
@@ -182,11 +161,9 @@ namespace ConlangJson
         /// at the Top Level.<br/>Optional, Recommended, Required if pronunciation_regex is present, Not allowed if 
         /// pronunciation_add is present.<br/>Set to null if not present.
         /// </summary>
-        public string? t_pronunciation_add
-        {
-            get { return _t_pronunciation_add; }
-            set { _t_pronunciation_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? t_pronunciation_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// The string to add to the beginning of the Romanized or Latinized representation 
@@ -194,11 +171,9 @@ namespace ConlangJson
         /// representation matches spelling_regex.<br/>Optional, Recommended, Required if spelling_regex is present,
         /// Not allowed if spelling_add is present.<br/>Set to null if not present.
         /// </summary>
-        public string? t_spelling_add
-        {
-            get { return _t_spelling_add; }
-            set { _t_spelling_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? t_spelling_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// The string to add to the beginning of the phonetic representation 
@@ -207,11 +182,9 @@ namespace ConlangJson
         /// phonetic_characters field at the Top Level.<br/>Optional, Recommended, Required if pronunciation_regex
         /// is present, Not allowed if pronunciation_add is present.<br/>Set to null if not present.
         /// </summary>
-        public string? f_pronunciation_add
-        {
-            get { return _f_pronunciation_add; }
-            set { _f_pronunciation_add = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? f_pronunciation_add { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// The string to add to the beginning of the phonetic representation for a 
@@ -220,11 +193,10 @@ namespace ConlangJson
         /// spelling_regex is present, Not allowed if spelling_add is present.<br/>Set to null if not
         /// present.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string? f_spelling_add
-        {
-            get { return _f_spelling_add; }
-            set { _f_spelling_add = value; }
-        }
+#pragma warning restore IDE1006 // Naming Styles
+        { get; set; } = null;
 
         /// <summary>
         /// This is the pattern that will be used to replace the pattern 
@@ -233,11 +205,9 @@ namespace ConlangJson
         /// the symbology specified in the phonetic_characters field at the Top Level.<br/>Optional, Recommended, 
         /// Required if pronunciation_regex is present.<br/>Set to null if not present.
         /// </summary>
-        public string? pronunciation_replacement
-        {
-            get { return _pronunciation_replacement; }
-            set { _pronunciation_replacement = value; }
-        }
+#pragma warning disable IDE1006 // Naming Styles
+        public string? pronunciation_replacement { get; set; } = null;
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// This is the pattern that will be used to replace the pattern matched 
@@ -245,10 +215,9 @@ namespace ConlangJson
         /// occurs.  Replacement groups are represented using the Perl standard of \$n.<br/>Optional, Recommended, 
         /// Required if spelling_regex is present.<br/>Set to null if not present.
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public string? spelling_replacement
-        {
-            get { return _spelling_replacement; }
-            set { _spelling_replacement = value; }
-        }
+#pragma warning restore IDE1006 // Naming Styles
+        { get; set; } = null;
     }
 }

@@ -42,7 +42,7 @@ namespace ConlangAudioHoning
             set
             {
                 _soundMapList = value;
-                loadForm();
+                LoadForm();
             }
         }
 
@@ -70,7 +70,7 @@ namespace ConlangAudioHoning
         /// Update the header text.  This will override any automatically generated text from the 
         /// PhonemeReplacementPairs.  However, updating them will override this text.
         /// </summary>
-        public string headerText
+        public string HeaderText
         {
             get
             {
@@ -119,12 +119,12 @@ namespace ConlangAudioHoning
             txtPhonemeReplacements.Text = sb.ToString();
         }
 
-        private void loadForm()
+        private void LoadForm()
         {
             UpdateSoundMapEntries();
         }
 
-        private void btnAddAbove_Click(object sender, EventArgs e)
+        private void BtnAddAbove_Click(object sender, EventArgs e)
         {
             if (!soundMapEditor.ValidMap)
             {
@@ -138,7 +138,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void btnAddBelow_Click(object sender, EventArgs e)
+        private void BtnAddBelow_Click(object sender, EventArgs e)
         {
             if (!soundMapEditor.ValidMap)
             {
@@ -153,13 +153,13 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void saveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SoundMapSaved = true;
             this.Close();
         }
 
-        private void closeWithoutSavingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CloseWithoutSavingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SoundMapSaved = false;
             this.Close();
@@ -180,7 +180,7 @@ namespace ConlangAudioHoning
             soundMapEditor.AppendToFocusedBox(charToInsert);
         }
 
-        private void btnEditSelected_Click(object sender, EventArgs e)
+        private void BtnEditSelected_Click(object sender, EventArgs e)
         {
             int index = lbx_soundMapListEntries.SelectedIndex;
             if (index >= 0)
@@ -190,7 +190,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void btnDeleteSelected_Click(object sender, EventArgs e)
+        private void BtnDeleteSelected_Click(object sender, EventArgs e)
         {
             int index = lbx_soundMapListEntries.SelectedIndex;
             if (index >= 0)
@@ -220,7 +220,7 @@ namespace ConlangAudioHoning
             lbx_soundMapListEntries.ResumeLayout();
         }
 
-        private void btnReplaceSelected_Click(object sender, EventArgs e)
+        private void BtnReplaceSelected_Click(object sender, EventArgs e)
         {
             if (!soundMapEditor.ValidMap)
             {

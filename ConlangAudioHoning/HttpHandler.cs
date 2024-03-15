@@ -1,5 +1,5 @@
 ﻿/*
-* Class for handling the HTTP/HTTPS requests (REST API Requests) for Langauge Honing
+* Class for handling the HTTP/HTTPS requests (REST API Requests) for Language Honing
 * 
 * Copyright (C) 2024 Ronald B. Oakes
 *

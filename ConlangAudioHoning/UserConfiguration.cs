@@ -23,10 +23,10 @@ using System.Text.Unicode;
 
 namespace ConlangAudioHoning
 {
-    internal class UserConfiguration
+    internal partial class UserConfiguration
     {
-        private static string? _pollyURI;
-        private static string? _eSpeakNgPath;
+        private string? _pollyURI;
+        private string? _eSpeakNgPath;
 
         public UserConfiguration()
         { }
@@ -66,19 +66,27 @@ namespace ConlangAudioHoning
             get => (!string.IsNullOrEmpty(ESpeakNgPath));
         }
 
+        public JsonSerializerOptions GetJsonSerializerOptions()
+        {
+            return new()
+            {
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            };
+        }
+
         /// <summary>
         /// Write this configuration out as a JSON file.
         /// </summary>
         /// <param name="filePath">Path to write the configuration file.  By default this will create the 
         /// configuration file in the user's application data directory using a default name.</param>
-        public void SaveConfiguration(string filePath = "")
+        public void SaveConfiguration(JsonSerializerOptions jsonSerializerOptions, string filePath = "")
         {
             if (string.IsNullOrEmpty(filePath))
             {
                 filePath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
             }
 
-            Match commitInPathMatch = Regex.Match(filePath, @"\\((\d+\.\d+\.\d+)\+[0-9a-f]+)\\");
+            Match commitInPathMatch = MyRegex().Match(filePath);
             if (commitInPathMatch.Success)
             {
                 filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
@@ -92,13 +100,9 @@ namespace ConlangAudioHoning
                 di.Create();
             }
 
-            JsonSerializerOptions jsonSerializerOptions = new()
-            {
-                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-            };
             JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
             jsonSerializerOptions.Encoder = encoder;
-            jsonSerializerOptions.WriteIndented = true; // TODO: make an option
+            jsonSerializerOptions.WriteIndented = true;
 
             string jsonString = JsonSerializer.Serialize<UserConfiguration>(this, jsonSerializerOptions);
             File.WriteAllText(filePath, jsonString, System.Text.Encoding.UTF8);
@@ -117,7 +121,7 @@ namespace ConlangAudioHoning
                 filePath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
             }
 
-            Match commitInPathMatch = Regex.Match(filePath, @"\\((\d+\.\d+\.\d+)\+[0-9a-f]+)\\");
+            Match commitInPathMatch = MyRegex().Match(filePath);
             if (commitInPathMatch.Success)
             {
                 filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
@@ -148,5 +152,8 @@ namespace ConlangAudioHoning
             UserConfiguration config = new();
             return config;
         }
+
+        [GeneratedRegex(@"\\((\d+\.\d+\.\d+)\+[0-9a-f]+)\\")]
+        private static partial Regex MyRegex();
     }
 }
