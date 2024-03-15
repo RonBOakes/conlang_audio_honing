@@ -1,18 +1,17 @@
 ﻿{
-  "version": 1.0,
+  "version": 1,
   "english_name": "Test English",
   "phonetic_characters": "ipa",
   "native_name_phonetic": "ˈɪŋɡlɪʃ",
   "native_name_english": "English",
   "preferred_voices": {
-    "Polly": "Matthew",
-    "espeak-ng": "en-us"
+    "Polly": "Emma",
+    "espeak-ng": "en-gb"
   },
+  "preferred_language": "",
   "derived": true,
   "declined": false,
-  "none_gender_list": [
-    ""
-  ],
+  "noun_gender_list": [],
   "part_of_speech_list": [
     "adj",
     "adv",
@@ -29,7 +28,7 @@
     "b",
     "d",
     "f",
-    "g",
+    "ɡ",
     "h",
     "j",
     "k",
@@ -60,17 +59,36 @@
     "uː",
     "ʊ",
     "ʌ",
-    "aɪ̯",
-    "aʊ̯",
-    "eɪ̯",
-    "oʊ̯",
-    "ɔɪ̯"
+    "aɪ",
+    "aʊ",
+    "eɪ",
+    "oʊ",
+    "ɔɪ"
   ],
   "phonetic_inventory": {
-    "p_consonants": [],
+    "p_consonants": [
+      "ð",
+      "l",
+      "m",
+      "n",
+      "p",
+      "ɹ",
+      "s",
+      "t"
+    ],
     "np_consonants": [],
-    "vowels": [],
-    "v_diphthongs": []
+    "vowels": [
+      "ɒ",
+      "e",
+      "ɪ"
+    ],
+    "v_diphthongs": [
+      "aɪ",
+      "aʊ",
+      "eɪ",
+      "oʊ",
+      "ɔɪ"
+    ]
   },
   "word_order": "SVO",
   "adjective_position": "Before",
@@ -78,61 +96,94 @@
   "sound_map_list": [
     {
       "phoneme": "θ",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "th"
     },
     {
       "phoneme": "ð",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "th"
     },
     {
       "phoneme": "ɹ",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "r"
     },
     {
       "phoneme": "ɹ",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "r"
     },
     {
       "phoneme": "z",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "s$"
     },
     {
       "phoneme": "eɪ",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "ai"
     },
     {
       "phoneme": "ɪ",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "i"
     },
     {
       "phoneme": "ɒ",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "o"
     },
     {
       "phoneme": "ɔ",
+      "romanization": "",
+      "spelling_regex": "",
       "pronunciation_regex": "o"
     },
     {
+      "phoneme": "",
+      "romanization": "o",
       "spelling_regex": "ɔ",
-      "romanization": "o"
+      "pronunciation_regex": ""
     },
     {
+      "phoneme": "",
+      "romanization": "ai",
       "spelling_regex": "eɪ",
-      "romanization": "ai"
+      "pronunciation_regex": ""
     },
     {
+      "phoneme": "",
+      "romanization": "s",
       "spelling_regex": "z$",
-      "romanization": "s"
+      "pronunciation_regex": ""
     },
     {
+      "phoneme": "",
+      "romanization": "r",
       "spelling_regex": "ɹ",
-      "romanization": "r"
+      "pronunciation_regex": ""
     },
     {
+      "phoneme": "",
+      "romanization": "th",
       "spelling_regex": "ð",
-      "romanization": "th"
+      "pronunciation_regex": ""
+    },
+    {
+      "phoneme": "",
+      "romanization": "",
+      "spelling_regex": "ˈ",
+      "pronunciation_regex": ""
     }
-
   ],
   "lexical_order_list": [
     "a",
@@ -164,12 +215,8 @@
     "⁠",
     " "
   ],
-  "affix_map": {
-
-  },
-  "derivational_affix_map": {
-
-  },
+  "affix_map": {},
+  "derivational_affix_map": {},
   "lexicon": [
     {
       "phonetic": "ðə",
@@ -269,5 +316,9 @@
     }
   ],
   "derived_word_list": [],
-  "metadata": {}
+  "metadata": {
+    "history": [
+      "Edited in LanguageEditor, saved at 2024-03-15T17:49:33.6122786Z"
+    ]
+  }
 }
