@@ -23,16 +23,12 @@ namespace ConlangAudioHoning
     /// </summary>
     internal sealed class HttpHandler
     {
-        private readonly HttpClient _httpClient;
 
         /// <summary>
         /// The constructor for HttpHandler is private to ensure that only one instance of this
         /// class exists during any given application execution.
         /// </summary>
-        private HttpHandler()
-        {
-            _httpClient = new HttpClient();
-        }
+        private HttpHandler() => HttpClient = new HttpClient();
 
         private static readonly object _lock = new();
         private static HttpHandler? _instance = null;
@@ -60,9 +56,6 @@ namespace ConlangAudioHoning
         /// Returns the HttpClient object contained within the HttpHandler.  This is the
         /// only HttpClient that can be used in the ConlangAudioHoning application.
         /// </summary>
-        public HttpClient HttpClient
-        {
-            get => _httpClient;
-        }
+        public HttpClient HttpClient { get; }
     }
 }

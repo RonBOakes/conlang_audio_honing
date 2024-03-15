@@ -29,7 +29,6 @@ namespace ConlangAudioHoning
     {
         private List<SoundMap> _soundMapList;
         private List<(string, string)> _phonemeReplacementPairs = [];
-        private bool _soundMapSaved = false;
 
         /// <summary>
         /// List of SoundMap objects being edited.  The order of this list is important.
@@ -65,10 +64,7 @@ namespace ConlangAudioHoning
         /// If this is set to true, then the user has indicated that they have "saved" the changes,
         /// if false, then the user has not saved the changes and they should not be applied.
         /// </summary>
-        public bool SoundMapSaved
-        {
-            get => _soundMapSaved;
-        }
+        public bool SoundMapSaved { get; private set; } = false;
 
         /// <summary>
         /// Update the header text.  This will override any automatically generated text from the 
@@ -105,7 +101,7 @@ namespace ConlangAudioHoning
             }
 
             CharacterInsertToolStripMenuItem ciMenu = new();
-            menuStrip1.Items.Add(ciMenu);
+            _ = menuStrip1.Items.Add(ciMenu);
             _soundMapList = [];
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
         }
@@ -118,7 +114,7 @@ namespace ConlangAudioHoning
             StringBuilder sb = new();
             foreach ((string phonemeToBeReplaced, string replacementPhoneme) in PhonemeReplacementPairs)
             {
-                sb.AppendFormat("{0} -> {1},", phonemeToBeReplaced, replacementPhoneme);
+                _ = sb.AppendFormat("{0} -> {1},", phonemeToBeReplaced, replacementPhoneme);
             }
             txtPhonemeReplacements.Text = sb.ToString();
         }
@@ -159,13 +155,13 @@ namespace ConlangAudioHoning
 
         private void saveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _soundMapSaved = true;
+            SoundMapSaved = true;
             this.Close();
         }
 
         private void closeWithoutSavingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _soundMapSaved = false;
+            SoundMapSaved = false;
             this.Close();
         }
 
@@ -215,11 +211,11 @@ namespace ConlangAudioHoning
             foreach (SoundMap map in _soundMapList)
             {
                 StringBuilder sb = new();
-                sb.AppendFormat("Phonetic Regex: {0}, ", map.pronunciation_regex);
-                sb.AppendFormat("Phoneme: {0}, ", map.phoneme);
-                sb.AppendFormat("Spelling Regex: {0}, ", map.spelling_regex);
-                sb.AppendFormat("Spelling: {0}", map.romanization);
-                lbx_soundMapListEntries.Items.Add(sb.ToString());
+                _ = sb.AppendFormat("Phonetic Regex: {0}, ", map.pronunciation_regex);
+                _ = sb.AppendFormat("Phoneme: {0}, ", map.phoneme);
+                _ = sb.AppendFormat("Spelling Regex: {0}, ", map.spelling_regex);
+                _ = sb.AppendFormat("Spelling: {0}", map.romanization);
+                _ = lbx_soundMapListEntries.Items.Add(sb.ToString());
             }
             lbx_soundMapListEntries.ResumeLayout();
         }

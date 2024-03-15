@@ -255,23 +255,16 @@ namespace ConlangJson
         /// </summary>
         public LanguageDescription.WordOrders WordOrder()
         {
-            switch (word_order)
+            return word_order switch
             {
-                case "SVO":
-                    return WordOrders.SVO;
-                case "SOV":
-                    return WordOrders.SOV;
-                case "VSO":
-                    return WordOrders.VSO;
-                case "VOS":
-                    return WordOrders.VOS;
-                case "OSV":
-                    return WordOrders.OSV;
-                case "OVS":
-                    return WordOrders.OVS;
-                default:
-                    return WordOrders.SVO;
-            }
+                "SVO" => WordOrders.SVO,
+                "SOV" => WordOrders.SOV,
+                "VSO" => WordOrders.VSO,
+                "VOS" => WordOrders.VOS,
+                "OSV" => WordOrders.OSV,
+                "OVS" => WordOrders.OVS,
+                _ => WordOrders.SVO,
+            };
         }
 
         /// <summary>
@@ -306,15 +299,12 @@ namespace ConlangJson
         /// <returns></returns>
         public LanguageDescription.AdjectivePositions AdjectivePosition()
         {
-            switch (adjective_position.ToLower())
+            return adjective_position.ToLower() switch
             {
-                case "before":
-                    return AdjectivePositions.BEFORE;
-                case "after":
-                    return AdjectivePositions.AFTER;
-                default:
-                    return AdjectivePositions.BEFORE;
-            }
+                "before" => AdjectivePositions.BEFORE,
+                "after" => AdjectivePositions.AFTER,
+                _ => AdjectivePositions.BEFORE,
+            };
         }
 
 
@@ -351,15 +341,12 @@ namespace ConlangJson
         /// <returns></returns>
         public LanguageDescription.PrePostPositions PrePostPosition()
         {
-            switch (pre_post_position.ToLower())
+            return pre_post_position.ToLower() switch
             {
-                case "preposition":
-                    return PrePostPositions.PREPOSITION;
-                case "postposition":
-                    return PrePostPositions.POSTPOSITION;
-                default:
-                    return PrePostPositions.PREPOSITION;
-            }
+                "preposition" => PrePostPositions.PREPOSITION,
+                "postposition" => PrePostPositions.POSTPOSITION,
+                _ => PrePostPositions.PREPOSITION,
+            };
         }
 
         /// <summary>

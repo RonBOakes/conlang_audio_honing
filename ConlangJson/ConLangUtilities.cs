@@ -21,7 +21,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using System.Linq;
 
 namespace ConlangJson
 {
@@ -149,7 +148,7 @@ namespace ConlangJson
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 if (newMetadata.ContainsKey("Source"))
                 {
-                    newMetadata.Remove("Source");
+                    _ = newMetadata.Remove("Source");
                 }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 newMetadata.Add("Source", declinedWordData);

@@ -28,10 +28,12 @@ namespace ConlangAudioHoning
     /// </summary>
     internal static class KirshenbaumUtilities
     {
-        // Based on https://web.archive.org/web/20160312220739/http://www.kirshenbaum.net/IPA/faq.html
-        // and https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/kirshenbaum.md as of 
-        // commit cd17e7c.
-        private static readonly Dictionary<string, string> _ipa_kirshenbaum_map = new()
+
+        /// <summary>
+        /// The dictionary used to map IPA characters to their (preferred)
+        /// corresponding X-SAMPA character.
+        /// </summary>
+        public static Dictionary<string, string> IpaKirshenbaumMap { get; } = new()
         {
             { "a", "a" }, { "b", "b" }, { "ɓ", "b`" },{ "c", "c" }, { "d", "d" }, { "ɖ", "d." },
             { "ɗ", "d`" }, { "e", "e" }, { "f", "f" }, { "ɡ", "g" }, { "ɠ", "g`" }, { "h", "h" },
@@ -59,32 +61,17 @@ namespace ConlangAudioHoning
             { "ɵ", "@." }, {"ǀ","!["}, {"‖","!"}, {"ǂ","!"}
         };
 
-        private static readonly List<string> _unmapped_phonemes =
-        [
+        public static List<String> UnmappedPhonemes { get; } = [
               "ʛ", "ᵻ",   "ᵿ", ".", "ʲ", "ˑ",    "ʢ",
             "ʡ", "ꜛ", "ꜜ", "|",   "ǁ",  "‿", "\u031f", "\u0320", "\u030c", "\u0325", "\u0e24",
             "\u0302", "\u032f", "\u031a", "\u0318", "\u033a", "\u031c", "\u033b", "\u033c", "\u0339",
             "\u0319", "\u0330", "\u031d", "\u02b7",
         ];
 
-        /// <summary>
-        /// The dictionary used to map IPA characters to their (preferred)
-        /// corresponding X-SAMPA character.
-        /// </summary>
-        public static Dictionary<string, string> IpaKirshenbaumMap
-        {
-            get => _ipa_kirshenbaum_map;
-        }
-
-        public static List<String> UnmappedPhonemes
-        {
-            get => _unmapped_phonemes;
-        }
-
         public static string IpaWordToKirshenbaum(string word)
         {
             StringBuilder sb = new();
-            sb.Append("[[");
+            _ = sb.Append("[[");
 
             // All of the keys in both Kirshenbaum maps are 1 character
             foreach (char c in word)
@@ -92,10 +79,10 @@ namespace ConlangAudioHoning
                 if (!UnmappedPhonemes.Contains(c.ToString()))
                 {
                     string kirshenbaumPhoneme = IpaKirshenbaumMap[c.ToString()];
-                    sb.Append(kirshenbaumPhoneme);
+                    _ = sb.Append(kirshenbaumPhoneme);
                 }
             }
-            sb.Append("]]");
+            _ = sb.Append("]]");
             return sb.ToString();
         }
 

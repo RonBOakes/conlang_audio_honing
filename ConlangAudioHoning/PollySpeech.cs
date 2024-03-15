@@ -28,38 +28,24 @@ namespace ConlangAudioHoning
     /// </summary>
     internal class PollySpeech : SpeechEngine
     {
-        // URI for the Amazon REST URI for processing the Polly messages.  This needs beefing up
-        // before this project can be made public since it will allow any SSML to be turned to 
-        // speech on my dime.
-        private static string _polyURI = "";
 
         /// <summary>
         /// Constructor for the Amazon Polly interface.
         /// </summary>
-        public PollySpeech() : base()
-        {
-            Description = "Amazon Polly";
-        }
+        public PollySpeech() : base() => Description = "Amazon Polly";
 
-        public static string PollyURI
-        {
-            get => _polyURI;
-            set => _polyURI = value;
-        }
+        public static string PollyURI { get; set; } = "";
 
         /// <summary>
         /// Constructor for the Amazon Polly interface.
         /// </summary>
         /// <param name="languageDescription">LanguageDescription object for the language to work with.</param>
-        public PollySpeech(LanguageDescription languageDescription) : base(languageDescription)
-        {
-            Description = "Amazon Polly";
-        }
+        public PollySpeech(LanguageDescription languageDescription) : base(languageDescription) => Description = "Amazon Polly";
 
         /// <summary>
         /// Key used to access the LanguageDescription preffered_voices dictionary.
         /// </summary>
-        public override string preferredVoiceKey
+        public override string PreferredVoiceKey
         {
             get => "Polly";
         }
@@ -77,7 +63,7 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("Cannot Generate Polly Speech without a language description");
             }
-            if (string.IsNullOrEmpty(sampleText))
+            if (string.IsNullOrEmpty(SampleText))
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
@@ -105,7 +91,7 @@ namespace ConlangAudioHoning
             // Get the phonetic representations of the text - ported from Python code.
             List<List<Dictionary<string, string>>> pronounceMapList = [];
             pronounceMapList.Clear();
-            using (StringReader sampleTextReader = new(sampleText.ToLower()))
+            using (StringReader sampleTextReader = new(SampleText.ToLower()))
             {
                 string? line;
                 do
@@ -116,7 +102,7 @@ namespace ConlangAudioHoning
                         List<Dictionary<string, string>> lineMapList = [];
                         foreach (string word in line.Split(null))
                         {
-                            Dictionary<string, string>? pronounceMap = pronounceWord(word, wordMap);
+                            Dictionary<string, string>? pronounceMap = PronounceWord(word, wordMap);
                             if (pronounceMap != null)
                             {
                                 lineMapList.Add(pronounceMap);
@@ -128,10 +114,10 @@ namespace ConlangAudioHoning
                 while (line != null);
             }
 
-            ssmlText = "<speak>\n";
-            ssmlText += "\t<prosody rate =\"" + speed + "\">\n";
+            SsmlText = "<Speak>\n";
+            SsmlText += "\t<prosody rate =\"" + speed + "\">\n";
 
-            phoneticText = string.Empty;
+            PhoneticText = string.Empty;
             int wordWrap = 0;
 
             foreach (List<Dictionary<string, string>> lineMapList in pronounceMapList)
@@ -141,34 +127,34 @@ namespace ConlangAudioHoning
                     // Build the phoneme tag
                     if ((!pronounceMap["phonetic"].Trim().Equals(string.Empty)) && (pronounceMap["phonetic"] != ".") && (pronounceMap["phonetic"] != ","))
                     {
-                        ssmlText += "\t\t<phoneme alphabet=\"ipa\" ph=\"" + pronounceMap["phonetic"] + "\">" + pronounceMap["word"] + "</phoneme>\n";
-                        phoneticText += pronounceMap["phonetic"];
+                        SsmlText += "\t\t<phoneme alphabet=\"ipa\" ph=\"" + pronounceMap["phonetic"] + "\">" + pronounceMap["word"] + "</phoneme>\n";
+                        PhoneticText += pronounceMap["phonetic"];
                         wordWrap += pronounceMap["phonetic"].Length;
                         if (pronounceMap["punctuation"] != "")
                         {
-                            phoneticText += pronounceMap["punctuation"];
+                            PhoneticText += pronounceMap["punctuation"];
                             wordWrap += pronounceMap["punctuation"].Length;
                         }
-                        phoneticText += " ";
+                        PhoneticText += " ";
                         wordWrap += 1;
                     }
                     else if (pronounceMap["punctuation"] == ".")
                     {
-                        ssmlText += "\t\t<break strength=\"strong\"/>\n";
+                        SsmlText += "\t\t<break strength=\"strong\"/>\n";
                     }
                     else if (pronounceMap["punctuation"] == ",")
                     {
-                        ssmlText += "\t\t<break strength=\"weak\"/>\n";
+                        SsmlText += "\t\t<break strength=\"weak\"/>\n";
                     }
                     if (wordWrap >= 80)
                     {
-                        phoneticText += "\n";
+                        PhoneticText += "\n";
                         wordWrap = 0;
                     }
                 }
             }
-            ssmlText += "\t</prosody>\n";
-            ssmlText += "</speak>\n";
+            SsmlText += "\t</prosody>\n";
+            SsmlText += "</Speak>\n";
 
             if (removeDeclinedWord)
             {
@@ -180,7 +166,7 @@ namespace ConlangAudioHoning
         /// Get all of the Amazon Polly voices from Amazon Web Services.
         /// </summary>
         /// <returns></returns>
-        public override Dictionary<string, PollySpeech.VoiceData> getVoices()
+        public override Dictionary<string, PollySpeech.VoiceData> GetVoices()
         {
             Dictionary<string, PollySpeech.VoiceData> voices = [];
             HttpHandler httpHandler = HttpHandler.Instance;
@@ -193,7 +179,7 @@ namespace ConlangAudioHoning
             };
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
-                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     return voices;
@@ -204,7 +190,7 @@ namespace ConlangAudioHoning
             JsonObject? responseData = null;
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
-                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     return voices;
@@ -259,7 +245,7 @@ namespace ConlangAudioHoning
             {
                 return false;
             }
-            if ((sampleText == null) || (sampleText.Length == 0))
+            if ((SampleText == null) || (SampleText.Length == 0))
             {
                 return false;
             }
@@ -273,7 +259,7 @@ namespace ConlangAudioHoning
                 speed = "slow";
             }
 
-            if ((ssmlText == null) || (ssmlText.Trim().Equals(string.Empty)))
+            if ((SsmlText == null) || (SsmlText.Trim().Equals(string.Empty)))
             {
                 Generate(speed, caller);
             }
@@ -307,7 +293,7 @@ namespace ConlangAudioHoning
             };
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
-                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     return false;
@@ -321,7 +307,7 @@ namespace ConlangAudioHoning
             requestDict.Clear();
             requestDict["start"] = string.Empty;
 #pragma warning disable CS8601 // Possible null reference assignment.
-            requestDict["ssml"] = ssmlText;
+            requestDict["ssml"] = SsmlText;
 #pragma warning restore CS8601 // Possible null reference assignment.            }
             requestDict["voice"] = voice;
             requestDict["filetype"] = "mp3";
@@ -329,7 +315,7 @@ namespace ConlangAudioHoning
             string taskURI;
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
-                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     return false;
@@ -356,7 +342,7 @@ namespace ConlangAudioHoning
             {
                 using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
                 {
-                    HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                    HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                     if (result.StatusCode != System.Net.HttpStatusCode.OK)
                     {
                         return false;
@@ -385,7 +371,7 @@ namespace ConlangAudioHoning
             requestDict["uri"] = taskURI;
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
-                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     return false;
@@ -405,7 +391,7 @@ namespace ConlangAudioHoning
             // requestDict["uri"] = string.Empty; // Remove or comment out to just delete the newly created file.
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
-                HttpResponseMessage result = httpClient.PostAsync(_polyURI, content).Result;
+                HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
             }
             if (progressBar != null)
             {

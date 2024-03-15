@@ -28,7 +28,11 @@ namespace ConlangAudioHoning
     /// </summary>
     internal static class LatinUtilities
     {
-        private static readonly Dictionary<string, string> _diacriticsMap = new()
+        /// <summary>
+        /// Returns an array containing strings with all of the commonly used
+        /// Latin diacritics.
+        /// </summary>
+        public static Dictionary<string, string> DiacriticsMap { get; } = new()
         {
             { "\u0300", "combining grave accent" },
             { "\u0301", "combining acute accent" },
@@ -120,15 +124,6 @@ namespace ConlangAudioHoning
         };
 
         /// <summary>
-        /// Returns an array containing strings with all of the commonly used
-        /// Latin diacritics.
-        /// </summary>
-        public static Dictionary<string, string> DiacriticsMap
-        {
-            get => _diacriticsMap;
-        }
-
-        /// <summary>
         /// Generate a gloss of the supplied text using the supplied language.<br/>
         /// A gloss is a translation into a common (natural) language in the same order
         /// as the original text, including information about the part of speech and
@@ -183,16 +178,16 @@ namespace ConlangAudioHoning
                             if (wordMap.TryGetValue(word, out LexiconEntry? value))
                             {
                                 LexiconEntry lexiconEntry = value;
-                                sb.AppendFormat("{0}-({1} ", lexiconEntry.english, lexiconEntry.part_of_speech);
+                                _ = sb.AppendFormat("{0}-({1} ", lexiconEntry.english, lexiconEntry.part_of_speech);
                                 foreach (string declension in lexiconEntry.declensions)
                                 {
-                                    sb.AppendFormat("[{0}]", declension);
+                                    _ = sb.AppendFormat("[{0}]", declension);
                                 }
-                                sb.Append(") ");
+                                _ = sb.Append(") ");
                             }
                             else
                             {
-                                sb.AppendFormat("Unknown Word ({0}) ", word);
+                                _ = sb.AppendFormat("Unknown Word ({0}) ", word);
                             }
                         }
                     }

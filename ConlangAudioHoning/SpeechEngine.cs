@@ -36,7 +36,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Constructor for the Speech Engine interface.
         /// </summary>
-        public SpeechEngine()
+        protected SpeechEngine()
         {
             _languageDescription = null;
         }
@@ -45,7 +45,7 @@ namespace ConlangAudioHoning
         /// Constructor for the Speech Engine interface.
         /// </summary>
         /// <param name="languageDescription">LanguageDescription object for the language to work with.</param>
-        public SpeechEngine(LanguageDescription? languageDescription)
+        protected SpeechEngine(LanguageDescription? languageDescription)
         {
             _languageDescription = languageDescription;
         }
@@ -79,7 +79,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// The sample text being worked on.
         /// </summary>
-        public string sampleText
+        public string SampleText
         {
             get => _sampleText ?? string.Empty;
             set => _sampleText = value;
@@ -88,7 +88,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// The SSML text generated to be sent to Amazon Polly.
         /// </summary>
-        public string ssmlText
+        public string SsmlText
         {
             get => _ssmlText ?? string.Empty;
             protected set => _ssmlText = value;
@@ -97,16 +97,16 @@ namespace ConlangAudioHoning
         /// <summary>
         /// The Phonetic text produced from the SampleText and the LanguageDescription.
         /// </summary>
-        public string phoneticText
+        public string PhoneticText
         {
             get => _phoneticText ?? string.Empty;
             protected set => _phoneticText = value;
         }
 
         /// <summary>
-        /// Key used to access the LanguageDescription preffered_voices dictionary.
+        /// Key used to access the LanguageDescription preferred_voices dictionary.
         /// </summary>
-        public abstract string preferredVoiceKey
+        public abstract string PreferredVoiceKey
         {
             get;
         }
@@ -132,9 +132,9 @@ namespace ConlangAudioHoning
         /// <returns>true if successful, false otherwise.</returns>
         public abstract bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null);
 
-        public abstract Dictionary<string, VoiceData> getVoices();
+        public abstract Dictionary<string, VoiceData> GetVoices();
 
-        protected Dictionary<string, string>? pronounceWord(string word, Dictionary<string, LexiconEntry> wordMap)
+        protected Dictionary<string, string>? PronounceWord(string word, Dictionary<string, LexiconEntry> wordMap)
         {
             if (word.Trim().Equals(string.Empty))
             {
@@ -205,59 +205,32 @@ namespace ConlangAudioHoning
         /// </summary>
         public struct VoiceData
         {
-            private string _name;
-            private string _gender;
-            private string _id;
-            private string _languageCode;
-            private string _languageName;
-            private string[] _additionalLanguageCodes;
-            private string[] _supportedEngines;
 
             /// <summary>
             /// Name of the voice. This provides a human readable voice name that you might display in your application.
             /// </summary>
-            public string Name
-            {
-                get => _name;
-                set => _name = value;
-            }
+            public string Name { get; set; }
 
             /// <summary>
             /// Gender of the voice.
             /// </summary>
-            public string Gender
-            {
-                get => _gender;
-                set => _gender = value;
-            }
+            public string Gender { get; set; }
 
             /// <summary>
             /// Amazon Polly assigned voice ID. This is the ID that you specify when calling the SynthesizeSpeech operation.
             /// Set to string.Empty for other engines.
             /// </summary>
-            public string Id
-            {
-                get => _id;
-                set => _id = value;
-            }
+            public string Id { get; set; }
 
             /// <summary>
             /// Language code of the voice.
             /// </summary>
-            public string LanguageCode
-            {
-                get => _languageCode;
-                set => _languageCode = value;
-            }
+            public string LanguageCode { get; set; }
 
             /// <summary>
             /// Human readable name of the language in English.
             /// </summary>
-            public string LanguageName
-            {
-                get => _languageName;
-                set => _languageName = value;
-            }
+            public string LanguageName { get; set; }
 
             /// <summary>
             /// Additional codes for languages available for the specified voice in addition to its default language.<br/>
@@ -265,20 +238,12 @@ namespace ConlangAudioHoning
             /// language.Since Aditi is bilingual and fluent in both Indian English and Hindi, this parameter would show 
             /// the code hi-IN.
             /// </summary>
-            public string[] AdditionalLanguageCodes
-            {
-                get => _additionalLanguageCodes;
-                set => _additionalLanguageCodes = value;
-            }
+            public string[] AdditionalLanguageCodes { get; set; }
 
             /// <summary>
             /// Specifies which engines (standard, neural or long-form) are supported by a given voice.
             /// </summary>
-            public string[] SupportedEngines
-            {
-                get => _supportedEngines;
-                set => _supportedEngines = value;
-            }
+            public string[] SupportedEngines { get; set; }
         }
     }
 }

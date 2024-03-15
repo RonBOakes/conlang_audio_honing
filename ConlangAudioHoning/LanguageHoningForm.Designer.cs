@@ -60,7 +60,7 @@
             btn_generateSpeech = new Button();
             cbx_recordings = new ComboBox();
             btn_replaySpeech = new Button();
-            pb_status = new ProgressBar();
+            ProgressBar = new ProgressBar();
             pbTimer = new System.Windows.Forms.Timer(components);
             lbl_choiceCbx = new Label();
             lbl_replacementCbx = new Label();
@@ -367,11 +367,11 @@
             // 
             // pb_status
             // 
-            pb_status.Location = new Point(12, 22);
-            pb_status.Name = "pb_status";
-            pb_status.Size = new Size(976, 23);
-            pb_status.TabIndex = 9;
-            pb_status.Visible = false;
+            ProgressBar.Location = new Point(12, 22);
+            ProgressBar.Name = "pb_status";
+            ProgressBar.Size = new Size(976, 23);
+            ProgressBar.TabIndex = 9;
+            ProgressBar.Visible = false;
             // 
             // pbTimer
             // 
@@ -963,7 +963,7 @@
             Controls.Add(lbl_SampleText);
             Controls.Add(txt_SampleText);
             Controls.Add(menuStrip1);
-            Controls.Add(pb_status);
+            Controls.Add(ProgressBar);
             MainMenuStrip = menuStrip1;
             Name = "LanguageHoningForm";
             Text = "LanguageHoningForm";
@@ -1011,7 +1011,6 @@
         private ToolStripMenuItem toolStripMenuItem2;
         private ComboBox cbx_recordings;
         private Button btn_replaySpeech;
-        private ProgressBar pb_status;
         private System.Windows.Forms.Timer pbTimer;
         private Label lbl_choiceCbx;
         private Label lbl_replacementCbx;

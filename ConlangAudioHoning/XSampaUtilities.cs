@@ -23,8 +23,13 @@ namespace ConlangAudioHoning
     /// </summary>
     internal static class XSampaUtilities
     {
-        // Based on https://en.wikipedia.org/wiki/X-SAMPA as of 2024-02-08
-        private static readonly Dictionary<string, string> _ipa_x_sampa_map = new()
+        private static Dictionary<string, string>? _x_sampa_ipa_map = null;
+
+        /// <summary>
+        /// The dictionary used to map IPA characters to their (preferred)
+        /// corresponding X-SAMPA character.
+        /// </summary>
+        public static Dictionary<string, string> IpaXSampaMap { get; } = new()
         {
             { "a", "a" }, { "b", "b" }, { "ɓ", "b_<" }, { "c", "c" }, { "d", "d" }, { "ɖ", "d`" },
             { "ɗ", "d_<" }, { "e", "e" }, { "f", "f" }, { "ɡ", "g" }, { "ɠ", "g_<" }, { "h", "h" },
@@ -55,17 +60,6 @@ namespace ConlangAudioHoning
             { "\u0319", "_q" }, { "\u0330", "_k" }, { "\u031d", "_r" }, { "\u0324", "_t" },
             { "\u02b7", "_w" },
         };
-
-        private static Dictionary<string, string>? _x_sampa_ipa_map = null;
-
-        /// <summary>
-        /// The dictionary used to map IPA characters to their (preferred)
-        /// corresponding X-SAMPA character.
-        /// </summary>
-        public static Dictionary<string, string> IpaXSampaMap
-        {
-            get => _ipa_x_sampa_map;
-        }
 
         /// <summary>
         /// The Dictionary used to map X-SAMPA characters to their (preferred) 

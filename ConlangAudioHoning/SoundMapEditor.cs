@@ -129,7 +129,7 @@ namespace ConlangAudioHoning
             {
                 _lastFocused.Text += textToAppend;
                 _lastFocused.Select(_lastFocused.Text.Length, 0);
-                _lastFocused.Focus();
+                _ = _lastFocused.Focus();
             }
         }
 

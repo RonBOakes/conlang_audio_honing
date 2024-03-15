@@ -29,8 +29,6 @@ namespace ConlangAudioHoning
     /// </summary>
     internal class PhoneticChanger
     {
-        private LanguageDescription _language;
-        private string _sampleText;
 
         /// <summary>
         /// Constructs a PhoneticChanges with a known language and sample text.
@@ -39,8 +37,8 @@ namespace ConlangAudioHoning
         /// <param name="sampleText">string containing the sample text used for speaking and phonetic representation.</param>
         public PhoneticChanger(LanguageDescription languageDescription, string sampleText)
         {
-            this._language = languageDescription;
-            this._sampleText = sampleText;
+            this.Language = languageDescription;
+            this.SampleText = sampleText;
         }
 
         /// <summary>
@@ -48,27 +46,19 @@ namespace ConlangAudioHoning
         /// </summary>
         public PhoneticChanger()
         {
-            this._language = new LanguageDescription();
-            this._sampleText = string.Empty;
+            this.Language = new LanguageDescription();
+            this.SampleText = string.Empty;
         }
 
         /// <summary>
         /// LanguageDescription object of the language the phonetic changer object is working on.
         /// </summary>
-        public LanguageDescription Language
-        {
-            get => this._language;
-            set => this._language = value;
-        }
+        public LanguageDescription Language { get; set; }
 
         /// <summary>
         /// String containing the sample text used for speaking and phonetic representation.
         /// </summary>
-        public string SampleText
-        {
-            get => this._sampleText;
-            set => this._sampleText = value;
-        }
+        public string SampleText { get; set; }
 
         /// <summary>
         /// Update the language loaded into this PhoneticChanger by replacing the oldPhoneme with
@@ -79,17 +69,17 @@ namespace ConlangAudioHoning
         /// <param name="newPhoneme">Replacement phoneme.</param>
         public void PhoneticChange(string oldPhoneme, string newPhoneme)
         {
-            if (this._language == null)
+            if (this.Language == null)
             {
                 return;
             }
 
             SoundMapListEditor soundMapListEditor = new();
-            List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
+            _ = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
             soundMapListEditor.SoundMapList = Language.sound_map_list;
             soundMapListEditor.PhonemeReplacementPairs.Add((oldPhoneme, newPhoneme));
             soundMapListEditor.UpdatePhonemeReplacements();
-            soundMapListEditor.ShowDialog();
+            _ = soundMapListEditor.ShowDialog();
             // ShowDialog is modal
             if (soundMapListEditor.SoundMapSaved)
             {
@@ -156,6 +146,16 @@ namespace ConlangAudioHoning
 
             }
 
+            // Update the phoneme inventory - the next update depends on it for diphthongs (at least)
+            for (int i = 0; i < Language.phoneme_inventory.Count; i++)
+            {
+
+                if (Language.phoneme_inventory[i].Trim() == oldPhoneme.Trim())
+                {
+                    Language.phoneme_inventory[i] = newPhoneme;
+                }
+            }
+
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
         }
@@ -172,7 +172,7 @@ namespace ConlangAudioHoning
         /// <param name="changeList"></param>
         public void PhoneticChange(List<(string oldPhoneme, string newPhoneme)> changeList)
         {
-            if (this._language == null)
+            if (this.Language == null)
             {
                 return;
             }
@@ -184,15 +184,16 @@ namespace ConlangAudioHoning
             }
 
             // Sort the list by size and then reverse it so that the longest 
-            changeList.Sort(new stringTupleLengthComp());
+            changeList.Sort(new StringTupleLengthComp());
             changeList.Reverse();
 
-            SoundMapListEditor soundMapListEditor = new();
-            List<SoundMap> soundMapList = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
-            soundMapListEditor.SoundMapList = Language.sound_map_list;
+            SoundMapListEditor soundMapListEditor = new()
+            {
+                SoundMapList = Language.sound_map_list
+            };
             soundMapListEditor.PhonemeReplacementPairs.AddRange(changeList);
             soundMapListEditor.UpdatePhonemeReplacements();
-            soundMapListEditor.ShowDialog();
+            _ = soundMapListEditor.ShowDialog();
             // ShowDialog is modal
             if (soundMapListEditor.SoundMapSaved)
             {
@@ -255,6 +256,15 @@ namespace ConlangAudioHoning
                     word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
 
                 }
+                // Update the phoneme inventory - the next update depends on it for diphthongs (at least)
+                for (int i = 0; i < Language.phoneme_inventory.Count; i++)
+                {
+
+                    if (Language.phoneme_inventory[i].Trim() == oldPhoneme.Trim())
+                    {
+                        Language.phoneme_inventory[i] = newPhoneme;
+                    }
+                }
             }
 
             // Update the Lexicon
@@ -266,7 +276,7 @@ namespace ConlangAudioHoning
                     (string oldPhoneme2, string newPhoneme2) = interimReplacementMap[interimReplacementSymbol];
                     // replace all occurrences of oldPhoneme in phonetic with newPhoneme
                     // Recreate the original phonetic version.
-                    oldVersion.phonetic.Replace(interimReplacementSymbol, oldPhoneme2);
+                    _ = oldVersion.phonetic.Replace(interimReplacementSymbol, oldPhoneme2);
                     word.phonetic = word.phonetic.Replace(interimReplacementSymbol, newPhoneme2);
                 }
                 if (!oldVersion.phonetic.Equals(word.phonetic))
@@ -288,7 +298,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Update the spelling of every word in the lexicon based on the current sound_map_list.
         /// </summary>
-        public void updateSpelling()
+        public void UpdateSpelling()
         {
             if (this.Language == null)
             {
@@ -338,7 +348,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Update the pronunciation of every word in the lexicon based on the current sound_map_list.
         /// </summary>
-        public void updatePronunciation()
+        public void UpdatePronunciation()
         {
             if (this.Language == null)
             {
@@ -407,7 +417,7 @@ namespace ConlangAudioHoning
                 foreach (string key in phoneticChangeHistories.Keys)
                 {
                     double keyValue = double.Parse(key);
-                    changeHistoryKeyMap.TryAdd(keyValue, key);
+                    _ = changeHistoryKeyMap.TryAdd(keyValue, key);
                 }
             }
             if (changeHistoryKeyMap.Count <= 0)
@@ -468,18 +478,18 @@ namespace ConlangAudioHoning
         /// </summary>
         /// <param name="soundMapList">List of spelling/pronunciation rules to be searched.</param>
         /// <returns>List of rules that create non-rhotacized vowels, or add "r" to the spelled word</returns>
-        public List<SoundMap> GetRAddingSoundMapEntries(List<SoundMap> soundMapList)
+        public static List<SoundMap> GetRAddingSoundMapEntries(List<SoundMap> soundMapList)
         {
             List<SoundMap> rAddingEntries = [];
 
             // Build the pattern to look for "r" phonemes and rhoticity.
             StringBuilder patternBuilder = new();
-            patternBuilder.Append("[ɚ˞");
+            _ = patternBuilder.Append("[ɚ˞");
             foreach (string phoneme in IpaUtilities.RPhonemes)
             {
-                patternBuilder.Append(phoneme);
+                _ = patternBuilder.Append(phoneme);
             }
-            patternBuilder.Append(']');
+            _ = patternBuilder.Append(']');
             Regex rPresentRegex = new(patternBuilder.ToString().Trim(), RegexOptions.Compiled);
 
             foreach (SoundMap soundMap in soundMapList)
@@ -496,7 +506,7 @@ namespace ConlangAudioHoning
             return rAddingEntries;
         }
 
-        public void ReplaceSoundMapEntry(SoundMap oldEntry, SoundMap newEntry, List<SoundMap> soundMapList)
+        public static void ReplaceSoundMapEntry(SoundMap oldEntry, SoundMap newEntry, List<SoundMap> soundMapList)
         {
             for (int i = 0; i < soundMapList.Count; i++)
             {
@@ -508,12 +518,12 @@ namespace ConlangAudioHoning
             }
         }
 
-        private class stringTupleLengthComp : IComparer<(string, string)>
+        private sealed class StringTupleLengthComp : IComparer<(string, string)>
         {
-            private int Compare((string, string) x, (string, string) y)
+            private static int Compare((string, string) x, (string, string) y)
             {
-                (string x1, string x2) = x;
-                (string y1, string y2) = y;
+                (string x1, _) = x;
+                (string y1, _) = y;
                 return x1.Length.CompareTo(y1.Length);
             }
 
@@ -525,25 +535,9 @@ namespace ConlangAudioHoning
 
         public struct PhoneticChangeHistory
         {
-            private string _oldPhoneme;
-            private string _newPhoneme;
-            private LexiconEntry _oldVersion;
-
-            public string OldPhoneme
-            {
-                get => this._oldPhoneme;
-                set => this._oldPhoneme = value;
-            }
-            public string NewPhoneme
-            {
-                get => this._newPhoneme;
-                set => this._newPhoneme = value;
-            }
-            public LexiconEntry OldVersion
-            {
-                get => this._oldVersion;
-                set => this._oldVersion = value;
-            }
+            public string OldPhoneme { get; set; }
+            public string NewPhoneme { get; set; }
+            public LexiconEntry OldVersion { get; set; }
         }
     }
 }

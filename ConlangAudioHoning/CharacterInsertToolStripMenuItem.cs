@@ -1142,7 +1142,7 @@ namespace ConlangAudioHoning
                     Size = new Size(50, 22),
                     Text = string.Format("Part {0}", i + 1)
                 };
-                latinTextDiacriticsToolStripMenuItem.DropDownItems.Add(menuItem);
+                _ = latinTextDiacriticsToolStripMenuItem.DropDownItems.Add(menuItem);
                 latinDiacriticToolStripSubMenus.Insert(i, menuItem);
             }
             int counter = 0;
@@ -1154,7 +1154,7 @@ namespace ConlangAudioHoning
                     Size = new Size(211, 22),
                     Text = string.Format("{0} -- {1}", latinDiacritic, LatinUtilities.DiacriticsMap[latinDiacritic])
                 };
-                latinDiacriticToolStripSubMenus[part].DropDownItems.Add(latinToolStripMenuItem);
+                _ = latinDiacriticToolStripSubMenus[part].DropDownItems.Add(latinToolStripMenuItem);
                 counter++;
                 if (counter % 10 == 0)
                 {

@@ -18,7 +18,6 @@
  */
 using ConlangJson;
 using System.Text;
-using System.Linq;
 
 namespace ConlangAudioHoning
 {
@@ -28,8 +27,116 @@ namespace ConlangAudioHoning
     /// </summary>
     public static class IpaUtilities
     {
-        private static readonly string[] _p_consonants =
+        private static readonly string[] _suprasegmentals =
         [
+            "\u02d0", "\u02d1", "\u02c8", "\u02cc", "\u035c", "\u0361"
+        ];
+        private static readonly Dictionary<string, List<string>> _consonant_changes = new()
+        {
+            // Plosive
+            { "p", new List<string>(){ "b","m","t","d","\u0271", "\u0253" } },
+            { "b", new List<string>(){ "p","m","t","d","\u0271", "\u0253" } },
+            { "t", new List<string>(){ "p","b","d","\u0288","\u0256","\u0271","n","\u0273"} },
+            { "d", new List<string>(){ "p","b","t", "\u0288", "\u0256", "\u0271", "n", "\u0273" } },
+            { "\u0288", new List<string>(){ "t","d","\u0256","c","\u025f","n","\u0273","\u0272" } },
+            { "\u0256", new List<string>(){ "t","d","\u0256","c","\u025f","n","\u0273","\u0272" } },
+            { "c", new List<string>(){ "\u0288","\u0256","\u025f","k","\u0261","\u0273","\u0272","\u014b"} },
+            { "\u025f", new List<string>(){ "\u0288", "\u0256", "c", "k", "\u0261", "\u0273", "\u0272", "\u014b" } },
+            { "k", new List<string>(){"c","\u025f","\u0261","q","\u0262","\u0272","\u014b","\u0274"} },
+            { "\u0261", new List<string>(){"c","\u025f","k","q","\u0262","\u0272","\u014b","\u0274"} },
+            { "q", new List<string>(){"k","\u0261","\u0262","\u0294","\u014b","\u0274"} },
+            { "\u0262", new List<string>(){"k","\u0261","q","\u0294","\u014b","\u0274"} },
+            { "\u0294", new List<string>(){"q","\u0262","\u0274"} },
+            // Nasal
+            { "m",new List<string>(){"p","b","\u0271","\u0299"} },
+            { "\u0271",new List<string>(){"p","b","t","d","m","n","\u0299","r"} },
+            { "n", new List<string>(){"\u0271","t","d","\u0288","\u0256","\u0273","r"}},
+            { "\u0273", new List<string>(){"n","\u0272","t","d","\u0288","\u0256","c","\u025f","r"} },
+            { "\u0272", new List<string>(){"\u0273","\u014b","\u0274","\u0288","\u0256","c","\u025f","k","\u0261","\u0280"} },
+            { "\u014b", new List<string>(){"\u0272","\u0274","c","\u025f","k","\u0261","q","\u0262"} },
+            { "\u0274", new List<string>(){"\u014b","k","\u0261","q","\u0262","\u0294"} },
+            // Trill
+            { "\u0299", new List<string>(){"r","m","\u0271","\u2c71" } },
+            { "r", new List<string>(){"\u0299","\u0280","\u0271","n","\u0273","\u2c71","\u027e","\u027d"} },
+            { "\u0280", new List<string>(){"r","\u014b"} },
+            // Tap or Flap
+            { "\u2c71", new List<string>(){"\u027e","\u0299","r","\u0278","\u03b2","f","v","\u03b8","\u00f0" } },
+            { "\u027e", new List<string>(){"\u2c71","\u027d","r","\u03b8","\u00f0","s","z","\u0283","\u0292"} },
+            { "\u027d", new List<string>(){"\u027e","r","\u0283","\u0292","\u0282","\u0290","\u00e7","\u029d"} },
+            // Affricate
+            { "\u02a6", new List<string>(){"\u02a3", "\u02a7", "\u02a4","n","\u03b8","\u00f0","s","z","\u0283","\u0292", } },
+            { "\u02a3", new List<string>(){"\u02a6", "\u02a7", "\u02a4","n","\u03b8","\u00f0","s","z","\u0283","\u0292", } },
+            { "\u02a7", new List<string>(){"\u02a4", "\u02a3", "\u02a6","n", "\u0273","s","z","\u0283","\u0292","\u0282","\u0290", } },
+            { "\u02a4", new List<string>(){"\u02a7", "\u02a3", "\u02a6","n", "\u0273","s","z","\u0283","\u0292","\u0282","\u0290", } },
+            { "\u02a8", new List<string>(){"\u02a5", "\u0273", "\u0283", "\u0292", "\u0255","\u0291", } },
+            { "\u02a5", new List<string>(){"\u02a8", "\u0273", "\u0283", "\u0292", "\u0255","\u0291", } },
+            // Fricative
+            { "\u0278", new List<string>(){"\u03b2","f","v","\u2c71"} },
+            { "\u03b2", new List<string>(){"\u0278","f","v","\u2c71"} },
+            { "f", new List<string>(){"v","\u0278","\u03b2","\u03b8","\u00f0","\u2c71","\u027e","\u026c","\u026e" } },
+            { "v", new List<string>(){"f","\u0278","\u03b2","\u03b8","\u00f0","\u2c71","\u027e", "\u026c", "\u026e" } },
+            { "\u03b8", new List<string>(){"\u00f0","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
+            { "\u00f0", new List<string>(){"\u03b8","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
+            { "s", new List<string>(){"z","\u03b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
+            { "z", new List<string>(){"s","\u03b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
+            { "\u0283", new List<string>(){"\u0292","s","z","\u0282","\u0290","\u027e","\u027d","\u026c","\u026e"} },
+            { "\u0292", new List<string>(){"\u0283","s","z","\u0282","\u0290","\u027e","\u027d","\u026c","\u026e"} },
+            { "\u0282", new List<string>(){"\u0290","\u0283","\u0292","\u00e7","\u029d","\u027e","\u027d" } },
+            { "\u0290", new List<string>(){"\u0282","\u0283","\u0292","\u00e7","\u029d", "\u027e", "\u027d" } },
+            { "\u0255", new List<string>(){"\u0291","\u0282","\u0290","\u00e7","\u029d","\u02a6","\u02a5","\u026d","j",} },
+            { "\u0291", new List<string>(){"\u0255","\u0282","\u0290","\u00e7","\u029d","\u02a6","\u02a5","\u026d","j",} },
+            { "\u00e7", new List<string>(){"\u029d","\u0282","\u0290","x","\u0263","\u027d"} },
+            { "\u029d", new List<string>(){"\u00e7","\u0282","\u0290","x","\u0263","\u027d"} },
+            { "x", new List<string>(){"\u0263","\u00e7","\u029d","\u03c7","\u0281"} },
+            { "\u0263", new List<string>(){"x","\u00e7","\u029d","\u03c7","\u0281"} },
+            { "\u03c7", new List<string>(){"\u0281","x","\u0263","\u0127","\u0295"} },
+            { "\u0281", new List<string>(){"\u03c7","x","\u0263","\u0127","\u0295"} },
+            { "\u0127", new List<string>(){"\u0295","\u03c7","\u0281","h","\u0266" } },
+            { "\u0295", new List<string>(){"\u0127","\u03c7","\u0281","h","\u0266" } },
+            { "h", new List<string>(){"\u0266","\u0127","\u0295"} },
+            { "\u0266", new List<string>(){"h","\u0127","\u0295"} },
+            // Lateral fricative
+            { "\u026c", new List<string>(){"\u026e","\u03b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
+            { "\u026e", new List<string>(){"\u026c","\u03b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
+            // approximant
+            { "\u028b", new List<string>(){"\u0279","\u026c","\u026e","l"} },
+            { "\u0279", new List<string>(){"\u028b","\u027b","\u026c","\u026e","l","\u026d"} },
+            { "\u027b", new List<string>(){"\u0279","j","\u026c","\u026e","l","\u026d","\u028e"} },
+            { "j", new List<string>(){"\u027b","\u0270","\u026d","\u028e","\u029f","\u028d","w",} },
+            { "\u0270", new List<string>(){"j","\u028e","\u029f", "\u028d", "w", } },
+            // Lateral approximant
+            { "l", new List<string>(){"\u026d","\u028b","\u0279","\u027b"} },
+            { "\u026d", new List<string>(){"l","\u028e","\u0279","\u027b","j"} },
+            { "\u028e", new List<string>(){"\u026d","\u029f","\u027b","j","\u0270", "\u028d", "w", } },
+            { "\u029f", new List<string>(){"\u028e","j","\u0270", "\u028d", "w", } },
+            // Clicks
+            { "\u0298", new List<string>(){"\u01c0","\u01c3","\u01c2","\u01c1"} },
+            { "\u01c0", new List<string>(){"\u0298","\u01c3","\u01c2","\u01c1"} },
+            { "\u01c3", new List<string>(){"\u0298","\u01c0","\u01c2","\u01c1"} },
+            { "\u01c2", new List<string>(){"\u0298","\u01c0","\u01c3","\u01c1"} },
+            { "\u01c1", new List<string>(){"\u0298","\u01c0","\u01c3","\u01c2"} },
+            // Voiced Implosives
+            { "\u0253", new List<string>(){"b","p","m","\u0257","t","d"} },
+            { "\u0257", new List<string>(){"t","d","n","\u0273","\u0253","b","p","\u0288","\u0256" } },
+            { "\u0284", new List<string>(){"c", "\u025f", "\u0288", "\u0256", "k", "\u0261","n", "\u0273", "\u0272", } },
+            { "\u0260", new List<string>(){"k","\u0261","c","\u025f","q","\u0262", "\u0273", "\u0272", "\u0274", } },
+            { "\u029b", new List<string>(){"q","\u0262", "\u0272", "\u0274", } },
+            // others
+            { "\u028d", new List<string>(){"w","\u028b","\u0279","\u027b","\u006a","\u0270","\u029d","x"} },
+            { "w", new List<string>(){ "ʍ", "\u028b","\u0279","\u027b","\u006a","\u0270","\u029d","x"} },
+        };
+
+        private static Dictionary<string, List<string>>? _consonant_changes_l2 = null;
+
+        private static Dictionary<string, List<string>>? _consonant_changes_l3 = null;
+        private static string? _consonant_pattern = null;
+        private static string? _vowel_pattern = null;
+        private static string? _diacritic_pattern = null;
+
+        /// <summary>
+        /// Returns an array containing strings with all of the identified Pulmonic Consonants.
+        /// </summary>
+        public static String[] PConsonants { get; } = [
             "b", "\u03b2", "\u0299", "c", "\u00e7", "d", "\u0256", "\u1d91", "\u02a3", "\u02a5", "\u02a4", "\uab66",
             "f", "\u0278", "g", "\u0262", "\u0270", "h", "\u0266", "\u0127", "\u0267", "j", "\u029d", "\u025f", "k",
             "l", "\u026c", "\u026e", "\u026d", "\ua78e", "\u029f", "m",
@@ -39,40 +146,141 @@ namespace ConlangAudioHoning
             "z", "\u0290", "\u0292", "\u03b8", "\u00f0", "\u0294", "\u0295", "ɕ", "ʑ",
         ];
 
-        private static readonly string[] _np_consonants =
-        [
+        /// <summary>
+        /// Returns an array containing strings with all of the identified Nonpulmonic Consonants.
+        /// </summary>
+        public static string[] NpConsonants { get; } = [
             "\u0253", "\u0257", "\u0284", "\u0260", "\u029b", "w", "\u028d", "\u0265", "\u02a1", "\u02a2", "\u0255",
             "\u0291", "\u029c", "\u0298", "\u01c0", "\u01c3", "\u01c2", "\u01c1", "\ud837\udf0a"
         ];
 
-        private static readonly string[] _vowels =
-        [
+        /// <summary>
+        /// Returns an array containing strings with all of the vowels.
+        /// </summary>
+        public static string[] Vowels { get; } = [
             "a", "\u00e6", "\u0251", "\u0252", "\u0250", "e", "\u025b", "\u025c", "\u025e", "\u0259", "i", "\u0268",
             "\u026a", "y", "\u028f", "\u00f8", "\u0258", "\u0275", "\u0153", "\u0276", "\u0264", "o", "\u0254", "u",
             "\u0289", "\u028a", "\u026f", "\u028c", "\u025a",
         ];
 
-        private static readonly string[] _suprasegmentals =
-        [
-            "\u02d0", "\u02d1", "\u02c8", "\u02cc", "\u035c", "\u0361"
-        ];
+        /// <summary>
+        /// Returns an array containing strings with the suprasegmental symbols 
+        /// (i.e. stress marks, length marks, and tie bars).
+        /// </summary>
+        public static string[] Suprasegmentals
+        {
+            get => _suprasegmentals;
+        }
 
-        private static readonly string[] _vowel_modifiers =
-        [
+        /// <summary>
+        /// Returns an array of strings with the modifiers that can be applied to vowels.
+        /// </summary>
+        public static string[] Vowel_modifiers { get; } = [
             "\u02d0", "\u02d1", "\u032f",
         ];
 
-        private static readonly string[] _diacritics =
-        [
+        /// <summary>
+        /// Returns an array of strings with the diacritics valid for use with IPA.
+        /// </summary>
+        public static string[] Diacritics { get; } = [
             "\u02f3", "\u0325", "\u030a", "\u0324", "\u032a", "\u0329", "\u0c3c", "\u032c", "\u02f7", "\u0330",
             "\u02f7", "\u0330", "\u02fd", "\u033a", "\u032f", "\u02b0", "\u033c", "\u033b", "\u02d2", "\u0339", "\u20b7",
             "\u0303", "\u02b2", "\u02d3", "\u031c", "\u02d6", "\u031f", "\u207f", "\u00a8", "\u0308", "\u02e0", "\u02cd",
             "\u0320", "\u20e1", "\u02df", "\u033d", "\u02e4", "\uab68", "\u0319", "\u02de"
         ];
 
-        // The following is based on the chart found at https://en.wikipedia.org/wiki/Phonetic_symbols_in_Unicode
-        // As of January 29, 2024
-        private static readonly Dictionary<string, string> _ipaPhonemesMap = new()
+        /// <summary>
+        /// Returns an array of strings that represent (Ron Oakes') selection of
+        /// phonemes that could be used in place of rhoticity.  
+        /// </summary>
+        public static string[] RPhonemes { get; } = [
+            "ɹ", "ɾ", "ɺ", "ɽ", "ɻ", "r"
+        ];
+
+        /// <summary>
+        /// Returns a string that can be used within a generalized regular expression to match
+        /// all IPA consonants. This pattern will only match the actual phone/phoneme character, 
+        /// not any diacritics or related markings that follow it.
+        /// </summary>
+        public static string ConsonantPattern
+        {
+            get
+            {
+                if (_consonant_pattern == null)
+                {
+                    StringBuilder sb = new();
+                    _ = sb.Append('[');
+                    foreach (string consonant in PConsonants)
+                    {
+                        _ = sb.Append(consonant);
+                    }
+                    foreach (string consonant in NpConsonants)
+                    {
+                        _ = sb.Append(consonant);
+                    }
+                    _ = sb.Append(']');
+                    _consonant_pattern = sb.ToString();
+                }
+                return _consonant_pattern;
+            }
+        }
+
+        /// <summary>
+        /// Returns a string that can be used within a generalized regular expression to match
+        /// all IPA vowels. This pattern will only match the actual phone/phoneme character, 
+        /// not any diacritics or related markings that follow it.
+        /// </summary>
+        public static string VowelPattern
+        {
+            get
+            {
+                if (_vowel_pattern == null)
+                {
+                    StringBuilder sb = new();
+                    _ = sb.Append('[');
+                    foreach (string vowel in Vowels)
+                    {
+                        _ = sb.Append(vowel);
+                    }
+                    _ = sb.Append(']');
+                    _vowel_pattern = sb.ToString();
+                }
+                return _vowel_pattern;
+            }
+        }
+
+        /// <summary>
+        /// Returns a string that can be used within a generalized regular expression to match
+        /// all IPA Diacritics.
+        /// </summary>
+        public static string DiacriticPattern
+        {
+            get
+            {
+                if (_diacritic_pattern == null)
+                {
+                    StringBuilder sb = new();
+                    _ = sb.Append('[');
+                    foreach (string diacritic in Vowel_modifiers)
+                    {
+                        _ = sb.Append(diacritic);
+                    }
+                    foreach (string diacritic in Diacritics)
+                    {
+                        _ = sb.Append(diacritic);
+                    }
+                    _ = sb.Append(']');
+                    _diacritic_pattern = sb.ToString();
+                }
+                return _diacritic_pattern;
+            }
+        }
+
+        /// <summary>
+        /// Returns a Dictionary that maps an IPA phoneme or diacritic to a textual
+        /// description of that symbol.
+        /// </summary>
+        public static Dictionary<string, string> IpaPhonemesMap { get; } = new()
         {
 			// Plosives
 			{ "\u0070", new string("unvoiced bilabial plosive") },
@@ -309,7 +517,12 @@ namespace ConlangAudioHoning
             { "\u02c8", new string("primary stress mark") },
         };
 
-        private static readonly Dictionary<string, string> _latinIpaReplacements = new()
+        /// <summary>
+        /// Returns a Dictionary that can be used to replace latin characters
+        /// that closely resemble IPA characters with the IPA character they can
+        /// easily be confused with.  
+        /// </summary>
+        public static Dictionary<string, string> LatinIpaReplacements { get; } = new()
         {
             { "g", "\u0261" },
             { "G", "\u0262" },
@@ -320,276 +533,6 @@ namespace ConlangAudioHoning
             { "L", "\u029f" },
             { "I", "ɪ"}
         };
-
-        private static readonly Dictionary<string, List<string>> _consonant_changes = new()
-        {
-            // Plosive
-            { "p", new List<string>(){ "b","m","t","d","\u0271", "\u0253" } },
-            { "b", new List<string>(){ "p","m","t","d","\u0271", "\u0253" } },
-            { "t", new List<string>(){ "p","b","d","\u0288","\u0256","\u0271","n","\u0273"} },
-            { "d", new List<string>(){ "p","b","t", "\u0288", "\u0256", "\u0271", "n", "\u0273" } },
-            { "\u0288", new List<string>(){ "t","d","\u0256","c","\u025f","n","\u0273","\u0272" } },
-            { "\u0256", new List<string>(){ "t","d","\u0256","c","\u025f","n","\u0273","\u0272" } },
-            { "c", new List<string>(){ "\u0288","\u0256","\u025f","k","\u0261","\u0273","\u0272","\u014b"} },
-            { "\u025f", new List<string>(){ "\u0288", "\u0256", "c", "k", "\u0261", "\u0273", "\u0272", "\u014b" } },
-            { "k", new List<string>(){"c","\u025f","\u0261","q","\u0262","\u0272","\u014b","\u0274"} },
-            { "\u0261", new List<string>(){"c","\u025f","k","q","\u0262","\u0272","\u014b","\u0274"} },
-            { "q", new List<string>(){"k","\u0261","\u0262","\u0294","\u014b","\u0274"} },
-            { "\u0262", new List<string>(){"k","\u0261","q","\u0294","\u014b","\u0274"} },
-            { "\u0294", new List<string>(){"q","\u0262","\u0274"} },
-            // Nasal
-            { "m",new List<string>(){"p","b","\u0271","\u0299"} },
-            { "\u0271",new List<string>(){"p","b","t","d","m","n","\u0299","r"} },
-            { "n", new List<string>(){"\u0271","t","d","\u0288","\u0256","\u0273","r"}},
-            { "\u0273", new List<string>(){"n","\u0272","t","d","\u0288","\u0256","c","\u025f","r"} },
-            { "\u0272", new List<string>(){"\u0273","\u014b","\u0274","\u0288","\u0256","c","\u025f","k","\u0261","\u0280"} },
-            { "\u014b", new List<string>(){"\u0272","\u0274","c","\u025f","k","\u0261","q","\u0262"} },
-            { "\u0274", new List<string>(){"\u014b","k","\u0261","q","\u0262","\u0294"} },
-            // Trill
-            { "\u0299", new List<string>(){"r","m","\u0271","\u2c71" } },
-            { "r", new List<string>(){"\u0299","\u0280","\u0271","n","\u0273","\u2c71","\u027e","\u027d"} },
-            { "\u0280", new List<string>(){"r","\u014b"} },
-            // Tap or Flap
-            { "\u2c71", new List<string>(){"\u027e","\u0299","r","\u0278","\u03b2","f","v","\u03b8","\u00f0" } },
-            { "\u027e", new List<string>(){"\u2c71","\u027d","r","\u03b8","\u00f0","s","z","\u0283","\u0292"} },
-            { "\u027d", new List<string>(){"\u027e","r","\u0283","\u0292","\u0282","\u0290","\u00e7","\u029d"} },
-            // Affricate
-            { "\u02a6", new List<string>(){"\u02a3", "\u02a7", "\u02a4","n","\u03b8","\u00f0","s","z","\u0283","\u0292", } },
-            { "\u02a3", new List<string>(){"\u02a6", "\u02a7", "\u02a4","n","\u03b8","\u00f0","s","z","\u0283","\u0292", } },
-            { "\u02a7", new List<string>(){"\u02a4", "\u02a3", "\u02a6","n", "\u0273","s","z","\u0283","\u0292","\u0282","\u0290", } },
-            { "\u02a4", new List<string>(){"\u02a7", "\u02a3", "\u02a6","n", "\u0273","s","z","\u0283","\u0292","\u0282","\u0290", } },
-            { "\u02a8", new List<string>(){"\u02a5", "\u0273", "\u0283", "\u0292", "\u0255","\u0291", } },
-            { "\u02a5", new List<string>(){"\u02a8", "\u0273", "\u0283", "\u0292", "\u0255","\u0291", } },
-            // Fricative
-            { "\u0278", new List<string>(){"\u03b2","f","v","\u2c71"} },
-            { "\u03b2", new List<string>(){"\u0278","f","v","\u2c71"} },
-            { "f", new List<string>(){"v","\u0278","\u03b2","\u03b8","\u00f0","\u2c71","\u027e","\u026c","\u026e" } },
-            { "v", new List<string>(){"f","\u0278","\u03b2","\u03b8","\u00f0","\u2c71","\u027e", "\u026c", "\u026e" } },
-            { "\u03b8", new List<string>(){"\u00f0","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
-            { "\u00f0", new List<string>(){"\u03b8","f","v","s","z","\u2c71","\u027e", "\u026c", "\u026e" } },
-            { "s", new List<string>(){"z","\u03b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
-            { "z", new List<string>(){"s","\u03b8","\u00f0","\u0283","\u0292","\u027e","\u027d","\u026c","\u026e"} },
-            { "\u0283", new List<string>(){"\u0292","s","z","\u0282","\u0290","\u027e","\u027d","\u026c","\u026e"} },
-            { "\u0292", new List<string>(){"\u0283","s","z","\u0282","\u0290","\u027e","\u027d","\u026c","\u026e"} },
-            { "\u0282", new List<string>(){"\u0290","\u0283","\u0292","\u00e7","\u029d","\u027e","\u027d" } },
-            { "\u0290", new List<string>(){"\u0282","\u0283","\u0292","\u00e7","\u029d", "\u027e", "\u027d" } },
-            { "\u0255", new List<string>(){"\u0291","\u0282","\u0290","\u00e7","\u029d","\u02a6","\u02a5","\u026d","j",} },
-            { "\u0291", new List<string>(){"\u0255","\u0282","\u0290","\u00e7","\u029d","\u02a6","\u02a5","\u026d","j",} },
-            { "\u00e7", new List<string>(){"\u029d","\u0282","\u0290","x","\u0263","\u027d"} },
-            { "\u029d", new List<string>(){"\u00e7","\u0282","\u0290","x","\u0263","\u027d"} },
-            { "x", new List<string>(){"\u0263","\u00e7","\u029d","\u03c7","\u0281"} },
-            { "\u0263", new List<string>(){"x","\u00e7","\u029d","\u03c7","\u0281"} },
-            { "\u03c7", new List<string>(){"\u0281","x","\u0263","\u0127","\u0295"} },
-            { "\u0281", new List<string>(){"\u03c7","x","\u0263","\u0127","\u0295"} },
-            { "\u0127", new List<string>(){"\u0295","\u03c7","\u0281","h","\u0266" } },
-            { "\u0295", new List<string>(){"\u0127","\u03c7","\u0281","h","\u0266" } },
-            { "h", new List<string>(){"\u0266","\u0127","\u0295"} },
-            { "\u0266", new List<string>(){"h","\u0127","\u0295"} },
-            // Lateral fricative
-            { "\u026c", new List<string>(){"\u026e","\u03b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
-            { "\u026e", new List<string>(){"\u026c","\u03b8","\u00f0","s","z","\u0283","\u0292","\u028b","\u0279","\u027b"} },
-            // approximant
-            { "\u028b", new List<string>(){"\u0279","\u026c","\u026e","l"} },
-            { "\u0279", new List<string>(){"\u028b","\u027b","\u026c","\u026e","l","\u026d"} },
-            { "\u027b", new List<string>(){"\u0279","j","\u026c","\u026e","l","\u026d","\u028e"} },
-            { "j", new List<string>(){"\u027b","\u0270","\u026d","\u028e","\u029f","\u028d","w",} },
-            { "\u0270", new List<string>(){"j","\u028e","\u029f", "\u028d", "w", } },
-            // Lateral approximant
-            { "l", new List<string>(){"\u026d","\u028b","\u0279","\u027b"} },
-            { "\u026d", new List<string>(){"l","\u028e","\u0279","\u027b","j"} },
-            { "\u028e", new List<string>(){"\u026d","\u029f","\u027b","j","\u0270", "\u028d", "w", } },
-            { "\u029f", new List<string>(){"\u028e","j","\u0270", "\u028d", "w", } },
-            // Clicks
-            { "\u0298", new List<string>(){"\u01c0","\u01c3","\u01c2","\u01c1"} },
-            { "\u01c0", new List<string>(){"\u0298","\u01c3","\u01c2","\u01c1"} },
-            { "\u01c3", new List<string>(){"\u0298","\u01c0","\u01c2","\u01c1"} },
-            { "\u01c2", new List<string>(){"\u0298","\u01c0","\u01c3","\u01c1"} },
-            { "\u01c1", new List<string>(){"\u0298","\u01c0","\u01c3","\u01c2"} },
-            // Voiced Implosives
-            { "\u0253", new List<string>(){"b","p","m","\u0257","t","d"} },
-            { "\u0257", new List<string>(){"t","d","n","\u0273","\u0253","b","p","\u0288","\u0256" } },
-            { "\u0284", new List<string>(){"c", "\u025f", "\u0288", "\u0256", "k", "\u0261","n", "\u0273", "\u0272", } },
-            { "\u0260", new List<string>(){"k","\u0261","c","\u025f","q","\u0262", "\u0273", "\u0272", "\u0274", } },
-            { "\u029b", new List<string>(){"q","\u0262", "\u0272", "\u0274", } },
-            // others
-            { "\u028d", new List<string>(){"w","\u028b","\u0279","\u027b","\u006a","\u0270","\u029d","x"} },
-            { "w", new List<string>(){ "ʍ", "\u028b","\u0279","\u027b","\u006a","\u0270","\u029d","x"} },
-        };
-
-        private static Dictionary<string, List<string>>? _consonant_changes_l2 = null;
-
-        private static Dictionary<string, List<string>>? _consonant_changes_l3 = null;
-
-        private static readonly List<string> _ipa_replacements =
-        [
-            "!","@","#","$","%","&","*","+","=","<",">","~","\u00a2","\u00a3","\u00a4",
-            "\u00a5","\u00a7","\u00a9","\u00ae","\u0394","\u039e","\u03a6","\u03a8",
-        ];
-
-        private static readonly string[] _rPhonemes =
-        [
-            "ɹ", "ɾ", "ɺ", "ɽ", "ɻ", "r"
-        ];
-
-        private static string? _consonant_pattern = null;
-        private static string? _vowel_pattern = null;
-        private static string? _diacritic_pattern = null;
-
-        /// <summary>
-        /// Returns an array containing strings with all of the identified Pulmonic Consonants.
-        /// </summary>
-        public static String[] PConsonants
-        {
-            get => _p_consonants;
-        }
-
-        /// <summary>
-        /// Returns an array containing strings with all of the identified Nonpulmonic Consonants.
-        /// </summary>
-        public static string[] NpConsonants
-        {
-            get => _np_consonants;
-        }
-
-        /// <summary>
-        /// Returns an array containing strings with all of the vowels.
-        /// </summary>
-        public static string[] Vowels
-        {
-            get => _vowels;
-        }
-
-        /// <summary>
-        /// Returns an array containing strings with the suprasegmental symbols 
-        /// (i.e. stress marks, length marks, and tie bars).
-        /// </summary>
-        public static string[] Suprasegmentals
-        {
-            get => _suprasegmentals;
-        }
-
-        /// <summary>
-        /// Returns an array of strings with the modifiers that can be applied to vowels.
-        /// </summary>
-        public static string[] Vowel_modifiers
-        {
-            get => _vowel_modifiers;
-        }
-
-        /// <summary>
-        /// Returns an array of strings with the diacritics valid for use with IPA.
-        /// </summary>
-        public static string[] Diacritics
-        {
-            get => _diacritics;
-        }
-
-        /// <summary>
-        /// Returns an array of strings that represent (Ron Oakes') selection of
-        /// phonemes that could be used in place of rhoticity.  
-        /// </summary>
-        public static string[] RPhonemes
-        {
-            get => _rPhonemes;
-        }
-
-        /// <summary>
-        /// Returns a string that can be used within a generalized regular expression to match
-        /// all IPA consonants. This pattern will only match the actual phone/phoneme character, 
-        /// not any diacritics or related markings that follow it.
-        /// </summary>
-        public static string ConsonantPattern
-        {
-            get
-            {
-                if (_consonant_pattern == null)
-                {
-                    StringBuilder sb = new();
-                    sb.Append('[');
-                    foreach (string consonant in PConsonants)
-                    {
-                        sb.Append(consonant);
-                    }
-                    foreach (string consonant in NpConsonants)
-                    {
-                        sb.Append(consonant);
-                    }
-                    sb.Append(']');
-                    _consonant_pattern = sb.ToString();
-                }
-                return _consonant_pattern;
-            }
-        }
-
-        /// <summary>
-        /// Returns a string that can be used within a generalized regular expression to match
-        /// all IPA vowels. This pattern will only match the actual phone/phoneme character, 
-        /// not any diacritics or related markings that follow it.
-        /// </summary>
-        public static string VowelPattern
-        {
-            get
-            {
-                if (_vowel_pattern == null)
-                {
-                    StringBuilder sb = new();
-                    sb.Append('[');
-                    foreach (string vowel in Vowels)
-                    {
-                        sb.Append(vowel);
-                    }
-                    sb.Append(']');
-                    _vowel_pattern = sb.ToString();
-                }
-                return _vowel_pattern;
-            }
-        }
-
-        /// <summary>
-        /// Returns a string that can be used within a generalized regular expression to match
-        /// all IPA Diacritics.
-        /// </summary>
-        public static string DiacriticPattern
-        {
-            get
-            {
-                if (_diacritic_pattern == null)
-                {
-                    StringBuilder sb = new();
-                    sb.Append('[');
-                    foreach (string diacritic in Vowel_modifiers)
-                    {
-                        sb.Append(diacritic);
-                    }
-                    foreach (string diacritic in Diacritics)
-                    {
-                        sb.Append(diacritic);
-                    }
-                    sb.Append(']');
-                    _diacritic_pattern = sb.ToString();
-                }
-                return _diacritic_pattern;
-            }
-        }
-
-        /// <summary>
-        /// Returns a Dictionary that maps an IPA phoneme or diacritic to a textual
-        /// description of that symbol.
-        /// </summary>
-        public static Dictionary<string, string> IpaPhonemesMap
-        {
-            get => _ipaPhonemesMap;
-        }
-
-        /// <summary>
-        /// Returns a Dictionary that can be used to replace latin characters
-        /// that closely resemble IPA characters with the IPA character they can
-        /// easily be confused with.  
-        /// </summary>
-        public static Dictionary<string, string> LatinIpaReplacements
-        {
-            get => _latinIpaReplacements;
-        }
 
         /// <summary>
         /// Returns a Dictionary that maps the IPA consonants to a list of other consonants that
@@ -633,10 +576,10 @@ namespace ConlangAudioHoning
         /// so that if an error occurs and they remain in place the error will be noticeable.
         /// </summary>
         /// <returns></returns>
-        public static List<string> Ipa_replacements
-        {
-            get => _ipa_replacements;
-        }
+        public static List<string> Ipa_replacements { get; } = [
+            "!","@","#","$","%","&","*","+","=","<",">","~","\u00a2","\u00a3","\u00a4",
+            "\u00a5","\u00a7","\u00a9","\u00ae","\u0394","\u039e","\u03a6","\u03a8",
+        ];
 
         /// <summary>
         /// Returns a single string that contains all of the IPA symbols along
@@ -656,15 +599,15 @@ namespace ConlangAudioHoning
                 {
                     if (Char.IsAsciiLetterOrDigit(c))
                     {
-                        sb2.Append(c);
+                        _ = sb2.Append(c);
                     }
                     else
                     {
                         int cInt = c;
-                        sb2.AppendFormat("U+{0,4:x4}", cInt);
+                        _ = sb2.AppendFormat("U+{0,4:x4}", cInt);
                     }
                 }
-                sb.AppendFormat("{0} ({2}):\t{1}\n", phoneme, description, sb2.ToString());
+                _ = sb.AppendFormat("{0} ({2}):\t{1}\n", phoneme, description, sb2.ToString());
             }
 
             return sb.ToString();
@@ -826,7 +769,7 @@ namespace ConlangAudioHoning
             {
                 foreach (string diphthong in languageDescription.phonetic_inventory["v_diphthongs"])
                 {
-                    vDiphthongs.Add(diphthong);
+                    _ = vDiphthongs.Add(diphthong);
                 }
             }
             // Add any potential vowel diphthongs found in the phoneme inventory
@@ -857,7 +800,7 @@ namespace ConlangAudioHoning
                         }
                         if (isPossibleDiphthong && (vowelCount == 2) && (symbolCount <= vowelCount))
                         {
-                            vDiphthongs.Add(phoneme);
+                            _ = vDiphthongs.Add(phoneme);
                         }
                     }
                 }
@@ -872,8 +815,8 @@ namespace ConlangAudioHoning
                 {
                     if (string.IsNullOrEmpty(priorChar.ToString()))
                     {
-                        priorChar.Clear();
-                        priorChar.Append(letter);
+                        _ = priorChar.Clear();
+                        _ = priorChar.Append(letter);
                     }
                     else
                     {
@@ -882,37 +825,37 @@ namespace ConlangAudioHoning
                             string newChar = priorChar + letter.ToString();
                             if (PConsonants.Contains(priorChar.ToString()))
                             {
-                                pConsonants.Add(newChar);
-                                priorChar.Clear();
+                                _ = pConsonants.Add(newChar);
+                                _ = priorChar.Clear();
                             }
                             else if (NpConsonants.Contains(priorChar.ToString()))
                             {
-                                npConsonants.Add(newChar);
-                                priorChar.Clear();
+                                _ = npConsonants.Add(newChar);
+                                _ = priorChar.Clear();
                             }
                             else if (ContainsVowels(priorChar.ToString()))
                             {
-                                priorChar.Append(letter);
+                                _ = priorChar.Append(letter);
                             }
                         }
                         else if ((letter == '\u035c') || (letter == '\u0361'))
                         {
                             if (ContainsVowels(priorChar.ToString()))
                             {
-                                priorChar.Append(letter);
+                                _ = priorChar.Append(letter);
                             }
                         }
                         else if (PConsonants.Contains(priorChar.ToString()))
                         {
-                            pConsonants.Add(priorChar.ToString());
-                            priorChar.Clear();
-                            priorChar.Append(letter);
+                            _ = pConsonants.Add(priorChar.ToString());
+                            _ = priorChar.Clear();
+                            _ = priorChar.Append(letter);
                         }
                         else if (NpConsonants.Contains(priorChar.ToString()))
                         {
-                            npConsonants.Add(priorChar.ToString());
-                            priorChar.Clear();
-                            priorChar.Append(letter);
+                            _ = npConsonants.Add(priorChar.ToString());
+                            _ = priorChar.Clear();
+                            _ = priorChar.Append(letter);
                         }
                         else if (ContainsVowels(priorChar.ToString()))
                         {
@@ -933,36 +876,36 @@ namespace ConlangAudioHoning
                                                 {
                                                     if (workingChar.Length > 0)
                                                     {
-                                                        vowels.Add(workingChar.ToString());
-                                                        workingChar.Clear();
-                                                        workingChar.Append(letter2);
+                                                        _ = vowels.Add(workingChar.ToString());
+                                                        _ = workingChar.Clear();
+                                                        _ = workingChar.Append(letter2);
                                                     }
                                                     else
                                                     {
-                                                        workingChar.Append(letter2);
+                                                        _ = workingChar.Append(letter2);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    workingChar.Append(letter2);
+                                                    _ = workingChar.Append(letter2);
                                                 }
                                             }
                                             if (!(string.IsNullOrEmpty(workingChar.ToString())))
                                             {
-                                                vowels.Add(workingChar.ToString());
+                                                _ = vowels.Add(workingChar.ToString());
                                             }
                                         }
-                                        priorChar.Clear();
-                                        priorChar.Append(letter);
+                                        _ = priorChar.Clear();
+                                        _ = priorChar.Append(letter);
                                     }
                                     else
                                     {
-                                        priorChar.Append(letter);
+                                        _ = priorChar.Append(letter);
                                     }
                                 }
                                 else
                                 {
-                                    priorChar.Append(letter); // Keep building the possible diphthong
+                                    _ = priorChar.Append(letter); // Keep building the possible diphthong
                                 }
                             }
                             else
@@ -971,7 +914,7 @@ namespace ConlangAudioHoning
                                 if ((priorChar.Length == 1) ||
                                     ((priorChar.Length == 2) && (Vowel_modifiers.Contains(lastPriorChar))))
                                 {
-                                    vowels.Add(priorChar.ToString());
+                                    _ = vowels.Add(priorChar.ToString());
                                 }
                                 else
                                 {
@@ -984,35 +927,35 @@ namespace ConlangAudioHoning
                                             {
                                                 if (workingChar.Length > 0)
                                                 {
-                                                    vowels.Add(workingChar.ToString());
-                                                    workingChar.Clear();
-                                                    workingChar.Append(letter2);
+                                                    _ = vowels.Add(workingChar.ToString());
+                                                    _ = workingChar.Clear();
+                                                    _ = workingChar.Append(letter2);
                                                 }
                                                 else
                                                 {
-                                                    workingChar.Append(letter2);
+                                                    _ = workingChar.Append(letter2);
                                                 }
                                             }
                                             else
                                             {
-                                                workingChar.Append(letter2);
+                                                _ = workingChar.Append(letter2);
                                             }
                                         }
                                         if (!(string.IsNullOrEmpty(workingChar.ToString())))
                                         {
-                                            vowels.Add(workingChar.ToString());
+                                            _ = vowels.Add(workingChar.ToString());
                                         }
                                     }
                                 }
-                                priorChar.Clear();
-                                priorChar.Append(letter);
+                                _ = priorChar.Clear();
+                                _ = priorChar.Append(letter);
                             }
                         }
                     }
                     // treat stress like new word.
                     if ((priorChar.Equals("\u02c8")) || (priorChar.Equals("\u02cc")))
                     {
-                        priorChar.Clear();
+                        _ = priorChar.Clear();
                     }
                 }
             }
@@ -1080,7 +1023,7 @@ namespace ConlangAudioHoning
                     {
                         if ((!candidateChange.Equals(pConsonant)) && (!Consonant_changes[pConsonant].Contains(candidateChange)))
                         {
-                            addedChanges.Add(candidateChange);
+                            _ = addedChanges.Add(candidateChange);
                         }
                     }
                 }
@@ -1106,7 +1049,7 @@ namespace ConlangAudioHoning
                     {
                         if ((!candidateChange.Equals(pConsonant)) && (!Consonant_changes_l2[pConsonant].Contains(candidateChange)))
                         {
-                            addedChanges.Add(candidateChange);
+                            _ = addedChanges.Add(candidateChange);
                         }
                     }
                 }
