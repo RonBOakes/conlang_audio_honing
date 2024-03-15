@@ -26,17 +26,9 @@ namespace ConlangAudioHoning
     /// </summary>
     internal class ESpeakNGSpeak : SpeechEngine
     {
-        private static string _ESpeakNGPath = "";
-
         public ESpeakNGSpeak() : base()
         {
             Description = "espeak-ng";
-        }
-
-        public static string ESpeakNGPath
-        {
-            get => _ESpeakNGPath;
-            set => _ESpeakNGPath = value;
         }
 
         /// <summary>
@@ -47,10 +39,12 @@ namespace ConlangAudioHoning
             Description = "espeak-ng";
         }
 
+        public static string ESpeakNGPath { get; set; } = "";
+
         /// <summary>
-        /// Key used to access the LanguageDescription preffered_voices dictionary.
+        /// Key used to access the LanguageDescription preferred_voices dictionary.
         /// </summary>
-        public override string preferredVoiceKey
+        public override string PreferredVoiceKey
         {
             get => "espeak-ng";
         }
@@ -68,7 +62,7 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("Cannot Generate Polly Speech without a language description");
             }
-            if (string.IsNullOrEmpty(sampleText))
+            if (string.IsNullOrEmpty(SampleText))
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
@@ -96,7 +90,7 @@ namespace ConlangAudioHoning
             // Get the phonetic representations of the text - ported from Python code.
             List<List<Dictionary<string, string>>> pronounceMapList = [];
             pronounceMapList.Clear();
-            using (StringReader sampleTextReader = new(sampleText.ToLower()))
+            using (StringReader sampleTextReader = new(SampleText.ToLower()))
             {
                 string? line;
                 do
@@ -105,9 +99,9 @@ namespace ConlangAudioHoning
                     if ((line != null) && (!line.Trim().Equals(string.Empty)))
                     {
                         List<Dictionary<string, string>> lineMapList = [];
-                        foreach (string word in line.Split(null))
+                        foreach (string word in line.Split())
                         {
-                            Dictionary<string, string>? pronounceMap = pronounceWord(word, wordMap);
+                            Dictionary<string, string>? pronounceMap = PronounceWord(word, wordMap);
                             if (pronounceMap != null)
                             {
                                 lineMapList.Add(pronounceMap);
@@ -121,7 +115,7 @@ namespace ConlangAudioHoning
 
             StringBuilder eSpeakText = new();
 
-            phoneticText = string.Empty;
+            PhoneticText = string.Empty;
             int wordWrap = 0;
 
             foreach (List<Dictionary<string, string>> lineMapList in pronounceMapList)
@@ -130,27 +124,27 @@ namespace ConlangAudioHoning
                 {
                     // Build the text entry
                     eSpeakText.Append(KirshenbaumUtilities.IpaWordToKirshenbaum(pronounceMap["phonetic"]));
-                    phoneticText += pronounceMap["phonetic"];
+                    PhoneticText += pronounceMap["phonetic"];
                     wordWrap += pronounceMap["phonetic"].Length;
                     if (pronounceMap["punctuation"] != "")
                     {
                         eSpeakText.Append(pronounceMap["punctuation"]);
-                        phoneticText += pronounceMap["punctuation"];
+                        PhoneticText += pronounceMap["punctuation"];
                         wordWrap += pronounceMap["punctuation"].Length;
                     }
-                    phoneticText += " ";
+                    PhoneticText += " ";
                     eSpeakText.Append(' ');
                     wordWrap += 1;
                     if (wordWrap >= 80)
                     {
                         eSpeakText.Append('\n');
-                        phoneticText += "\n";
+                        PhoneticText += "\n";
                         wordWrap = 0;
                     }
                 }
             }
 
-            ssmlText = eSpeakText.ToString().Trim();
+            SsmlText = eSpeakText.ToString().Trim();
 
             if (removeDeclinedWord)
             {
@@ -174,12 +168,12 @@ namespace ConlangAudioHoning
             {
                 return false;
             }
-            if (string.IsNullOrEmpty(sampleText))
+            if (string.IsNullOrEmpty(SampleText))
             {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(ssmlText))
+            if (string.IsNullOrEmpty(SsmlText))
             {
                 this.Generate(speed ?? "medium", caller);
             }
@@ -192,42 +186,28 @@ namespace ConlangAudioHoning
             int speedInt = -1;
             if (!string.IsNullOrEmpty(speed))
             {
-                switch (speed.ToLower())
+                speedInt = speed.ToLower() switch
                 {
-                    case "x-slow":
-                        speedInt = 75;
-                        break;
-                    case "slow":
-                        speedInt = 125;
-                        break;
-                    case "medium":
-                    case "default":
-                        speedInt = 175;
-                        break;
-                    case "fast":
-                        speedInt = 225;
-                        break;
-                    case "x-fast":
-                        speedInt = 275;
-                        break;
-                    default:
-                        speedInt = 175;
-                        break;
-                }
+                    "x-slow" => 75,
+                    "slow" => 125,
+                    "medium" or "default" => 175,
+                    "fast" => 225,
+                    "x-fast" => 275,
+                    _ => 175,
+                };
             }
 
-            bool result = speak(text: ssmlText, waveFile: targetFile, voiceLanguage: voice, speed: speedInt);
+            bool result = Speak(text: SsmlText, waveFile: targetFile, voiceLanguage: voice, speed: speedInt);
 
             return result;
         }
 
 
-        public override Dictionary<string, VoiceData> getVoices()
+        public override Dictionary<string, VoiceData> GetVoices()
         {
             Dictionary<string, VoiceData> voices = [];
-            List<IntPtr> voicePointers = [];
 
-            char[] whiteSpaces = { ' ', '\t', };
+            char[] whiteSpaces = [' ', '\t',];
 
             string voiceList = string.Empty;
             RunConsoleCommand("--voices", ref voiceList);
@@ -265,7 +245,7 @@ namespace ConlangAudioHoning
             return voices;
         }
 
-        public void Test()
+        public static void Test()
         {
             // Initialize the eSpeak-ng library via the wrapper
             List<string> ipaText =
@@ -280,11 +260,11 @@ namespace ConlangAudioHoning
             }
             string text = "[[h@'loU]]. This is a test. ";
             text += sb.ToString();
-            speak(text: text, voiceLanguage: "en-us");
+            Speak(text: text, voiceLanguage: "en-us");
             return;
         }
 
-        internal bool speak(string text, string waveFile = "", string voiceLanguage = "", int speed = -1)
+        internal static bool Speak(string text, string waveFile = "", string voiceLanguage = "", int speed = -1)
         {
             StringBuilder cmdSb = new();
 
@@ -320,10 +300,10 @@ namespace ConlangAudioHoning
 
             return result;
         }
-        private static bool processRunning;
 
         private static bool RunConsoleCommand(string cmd, ref string response)
         {
+            bool processRunning;
             System.Diagnostics.Process process = new();
             System.Diagnostics.ProcessStartInfo startInfo = new()
             {
@@ -337,7 +317,7 @@ namespace ConlangAudioHoning
                 processRunning = false;
             }
             );
-            startInfo.FileName = _ESpeakNGPath;
+            startInfo.FileName = ESpeakNGPath;
 
             startInfo.Arguments = cmd;
             process.StartInfo = startInfo;

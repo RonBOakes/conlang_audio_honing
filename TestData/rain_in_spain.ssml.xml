@@ -1,0 +1,14 @@
+<Speak>
+	<prosody rate ="slow">
+		<phoneme alphabet="ipa" ph="ðə">the</phoneme>
+		<phoneme alphabet="ipa" ph="ɹˈeɪn">rain</phoneme>
+		<phoneme alphabet="ipa" ph="ɪn">in</phoneme>
+		<phoneme alphabet="ipa" ph="spˈeɪn">spain</phoneme>
+		<phoneme alphabet="ipa" ph="stˈeɪz">stays</phoneme>
+		<phoneme alphabet="ipa" ph="mˈeɪnli">mainly</phoneme>
+		<phoneme alphabet="ipa" ph="ɒn">on</phoneme>
+		<phoneme alphabet="ipa" ph="ðə">the</phoneme>
+		<phoneme alphabet="ipa" ph="plˈeɪn">plain</phoneme>
+	</prosody>
+</Speak>
+

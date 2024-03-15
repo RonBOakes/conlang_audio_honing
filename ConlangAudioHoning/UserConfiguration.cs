@@ -66,7 +66,7 @@ namespace ConlangAudioHoning
             get => (!string.IsNullOrEmpty(ESpeakNgPath));
         }
 
-        public JsonSerializerOptions GetJsonSerializerOptions()
+        public static JsonSerializerOptions GetJsonSerializerOptions()
         {
             return new()
             {
@@ -77,6 +77,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Write this configuration out as a JSON file.
         /// </summary>
+        /// <param name="jsonSerializerOptions">Options for serializing the JSON when writing out</param>
         /// <param name="filePath">Path to write the configuration file.  By default this will create the 
         /// configuration file in the user's application data directory using a default name.</param>
         public void SaveConfiguration(JsonSerializerOptions jsonSerializerOptions, string filePath = "")
