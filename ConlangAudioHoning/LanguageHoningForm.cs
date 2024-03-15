@@ -1659,6 +1659,48 @@ namespace ConlangAudioHoning
                         }
                     }
                 }
+                else if(rbn_diphthongReplacement.Checked)
+                {
+                    cbx_dipthongStartVowel.Items.Clear();
+                    cbx_dipthongEndVowel.Items.Clear();
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0} -- ", replacementVowel);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel[0..1]]);
+                        cbx_dipthongStartVowel.Items.Add(sb.ToString());
+                        cbx_dipthongEndVowel.Items.Add(sb.ToString());
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0}ː -- ", replacementVowel);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel[0..1]]);
+                        sb.Append(" lengthened");
+                        cbx_dipthongStartVowel.Items.Add(sb.ToString());
+                        cbx_dipthongEndVowel.Items.Add(sb.ToString());
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0}ˑ -- ", replacementVowel);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel[0..1]]);
+                        sb.Append(" half-lengthened");
+                        cbx_dipthongStartVowel.Items.Add(sb.ToString());
+                        cbx_dipthongEndVowel.Items.Add(sb.ToString());
+                    }
+                    foreach (string replacementVowel in IpaUtilities.Vowels)
+                    {
+                        StringBuilder sb = new();
+                        sb.AppendFormat("{0}\u032F -- ", replacementVowel);
+                        sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel[0..1]]);
+                        sb.Append(" semi-vowel");
+                        cbx_dipthongStartVowel.Items.Add(sb.ToString());
+                        cbx_dipthongEndVowel.Items.Add(sb.ToString());
+                    }
+                    cbx_dipthongStartVowel.SelectedIndex = -1;
+                    cbx_dipthongEndVowel.SelectedIndex = -1;
+                }
             }
             else if (tabPhoneticAlterations.SelectedIndex == 3)  // Rhoticity
             {
@@ -1784,19 +1826,23 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if ((tabPhoneticAlterations.SelectedIndex != 0) && (tabPhoneticAlterations.SelectedIndex != 1) && (tabPhoneticAlterations.SelectedIndex != 3))
-            {
-                return;
-            }
-            if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
+            if ((tabPhoneticAlterations.SelectedIndex != 0) &&
+                (tabPhoneticAlterations.SelectedIndex != 1) &&
+                (tabPhoneticAlterations.SelectedIndex != 2) &&
+                (tabPhoneticAlterations.SelectedIndex != 3))
             {
                 return;
             }
 
             if ((tabPhoneticAlterations.SelectedIndex == 0) ||
                 (tabPhoneticAlterations.SelectedIndex == 1) ||
-                ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)))
+                ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)) ||
+                ((tabPhoneticAlterations.SelectedIndex == 2) && (!rbn_diphthongReplacement.Checked)))
             {
+                if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
+                {
+                    return;
+                }
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
                 // Make the change
@@ -1857,6 +1903,35 @@ namespace ConlangAudioHoning
                 cbx_phonemeToChange.Items.Clear();
                 cbx_replacementPhoneme.Items.Clear();
                 tabPhoneticAlterations.SelectedIndex = -1;
+            }
+            else if((tabPhoneticAlterations.SelectedIndex == 2) && (rbn_diphthongReplacement.Checked))
+            {
+                if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_dipthongStartVowel.SelectedIndex == -1) || (cbx_dipthongEndVowel.SelectedIndex == -1))
+                {
+                    return;
+                }
+                string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
+                string newPhoneme = "";
+                if(BuildNewDiphthong(ref newPhoneme))
+                {
+                    phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme);
+                    // Update sample text
+                    if (sampleText != string.Empty)
+                    {
+                        sampleText = phoneticChanger.SampleText;
+                        txt_SampleText.Text = sampleText;
+                        txt_phonetic.Text = string.Empty;
+                        foreach (string engineName in speechEngines.Keys)
+                        {
+                            SpeechEngine speechEngine = speechEngines[engineName];
+                            speechEngine.sampleText = sampleText;
+                        }
+                    }
+                    // Clear the combo boxes
+                    cbx_phonemeToChange.Items.Clear();
+                    cbx_replacementPhoneme.Items.Clear();
+                    tabPhoneticAlterations.SelectedIndex = -1;
+                }
             }
             // Add other options as needed.
         }
@@ -1954,7 +2029,10 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            if ((tabPhoneticAlterations.SelectedIndex != 0) && (tabPhoneticAlterations.SelectedIndex != 1) && (tabPhoneticAlterations.SelectedIndex != 3))
+            if ((tabPhoneticAlterations.SelectedIndex != 0) && 
+                (tabPhoneticAlterations.SelectedIndex != 1) && 
+                (tabPhoneticAlterations.SelectedIndex != 2) &&
+                (tabPhoneticAlterations.SelectedIndex != 3))
             {
                 return;
             }
@@ -1963,18 +2041,21 @@ namespace ConlangAudioHoning
                 MessageBox.Show("Rhotacize based on spelling can only be performed singly", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
-            {
-                return;
-            }
             if (changesToBeMade.Count >= 10)
             {
                 MessageBox.Show("No more than 10 changes can be grouped for simultaneous update.  Apply existing updates before adding additional changes",
                     "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if ((tabPhoneticAlterations.SelectedIndex == 0) || (tabPhoneticAlterations.SelectedIndex == 1) || (tabPhoneticAlterations.SelectedIndex == 3))
+            if ((tabPhoneticAlterations.SelectedIndex == 0) ||
+                (tabPhoneticAlterations.SelectedIndex == 1) ||
+                ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)) ||
+                ((tabPhoneticAlterations.SelectedIndex == 2) && (!rbn_diphthongReplacement.Checked)))
             {
+                if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
+                {
+                    return;
+                }
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
 
@@ -1988,6 +2069,33 @@ namespace ConlangAudioHoning
                     sb.Append(", ");
                 }
                 txt_changeList.Text = sb.ToString();
+            }
+            else if ((tabPhoneticAlterations.SelectedIndex == 2) && (rbn_diphthongReplacement.Checked))
+            {
+                if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_dipthongStartVowel.SelectedIndex == -1) || (cbx_dipthongEndVowel.SelectedIndex == -1))
+                {
+                    return;
+                }
+                string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
+                string newPhoneme = "";
+                if (BuildNewDiphthong(ref newPhoneme))
+                {
+                    phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme);
+                    // Update sample text
+                    if (sampleText != string.Empty)
+                    {
+                        changesToBeMade.Add((oldPhoneme, newPhoneme));
+                        StringBuilder sb = new();
+                        foreach ((string oph, string nph) in changesToBeMade)
+                        {
+                            sb.Append(oph);
+                            sb.Append(" -> ");
+                            sb.Append(nph);
+                            sb.Append(", ");
+                        }
+                        txt_changeList.Text = sb.ToString();
+                    }
+                }
             }
 
         }
@@ -2367,6 +2475,24 @@ namespace ConlangAudioHoning
         private void Rbn_diphthongReplacement_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
+        }
+
+        private bool BuildNewDiphthong(ref string newPhoneme)
+        {
+            string startVowel = cbx_dipthongStartVowel.Text.Split()[0];
+            string endVowel = cbx_dipthongEndVowel.Text.Split()[0];
+
+            // Validate the potential diphthong to confirm it is valid
+            if ((startVowel[0..1] == endVowel[0..1]) ||
+                (startVowel.Contains('\u032f') && endVowel.Contains('\u032f')))
+            {
+                string errorString = string.Format("{0}{1} is not a valid diphthong",startVowel,endVowel);
+                MessageBox.Show(errorString, "Invalid Diphthong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            newPhoneme = string.Format("{0}{1}", startVowel, endVowel);
+            return true;
         }
     }
 }
