@@ -1,0 +1,273 @@
+﻿{
+  "version": 1.0,
+  "english_name": "Test English",
+  "phonetic_characters": "ipa",
+  "native_name_phonetic": "ˈɪŋɡlɪʃ",
+  "native_name_english": "English",
+  "preferred_voices": {
+    "Polly": "Matthew",
+    "espeak-ng": "en-us"
+  },
+  "derived": true,
+  "declined": false,
+  "none_gender_list": [
+    ""
+  ],
+  "part_of_speech_list": [
+    "adj",
+    "adv",
+    "conj",
+    "det",
+    "interj",
+    "n",
+    "num",
+    "prep",
+    "pron",
+    "v"
+  ],
+  "phoneme_inventory": [
+    "b",
+    "d",
+    "f",
+    "g",
+    "h",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "ŋ",
+    "p",
+    "ɹ",
+    "s",
+    "t",
+    "v",
+    "w",
+    "z",
+    "ʃ",
+    "ʒ",
+    "ʧ",
+    "ʤ",
+    "θ",
+    "ð",
+    "ɑ",
+    "æ",
+    "ɛ",
+    "ɜː",
+    "iː",
+    "ɪ",
+    "ɔː",
+    "uː",
+    "ʊ",
+    "ʌ",
+    "aɪ̯",
+    "aʊ̯",
+    "eɪ̯",
+    "oʊ̯",
+    "ɔɪ̯"
+  ],
+  "phonetic_inventory": {
+    "p_consonants": [],
+    "np_consonants": [],
+    "vowels": [],
+    "v_diphthongs": []
+  },
+  "word_order": "SVO",
+  "adjective_position": "Before",
+  "pre_post_position": "preposition",
+  "sound_map_list": [
+    {
+      "phoneme": "θ",
+      "pronunciation_regex": "th"
+    },
+    {
+      "phoneme": "ð",
+      "pronunciation_regex": "th"
+    },
+    {
+      "phoneme": "ɹ",
+      "pronunciation_regex": "r"
+    },
+    {
+      "phoneme": "ɹ",
+      "pronunciation_regex": "r"
+    },
+    {
+      "phoneme": "z",
+      "pronunciation_regex": "s$"
+    },
+    {
+      "phoneme": "eɪ",
+      "pronunciation_regex": "ai"
+    },
+    {
+      "phoneme": "ɪ",
+      "pronunciation_regex": "i"
+    },
+    {
+      "phoneme": "ɒ",
+      "pronunciation_regex": "o"
+    },
+    {
+      "phoneme": "ɔ",
+      "pronunciation_regex": "o"
+    },
+    {
+      "spelling_regex": "ɔ",
+      "romanization": "o"
+    },
+    {
+      "spelling_regex": "eɪ",
+      "romanization": "ai"
+    },
+    {
+      "spelling_regex": "z$",
+      "romanization": "s"
+    },
+    {
+      "spelling_regex": "ɹ",
+      "romanization": "r"
+    },
+    {
+      "spelling_regex": "ð",
+      "romanization": "th"
+    }
+
+  ],
+  "lexical_order_list": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "⁠",
+    " "
+  ],
+  "affix_map": {
+
+  },
+  "derivational_affix_map": {
+
+  },
+  "lexicon": [
+    {
+      "phonetic": "ðə",
+      "spelled": "the",
+      "english": "the",
+      "part_of_speech": "art",
+      "declensions": [
+        "root"
+      ],
+      "derived_word": false,
+      "declined_word": false,
+      "metadata": {}
+    },
+    {
+      "phonetic": "ɹˈeɪn",
+      "spelled": "rain",
+      "english": "rain",
+      "part_of_speech": "n",
+      "declensions": [
+        "root"
+      ],
+      "derived_word": false,
+      "declined_word": false,
+      "metadata": {}
+    },
+    {
+      "phonetic": "ɪn",
+      "spelled": "in",
+      "english": "in",
+      "part_of_speech": "prep",
+      "declensions": [
+        "root"
+      ],
+      "derived_word": false,
+      "declined_word": false,
+      "metadata": {}
+    },
+    {
+      "phonetic": "stˈeɪz",
+      "spelled": "stays",
+      "english": "stays",
+      "part_of_speech": "v",
+      "declensions": [
+        "root"
+      ],
+      "derived_word": false,
+      "declined_word": false,
+      "metadata": {}
+    },
+    {
+      "phonetic": "mˈeɪnli",
+      "spelled": "mainly",
+      "english": "mainly",
+      "part_of_speech": "adv",
+      "declensions": [
+        "root"
+      ],
+      "derived_word": false,
+      "declined_word": false,
+      "metadata": {}
+    },
+    {
+      "phonetic": "ɒn",
+      "spelled": "on",
+      "english": "on",
+      "part_of_speech": "prep",
+      "declensions": [
+        "root"
+      ],
+      "derived_word": false,
+      "declined_word": false,
+      "metadata": {}
+    },
+    {
+      "phonetic": "plˈeɪn",
+      "spelled": "plain",
+      "english": "plain",
+      "part_of_speech": "n",
+      "declensions": [
+        "root"
+      ],
+      "derived_word": false,
+      "declined_word": false,
+      "metadata": {}
+    },
+    {
+      "phonetic": "spˈeɪn",
+      "spelled": "spain",
+      "english": "spain",
+      "part_of_speech": "n",
+      "declensions": [
+        "root"
+      ],
+      "derived_word": false,
+      "declined_word": false,
+      "metadata": {}
+    }
+  ],
+  "derived_word_list": [],
+  "metadata": {}
+}
