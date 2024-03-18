@@ -863,12 +863,39 @@ namespace ConlangAudioHoning
                             {
                                 if (priorChar.Length >= 2)
                                 {
+                                    // First add this as a potential diphthong since that is probably how it will be treated 
+                                    // by the text-to-speech engines.
                                     int vCount = CountVowels(priorChar.ToString());
                                     int dCount = CountDiacritics(priorChar.ToString());
                                     if ((vCount >= 2) || (dCount >= 2))
                                     {
                                         if (!vDiphthongs.Contains(priorChar.ToString()))
                                         {
+                                            int vowelCount = 0;
+                                            int symbolCount = 0;
+                                            bool isPossibleDiphthong = true;
+                                            foreach (char letter2 in priorChar.ToString())
+                                            {
+                                                if (Vowels.Contains(letter.ToString()))
+                                                {
+                                                    vowelCount += 1;
+                                                }
+                                                else if (Vowel_modifiers.Contains(letter.ToString()))
+                                                {
+                                                    symbolCount += 1;
+                                                }
+                                                else
+                                                {
+                                                    isPossibleDiphthong = false;
+                                                    break;
+                                                }
+                                            }
+                                            if (isPossibleDiphthong && (vowelCount == 2) && (symbolCount <= vowelCount))
+                                            {
+                                                _ = vDiphthongs.Add(priorChar.ToString());
+                                            }
+
+                                            // Also consider adding it as individual vowels for editing purposes.
                                             StringBuilder workingChar = new();
                                             foreach (char letter2 in priorChar.ToString())
                                             {
