@@ -44,6 +44,9 @@ namespace ConlangAudioHoning
         private readonly List<(string, string)> changesToBeMade = [];
         private readonly UserConfiguration UserConfiguration;
 
+        bool languageDirty = false;
+        bool sampleDirty = false;
+
         /// <summary>
         /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
         /// </summary>
@@ -67,6 +70,8 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
             }
+
+            this.FormClosing += This_FormClosing;
 
             UserConfiguration = UserConfiguration.LoadFromFile();
 
@@ -323,6 +328,9 @@ namespace ConlangAudioHoning
             rbn_vowelToDiphthongStart.Checked = true;
             UpdatePhonemeToChangeCbx();
             LoadVoices();
+
+            // Clear the dirty setting
+            languageDirty = false;
         }
 
         private readonly JsonSerializerOptions JsonSerializerOptions = new()
@@ -365,6 +373,9 @@ namespace ConlangAudioHoning
 
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
                 File.WriteAllText(filename, jsonString, System.Text.Encoding.UTF8);
+
+                // Clear the dirty setting
+                languageDirty = false;
             }
         }
 
@@ -405,6 +416,9 @@ namespace ConlangAudioHoning
                 speechEngines[engineKey].SampleText = sampleText;
             }
             phoneticChanger.SampleText = sampleText;
+
+            // Clear the dirty indication
+            sampleDirty = false;
         }
 
         private void SaveSampleMenu_Click(object sender, EventArgs e)
@@ -435,17 +449,87 @@ namespace ConlangAudioHoning
             sampleText = txt_SampleText.Text;
             sampleText = sampleText.Trim();
             File.WriteAllText(filename, sampleText);
+
+            // Clear the dirty indication
+            sampleDirty = false;
+        }
+
+        private void This_FormClosing(Object? sender, FormClosingEventArgs e)
+        {
+            if (languageDirty)
+            {
+                DialogResult dialogResult = MessageBox.Show("Language has been altered, save?", "Language Altered", MessageBoxButtons.YesNoCancel);
+                if (dialogResult.Equals(DialogResult.Yes))
+                {
+                    using SaveFileDialog saveFileDialog = new();
+                    if (languageFileInfo == null)
+                    {
+                        saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+                    }
+                    else
+                    {
+                        saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+                    }
+                    saveFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+                    saveFileDialog.FilterIndex = 1;
+                    saveFileDialog.RestoreDirectory = true;
+                    saveFileDialog.CheckFileExists = false;
+                    saveFileDialog.OverwritePrompt = true;
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        SaveLanguage(saveFileDialog.FileName);
+                    }
+                }
+                else if (dialogResult.Equals(DialogResult.Cancel))
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+            if (sampleDirty)
+            {
+                DialogResult dialogResult = MessageBox.Show("Sample Text has been altered, save?", "Sample Text Altered", MessageBoxButtons.YesNoCancel);
+                if (dialogResult.Equals(DialogResult.Yes))
+                {
+                    using SaveFileDialog saveFileDialog = new();
+                    if (languageFileInfo == null)
+                    {
+                        saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+                    }
+                    else
+                    {
+                        saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+                    }
+                    saveFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+                    saveFileDialog.FilterIndex = 1;
+                    saveFileDialog.RestoreDirectory = true;
+                    saveFileDialog.CheckFileExists = false;
+                    saveFileDialog.OverwritePrompt = true;
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        SaveLanguage(saveFileDialog.FileName);
+                    }
+                }
+                else if (dialogResult.Equals(DialogResult.Cancel))
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
         }
 
         private void OnApplicationExit(object? sender, EventArgs e)
         {
-            UserConfiguration.SaveConfiguration(            UserConfiguration.GetJsonSerializerOptions());
+            UserConfiguration.SaveConfiguration(UserConfiguration.GetJsonSerializerOptions());
         }
 
         private void Txt_SampleText_TextChanged(object sender, EventArgs e)
         {
             sampleText = txt_SampleText.Text;
             sampleText = sampleText.Trim();
+            sampleDirty = true;
         }
 
         private void Btn_generate_Click(object sender, EventArgs e)
@@ -470,11 +554,13 @@ namespace ConlangAudioHoning
             {
                 DeclineLexicon(languageDescription);
                 declineToolStripMenuItem.Text = "Remove Declensions";
+                languageDirty = true;
             }
             else
             {
                 ConlangUtilities.RemoveDeclinedEntries(languageDescription);
                 declineToolStripMenuItem.Text = "Decline Language";
+                languageDirty = true;
             }
 
         }
@@ -1932,6 +2018,10 @@ namespace ConlangAudioHoning
                 }
             }
             // Add other options as needed.
+
+            // Mark language and sample dirty
+            languageDirty = true;
+            sampleDirty = true;
         }
 
         private void Cbx_replacementPhoneme_MeasureItem(object? sender, System.Windows.Forms.MeasureItemEventArgs e)
@@ -2120,6 +2210,10 @@ namespace ConlangAudioHoning
             cbx_phonemeToChange.SelectedIndex = -1;
             cbx_replacementPhoneme.SelectedIndex = -1;
             tabPhoneticAlterations.SelectedIndex = -1;
+
+            // Mark language and sample dirty
+            languageDirty = true;
+            sampleDirty = true;
         }
 
         private void Btn_revertLastChange_Click(object sender, EventArgs e)
@@ -2135,6 +2229,10 @@ namespace ConlangAudioHoning
             {
                 txt_SampleText.Text = string.Empty;
             }
+
+            // Mark language and sample dirty
+            languageDirty = true;
+            sampleDirty = true;
         }
 
         private void DisplayGlossOfSampleTextToolStripMenuItem_Click(object sender, EventArgs e)
