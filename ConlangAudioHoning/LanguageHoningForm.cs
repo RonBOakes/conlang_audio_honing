@@ -303,11 +303,11 @@ namespace ConlangAudioHoning
 
             if (languageDescription.declined)
             {
-                declineToolStripMenuItem.Enabled = false;
+                declineToolStripMenuItem.Text = "Remove Declined Words";
             }
             if (languageDescription.derived)
             {
-                deriveToolStripMenuItem.Enabled = false;
+                deriveToolStripMenuItem.Text = "Remove Derived Words";
             }
 
             foreach (string engineKey in speechEngines.Keys)
@@ -2589,6 +2589,25 @@ namespace ConlangAudioHoning
 
             newPhoneme = string.Format("{0}{1}", startVowel, endVowel);
             return true;
+        }
+
+        private void DeriveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(languageDescription == null)
+            {
+                return;
+            }
+
+            if(languageDescription.derived)
+            {
+                ConlangUtilities.RemoveDerivedEntries(languageDescription);
+                deriveToolStripMenuItem.Text = "Derive Words";
+            }
+            else
+            {
+                ConlangUtilities.DeriveLexicon(languageDescription);
+                deriveToolStripMenuItem.Text = "Remove Derived Words";
+            }
         }
     }
 }

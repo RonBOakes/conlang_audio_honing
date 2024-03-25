@@ -60,7 +60,6 @@
             btn_generateSpeech = new Button();
             cbx_recordings = new ComboBox();
             btn_replaySpeech = new Button();
-            ProgressBar = new ProgressBar();
             pbTimer = new System.Windows.Forms.Timer(components);
             lbl_choiceCbx = new Label();
             lbl_replacementCbx = new Label();
@@ -198,15 +197,16 @@
             // declineToolStripMenuItem
             // 
             declineToolStripMenuItem.Name = "declineToolStripMenuItem";
-            declineToolStripMenuItem.Size = new Size(168, 22);
+            declineToolStripMenuItem.Size = new Size(180, 22);
             declineToolStripMenuItem.Text = "Decline Language";
             declineToolStripMenuItem.Click += DeclineToolStripMenuItem_Click;
             // 
             // deriveToolStripMenuItem
             // 
             deriveToolStripMenuItem.Name = "deriveToolStripMenuItem";
-            deriveToolStripMenuItem.Size = new Size(168, 22);
+            deriveToolStripMenuItem.Size = new Size(180, 22);
             deriveToolStripMenuItem.Text = "Derive Words";
+            deriveToolStripMenuItem.Click += DeriveToolStripMenuItem_Click;
             // 
             // utilitiesToolStripMenuItem
             // 
@@ -364,14 +364,6 @@
             btn_replaySpeech.Text = "Replay Selected Recording";
             btn_replaySpeech.UseVisualStyleBackColor = true;
             btn_replaySpeech.Click += Btn_replaySpeech_Click;
-            // 
-            // pb_status
-            // 
-            ProgressBar.Location = new Point(12, 22);
-            ProgressBar.Name = "pb_status";
-            ProgressBar.Size = new Size(976, 23);
-            ProgressBar.TabIndex = 9;
-            ProgressBar.Visible = false;
             // 
             // pbTimer
             // 
@@ -963,7 +955,6 @@
             Controls.Add(lbl_SampleText);
             Controls.Add(txt_SampleText);
             Controls.Add(menuStrip1);
-            Controls.Add(ProgressBar);
             MainMenuStrip = menuStrip1;
             Name = "LanguageHoningForm";
             Text = "LanguageHoningForm";

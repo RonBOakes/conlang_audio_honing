@@ -193,100 +193,84 @@ namespace ConlangJson
 #pragma warning restore IDE0028 // Simplify collection initialization
 
             // Build the word map and word map tuple from the lexicon in the language
-            foreach (LexiconEntry entry in language.lexicon)
+            for (int i = 0; i < language.lexicon.Count; i++)
             {
+                LexiconEntry entry = language.lexicon[i];
                 // If the word is a root word, then put it in the word maps
                 // In order to match with words in the derived_word_list, spaces need to be 
                 // replaced with underscores.
                 if (entry.declensions.Contains("root"))
                 {
                     string wmEnglish = entry.english.Replace(' ', '_');
-                    wordMap.Add(wmEnglish, entry);
+                    _ = wordMap.TryAdd(wmEnglish, entry);
                     string partOfSpeech = entry.part_of_speech;
                     if (partOfSpeech.StartsWith('n'))
                     {
                         partOfSpeech = "n";
                     }
-                    wordMapTuple.Add((wmEnglish, partOfSpeech), entry);
+                    _ = wordMapTuple.TryAdd((wmEnglish, partOfSpeech), entry);
                 }
+            }
 
-                // Iterate over the derived_word_list
-                foreach (string words in language.derived_word_list)
+            // Iterate over the derived_word_list
+            foreach (string words in language.derived_word_list)
+            {
+                // Partition the word into parts based on the Vulgarlang format.
+                string[] parts1 = words.Split("=");
+                string[] parts2 = parts1[0].Split(":");
+                string english = parts2[0].Trim();
+                string partOfSpeech = parts2[1].Trim();
+                string ruleText = parts1[1].Trim();
+                // The following rule splits Vulgarlang compound words by putting a space.
+                // This does not impact affix rules due to the letter case involved.
+                ruleText = ConvertVulgarlangCompoundWordRegex().Replace(ruleText, @"$1 $2");
+                string[] ruleList = ruleText.Split();
+
+                StringBuilder phonetic = new();
+
+                foreach (string ruleListEntry in ruleList)
                 {
-                    // Partition the word into parts based on the Vulgarlang format.
-                    string[] parts1 = words.Split("=");
-                    string[] parts2 = parts1[0].Split(":");
-                    string english = parts2[0].Trim();
-                    string partOfSpeech = parts2[1].Trim();
-                    string ruleText = parts1[1].Trim();
-                    // The following rule splits Vulgarlang compound words by putting a space.
-                    // This does not impact affix rules due to the letter case involved.
-                    ruleText = ConvertVulgarlangCompoundWordRegex().Replace(@"([a-z]+)-([a-z]+)", ruleText);
-                    string[] ruleList = ruleText.Split();
+                    string rule = ruleListEntry;
+                    DerivationalAffix? ruleAffixData = null;
 
-                    StringBuilder phonetic = new();
-
-                    foreach (string ruleListEntry in ruleList)
+                    if (rule.Contains('-'))
                     {
-                        string rule = ruleListEntry;
-                        DerivationalAffix? ruleAffixData = null;
+                        string[] ruleSplit = rule.Split('-');
+                        ruleAffixData = language.derivational_affix_map[ruleSplit[1].Trim()];
+                        rule = ruleSplit[0].Trim();
+                    }
+                    string rulePartOfSpeech = "";
+                    if (rule.Contains(':'))
+                    {
+                        string[] ruleSplit = rule.Split(':');
+                        rulePartOfSpeech = ruleSplit[1].Trim();
+                        rule = ruleSplit[0].Trim();
+                        // Turn all gendered nouns into "n"
+                        if (rulePartOfSpeech != "num")
+                        {
+                            rulePartOfSpeech = RemoveNounGenderRegex().Replace(rulePartOfSpeech, "n");
+                        }
+                    }
 
-                        if (rule.Contains('-'))
+                    // Look for the root word.
+                    string word = rule;
+                    LexiconEntry? lexEntry = null;
+                    // If we are looking to match a specific part of speech
+                    if (!string.IsNullOrEmpty(rulePartOfSpeech))
+                    {
+                        if (!wordMapTuple.ContainsKey((word, rulePartOfSpeech)))
                         {
-                            string[] ruleSplit = rule.Split('-');
-                            ruleAffixData = language.derivational_affix_map[ruleSplit[1].Trim()];
-                            rule = ruleSplit[0].Trim();
-                        }
-                        string rulePartOfSpeech = "";
-                        if (rule.Contains(':'))
-                        {
-                            string[] ruleSplit = rule.Split(':');
-                            rulePartOfSpeech = ruleSplit[1].Trim();
-                            rule = ruleSplit[0].Trim();
-                            // Turn all gendered nouns into "n"
-                            if (rulePartOfSpeech != "num")
-                            {
-                                rulePartOfSpeech = RemoveNounGenderRegex().Replace(@"\s*\n\w*\s*", rulePartOfSpeech);
-                            }
-                        }
-
-                        // Look for the root word.
-                        string word = rule;
-                        LexiconEntry? lexEntry = null;
-                        // If we are looking to match a specific part of speech
-                        if (!string.IsNullOrEmpty(rulePartOfSpeech))
-                        {
-                            if (!wordMapTuple.ContainsKey((word, rulePartOfSpeech)))
-                            {
-                                // Searching for matching entries that start and use the first one.
-                                bool found = false;
-                                foreach ((string, string) pair in wordMapTuple.Keys)
-                                {
-                                    if (pair.Item1.StartsWith(word) && pair.Item2.Equals(partOfSpeech))
-                                    {
-                                        lexEntry = wordMapTuple[pair];
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                                if (!found)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                        else if (!wordMap.TryGetValue(word, out LexiconEntry? value))
-                        {
-                            // Searching for matching entries that start and use the first one
+                            // Searching for matching entries that start and use the first one.
                             bool found = false;
-                            foreach (var searchWord in from string searchWord in wordMap.Keys
-                                                       where searchWord.StartsWith(word)
-                                                       select searchWord)
+                            foreach ((string, string) pair in wordMapTuple.Keys)
                             {
-                                lexEntry = wordMap[searchWord];
-                                found = true;
+                                if (pair.Item1.StartsWith(word) && pair.Item2.Equals(rulePartOfSpeech))
+                                {
+                                    lexEntry = wordMapTuple[pair];
+                                    found = true;
+                                    break;
+                                }
                             }
-
                             if (!found)
                             {
                                 return false;
@@ -294,83 +278,104 @@ namespace ConlangJson
                         }
                         else
                         {
-                            lexEntry = value;
+                            lexEntry = wordMapTuple[(word, rulePartOfSpeech)];
+                        }
+                    }
+                    else if (!wordMap.TryGetValue(word, out LexiconEntry? value))
+                    {
+                        // Searching for matching entries that start and use the first one
+                        bool found = false;
+                        foreach (var searchWord in from string searchWord in wordMap.Keys
+                                                   where searchWord.StartsWith(word)
+                                                   select searchWord)
+                        {
+                            lexEntry = wordMap[searchWord];
+                            found = true;
                         }
 
-                        if (lexEntry == null)
+                        if (!found)
                         {
                             return false;
                         }
+                    }
+                    else
+                    {
+                        lexEntry = value;
+                    }
 
-                        // build the derived word's phonetic representation
-                        string phoneticPart = lexEntry.phonetic;
-                        if (ruleAffixData != null)
+                    if (lexEntry == null)
+                    {
+                        return false;
+                    }
+
+                    // build the derived word's phonetic representation
+                    string phoneticPart = lexEntry.phonetic;
+                    if (ruleAffixData != null)
+                    {
+                        if (!string.IsNullOrEmpty(ruleAffixData.pronunciation_regex))
                         {
-                            if (!string.IsNullOrEmpty(ruleAffixData.pronunciation_regex))
-                            {
-                                if (Regex.IsMatch(ruleAffixData.pronunciation_regex, phoneticPart))
-                                {
-                                    if (ruleAffixData.type == "PREFIX")
-                                    {
-                                        phoneticPart = ruleAffixData.t_pronunciation_add + phoneticPart;
-                                    }
-                                    else
-                                    {
-                                        phoneticPart += ruleAffixData.t_pronunciation_add;
-                                    }
-                                }
-                                else
-                                {
-                                    if (ruleAffixData.type == "PREFIX")
-                                    {
-                                        phoneticPart = ruleAffixData.f_pronunciation_add + phoneticPart;
-                                    }
-                                    else
-                                    {
-                                        phoneticPart += ruleAffixData.f_pronunciation_add;
-                                    }
-                                }
-                            }
-                            else if (!string.IsNullOrEmpty(ruleAffixData.pronunciation_add))
+                            if (Regex.IsMatch(ruleAffixData.pronunciation_regex, phoneticPart))
                             {
                                 if (ruleAffixData.type == "PREFIX")
                                 {
-                                    phoneticPart = ruleAffixData.pronunciation_add + phoneticPart;
+                                    phoneticPart = ruleAffixData.t_pronunciation_add + phoneticPart;
                                 }
                                 else
                                 {
-                                    phoneticPart += ruleAffixData.pronunciation_add;
+                                    phoneticPart += ruleAffixData.t_pronunciation_add;
                                 }
-
+                            }
+                            else
+                            {
+                                if (ruleAffixData.type == "PREFIX")
+                                {
+                                    phoneticPart = ruleAffixData.f_pronunciation_add + phoneticPart;
+                                }
+                                else
+                                {
+                                    phoneticPart += ruleAffixData.f_pronunciation_add;
+                                }
                             }
                         }
-                        phonetic.Append(phoneticPart);
+                        else if (!string.IsNullOrEmpty(ruleAffixData.pronunciation_add))
+                        {
+                            if (ruleAffixData.type == "PREFIX")
+                            {
+                                phoneticPart = ruleAffixData.pronunciation_add + phoneticPart;
+                            }
+                            else
+                            {
+                                phoneticPart += ruleAffixData.pronunciation_add;
+                            }
+
+                        }
                     }
+                    phonetic.Append(phoneticPart);
+                }
 
-                    string spelled = SpellWord(phonetic.ToString(), language.sound_map_list);
-                    Dictionary<string, Dictionary<string, string>> metadataDict = new() { { "source", new Dictionary<string, string> { { "derived_word", words } } } };
-                    JsonObject? metadata = JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(metadataDict));
+                string spelled = SpellWord(phonetic.ToString(), language.sound_map_list);
+                Dictionary<string, Dictionary<string, string>> metadataDict = new() { { "source", new Dictionary<string, string> { { "derived_word", words } } } };
+                JsonObject? metadata = JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(metadataDict));
 
 
-                    // build all of the LexiconEntries for this word.  Each English word or definition gets its own entry
-                    foreach (string eng1 in english.Split(','))
-                    {
-                        string eng = eng1.Trim();
+                // build all of the LexiconEntries for this word.  Each English word or definition gets its own entry
+                foreach (string eng1 in english.Split(','))
+                {
+                    string eng = eng1.Trim();
 #pragma warning disable IDE0028 // Simplify collection initialization
-                        LexiconEntry LexEntry = new(phonetic: phonetic.ToString(),
-                            spelled: spelled,
-                            english: eng,
-                            part_of_speech: partOfSpeech,
-                            declensions: new List<string>() { "root" },
-                            derived_word: true,
-                            declined_word: false,
-                            metadata: metadata);
+                    LexiconEntry entry = new(phonetic: phonetic.ToString(),
+                        spelled: spelled,
+                        english: eng,
+                        part_of_speech: partOfSpeech,
+                        declensions: new List<string>() { "root" },
+                        derived_word: true,
+                        declined_word: false,
+                        metadata: metadata);
 #pragma warning restore IDE0028 // Simplify collection initialization
-                        string wm_english = eng.Replace(' ', '_');
-                        wordMap.Add(wm_english, LexEntry);
-                        wordMapTuple.Add((wm_english, partOfSpeech), entry);
-                        lexiconFragment.Add(entry);
-                    }
+                    string wm_english = eng.Replace(' ', '_');
+                    _ = wordMap.TryAdd(wm_english, entry);
+                    _ = wordMapTuple.TryAdd((wm_english, partOfSpeech), entry);
+                    lexiconFragment.Add(entry);
                 }
             }
 
@@ -732,9 +737,9 @@ namespace ConlangJson
             return xKey.CompareTo(yKey);
         }
 
-        [GeneratedRegex(@"$1 $2")]
+        [GeneratedRegex(@"([a-z]+)-([a-z]+)")]
         private static partial Regex ConvertVulgarlangCompoundWordRegex();
-        [GeneratedRegex("n")]
+        [GeneratedRegex(@"\s*\n\w*\s*")]
         private static partial Regex RemoveNounGenderRegex();
     }
 }
