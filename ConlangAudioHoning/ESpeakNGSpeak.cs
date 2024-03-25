@@ -66,6 +66,13 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
+            bool removeDerivedWords = false;
+            if(!LanguageDescription.derived)
+            {
+                ConlangUtilities.DeriveLexicon(LanguageDescription);
+                removeDerivedWords = true;
+            }
+
             bool removeDeclinedWord = false;
             if (!LanguageDescription.declined)
             {
@@ -149,6 +156,10 @@ namespace ConlangAudioHoning
             if (removeDeclinedWord)
             {
                 ConlangUtilities.RemoveDeclinedEntries(LanguageDescription);
+            }
+            if (removeDerivedWords)
+            {
+                ConlangUtilities.RemoveDerivedEntries(LanguageDescription);
             }
         }
 
