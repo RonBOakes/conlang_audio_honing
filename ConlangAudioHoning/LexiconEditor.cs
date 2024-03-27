@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using ConlangAudioHoning;
 using ConlangJson;
 using Microsoft.VisualBasic;
 using System;
@@ -24,18 +25,23 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LanguageEditor
 {
-    internal class LexiconEditor : UserControl
+    internal class LexiconEditor : Form
     {
         private static Size controlSize = new(850, 140);
 
-        private static List<SoundMap>? _soundMapList;
+        private List<SoundMap>? _soundMapList;
         private string[]? _partOfSpeechList;
 
         private LexiconEntry? _lexiconEntry;
         private bool dirty = false;
+        public bool LexiconEntrySaved
+        {
+            get; set;
+        }
 
         public LexiconEntry LexiconEntry
         {
@@ -88,10 +94,40 @@ namespace LanguageEditor
         private CheckBox ckb_declinedWord;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public LexiconEditor()
+        public LexiconEditor(LexiconEntry? lexiconEntry = null, List<string>? partOfSpeechList = null, List<SoundMap>? soundMapList = null)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
+            if (lexiconEntry == null)
+            {
+                LexiconEntry = new LexiconEntry();
+            }
+            else
+            { 
+                LexiconEntry = lexiconEntry;
+            }
+
+            if(partOfSpeechList == null)
+            {
+                _partOfSpeechList = new string[0];
+            }
+            else
+            {
+                _partOfSpeechList = [..partOfSpeechList];
+            }
+
+            if(soundMapList == null)
+            {
+                _soundMapList = new List<SoundMap>();
+            }
+            else
+            {
+                _soundMapList = soundMapList;
+            }
+
             InitializeComponent();
+
+            dirty = false;
+            LexiconEntrySaved = false;
         }
 
         internal List<string> PartOfSpeechList
@@ -109,7 +145,7 @@ namespace LanguageEditor
             }
         }
 
-        internal static List<SoundMap> SoundMapList
+        internal List<SoundMap> SoundMapList
         {
             set
             {
@@ -161,9 +197,12 @@ namespace LanguageEditor
             Label lbl_declensions;
             Label lbl_derivedWord;
             Label lbl_declinedWord;
+            MenuStrip menuStrip1;
+            ToolStripMenuItem controlsToolStripMenuItem;
+            ToolStripMenuItem saveAndCloseToolStripMenuItem;
+            ToolStripMenuItem closeWithoutSavingToolStripMenuItem;
 
             this.Size = controlSize;
-            this.BorderStyle = BorderStyle.FixedSingle;
 
             lbl_phonetic = new Label
             {
@@ -285,12 +324,51 @@ namespace LanguageEditor
                 Enabled = false
             };
             Controls.Add(ckb_declinedWord);
+
+            menuStrip1 = new MenuStrip();
+            controlsToolStripMenuItem = new ToolStripMenuItem();
+            saveAndCloseToolStripMenuItem = new ToolStripMenuItem();
+            closeWithoutSavingToolStripMenuItem = new ToolStripMenuItem();
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { controlsToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1007, 24);
+            menuStrip1.TabIndex = 7;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // controlsToolStripMenuItem
+            // 
+            controlsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveAndCloseToolStripMenuItem, closeWithoutSavingToolStripMenuItem });
+            controlsToolStripMenuItem.Name = "controlsToolStripMenuItem";
+            controlsToolStripMenuItem.Size = new Size(64, 20);
+            controlsToolStripMenuItem.Text = "Controls";
+            // 
+            // saveAndCloseToolStripMenuItem
+            // 
+            saveAndCloseToolStripMenuItem.Name = "saveAndCloseToolStripMenuItem";
+            saveAndCloseToolStripMenuItem.Size = new Size(184, 22);
+            saveAndCloseToolStripMenuItem.Text = "Save and Close";
+            saveAndCloseToolStripMenuItem.Click += SaveAndCloseToolStripMenuItem_Click;
+            // 
+            // closeWithoutSavingToolStripMenuItem
+            // 
+            closeWithoutSavingToolStripMenuItem.Name = "closeWithoutSavingToolStripMenuItem";
+            closeWithoutSavingToolStripMenuItem.Size = new Size(184, 22);
+            closeWithoutSavingToolStripMenuItem.Text = "Close without saving";
+            closeWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;
+
+
+            CharacterInsertToolStripMenuItem ciMenu = new();
+            _ = menuStrip1.Items.Add(ciMenu);
+
         }
 
         private void Txt_any_TextChanged(object? sender, EventArgs e)
         {
             dirty = true;
-            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Txt_spelled_TextChanged(object? sender, EventArgs e)
@@ -310,7 +388,6 @@ namespace LanguageEditor
                 txt_spelled.TextChanged += Txt_spelled_TextChanged;
                 txt_phonetic.TextChanged += Txt_phonetic_TextChanged;
                 dirty = true;
-                Changed?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -331,10 +408,19 @@ namespace LanguageEditor
                 txt_spelled.TextChanged += Txt_spelled_TextChanged;
                 txt_phonetic.TextChanged += Txt_phonetic_TextChanged;
                 dirty = true;
-                Changed?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        public event EventHandler Changed;
+        private void SaveAndCloseToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            LexiconEntrySaved = true;
+            this.Close();
+        }
+
+        private void CloseWithoutSavingToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            LexiconEntrySaved = false;
+            this.Close();
+        }
     }
 }
