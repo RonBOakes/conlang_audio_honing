@@ -2610,13 +2610,13 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void editLexiconToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EditLexiconToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if(languageDescription == null)
             {
                 return;
             }
-            LexiconEditor lexiconEditor = new LexiconEditor(languageDescription.lexicon, languageDescription.part_of_speech_list, languageDescription.sound_map_list);
+            LexiconEditor lexiconEditor = new(languageDescription.lexicon, languageDescription.part_of_speech_list, languageDescription.sound_map_list);
             _ = lexiconEditor.ShowDialog();
             if(lexiconEditor.Saved)
             {

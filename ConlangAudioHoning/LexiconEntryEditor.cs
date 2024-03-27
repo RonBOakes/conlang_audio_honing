@@ -66,7 +66,7 @@ namespace ConlangAudioHoning
                     _lexiconEntry.declined_word = ckb_declinedWord.Checked;
                 }
                 dirty = false;
-                return new LexiconEntry();
+                return _lexiconEntry;
             }
             set
             {

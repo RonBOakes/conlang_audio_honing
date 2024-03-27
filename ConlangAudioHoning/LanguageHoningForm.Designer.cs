@@ -926,7 +926,7 @@
             editLexiconToolStripMenuItem.Name = "editLexiconToolStripMenuItem";
             editLexiconToolStripMenuItem.Size = new Size(180, 22);
             editLexiconToolStripMenuItem.Text = "Edit Lexicon";
-            editLexiconToolStripMenuItem.Click += editLexiconToolStripMenuItem_Click;
+            editLexiconToolStripMenuItem.Click += EditLexiconToolStripMenuItem_Click;
             // 
             // LanguageHoningForm
             // 

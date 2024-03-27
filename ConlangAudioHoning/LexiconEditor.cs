@@ -19,7 +19,7 @@ namespace ConlangAudioHoning
     {
         private List<LexiconEntry> lexiconEntries;
 
-        private Dictionary<(string,string,string), LexiconEntry> lexiconMap;
+        private readonly Dictionary<(string,string,string), LexiconEntry> lexiconMap;
 
         /// <summary>
         /// The lexicon being edited in this form.
@@ -133,7 +133,7 @@ namespace ConlangAudioHoning
                 string? selectedWord = lbxLexicon.SelectedItem.ToString();
                 if (!string.IsNullOrEmpty(selectedWord))
                 {
-                    Match wordMatch = Regex.Match(selectedWord, @"^\s*(\S+)\s+\((\S+):\s+(\S+)\)\s*$");
+                    Match wordMatch = EditorEntryRegex().Match(selectedWord);
                     if (wordMatch.Success)
                     {
                         string conlang = wordMatch.Groups[1].Value;
@@ -142,7 +142,7 @@ namespace ConlangAudioHoning
 
                         LexiconEntry word = lexiconMap[(conlang, english, partOfSpeech)];
                         
-                        LexiconEntryEditor editor = new LexiconEntryEditor(word,PartOfSpeechList,SoundMapList);
+                        LexiconEntryEditor editor = new(word,PartOfSpeechList,SoundMapList);
                         _ = editor.ShowDialog();
                         if(editor.LexiconEntrySaved)
                         {
@@ -163,5 +163,8 @@ namespace ConlangAudioHoning
                 }
             }
         }
+
+        [GeneratedRegex(@"^\s*(\S+)\s+\((\S+):\s+(\S+)\)\s*$")]
+        private static partial Regex EditorEntryRegex();
     }
 }
