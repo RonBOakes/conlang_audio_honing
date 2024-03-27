@@ -182,7 +182,7 @@
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "SoundMapListEditor";
-            Text = "Spelling/Pronounciation List Editor";
+            Text = "Spelling/Pronunciation List Editor";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
