@@ -2593,12 +2593,12 @@ namespace ConlangAudioHoning
 
         private void DeriveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
 
-            if(languageDescription.derived)
+            if (languageDescription.derived)
             {
                 ConlangUtilities.RemoveDerivedEntries(languageDescription);
                 deriveToolStripMenuItem.Text = "Derive Words";
@@ -2607,6 +2607,20 @@ namespace ConlangAudioHoning
             {
                 ConlangUtilities.DeriveLexicon(languageDescription);
                 deriveToolStripMenuItem.Text = "Remove Derived Words";
+            }
+        }
+
+        private void editLexiconToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(languageDescription == null)
+            {
+                return;
+            }
+            LexiconEditor lexiconEditor = new LexiconEditor(languageDescription.lexicon, languageDescription.part_of_speech_list, languageDescription.sound_map_list);
+            _ = lexiconEditor.ShowDialog();
+            if(lexiconEditor.Saved)
+            {
+                languageDescription.lexicon = lexiconEditor.Lexicon;
             }
         }
     }

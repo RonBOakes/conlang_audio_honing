@@ -23,7 +23,7 @@ namespace ConlangAudioHoning
     ///  Exception for events that occur within the ConlangAudioHoning program that do 
     ///  not have another exception defined for them.
     /// </summary>
-    internal class ConlangAudioHoningException : Exception
+    public class ConlangAudioHoningException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the ConlangAudioHoningException class with a specified error message.

@@ -112,6 +112,7 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
+            editLexiconToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -189,7 +190,7 @@
             // 
             // languageToolStripMenuItem
             // 
-            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { declineToolStripMenuItem, deriveToolStripMenuItem });
+            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem });
             languageToolStripMenuItem.Name = "languageToolStripMenuItem";
             languageToolStripMenuItem.Size = new Size(71, 20);
             languageToolStripMenuItem.Text = "Language";
@@ -920,6 +921,13 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += Btn_updateSoundMapList_Click;
             // 
+            // editLexiconToolStripMenuItem
+            // 
+            editLexiconToolStripMenuItem.Name = "editLexiconToolStripMenuItem";
+            editLexiconToolStripMenuItem.Size = new Size(180, 22);
+            editLexiconToolStripMenuItem.Text = "Edit Lexicon";
+            editLexiconToolStripMenuItem.Click += editLexiconToolStripMenuItem_Click;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1061,5 +1069,6 @@
         private Label lbl_diphthongStartVowel;
         private ComboBox cbx_dipthongStartVowel;
         private RadioButton rbn_diphthongReplacement;
+        private ToolStripMenuItem editLexiconToolStripMenuItem;
     }
 }
