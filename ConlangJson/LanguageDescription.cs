@@ -377,6 +377,15 @@ namespace ConlangJson
         }
 
         /// <summary>
+        /// Refreshes the order of the lexicon.  This is needed if LexiconEntry.LexicalOrderList is changed.
+        /// </summary>
+        public void RefreshLexiconOrder()
+        {
+            SortedSet<LexiconEntry> oldLexicon = lexicon;
+            lexicon = [.. oldLexicon];
+        }
+
+        /// <summary>
         /// This array of objects contains the objects described below that are used to map between 
         /// the phonetic representation of the conlang and its Romanized or Latinized representation using the Latin alphabet.  
         /// Without this entry, tools cannot translate between phonetic and Latin formats.  This list is traversed in the order 

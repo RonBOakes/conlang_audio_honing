@@ -39,8 +39,10 @@
             toolStripSeparator1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
             languageToolStripMenuItem = new ToolStripMenuItem();
+            editLexiconToolStripMenuItem = new ToolStripMenuItem();
             declineToolStripMenuItem = new ToolStripMenuItem();
             deriveToolStripMenuItem = new ToolStripMenuItem();
+            setAndAdjustLexicalOrderToolStripMenuItem = new ToolStripMenuItem();
             utilitiesToolStripMenuItem = new ToolStripMenuItem();
             displayGlossOfSampleTextToolStripMenuItem = new ToolStripMenuItem();
             printSampleTextSummaryToolStripMenuItem = new ToolStripMenuItem();
@@ -112,7 +114,6 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
-            editLexiconToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -190,24 +191,38 @@
             // 
             // languageToolStripMenuItem
             // 
-            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem });
+            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem, setAndAdjustLexicalOrderToolStripMenuItem });
             languageToolStripMenuItem.Name = "languageToolStripMenuItem";
             languageToolStripMenuItem.Size = new Size(71, 20);
             languageToolStripMenuItem.Text = "Language";
             // 
+            // editLexiconToolStripMenuItem
+            // 
+            editLexiconToolStripMenuItem.Name = "editLexiconToolStripMenuItem";
+            editLexiconToolStripMenuItem.Size = new Size(222, 22);
+            editLexiconToolStripMenuItem.Text = "Edit Lexicon";
+            editLexiconToolStripMenuItem.Click += EditLexiconToolStripMenuItem_Click;
+            // 
             // declineToolStripMenuItem
             // 
             declineToolStripMenuItem.Name = "declineToolStripMenuItem";
-            declineToolStripMenuItem.Size = new Size(180, 22);
+            declineToolStripMenuItem.Size = new Size(222, 22);
             declineToolStripMenuItem.Text = "Decline Language";
             declineToolStripMenuItem.Click += DeclineToolStripMenuItem_Click;
             // 
             // deriveToolStripMenuItem
             // 
             deriveToolStripMenuItem.Name = "deriveToolStripMenuItem";
-            deriveToolStripMenuItem.Size = new Size(180, 22);
+            deriveToolStripMenuItem.Size = new Size(222, 22);
             deriveToolStripMenuItem.Text = "Derive Words";
             deriveToolStripMenuItem.Click += DeriveToolStripMenuItem_Click;
+            // 
+            // setAndAdjustLexicalOrderToolStripMenuItem
+            // 
+            setAndAdjustLexicalOrderToolStripMenuItem.Name = "setAndAdjustLexicalOrderToolStripMenuItem";
+            setAndAdjustLexicalOrderToolStripMenuItem.Size = new Size(222, 22);
+            setAndAdjustLexicalOrderToolStripMenuItem.Text = "Set and Adjust Lexical Order";
+            setAndAdjustLexicalOrderToolStripMenuItem.Click += SetAndAdjustLexicalOrderToolStripMenuItem_Click;
             // 
             // utilitiesToolStripMenuItem
             // 
@@ -921,13 +936,6 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += Btn_updateSoundMapList_Click;
             // 
-            // editLexiconToolStripMenuItem
-            // 
-            editLexiconToolStripMenuItem.Name = "editLexiconToolStripMenuItem";
-            editLexiconToolStripMenuItem.Size = new Size(180, 22);
-            editLexiconToolStripMenuItem.Text = "Edit Lexicon";
-            editLexiconToolStripMenuItem.Click += EditLexiconToolStripMenuItem_Click;
-            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1070,5 +1078,6 @@
         private ComboBox cbx_dipthongStartVowel;
         private RadioButton rbn_diphthongReplacement;
         private ToolStripMenuItem editLexiconToolStripMenuItem;
+        private ToolStripMenuItem setAndAdjustLexicalOrderToolStripMenuItem;
     }
 }

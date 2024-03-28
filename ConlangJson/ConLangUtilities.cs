@@ -96,7 +96,7 @@ namespace ConlangJson
         {
             // Safety check - never decline a word already marked as declined, or a word with
             // a source metadata entry
-            if ((word.declined_word != null) && ((bool)word.declined_word))
+            if (word.declined_word)
             {
                 return [];
             }
@@ -110,10 +110,7 @@ namespace ConlangJson
             string phonetic = word.phonetic;
             string partOfSpeech = word.part_of_speech;
             string english = word.english;
-            if (word.derived_word != null)
-            {
-                derivedWord = (bool)word.derived_word;
-            }
+            derivedWord = word.derived_word;
             LexiconEntry wordSourceData = word.copy();
 
             // Search the affixMap for a matching part of speech.  If one is found then
@@ -175,7 +172,7 @@ namespace ConlangJson
             {
                 addLexicon.AddRange(DeclineWord(word, language.affix_map, language.sound_map_list));
             }
-            foreach(LexiconEntry word in addLexicon)
+            foreach (LexiconEntry word in addLexicon)
             {
                 language.lexicon.Add(word);
             }
@@ -404,11 +401,7 @@ namespace ConlangJson
             SortedSet<LexiconEntry> cleanLexicon = [];
             foreach (LexiconEntry word in language.lexicon)
             {
-                if (word.declined_word == null)
-                {
-                    cleanLexicon.Add(word);
-                }
-                else if (!(bool)word.declined_word)
+                if (!word.declined_word)
                 {
                     cleanLexicon.Add(word);
                 }
@@ -428,11 +421,7 @@ namespace ConlangJson
             SortedSet<LexiconEntry> cleanLexicon = [];
             foreach (LexiconEntry word in language.lexicon)
             {
-                if (word.derived_word == null)
-                {
-                    cleanLexicon.Add(word);
-                }
-                else if (!(bool)word.derived_word)
+                if (!word.derived_word)
                 {
                     cleanLexicon.Add(word);
                 }

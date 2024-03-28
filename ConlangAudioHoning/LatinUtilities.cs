@@ -167,7 +167,7 @@ namespace ConlangAudioHoning
                     line = sampleTextReader.ReadLine();
                     if ((line != null) && (!line.Trim().Equals(string.Empty)))
                     {
-                        foreach (string wordIterator in line.Split(null))
+                        foreach (string wordIterator in line.Split())
                         {
                             string word = wordIterator.Trim();
                             Match wordMatch = MyRegex().Match(word);

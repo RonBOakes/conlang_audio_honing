@@ -76,8 +76,8 @@ namespace ConlangAudioHoning
                 txt_english.Text = _lexiconEntry.english;
                 cmb_partOfSpeech.SelectedItem = _lexiconEntry.part_of_speech;
                 LoadDeclensionList();
-                ckb_derivedWord.Checked = _lexiconEntry.derived_word ?? false;
-                ckb_declinedWord.Checked = _lexiconEntry.declined_word ?? false;
+                ckb_derivedWord.Checked = _lexiconEntry.derived_word;
+                ckb_declinedWord.Checked = _lexiconEntry.declined_word;
                 dirty = false;
             }
         }

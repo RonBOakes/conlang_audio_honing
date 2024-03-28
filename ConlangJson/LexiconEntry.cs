@@ -56,7 +56,7 @@ namespace ConlangJson
         /// information regarding the word's history and it's source.  There is no exact format specified for this.  Programs 
         /// should not delete or alter metadata created by other programs but may add their own metadata or alter their metadata 
         /// to update their content.<br/>Optional, Recommended.</param>
-        public LexiconEntry(string phonetic, string spelled, string english, string part_of_speech, List<string> declensions, bool? derived_word, bool? declined_word, JsonObject? metadata)
+        public LexiconEntry(string phonetic, string spelled, string english, string part_of_speech, List<string> declensions, bool derived_word, bool declined_word, JsonObject? metadata)
         {
             this.phonetic = phonetic;
             this.spelled = spelled;
@@ -130,7 +130,7 @@ namespace ConlangJson
         /// words in the derived_word_list with the aid of the affixes in the derivation_affix_map}.<br/>Required.
         /// </summary>
 #pragma warning disable IDE1006 // Naming Styles
-        public bool? derived_word { get; set; }
+        public bool derived_word { get; set; }
 #pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace ConlangJson
         /// the rules in the affix_map.<br/>Required.
         /// </summary>
 #pragma warning disable IDE1006 // Naming Styles
-        public bool? declined_word
+        public bool declined_word
 #pragma warning restore IDE1006 // Naming Styles
         { get; set; }
 
@@ -165,7 +165,7 @@ namespace ConlangJson
         /// <summary>
         /// Lexical order for sorting LexiconEntries by their spelled values.
         /// </summary>
-        internal static List<string> LexicalOrderList
+        public static List<string> LexicalOrderList
         {
             get
             {
@@ -280,7 +280,47 @@ namespace ConlangJson
                 return partOfSpeechResult;
             }
 
-            return englishComp.Compare(this, other);
+            int englishResult = englishComp.Compare(this, other);
+            if (englishResult != 0)
+            {
+                return englishResult;
+            }
+
+            if(phonetic != other.phonetic)
+            {
+                return string.Compare(phonetic, other.phonetic);
+            }
+
+            if(derived_word != other.derived_word)
+            {
+                if(derived_word)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+
+            if(declined_word != other.declined_word)
+            {
+                if(declined_word)
+                { 
+                    return -1; 
+                }
+                else
+                { 
+                    return 1; 
+                }
+            }
+
+            if(declensions != other.declensions)
+            {
+                return string.Compare(JsonSerializer.Serialize<List<string>>(declensions), JsonSerializer.Serialize<List<string>>(other.declensions));
+            }
+
+            return string.Compare(JsonSerializer.Serialize<JsonObject>(metadata), JsonSerializer.Serialize<JsonObject>(other.metadata));
 
         }
 
@@ -355,7 +395,7 @@ namespace ConlangJson
 
                     if ((evalChar != "ˈ") && evalChar != " ")
                     {
-                        retVal += lexicalValue(evalChar) * Math.Pow(10.0, charIndex);
+                        retVal += LexicalValue(evalChar) * Math.Pow(10.0, charIndex);
                     }
                 }
 
@@ -363,9 +403,7 @@ namespace ConlangJson
                 return retVal;
             }
 
-#pragma warning disable IDE1006 // Naming Styles
-            private static double lexicalValue(string value)
-#pragma warning restore IDE1006 // Naming Styles
+            private static double LexicalValue(string value)
             {
                 string charBase = value[..1];
                 double lexVal;

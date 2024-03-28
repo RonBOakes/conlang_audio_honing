@@ -2608,16 +2608,26 @@ namespace ConlangAudioHoning
 
         private void EditLexiconToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
             LexiconEditor lexiconEditor = new(languageDescription.lexicon, languageDescription.part_of_speech_list, languageDescription.sound_map_list);
             _ = lexiconEditor.ShowDialog();
-            if(lexiconEditor.Saved)
+            if (lexiconEditor.Saved)
             {
                 languageDescription.lexicon = lexiconEditor.Lexicon;
             }
+        }
+
+        private void SetAndAdjustLexicalOrderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(languageDescription == null)
+            {
+                return;
+            }
+            LexicalOrderEditor editor = new(languageDescription, true);
+            _ = editor.ShowDialog();
         }
     }
 }
