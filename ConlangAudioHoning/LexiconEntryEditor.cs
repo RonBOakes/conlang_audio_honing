@@ -38,6 +38,9 @@ namespace ConlangAudioHoning
 
         private LexiconEntry? _lexiconEntry;
         private bool dirty = false;
+
+        private TextBox? _lastFocused;
+
         public bool LexiconEntrySaved
         {
             get; set;
@@ -133,6 +136,7 @@ namespace ConlangAudioHoning
 
             dirty = false;
             LexiconEntrySaved = false;
+            _lastFocused = null;
         }
 
         internal List<string> PartOfSpeechList
@@ -223,6 +227,7 @@ namespace ConlangAudioHoning
                 Size = new Size(200, 15)
             };
             txt_phonetic.TextChanged += Txt_phonetic_TextChanged;
+            txt_phonetic.GotFocus += Txt_GotFocus;
             Controls.Add(txt_phonetic);
 
             lbl_spelled = new Label
@@ -240,6 +245,7 @@ namespace ConlangAudioHoning
                 Size = new Size(200, 15)
             };
             txt_spelled.TextChanged += Txt_spelled_TextChanged;
+            txt_spelled.GotFocus += Txt_GotFocus;
             Controls.Add(txt_spelled);
 
             lbl_english = new Label
@@ -257,6 +263,7 @@ namespace ConlangAudioHoning
                 Size = new Size(200, 15)
             };
             txt_english.TextChanged += Txt_any_TextChanged;
+            txt_english.GotFocus += Txt_GotFocus;
             Controls.Add(txt_english);
 
             lbl_partOfSpeech = new Label
@@ -374,7 +381,10 @@ namespace ConlangAudioHoning
 
             CharacterInsertToolStripMenuItem ciMenu = new();
             _ = menuStrip1.Items.Add(ciMenu);
-            
+
+            ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
+
+
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "SoundMapListEditor";
@@ -441,5 +451,44 @@ namespace ConlangAudioHoning
             LexiconEntrySaved = false;
             this.Close();
         }
+
+        private void CharInsetToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            if (sender == null)
+            {
+                return;
+            }
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            if (String.IsNullOrEmpty(menuItem.Text))
+            {
+                return;
+            }
+            string charToInsert = menuItem.Text.Split()[0];
+            AppendToFocusedBox(charToInsert);
+        }
+
+        /// <summary>
+        /// Append the supplied string to which of the four text boxes that most recently
+        /// had focus.
+        /// </summary>
+        /// <param name="textToAppend">string containing the text to append.</param>
+        public void AppendToFocusedBox(string textToAppend)
+        {
+            if ((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
+            {
+                _lastFocused.Text += textToAppend;
+                _lastFocused.Select(_lastFocused.Text.Length, 0);
+                _ = _lastFocused.Focus();
+            }
+        }
+
+        private void Txt_GotFocus(Object? sender, EventArgs e)
+        {
+            if (sender is TextBox box)
+            {
+                _lastFocused = box;
+            }
+        }
+
     }
 }

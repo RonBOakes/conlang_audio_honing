@@ -76,11 +76,6 @@ namespace ConlangAudioHoning
             }
         }
 
-        private Label lbl_phoneme;
-        private Label lbl_pronunciationRegex;
-        private Label lbl_romanization;
-        private Label lbl_spellingRegex;
-
         private TextBox txt_phoneme;
         private TextBox txt_pronunciationRegex;
         private TextBox txt_romanization;
@@ -135,6 +130,11 @@ namespace ConlangAudioHoning
 
         private void InitializeComponent()
         {
+            Label lbl_phoneme;
+            Label lbl_pronunciationRegex;
+            Label lbl_romanization;
+            Label lbl_spellingRegex;
+
             this.Size = controlSize;
             this.BorderStyle = BorderStyle.FixedSingle;
 
@@ -152,7 +152,7 @@ namespace ConlangAudioHoning
                 Location = new Point(205, 5),
                 Size = new Size(200, 15)
             };
-            txt_phoneme.GotFocus += txt_phoneme_GotFocus;
+            txt_phoneme.GotFocus += Txt_phoneme_GotFocus;
             Controls.Add(txt_phoneme);
 
             lbl_pronunciationRegex = new Label
@@ -169,7 +169,7 @@ namespace ConlangAudioHoning
                 Location = new Point(615, 5),
                 Size = new Size(200, 15)
             };
-            txt_pronunciationRegex.GotFocus += txt_pronunciationRegex_GotFocus;
+            txt_pronunciationRegex.GotFocus += Txt_pronunciationRegex_GotFocus;
             Controls.Add(txt_pronunciationRegex);
 
             lbl_romanization = new Label
@@ -186,7 +186,7 @@ namespace ConlangAudioHoning
                 Location = new Point(205, 30),
                 Size = new Size(200, 15)
             };
-            txt_romanization.GotFocus += txt_romanization_GotFocus;
+            txt_romanization.GotFocus += Txt_romanization_GotFocus;
             Controls.Add(txt_romanization);
 
             lbl_spellingRegex = new Label
@@ -203,26 +203,26 @@ namespace ConlangAudioHoning
                 Location = new Point(615, 30),
                 Size = new Size(200, 15)
             };
-            txt_spellingRegex.GotFocus += txt_spellingRegex_GotFocus;
+            txt_spellingRegex.GotFocus += Txt_spellingRegex_GotFocus;
             Controls.Add(txt_spellingRegex);
         }
 
-        private void txt_phoneme_GotFocus(Object? sender, EventArgs e)
+        private void Txt_phoneme_GotFocus(Object? sender, EventArgs e)
         {
             _lastFocused = this.txt_phoneme;
         }
 
-        private void txt_pronunciationRegex_GotFocus(Object? sender, EventArgs e)
+        private void Txt_pronunciationRegex_GotFocus(Object? sender, EventArgs e)
         {
             _lastFocused = this.txt_pronunciationRegex;
         }
 
-        private void txt_romanization_GotFocus(Object? sender, EventArgs e)
+        private void Txt_romanization_GotFocus(Object? sender, EventArgs e)
         {
             _lastFocused = this.txt_romanization;
         }
 
-        private void txt_spellingRegex_GotFocus(Object? sender, EventArgs e)
+        private void Txt_spellingRegex_GotFocus(Object? sender, EventArgs e)
         {
             _lastFocused = this.txt_spellingRegex;
         }
