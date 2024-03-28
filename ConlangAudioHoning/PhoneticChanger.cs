@@ -157,7 +157,7 @@ namespace ConlangAudioHoning
             }
 
             // Update the Affix Map
-            foreach(string partOfSpeech in Language.affix_map.Keys)
+            foreach (string partOfSpeech in Language.affix_map.Keys)
             {
                 //foreach(List<Dictionary<string, List<Dictionary<string, Affix>>>> byPartOfSpeech in Language.affix_map[partOfSpeech])
                 foreach (var byPartOfSpeech in Language.affix_map[partOfSpeech])
@@ -260,10 +260,10 @@ namespace ConlangAudioHoning
             }
 
             // Update the derivational affix map
-            foreach(string derivation in Language.derivational_affix_map.Keys)
+            foreach (string derivation in Language.derivational_affix_map.Keys)
             {
                 DerivationalAffix affix = Language.derivational_affix_map[derivation];
-                if(!string.IsNullOrEmpty(affix.pronunciation_add))
+                if (!string.IsNullOrEmpty(affix.pronunciation_add))
                 {
                     // Preserve vowel diphthongs before doing the main replacement
                     Dictionary<string, string> diphthongReplacementMap = [];
@@ -483,6 +483,303 @@ namespace ConlangAudioHoning
                     SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
                 }
             }
+
+            Dictionary<(string, string),string> reverseInterimReplacementMap = new Dictionary<(string, string),string>();
+            foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+            {
+                reverseInterimReplacementMap.Add(interimReplacementMap[interimReplacementSymbol], interimReplacementSymbol);
+            }
+
+#pragma warning disable S1481 // Unused local variables should be removed
+            // Update the Affix Map
+            foreach (string partOfSpeech in Language.affix_map.Keys)
+            {
+                foreach (var byPartOfSpeech in Language.affix_map[partOfSpeech])
+                {
+                    foreach (string affixType in byPartOfSpeech.Keys)
+                    {
+                        foreach (var byAffixType in byPartOfSpeech[affixType])
+                        {
+                            foreach (string declension in byAffixType.Keys)
+                            {
+                                Affix affix = byAffixType[declension];
+
+                                if (!string.IsNullOrEmpty(affix.pronunciation_add))
+                                {
+                                    foreach ((string oldPhoneme, string newPhoneme) in changeList)
+                                    {
+                                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme,newPhoneme)];
+                                        string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+                                        // Preserve vowel diphthongs before doing the main replacement
+                                        Dictionary<string, string> diphthongReplacementMap = [];
+                                        int ipaReplacementIndex = 0;
+                                        foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                                        {
+                                            if (!diphthong.Equals(oldPhoneme))
+                                            {
+                                                string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                                                diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                                                affix.pronunciation_add = affix.pronunciation_add.Replace(diphthong, ipaReplacement);
+                                            }
+                                        }
+                                        // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                                        affix.pronunciation_add = Regex.Replace(affix.pronunciation_add, replacementPattern, interimReplacementSymbol);
+                                        // Put the replaced diphthongs back
+                                        foreach (string diphthong in diphthongReplacementMap.Keys)
+                                        {
+                                            affix.pronunciation_add = affix.pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
+                                        }
+                                    }
+                                    foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                                    {
+                                        (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
+                                        affix.pronunciation_add = affix.pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
+                                    }
+                                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.sound_map_list);
+                                }
+                                if (!string.IsNullOrEmpty(affix.pronunciation_regex))
+                                {
+                                    foreach ((string oldPhoneme, string newPhoneme) in changeList)
+                                    {
+                                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme, newPhoneme)];
+                                        string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+                                        // Preserve vowel diphthongs before doing the main replacement
+                                        Dictionary<string, string> diphthongReplacementMap = [];
+                                        int ipaReplacementIndex = 0;
+                                        foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                                        {
+                                            if (!diphthong.Equals(oldPhoneme))
+                                            {
+                                                string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                                                diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                                                affix.pronunciation_regex = affix.pronunciation_regex.Replace(diphthong, ipaReplacement);
+                                            }
+                                        }
+                                        // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                                        affix.pronunciation_regex = Regex.Replace(affix.pronunciation_regex, replacementPattern, interimReplacementSymbol);
+                                        // Put the replaced diphthongs back
+                                        foreach (string diphthong in diphthongReplacementMap.Keys)
+                                        {
+                                            affix.pronunciation_regex = affix.pronunciation_regex.Replace(diphthongReplacementMap[diphthong], diphthong);
+                                        }
+                                    }
+                                    foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                                    {
+                                        (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
+                                        affix.pronunciation_regex = affix.pronunciation_regex.Replace(interimReplacementSymbol, newPhoneme);
+                                    }
+                                }
+                                if (!string.IsNullOrEmpty(affix.t_pronunciation_add))
+                                {
+                                    foreach ((string oldPhoneme, string newPhoneme) in changeList)
+                                    {
+                                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme, newPhoneme)];
+                                        string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+                                        // Preserve vowel diphthongs before doing the main replacement
+                                        Dictionary<string, string> diphthongReplacementMap = [];
+                                        int ipaReplacementIndex = 0;
+                                        foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                                        {
+                                            if (!diphthong.Equals(oldPhoneme))
+                                            {
+                                                string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                                                diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                                                affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(diphthong, ipaReplacement);
+                                            }
+                                        }
+                                        // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                                        affix.t_pronunciation_add = Regex.Replace(affix.t_pronunciation_add, replacementPattern, interimReplacementSymbol);
+                                        // Put the replaced diphthongs back
+                                        foreach (string diphthong in diphthongReplacementMap.Keys)
+                                        {
+                                            affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
+                                        }
+                                    }
+                                    foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                                    {
+                                        (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
+                                        affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
+                                    }
+                                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.sound_map_list);
+                                }
+                                if (!string.IsNullOrEmpty(affix.f_pronunciation_add))
+                                {
+                                    foreach ((string oldPhoneme, string newPhoneme) in changeList)
+                                    {
+                                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme, newPhoneme)];
+                                        string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+                                        // Preserve vowel diphthongs before doing the main replacement
+                                        Dictionary<string, string> diphthongReplacementMap = [];
+                                        int ipaReplacementIndex = 0;
+                                        foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                                        {
+                                            if (!diphthong.Equals(oldPhoneme))
+                                            {
+                                                string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                                                diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                                                affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(diphthong, ipaReplacement);
+                                            }
+                                        }
+                                        // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                                        affix.f_pronunciation_add = Regex.Replace(affix.f_pronunciation_add, replacementPattern, interimReplacementSymbol);
+                                        // Put the replaced diphthongs back
+                                        foreach (string diphthong in diphthongReplacementMap.Keys)
+                                        {
+                                            affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
+                                        }
+                                    }
+                                    foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                                    {
+                                        (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
+                                        affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
+                                    }
+                                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.sound_map_list);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Update the derivational affix map
+            foreach (string derivation in Language.derivational_affix_map.Keys)
+            {
+                DerivationalAffix affix = Language.derivational_affix_map[derivation];
+
+                if (!string.IsNullOrEmpty(affix.pronunciation_add))
+                {
+                    foreach ((string oldPhoneme, string newPhoneme) in changeList)
+                    {
+                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme, newPhoneme)];
+                        string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+                        // Preserve vowel diphthongs before doing the main replacement
+                        Dictionary<string, string> diphthongReplacementMap = [];
+                        int ipaReplacementIndex = 0;
+                        foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                        {
+                            if (!diphthong.Equals(oldPhoneme))
+                            {
+                                string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                                diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                                affix.pronunciation_add = affix.pronunciation_add.Replace(diphthong, ipaReplacement);
+                            }
+                        }
+                        // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                        affix.pronunciation_add = Regex.Replace(affix.pronunciation_add, replacementPattern, interimReplacementSymbol);
+                        // Put the replaced diphthongs back
+                        foreach (string diphthong in diphthongReplacementMap.Keys)
+                        {
+                            affix.pronunciation_add = affix.pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
+                        }
+                    }
+                    foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                    {
+                        (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
+                        affix.pronunciation_add = affix.pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
+                    }
+                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.sound_map_list);
+                }
+                if (!string.IsNullOrEmpty(affix.pronunciation_regex))
+                {
+                    foreach ((string oldPhoneme, string newPhoneme) in changeList)
+                    {
+                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme, newPhoneme)];
+                        string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+                        // Preserve vowel diphthongs before doing the main replacement
+                        Dictionary<string, string> diphthongReplacementMap = [];
+                        int ipaReplacementIndex = 0;
+                        foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                        {
+                            if (!diphthong.Equals(oldPhoneme))
+                            {
+                                string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                                diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                                affix.pronunciation_regex = affix.pronunciation_regex.Replace(diphthong, ipaReplacement);
+                            }
+                        }
+                        // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                        affix.pronunciation_regex = Regex.Replace(affix.pronunciation_regex, replacementPattern, interimReplacementSymbol);
+                        // Put the replaced diphthongs back
+                        foreach (string diphthong in diphthongReplacementMap.Keys)
+                        {
+                            affix.pronunciation_regex = affix.pronunciation_regex.Replace(diphthongReplacementMap[diphthong], diphthong);
+                        }
+                    }
+                    foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                    {
+                        (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
+                        affix.pronunciation_regex = affix.pronunciation_regex.Replace(interimReplacementSymbol, newPhoneme);
+                    }
+                }
+                if (!string.IsNullOrEmpty(affix.t_pronunciation_add))
+                {
+                    foreach ((string oldPhoneme, string newPhoneme) in changeList)
+                    {
+                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme, newPhoneme)];
+                        string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+                        // Preserve vowel diphthongs before doing the main replacement
+                        Dictionary<string, string> diphthongReplacementMap = [];
+                        int ipaReplacementIndex = 0;
+                        foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                        {
+                            if (!diphthong.Equals(oldPhoneme))
+                            {
+                                string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                                diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                                affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(diphthong, ipaReplacement);
+                            }
+                        }
+                        // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                        affix.t_pronunciation_add = Regex.Replace(affix.t_pronunciation_add, replacementPattern, interimReplacementSymbol);
+                        // Put the replaced diphthongs back
+                        foreach (string diphthong in diphthongReplacementMap.Keys)
+                        {
+                            affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
+                        }
+                    }
+                    foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                    {
+                        (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
+                        affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
+                    }
+                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.sound_map_list);
+                }
+                if (!string.IsNullOrEmpty(affix.f_pronunciation_add))
+                {
+                    foreach ((string oldPhoneme, string newPhoneme) in changeList)
+                    {
+                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme, newPhoneme)];
+                        string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
+                        // Preserve vowel diphthongs before doing the main replacement
+                        Dictionary<string, string> diphthongReplacementMap = [];
+                        int ipaReplacementIndex = 0;
+                        foreach (string diphthong in Language.phonetic_inventory["v_diphthongs"])
+                        {
+                            if (!diphthong.Equals(oldPhoneme))
+                            {
+                                string ipaReplacement = IpaUtilities.Ipa_replacements[ipaReplacementIndex++];
+                                diphthongReplacementMap.Add(diphthong, ipaReplacement);
+                                affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(diphthong, ipaReplacement);
+                            }
+                        }
+                        // replace all occurrences of oldPhoneme in phonetic with newPhoneme
+                        affix.f_pronunciation_add = Regex.Replace(affix.f_pronunciation_add, replacementPattern, interimReplacementSymbol);
+                        // Put the replaced diphthongs back
+                        foreach (string diphthong in diphthongReplacementMap.Keys)
+                        {
+                            affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
+                        }
+                    }
+                    foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
+                    {
+                        (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
+                        affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
+                    }
+                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.sound_map_list);
+                }
+            }
+#pragma warning restore S1481 // Unused local variables should be removed
+
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
         }
