@@ -431,7 +431,7 @@ namespace ConlangAudioHoning
             string mostRecentKey = changeHistoryKeyMap[keyList[0]];
 
             // Having (finally) found the most recent key via this convoluted method, now go through the lexicon again, and revert any changes that have it.
-            List<LexiconEntry> newLexicon = [];
+            SortedSet<LexiconEntry> newLexicon = [];
             newLexicon.Clear();
             foreach (LexiconEntry lexiconEntry in Language.lexicon)
             {
@@ -463,7 +463,6 @@ namespace ConlangAudioHoning
                     newLexicon.Add(lexiconEntry);
                 }
             }
-            newLexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
             Language.lexicon = newLexicon;
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);

@@ -45,7 +45,7 @@ namespace ConlangJson
         private List<string>? _lexical_order_list;
         private Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? _affix_map;
         private Dictionary<string, DerivationalAffix>? _derivational_affix_map;
-        private List<LexiconEntry>? _lexicon;
+        private SortedSet<LexiconEntry>? _lexicon;
         private List<string>? _derived_word_list;
         private JsonObject? _metadata;
 
@@ -436,7 +436,7 @@ namespace ConlangJson
         /// This list of objects contains the lexicon, or dictionary, of the conlang.<br/>Required.
         /// </summary>
 #pragma warning disable IDE1006 // Naming Styles
-        public List<LexiconEntry> lexicon
+        public SortedSet<LexiconEntry> lexicon
 #pragma warning restore IDE1006 // Naming Styles
         {
             get => _lexicon ?? [];

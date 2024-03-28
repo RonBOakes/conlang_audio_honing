@@ -25,7 +25,7 @@ namespace ConlangJson
     /// Defines the .NET/C# structure that corresponds to the individual lexicon entries.  Each object
     /// will encapsulate a single word in the lexicon.
     /// </summary>
-    public sealed class LexiconEntry : IEquatable<LexiconEntry>
+    public sealed class LexiconEntry : IEquatable<LexiconEntry>, IComparable<LexiconEntry>
     {
         private JsonObject? _metadata;
 
@@ -245,7 +245,47 @@ namespace ConlangJson
         }
 
         /// <summary>
-        /// Class to be used when sorting a list of LexiconEntry objects by their spelling.
+        /// Provides the string description of the Lexicon Entry
+        /// </summary>
+        /// <returns>A string containing the spelled, English and Part of Speech for this entry.</returns>
+        public override string ToString()
+        {
+            return string.Format("{0} ({1}: {2})", spelled, english, part_of_speech);
+        }
+
+        /// <summary>
+        /// Compares the current instance with another object of the same type and returns an integer that indicates 
+        /// whether the current instance precedes, follows, or occurs in the same position in the sort order as the 
+        /// other object.
+        /// </summary>
+        /// <param name="other">Other LexiconEntry to compare</param>
+        /// <returns>The comparison results as an integer.</returns>
+        /// <exception cref="ArgumentNullException">If "other" is null</exception>
+        public int CompareTo(LexiconEntry? other)
+        {
+            ArgumentNullException.ThrowIfNull(other);
+
+            LexicalOrderCompSpelling spellingComp = new();
+            LexicalOrderCompEnglish englishComp = new();
+
+            int spellingResult = spellingComp.Compare(this, other);
+            if(spellingResult != 0)
+            {
+                return spellingResult;
+            }
+
+            int partOfSpeechResult = string.Compare(this.part_of_speech, other.part_of_speech);
+            if(partOfSpeechResult != 0)
+            {
+                return partOfSpeechResult;
+            }
+
+            return englishComp.Compare(this, other);
+
+        }
+
+        /// <summary>
+        /// Class to be used when sorting a list of LexiconEntry objects by their spellingComp.
         /// </summary>
         public class LexicalOrderCompSpelling : IComparer<LexiconEntry>
         {
@@ -362,14 +402,14 @@ namespace ConlangJson
         public class LexicalOrderCompEnglish : IComparer<LexiconEntry>
         {
             /// <summary>
-            /// Determines the ordering of the two supplied LexiconEntry objects using their english
+            /// Determines the ordering of the two supplied LexiconEntry objects using their englishComp
             /// property.
             /// </summary>
             /// <param name="x">First LexiconEntry object for the comparison</param>
             /// <param name="y">Second LexiconEntry object for the comparison</param>
             /// <returns>Per IComparer&lt;T&gt;.Compare.</returns>
             /// <exception cref="NotSupportedException">If either supplied object is null.</exception>
-            int IComparer<LexiconEntry>.Compare(LexiconEntry? x, LexiconEntry? y)
+            public int Compare(LexiconEntry? x, LexiconEntry? y)
             {
                 if (x == null || y == null)
                 {
@@ -403,6 +443,50 @@ namespace ConlangJson
         public static bool operator !=(LexiconEntry? left, LexiconEntry? right)
         {
             return !(left == right);
+        }
+
+        /// <summary>
+        /// Operator for comparing two LexiconEntry objects.  
+        /// </summary>
+        /// <param name="left">Left hand side</param>
+        /// <param name="right">Right hand side</param>
+        /// <returns>true if left precedes right.</returns>
+        public static bool operator <(LexiconEntry left, LexiconEntry right)
+        {
+            return left is null ? right is not null : left.CompareTo(right) < 0;
+        }
+
+        /// <summary>
+        /// Operator for comparing two LexiconEntry objects.  
+        /// </summary>
+        /// <param name="left">Left hand side</param>
+        /// <param name="right">Right hand side</param>
+        /// <returns>true if left precedes right or they are the same.</returns>
+        public static bool operator <=(LexiconEntry left, LexiconEntry right)
+        {
+            return left is null || left.CompareTo(right) <= 0;
+        }
+
+        /// <summary>
+        /// Operator for comparing two LexiconEntry objects.  
+        /// </summary>
+        /// <param name="left">Left hand side</param>
+        /// <param name="right">Right hand side</param>
+        /// <returns>true if left follows right.</returns>
+        public static bool operator >(LexiconEntry left, LexiconEntry right)
+        {
+            return left is not null && left.CompareTo(right) > 0;
+        }
+
+        /// <summary>
+        /// Operator for comparing two LexiconEntry objects.  
+        /// </summary>
+        /// <param name="left">Left hand side</param>
+        /// <param name="right">Right hand side</param>
+        /// <returns>true if left follows right or they are the same.</returns>
+        public static bool operator >=(LexiconEntry left, LexiconEntry right)
+        {
+            return left is null ? right is null : left.CompareTo(right) >= 0;
         }
     }
 }

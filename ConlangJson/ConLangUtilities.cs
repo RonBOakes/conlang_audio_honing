@@ -175,7 +175,10 @@ namespace ConlangJson
             {
                 addLexicon.AddRange(DeclineWord(word, language.affix_map, language.sound_map_list));
             }
-            language.lexicon.AddRange(addLexicon);
+            foreach(LexiconEntry word in addLexicon)
+            {
+                language.lexicon.Add(word);
+            }
             language.declined = true;
         }
 
@@ -193,9 +196,9 @@ namespace ConlangJson
 #pragma warning restore IDE0028 // Simplify collection initialization
 
             // Build the word map and word map tuple from the lexicon in the language
-            for (int i = 0; i < language.lexicon.Count; i++)
+#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
+            foreach (LexiconEntry entry in language.lexicon)
             {
-                LexiconEntry entry = language.lexicon[i];
                 // If the word is a root word, then put it in the word maps
                 // In order to match with words in the derived_word_list, spaces need to be 
                 // replaced with underscores.
@@ -211,6 +214,7 @@ namespace ConlangJson
                     _ = wordMapTuple.TryAdd((wmEnglish, partOfSpeech), entry);
                 }
             }
+#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
 
             // Iterate over the derived_word_list
             foreach (string words in language.derived_word_list)
@@ -380,7 +384,10 @@ namespace ConlangJson
             }
 
             // Add the lexicon fragment into the existing lexicon
-            language.lexicon.AddRange(lexiconFragment);
+            foreach (LexiconEntry word in lexiconFragment)
+            {
+                language.lexicon.Add(word);
+            }
             language.derived = true;
             ok = true;
 
@@ -394,7 +401,7 @@ namespace ConlangJson
         /// <param name="language">Language to have its declined words removed from the lexicon</param>
         public static void RemoveDeclinedEntries(LanguageDescription language)
         {
-            List<LexiconEntry> cleanLexicon = [];
+            SortedSet<LexiconEntry> cleanLexicon = [];
             foreach (LexiconEntry word in language.lexicon)
             {
                 if (word.declined_word == null)
@@ -407,7 +414,6 @@ namespace ConlangJson
                 }
             }
             language.lexicon = cleanLexicon;
-            language.lexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
             language.declined = false;
         }
 
@@ -419,7 +425,7 @@ namespace ConlangJson
         /// <param name="language">Language to have its derived words removed from the lexicon.</param>
         public static void RemoveDerivedEntries(LanguageDescription language)
         {
-            List<LexiconEntry> cleanLexicon = [];
+            SortedSet<LexiconEntry> cleanLexicon = [];
             foreach (LexiconEntry word in language.lexicon)
             {
                 if (word.derived_word == null)
@@ -432,7 +438,6 @@ namespace ConlangJson
                 }
             }
             language.lexicon = cleanLexicon;
-            language.lexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
             language.derived = false;
         }
 

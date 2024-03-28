@@ -150,7 +150,10 @@ namespace ConlangAudioHoning
             ProgressBar.MarqueeAnimationSpeed = 200;
             ProgressBar.Minimum = 0;
             ProgressBar.Maximum = 100;
-            language.lexicon.AddRange(addLexicon);
+            foreach (LexiconEntry word in addLexicon)
+            {
+                language.lexicon.Add(word);
+            }
             ProgressBar.Visible = false;
             ProgressBar.SendToBack();
             pbTimer.Enabled = false;
@@ -346,13 +349,6 @@ namespace ConlangAudioHoning
             }
             else
             {
-                // If the language is currently declined, it might have been declined by this tool, 
-                // If so, we want to sort it before saving it.
-                if (languageDescription.declined)
-                {
-                    languageDescription.lexicon.Sort(new LexiconEntry.LexicalOrderCompSpelling());
-                }
-
                 DateTime now = DateTime.UtcNow;
                 string timestamp = now.ToString("o");
                 string history = "Edited in LanguageEditor, saved at " + timestamp;

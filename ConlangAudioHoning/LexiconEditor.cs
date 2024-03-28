@@ -17,14 +17,14 @@ namespace ConlangAudioHoning
     /// </summary>
     public partial class LexiconEditor : Form
     {
-        private List<LexiconEntry> lexiconEntries;
+        private SortedSet<LexiconEntry> lexiconEntries;
 
         private readonly Dictionary<(string,string,string), LexiconEntry> lexiconMap;
 
         /// <summary>
         /// The lexicon being edited in this form.
         /// </summary>
-        public List<LexiconEntry> Lexicon
+        public SortedSet<LexiconEntry> Lexicon
         {
             get => lexiconEntries;
             set
@@ -68,7 +68,7 @@ namespace ConlangAudioHoning
         /// <param name="lexicon">Lexicon to be edited (empty by default)</param>
         /// <param name="partOfSpeech">Part of Speech list (empty by default)</param>
         /// <param name="soundMapList">Sound map list (empty by default)</param>
-        public LexiconEditor(List<LexiconEntry>? lexicon = null, List<string>? partOfSpeech = null, List<SoundMap>? soundMapList = null)
+        public LexiconEditor(SortedSet<LexiconEntry>? lexicon = null, List<string>? partOfSpeech = null, List<SoundMap>? soundMapList = null)
         {
             if (lexicon != null)
             {
