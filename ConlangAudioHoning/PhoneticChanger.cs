@@ -484,7 +484,7 @@ namespace ConlangAudioHoning
                 }
             }
 
-            Dictionary<(string, string),string> reverseInterimReplacementMap = [];
+            Dictionary<(string, string), string> reverseInterimReplacementMap = [];
             foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
             {
                 reverseInterimReplacementMap.Add(interimReplacementMap[interimReplacementSymbol], interimReplacementSymbol);
@@ -508,7 +508,7 @@ namespace ConlangAudioHoning
                                 {
                                     foreach ((string oldPhoneme, string newPhoneme) in changeList)
                                     {
-                                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme,newPhoneme)];
+                                        string interimReplacementSymbol = reverseInterimReplacementMap[(oldPhoneme, newPhoneme)];
                                         string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
                                         // Preserve vowel diphthongs before doing the main replacement
                                         Dictionary<string, string> diphthongReplacementMap = [];

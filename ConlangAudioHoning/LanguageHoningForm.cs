@@ -43,9 +43,8 @@ namespace ConlangAudioHoning
         private readonly PhoneticChanger phoneticChanger;
         private readonly List<(string, string)> changesToBeMade = [];
         private readonly UserConfiguration UserConfiguration;
-
-        bool languageDirty = false;
-        bool sampleDirty = false;
+        private bool languageDirty = false;
+        private bool sampleDirty = false;
 
         /// <summary>
         /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
@@ -2622,7 +2621,7 @@ namespace ConlangAudioHoning
 
         private void SetAndAdjustLexicalOrderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }

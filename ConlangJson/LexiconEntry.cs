@@ -269,13 +269,13 @@ namespace ConlangJson
             LexicalOrderCompEnglish englishComp = new();
 
             int spellingResult = spellingComp.Compare(this, other);
-            if(spellingResult != 0)
+            if (spellingResult != 0)
             {
                 return spellingResult;
             }
 
             int partOfSpeechResult = string.Compare(this.part_of_speech, other.part_of_speech);
-            if(partOfSpeechResult != 0)
+            if (partOfSpeechResult != 0)
             {
                 return partOfSpeechResult;
             }
@@ -286,14 +286,14 @@ namespace ConlangJson
                 return englishResult;
             }
 
-            if(phonetic != other.phonetic)
+            if (phonetic != other.phonetic)
             {
                 return string.Compare(phonetic, other.phonetic);
             }
 
-            if(derived_word != other.derived_word)
+            if (derived_word != other.derived_word)
             {
-                if(derived_word)
+                if (derived_word)
                 {
                     return -1;
                 }
@@ -303,19 +303,19 @@ namespace ConlangJson
                 }
             }
 
-            if(declined_word != other.declined_word)
+            if (declined_word != other.declined_word)
             {
-                if(declined_word)
-                { 
-                    return -1; 
+                if (declined_word)
+                {
+                    return -1;
                 }
                 else
-                { 
-                    return 1; 
+                {
+                    return 1;
                 }
             }
 
-            if(declensions != other.declensions)
+            if (declensions != other.declensions)
             {
                 return string.Compare(JsonSerializer.Serialize<List<string>>(declensions), JsonSerializer.Serialize<List<string>>(other.declensions));
             }

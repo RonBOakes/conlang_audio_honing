@@ -1,14 +1,5 @@
 ﻿using ConlangJson;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ConlangAudioHoning
 {
@@ -217,7 +208,7 @@ namespace ConlangAudioHoning
                     Match wordMatch = EditorEntryRegex().Match(selectedWord);
                     if (wordMatch.Success)
                     {
-                        string conlang = (SortByCriteria == SortByCriteriaTypes.CONLANG? wordMatch.Groups[1].Value : wordMatch.Groups[2].Value);
+                        string conlang = (SortByCriteria == SortByCriteriaTypes.CONLANG ? wordMatch.Groups[1].Value : wordMatch.Groups[2].Value);
                         string english = (SortByCriteria == SortByCriteriaTypes.CONLANG ? wordMatch.Groups[2].Value : wordMatch.Groups[1].Value);
                         string partOfSpeech = wordMatch.Groups[3].Value;
 

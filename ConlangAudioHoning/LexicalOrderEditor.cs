@@ -1,13 +1,5 @@
 ﻿using ConlangJson;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ConlangAudioHoning
 {
@@ -111,7 +103,7 @@ namespace ConlangAudioHoning
 
         private void BtnMoveDown_Click(object sender, EventArgs e)
         {
-            if(lbxCharacters.SelectedIndex < (charList.Count - 1))
+            if (lbxCharacters.SelectedIndex < (charList.Count - 1))
             {
                 int index = lbxCharacters.SelectedIndex;
                 (charList[index], charList[index + 1]) = (charList[index + 1], charList[index]);
