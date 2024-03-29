@@ -464,7 +464,7 @@ namespace ConlangAudioHoning
                 return;
             }
             string charToInsert = menuItem.Text.Split()[0];
-            AppendToFocusedBox(charToInsert);
+            PasteIntoFocusedBox(charToInsert);
         }
 
         /// <summary>
@@ -472,13 +472,12 @@ namespace ConlangAudioHoning
         /// had focus.
         /// </summary>
         /// <param name="textToAppend">string containing the text to append.</param>
-        public void AppendToFocusedBox(string textToAppend)
+        public void PasteIntoFocusedBox(string textToAppend)
         {
             if ((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
             {
-                _lastFocused.Text += textToAppend;
-                _lastFocused.Select(_lastFocused.Text.Length, 0);
-                _ = _lastFocused.Focus();
+                Clipboard.SetText(textToAppend);
+                _lastFocused.Paste();
             }
         }
 

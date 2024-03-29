@@ -177,7 +177,7 @@ namespace ConlangAudioHoning
                 return;
             }
             string charToInsert = menuItem.Text.Split()[0];
-            soundMapEditor.AppendToFocusedBox(charToInsert);
+            soundMapEditor.PasteIntoFocusedBox(charToInsert);
         }
 
         private void BtnEditSelected_Click(object sender, EventArgs e)
