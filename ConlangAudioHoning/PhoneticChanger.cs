@@ -484,7 +484,7 @@ namespace ConlangAudioHoning
                 }
             }
 
-            Dictionary<(string, string),string> reverseInterimReplacementMap = new Dictionary<(string, string),string>();
+            Dictionary<(string, string),string> reverseInterimReplacementMap = [];
             foreach (string interimReplacementSymbol in interimReplacementMap.Keys)
             {
                 reverseInterimReplacementMap.Add(interimReplacementMap[interimReplacementSymbol], interimReplacementSymbol);
