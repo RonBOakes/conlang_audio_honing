@@ -33,6 +33,11 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             saveAndCloseToolStripMenuItem = new ToolStripMenuItem();
             closeWithoutSavingToolStripMenuItem = new ToolStripMenuItem();
+            editToolStripMenuItem = new ToolStripMenuItem();
+            sortByToolStripMenuItem = new ToolStripMenuItem();
+            conlangToolStripMenuItem = new ToolStripMenuItem();
+            englishToolStripMenuItem = new ToolStripMenuItem();
+            findToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -45,11 +50,11 @@
             lbxLexicon.Name = "lbxLexicon";
             lbxLexicon.Size = new Size(384, 403);
             lbxLexicon.TabIndex = 0;
-            lbxLexicon.SelectedIndexChanged += LbxLexicon_SelectedIndexChanged;
+            lbxLexicon.DoubleClick += LbxLexicon_DoubleClick;
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(412, 24);
@@ -77,6 +82,42 @@
             closeWithoutSavingToolStripMenuItem.Text = "Close Without Saving";
             closeWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;
             // 
+            // editToolStripMenuItem
+            // 
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sortByToolStripMenuItem, findToolStripMenuItem });
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(39, 20);
+            editToolStripMenuItem.Text = "Edit";
+            // 
+            // sortByToolStripMenuItem
+            // 
+            sortByToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { conlangToolStripMenuItem, englishToolStripMenuItem });
+            sortByToolStripMenuItem.Name = "sortByToolStripMenuItem";
+            sortByToolStripMenuItem.Size = new Size(180, 22);
+            sortByToolStripMenuItem.Text = "Sort By";
+            // 
+            // conlangToolStripMenuItem
+            // 
+            conlangToolStripMenuItem.Name = "conlangToolStripMenuItem";
+            conlangToolStripMenuItem.Size = new Size(119, 22);
+            conlangToolStripMenuItem.Text = "Conlang";
+            conlangToolStripMenuItem.Click += ConlangToolStripMenuItem_Click;
+            // 
+            // englishToolStripMenuItem
+            // 
+            englishToolStripMenuItem.Name = "englishToolStripMenuItem";
+            englishToolStripMenuItem.Size = new Size(119, 22);
+            englishToolStripMenuItem.Text = "English";
+            englishToolStripMenuItem.Click += EnglishToolStripMenuItem_Click;
+            // 
+            // findToolStripMenuItem
+            // 
+            findToolStripMenuItem.Name = "findToolStripMenuItem";
+            findToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.F;
+            findToolStripMenuItem.Size = new Size(180, 22);
+            findToolStripMenuItem.Text = "Find";
+            findToolStripMenuItem.Click += FindToolStripMenuItem_Click;
+            // 
             // LexiconEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -100,5 +141,10 @@
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem saveAndCloseToolStripMenuItem;
         private ToolStripMenuItem closeWithoutSavingToolStripMenuItem;
+        private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem sortByToolStripMenuItem;
+        private ToolStripMenuItem conlangToolStripMenuItem;
+        private ToolStripMenuItem englishToolStripMenuItem;
+        private ToolStripMenuItem findToolStripMenuItem;
     }
 }
