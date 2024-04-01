@@ -74,6 +74,10 @@ namespace ConlangAudioHoning
 
             UserConfiguration = UserConfiguration.LoadFromFile();
 
+            NoEngineSpeak noEngineSpeak = new();
+            speechEngines.Add(noEngineSpeak.Description, noEngineSpeak);
+            voices.Add(noEngineSpeak.Description,noEngineSpeak.GetVoices());
+
             if (UserConfiguration.IsESpeakNGSupported)
             {
                 ESpeakNGSpeak.ESpeakNGPath = UserConfiguration.ESpeakNgPath;
@@ -165,7 +169,10 @@ namespace ConlangAudioHoning
             cbx_speechEngine.Items.Clear();
             foreach (string engineName in speechEngines.Keys)
             {
-                _ = cbx_speechEngine.Items.Add(engineName);
+                if (engineName != "None")
+                {
+                    _ = cbx_speechEngine.Items.Add(engineName);
+                }
             }
             if (cbx_speechEngine.Items.Count > 0)
             {
@@ -1570,7 +1577,15 @@ namespace ConlangAudioHoning
             if (string.IsNullOrEmpty(txt_phonetic.Text))
             {
                 string speed = cbx_speed.Text.Trim();
-                string engineName = cbx_speechEngine.Text.Trim();
+                string engineName;
+                if (cbx_speechEngine.SelectedIndex == -1)
+                {
+                    engineName = "None";
+                }
+                else
+                {
+                    engineName = cbx_speechEngine.Text.Trim();
+                }
                 speechEngines[engineName].Generate(speed, this);
                 txt_phonetic.Text = speechEngines[engineName].PhoneticText;
             }

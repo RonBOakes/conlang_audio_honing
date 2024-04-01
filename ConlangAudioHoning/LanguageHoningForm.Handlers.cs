@@ -205,8 +205,16 @@ namespace ConlangAudioHoning
         {
             if ((languageDescription != null) && (!string.IsNullOrEmpty(sampleText)))
             {
-                string engineKey = cbx_speechEngine.Text.Trim();
-                SpeechEngine engine = speechEngines[engineKey];
+                string engineName;
+                if (cbx_speechEngine.SelectedIndex == -1)
+                {
+                    engineName = "None";
+                }
+                else
+                {
+                    engineName = cbx_speechEngine.Text.Trim();
+                }
+                SpeechEngine engine = speechEngines[engineName];
                 string speed = cbx_speed.Text.Trim();
                 engine.Generate(speed, this);
                 txt_phonetic.Text = engine.PhoneticText;
