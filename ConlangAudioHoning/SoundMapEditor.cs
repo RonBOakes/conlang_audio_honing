@@ -23,7 +23,7 @@ namespace ConlangAudioHoning
     /// <summary>
     /// User Control used to edit a single SoundMap entry.
     /// </summary>
-    internal class SoundMapEditor : UserControl
+    public class SoundMapEditor : UserControl
     {
         private static Size controlSize = new(850, 50);
 
