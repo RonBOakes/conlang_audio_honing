@@ -74,16 +74,16 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            SoundMapListEditor soundMapListEditor = new();
+            SoundMapListEditorForm soundMapListEditorForm = new();
             _ = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
-            soundMapListEditor.SoundMapList = Language.sound_map_list;
-            soundMapListEditor.PhonemeReplacementPairs.Add((oldPhoneme, newPhoneme));
-            soundMapListEditor.UpdatePhonemeReplacements();
-            _ = soundMapListEditor.ShowDialog();
+            soundMapListEditorForm.SoundMapList = Language.sound_map_list;
+            soundMapListEditorForm.PhonemeReplacementPairs.Add((oldPhoneme, newPhoneme));
+            soundMapListEditorForm.UpdatePhonemeReplacements();
+            _ = soundMapListEditorForm.ShowDialog();
             // ShowDialog is modal
-            if (soundMapListEditor.SoundMapSaved)
+            if (soundMapListEditorForm.SoundMapSaved)
             {
-                Language.sound_map_list = soundMapListEditor.SoundMapList;
+                Language.sound_map_list = soundMapListEditorForm.SoundMapList;
             }
 
             string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
@@ -379,17 +379,17 @@ namespace ConlangAudioHoning
             changeList.Sort(new StringTupleLengthComp());
             changeList.Reverse();
 
-            SoundMapListEditor soundMapListEditor = new()
+            SoundMapListEditorForm soundMapListEditorForm = new()
             {
                 SoundMapList = Language.sound_map_list
             };
-            soundMapListEditor.PhonemeReplacementPairs.AddRange(changeList);
-            soundMapListEditor.UpdatePhonemeReplacements();
-            _ = soundMapListEditor.ShowDialog();
+            soundMapListEditorForm.PhonemeReplacementPairs.AddRange(changeList);
+            soundMapListEditorForm.UpdatePhonemeReplacements();
+            _ = soundMapListEditorForm.ShowDialog();
             // ShowDialog is modal
-            if (soundMapListEditor.SoundMapSaved)
+            if (soundMapListEditorForm.SoundMapSaved)
             {
-                Language.sound_map_list = soundMapListEditor.SoundMapList;
+                Language.sound_map_list = soundMapListEditorForm.SoundMapList;
             }
 
             string changeHistoryTimestamp = string.Format("{0:yyyyMMdd.hhmmssfffffff}", DateTime.Now);

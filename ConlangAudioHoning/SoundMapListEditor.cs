@@ -22,10 +22,10 @@ using System.Text;
 namespace ConlangAudioHoning
 {
     /// <summary>
-    /// Form for editing the SoundMap List used for spelling and pronunciation of a 
+    /// Panel for editing the SoundMap List used for spelling and pronunciation of a 
     /// language.
     /// </summary>
-    public partial class SoundMapListEditor : Form
+    public partial class SoundMapListEditor : Panel
     {
         private List<SoundMap> _soundMapList;
         private List<(string, string)> _phonemeReplacementPairs = [];
@@ -64,7 +64,7 @@ namespace ConlangAudioHoning
         /// If this is set to true, then the user has indicated that they have "saved" the changes,
         /// if false, then the user has not saved the changes and they should not be applied.
         /// </summary>
-        public bool SoundMapSaved { get; private set; } = false;
+        public bool SoundMapSaved { get; set; } = false;
 
         /// <summary>
         /// Update the header text.  This will override any automatically generated text from the 
@@ -90,20 +90,7 @@ namespace ConlangAudioHoning
         {
             InitializeComponent();
 
-            // Checks to ensure that the form from the designer doesn't exceed 1024x768
-            if (this.Width > 1024)
-            {
-                throw new ConlangAudioHoningException("The default/design width of LanguageHoningForm exceeds the 1024 small screen size limit");
-            }
-            if (this.Height > 768)
-            {
-                throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
-            }
-
-            CharacterInsertToolStripMenuItem ciMenu = new();
-            _ = menuStrip1.Items.Add(ciMenu);
             _soundMapList = [];
-            ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
         }
 
         /// <summary>
@@ -153,19 +140,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void SaveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SoundMapSaved = true;
-            this.Close();
-        }
-
-        private void CloseWithoutSavingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SoundMapSaved = false;
-            this.Close();
-        }
-
-        private void CharInsetToolStripMenuItem_Click(object? sender, EventArgs e)
+        internal void CharInsetToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             if (sender == null)
             {

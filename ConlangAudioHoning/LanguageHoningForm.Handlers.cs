@@ -743,20 +743,20 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            SoundMapListEditor soundMapListEditor = new()
+            SoundMapListEditorForm soundMapListEditorForm = new()
             {
                 SoundMapList = languageDescription.sound_map_list,
                 HeaderText = "No specific changes - editing the entire list"
             };
-            soundMapListEditor.UpdatePhonemeReplacements();
-            _ = soundMapListEditor.ShowDialog();
+            soundMapListEditorForm.UpdatePhonemeReplacements();
+            _ = soundMapListEditorForm.ShowDialog();
             // ShowDialog is modal
-            if (soundMapListEditor.SoundMapSaved)
+            if (soundMapListEditorForm.SoundMapSaved)
             {
                 DialogResult result = MessageBox.Show("Preserve the spelling (Yes)?\nNo preserves the pronunciation.", "Spelling or pronunciation", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes)
                 {
-                    languageDescription.sound_map_list = soundMapListEditor.SoundMapList;
+                    languageDescription.sound_map_list = soundMapListEditorForm.SoundMapList;
                     phoneticChanger.UpdatePronunciation();
                     if (sampleText != string.Empty)
                     {
@@ -773,7 +773,7 @@ namespace ConlangAudioHoning
                 else if (result == DialogResult.No)
                 {
                     phoneticChanger.UpdateSpelling();
-                    languageDescription.sound_map_list = soundMapListEditor.SoundMapList;
+                    languageDescription.sound_map_list = soundMapListEditorForm.SoundMapList;
                     if (sampleText != string.Empty)
                     {
                         sampleText = phoneticChanger.SampleText;

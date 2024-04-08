@@ -33,16 +33,11 @@
             btnAddBelow = new Button();
             lbx_soundMapListEntries = new ListBox();
             soundMapEditor = new SoundMapEditor();
-            menuStrip1 = new MenuStrip();
-            controlsToolStripMenuItem = new ToolStripMenuItem();
-            saveAndCloseToolStripMenuItem = new ToolStripMenuItem();
-            closeWithoutSavingToolStripMenuItem = new ToolStripMenuItem();
             btnReplaceSelected = new Button();
             btnEditSelected = new Button();
             btnDeleteSelected = new Button();
             txtPhonemeReplacements = new TextBox();
             label1 = new Label();
-            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // btnAddAbove
@@ -86,36 +81,6 @@
             soundMap2.spelling_regex = "";
             soundMapEditor.SoundMapData = soundMap2;
             soundMapEditor.TabIndex = 6;
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { controlsToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1007, 24);
-            menuStrip1.TabIndex = 7;
-            menuStrip1.Text = "menuStrip1";
-            // 
-            // controlsToolStripMenuItem
-            // 
-            controlsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveAndCloseToolStripMenuItem, closeWithoutSavingToolStripMenuItem });
-            controlsToolStripMenuItem.Name = "controlsToolStripMenuItem";
-            controlsToolStripMenuItem.Size = new Size(64, 20);
-            controlsToolStripMenuItem.Text = "Controls";
-            // 
-            // saveAndCloseToolStripMenuItem
-            // 
-            saveAndCloseToolStripMenuItem.Name = "saveAndCloseToolStripMenuItem";
-            saveAndCloseToolStripMenuItem.Size = new Size(184, 22);
-            saveAndCloseToolStripMenuItem.Text = "Save and Close";
-            saveAndCloseToolStripMenuItem.Click += SaveAndCloseToolStripMenuItem_Click;
-            // 
-            // closeWithoutSavingToolStripMenuItem
-            // 
-            closeWithoutSavingToolStripMenuItem.Name = "closeWithoutSavingToolStripMenuItem";
-            closeWithoutSavingToolStripMenuItem.Size = new Size(184, 22);
-            closeWithoutSavingToolStripMenuItem.Text = "Close without saving";
-            closeWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;
             // 
             // btnReplaceSelected
             // 
@@ -167,8 +132,6 @@
             // 
             // SoundMapListEditor
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1007, 382);
             Controls.Add(label1);
             Controls.Add(txtPhonemeReplacements);
@@ -179,12 +142,8 @@
             Controls.Add(lbx_soundMapListEntries);
             Controls.Add(btnAddBelow);
             Controls.Add(btnAddAbove);
-            Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
             Name = "SoundMapListEditor";
             Text = "Spelling/Pronunciation List Editor";
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -194,10 +153,6 @@
         private Button btnAddBelow;
         private ListBox lbx_soundMapListEntries;
         private SoundMapEditor soundMapEditor;
-        private MenuStrip menuStrip1;
-        private ToolStripMenuItem controlsToolStripMenuItem;
-        private ToolStripMenuItem saveAndCloseToolStripMenuItem;
-        private ToolStripMenuItem closeWithoutSavingToolStripMenuItem;
         private Button btnReplaceSelected;
         private Button btnEditSelected;
         private Button btnDeleteSelected;
