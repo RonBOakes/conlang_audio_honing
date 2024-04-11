@@ -120,12 +120,9 @@
             // 
             // LexiconEditor
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(412, 450);
             Controls.Add(lbxLexicon);
             Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
             Name = "LexiconEditor";
             Text = "Lexicon Editor";
             menuStrip1.ResumeLayout(false);

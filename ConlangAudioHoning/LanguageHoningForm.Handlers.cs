@@ -987,11 +987,11 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            LexiconEditor lexiconEditor = new(languageDescription.lexicon, languageDescription.part_of_speech_list, languageDescription.sound_map_list);
-            _ = lexiconEditor.ShowDialog();
-            if (lexiconEditor.Saved)
+            LexiconEditorForm lexiconEditorForm = new(languageDescription.lexicon, languageDescription.part_of_speech_list, languageDescription.sound_map_list);
+            _ = lexiconEditorForm.ShowDialog();
+            if (lexiconEditorForm.Saved)
             {
-                languageDescription.lexicon = lexiconEditor.Lexicon;
+                languageDescription.lexicon = lexiconEditorForm.Lexicon;
             }
         }
 

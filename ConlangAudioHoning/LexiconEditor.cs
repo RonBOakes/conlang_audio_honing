@@ -1,12 +1,13 @@
 ﻿using ConlangJson;
 using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace ConlangAudioHoning
 {
     /// <summary>
-    /// Form/Dialog to allow editing of the entire Lexicon.
+    /// Panel/Dialog to allow editing of the entire Lexicon.
     /// </summary>
-    public partial class LexiconEditor : Form
+    public partial class LexiconEditor : Panel
     {
         /// <summary>
         /// Which criteria is used to sort the lexicon for display.
@@ -97,6 +98,16 @@ namespace ConlangAudioHoning
             get; set;
         }
 
+        public ToolStripMenuItem SaveAndCloseToolStripMenuItem
+        {
+            get => saveAndCloseToolStripMenuItem;
+        }
+
+        public ToolStripMenuItem CloseWithoutSavingToolStripMenuItem
+        {
+            get => closeWithoutSavingToolStripMenuItem;
+        }
+
         /// <summary>
         /// Construct the Lexicon Editor
         /// </summary>
@@ -185,18 +196,16 @@ namespace ConlangAudioHoning
             lbxLexicon.EndUpdate();
 
         }
-
         private void SaveAndCloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Saved = true;
-            this.Close();
         }
 
         private void CloseWithoutSavingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Saved = false;
-            this.Close();
         }
+
 
         private void LbxLexicon_DoubleClick(object sender, EventArgs e)
         {
