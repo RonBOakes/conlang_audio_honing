@@ -141,6 +141,7 @@ namespace LanguageEditor
             yPos = 0;
             SoundMapListEditor soundMapEditor = new SoundMapListEditor();
             soundMapEditor.Location = new Point(xPos, yPos);
+            soundMapEditor.Size = new Size(895, 355);
             tab_soundMapList.Controls.Add(soundMapEditor);
             tab_soundMapList.ResumeLayout(true);
 
@@ -187,6 +188,7 @@ namespace LanguageEditor
             panel_phonemeInventory.ResumeLayout(true);
 
             lexiconEditor = new LexiconEditor();
+            lexiconEditor.Size = new Size(895, 355);
             tab_lexicon.SuspendLayout();
             tab_lexicon.Controls.Clear();
             tab_lexicon.Controls.Add(lexiconEditor);
