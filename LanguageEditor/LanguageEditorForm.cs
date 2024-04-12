@@ -189,6 +189,13 @@ namespace LanguageEditor
 
             lexiconEditor = new LexiconEditor();
             lexiconEditor.Size = new Size(895, 355);
+            lexiconEditor.Lexicon = languageDescription.lexicon;
+            lexiconEditor.PartOfSpeechList = languageDescription.part_of_speech_list;
+            lexiconEditor.SoundMapList = languageDescription.sound_map_list;
+            lexiconEditor.SaveAndCloseToolStripMenuItem.Text = "Save";
+            lexiconEditor.CloseWithoutSavingToolStripMenuItem.Text = "Do Not Save";
+            tab_lexicon.Enter += Tab_lexicon_Enter;
+            tab_lexicon.Leave += Tab_lexicon_Leave;
             tab_lexicon.SuspendLayout();
             tab_lexicon.Controls.Clear();
             tab_lexicon.Controls.Add(lexiconEditor);
@@ -241,6 +248,31 @@ namespace LanguageEditor
             txt_languageNameNativeEnglish.TextChanged += Txt_languageNameNativeEnglish_TextChanged;
 
             languageFileInfo = new FileInfo(filename);
+        }
+
+        private void Tab_lexicon_Enter(object? sender, EventArgs e)
+        {
+            if ((languageDescription != null) && (lexiconEditor != null))
+            {
+                lexiconEditor.PartOfSpeechList = languageDescription.part_of_speech_list;
+                lexiconEditor.SoundMapList = languageDescription.sound_map_list;
+                lexiconEditor.Lexicon = languageDescription.lexicon;
+            }
+        }
+
+        private void Tab_lexicon_Leave(object? sender, EventArgs e)
+        {
+            if((languageDescription != null) && (lexiconEditor != null))
+            {
+                if(lexiconEditor.Saved)
+                {
+                    languageDescription.lexicon = lexiconEditor.Lexicon;
+                }
+                else
+                {
+                    lexiconEditor.Lexicon = languageDescription.lexicon;
+                }
+            }
         }
 
         private void Txt_languageNameNativeEnglish_TextChanged(object? sender, EventArgs e)

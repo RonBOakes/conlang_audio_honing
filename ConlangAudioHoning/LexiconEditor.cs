@@ -167,6 +167,17 @@ namespace ConlangAudioHoning
                 lexiconMap.TryAdd((entry.spelled, entry.english, entry.part_of_speech), entry);
             }
             lbxLexicon.EndUpdate();
+
+            this.SizeChanged += LexiconEditor_SizeChanged;
+        }
+
+        private void LexiconEditor_SizeChanged(object? sender, EventArgs e)
+        {
+            this.SuspendLayout();
+            ClientSize = this.Size;
+            lbxLexicon.Size = new Size(this.Width - 20, this.Height - 20);
+            ReSort();
+            this.ResumeLayout();
         }
 
         private void ReSort()
