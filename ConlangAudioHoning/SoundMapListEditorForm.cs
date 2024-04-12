@@ -20,54 +20,13 @@ namespace ConlangAudioHoning
 
             SoundMapListEditor = new SoundMapListEditor();
 
-            MenuStrip menuStrip1 = new MenuStrip();
-            ToolStripMenuItem controlsToolStripMenuItem = new ToolStripMenuItem();
-            ToolStripMenuItem saveAndCloseToolStripMenuItem = new ToolStripMenuItem();
-            ToolStripMenuItem closeWithoutSavingToolStripMenuItem = new ToolStripMenuItem();
-            menuStrip1.SuspendLayout();
             SuspendLayout();
-            //
-            // menuStrip1
-            //
-            menuStrip1.Items.AddRange(new ToolStripItem[] { controlsToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1007, 24);
-            menuStrip1.TabIndex = 7;
-            menuStrip1.Text = "menuStrip1";
-            //
-            // controlsToolStripMenuItem
-            //
-            controlsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveAndCloseToolStripMenuItem, closeWithoutSavingToolStripMenuItem });
-            controlsToolStripMenuItem.Name = "controlsToolStripMenuItem";
-            controlsToolStripMenuItem.Size = new Size(64, 20);
-            controlsToolStripMenuItem.Text = "Controls";
-            //
-            // saveAndCloseToolStripMenuItem
-            //
-            saveAndCloseToolStripMenuItem.Name = "saveAndCloseToolStripMenuItem";
-            saveAndCloseToolStripMenuItem.Size = new Size(184, 22);
-            saveAndCloseToolStripMenuItem.Text = "Save and Close";
-            saveAndCloseToolStripMenuItem.Click += SaveAndCloseToolStripMenuItem_Click;
-            //
-            // closeWithoutSavingToolStripMenuItem
-            //
-            closeWithoutSavingToolStripMenuItem.Name = "closeWithoutSavingToolStripMenuItem";
-            closeWithoutSavingToolStripMenuItem.Size = new Size(184, 22);
-            closeWithoutSavingToolStripMenuItem.Text = "Close without saving";
-            closeWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;
 
-            CharacterInsertToolStripMenuItem ciMenu = new();
-            _ = menuStrip1.Items.Add(ciMenu);
-            ciMenu.AddClickDelegate(SoundMapListEditor.CharInsetToolStripMenuItem_Click);
-
-            ClientSize = new Size(1008, 425);
-
-            Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
+            ClientSize = new Size(915, 375);
             Controls.Add(SoundMapListEditor);
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
+
+            SoundMapListEditor.SaveAndCloseToolStripItem.Click += SaveAndCloseToolStripItem_Click;
+            SoundMapListEditor.CloseWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;
 
             // Checks to ensure that the form from the designer doesn't exceed 1024x768
             if (this.Width > 1024)
@@ -79,6 +38,16 @@ namespace ConlangAudioHoning
                 throw new ConlangAudioHoningException("The default/design height of LanguageHoningForm exceeds the 768 small screen size limit");
             }
 
+        }
+
+        private void CloseWithoutSavingToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SaveAndCloseToolStripItem_Click(object? sender, EventArgs e)
+        {
+            this.Close();
         }
 
         /// <summary>
@@ -128,19 +97,5 @@ namespace ConlangAudioHoning
             get => SoundMapListEditor.HeaderText;
             set => SoundMapListEditor.HeaderText = value;
         }
-
-        private void SaveAndCloseToolStripMenuItem_Click(object? sender, EventArgs e)
-        {
-            SoundMapSaved = true;
-            this.Close();
-        }
-
-        private void CloseWithoutSavingToolStripMenuItem_Click(object? sender, EventArgs e)
-        {
-            SoundMapSaved = false;
-            this.Close();
-        }
-
-
     }
 }

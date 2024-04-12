@@ -39,10 +39,51 @@
             txtPhonemeReplacements = new TextBox();
             label1 = new Label();
             SuspendLayout();
+
+            menuStrip1 = new MenuStrip();
+            controlsToolStripMenuItem = new ToolStripMenuItem();
+            saveAndCloseToolStripMenuItem = new ToolStripMenuItem();
+            closeWithoutSavingToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip1.SuspendLayout();
+            //
+            // menuStrip1
+            //
+            menuStrip1.Items.AddRange(new ToolStripItem[] { controlsToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1007, 24);
+            menuStrip1.TabIndex = 7;
+            menuStrip1.Text = "menuStrip1";
+            //
+            // controlsToolStripMenuItem
+            //
+            controlsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveAndCloseToolStripMenuItem, closeWithoutSavingToolStripMenuItem });
+            controlsToolStripMenuItem.Name = "controlsToolStripMenuItem";
+            controlsToolStripMenuItem.Size = new Size(64, 20);
+            controlsToolStripMenuItem.Text = "Controls";
+            //
+            // saveAndCloseToolStripMenuItem
+            //
+            saveAndCloseToolStripMenuItem.Name = "saveAndCloseToolStripMenuItem";
+            saveAndCloseToolStripMenuItem.Size = new Size(184, 22);
+            saveAndCloseToolStripMenuItem.Text = "Save and Close";
+            saveAndCloseToolStripMenuItem.Click += SaveAndCloseToolStripMenuItem_Click;
+            //
+            // closeWithoutSavingToolStripMenuItem
+            //
+            closeWithoutSavingToolStripMenuItem.Name = "closeWithoutSavingToolStripMenuItem";
+            closeWithoutSavingToolStripMenuItem.Size = new Size(184, 22);
+            closeWithoutSavingToolStripMenuItem.Text = "Close without saving";
+            closeWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;
+
+            CharacterInsertToolStripMenuItem ciMenu = new();
+            _ = menuStrip1.Items.Add(ciMenu);
+            ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
+
             // 
             // btnAddAbove
             // 
-            btnAddAbove.Location = new Point(868, 82);
+            btnAddAbove.Location = new Point(718, 82);
             btnAddAbove.Name = "btnAddAbove";
             btnAddAbove.Size = new Size(127, 23);
             btnAddAbove.TabIndex = 3;
@@ -52,7 +93,7 @@
             // 
             // btnAddBelow
             // 
-            btnAddBelow.Location = new Point(868, 140);
+            btnAddBelow.Location = new Point(718, 140);
             btnAddBelow.Name = "btnAddBelow";
             btnAddBelow.Size = new Size(127, 23);
             btnAddBelow.TabIndex = 4;
@@ -66,7 +107,8 @@
             lbx_soundMapListEntries.ItemHeight = 15;
             lbx_soundMapListEntries.Location = new Point(12, 168);
             lbx_soundMapListEntries.Name = "lbx_soundMapListEntries";
-            lbx_soundMapListEntries.Size = new Size(850, 199);
+            lbx_soundMapListEntries.Size = new Size(700, 175);
+            lbx_soundMapListEntries.ScrollAlwaysVisible = true;
             lbx_soundMapListEntries.TabIndex = 5;
             // 
             // soundMapEditor
@@ -74,7 +116,7 @@
             soundMapEditor.BorderStyle = BorderStyle.FixedSingle;
             soundMapEditor.Location = new Point(12, 82);
             soundMapEditor.Name = "soundMapEditor";
-            soundMapEditor.Size = new Size(850, 80);
+            soundMapEditor.Size = new Size(700, 80);
             soundMap2.phoneme = "";
             soundMap2.pronunciation_regex = "";
             soundMap2.romanization = "";
@@ -84,7 +126,7 @@
             // 
             // btnReplaceSelected
             // 
-            btnReplaceSelected.Location = new Point(868, 111);
+            btnReplaceSelected.Location = new Point(718, 111);
             btnReplaceSelected.Name = "btnReplaceSelected";
             btnReplaceSelected.Size = new Size(127, 23);
             btnReplaceSelected.TabIndex = 8;
@@ -94,7 +136,7 @@
             // 
             // btnEditSelected
             // 
-            btnEditSelected.Location = new Point(868, 187);
+            btnEditSelected.Location = new Point(718, 187);
             btnEditSelected.Name = "btnEditSelected";
             btnEditSelected.Size = new Size(127, 42);
             btnEditSelected.TabIndex = 9;
@@ -104,7 +146,7 @@
             // 
             // btnDeleteSelected
             // 
-            btnDeleteSelected.Location = new Point(868, 235);
+            btnDeleteSelected.Location = new Point(718, 235);
             btnDeleteSelected.Name = "btnDeleteSelected";
             btnDeleteSelected.Size = new Size(127, 23);
             btnDeleteSelected.TabIndex = 10;
@@ -118,7 +160,7 @@
             txtPhonemeReplacements.Location = new Point(163, 33);
             txtPhonemeReplacements.Name = "txtPhonemeReplacements";
             txtPhonemeReplacements.ReadOnly = true;
-            txtPhonemeReplacements.Size = new Size(699, 34);
+            txtPhonemeReplacements.Size = new Size(650, 34);
             txtPhonemeReplacements.TabIndex = 11;
             // 
             // label1
@@ -132,7 +174,11 @@
             // 
             // SoundMapListEditor
             // 
-            ClientSize = new Size(1007, 382);
+            Controls.Add(menuStrip1);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+
+            ClientSize = new Size(895, 355);
             Controls.Add(label1);
             Controls.Add(txtPhonemeReplacements);
             Controls.Add(btnDeleteSelected);
@@ -149,6 +195,10 @@
         }
 
         #endregion
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem controlsToolStripMenuItem;
+        private ToolStripMenuItem saveAndCloseToolStripMenuItem;
+        private ToolStripMenuItem closeWithoutSavingToolStripMenuItem;
         private Button btnAddAbove;
         private Button btnAddBelow;
         private ListBox lbx_soundMapListEntries;

@@ -140,16 +140,16 @@ namespace ConlangAudioHoning
             lbl_phoneme = new Label
             {
                 Text = "Phoneme:",
-                Location = new Point(5, 5),
-                Size = new Size(200, 15),
+                Location = new Point(0, 5),
+                Size = new Size(130, 15),
                 TextAlign = ContentAlignment.MiddleRight
             };
             Controls.Add(lbl_phoneme);
 
             txt_phoneme = new TextBox
             {
-                Location = new Point(205, 5),
-                Size = new Size(200, 15)
+                Location = new Point(135, 5),
+                Size = new Size(150, 15)
             };
             txt_phoneme.GotFocus += Txt_phoneme_GotFocus;
             Controls.Add(txt_phoneme);
@@ -157,16 +157,16 @@ namespace ConlangAudioHoning
             lbl_pronunciationRegex = new Label
             {
                 Text = "Pronunciation RegEx:",
-                Location = new Point(410, 5),
-                Size = new Size(200, 15),
+                Location = new Point(265, 5),
+                Size = new Size(150, 15),
                 TextAlign = ContentAlignment.MiddleRight
             };
             Controls.Add(lbl_pronunciationRegex);
 
             txt_pronunciationRegex = new TextBox
             {
-                Location = new Point(615, 5),
-                Size = new Size(200, 15)
+                Location = new Point(415, 5),
+                Size = new Size(150, 15)
             };
             txt_pronunciationRegex.GotFocus += Txt_pronunciationRegex_GotFocus;
             Controls.Add(txt_pronunciationRegex);
@@ -174,16 +174,16 @@ namespace ConlangAudioHoning
             lbl_romanization = new Label
             {
                 Text = "Spelling/Romanization:",
-                Location = new Point(5, 30),
-                Size = new Size(200, 15),
+                Location = new Point(0, 30),
+                Size = new Size(130, 15),
                 TextAlign = ContentAlignment.MiddleRight
             };
             Controls.Add(lbl_romanization);
 
             txt_romanization = new TextBox
             {
-                Location = new Point(205, 30),
-                Size = new Size(200, 15)
+                Location = new Point(135, 30),
+                Size = new Size(150, 15)
             };
             txt_romanization.GotFocus += Txt_romanization_GotFocus;
             Controls.Add(txt_romanization);
@@ -191,16 +191,16 @@ namespace ConlangAudioHoning
             lbl_spellingRegex = new Label
             {
                 Text = "Spelling RegEx:",
-                Location = new Point(410, 30),
-                Size = new Size(200, 15),
+                Location = new Point(265, 30),
+                Size = new Size(150, 15),
                 TextAlign = ContentAlignment.MiddleRight
             };
             Controls.Add(lbl_spellingRegex);
 
             txt_spellingRegex = new TextBox
             {
-                Location = new Point(615, 30),
-                Size = new Size(200, 15)
+                Location = new Point(415, 30),
+                Size = new Size(150, 15)
             };
             txt_spellingRegex.GotFocus += Txt_spellingRegex_GotFocus;
             Controls.Add(txt_spellingRegex);

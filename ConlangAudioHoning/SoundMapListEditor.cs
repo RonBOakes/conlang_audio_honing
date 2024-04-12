@@ -84,6 +84,22 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
+        /// Get the Save menu for high level interaction
+        /// </summary>
+        public ToolStripMenuItem SaveAndCloseToolStripItem
+        {
+            get => saveAndCloseToolStripMenuItem;
+        }
+
+        /// <summary>
+        /// Get the don't save menu for high level interaction.
+        /// </summary>
+        public ToolStripMenuItem CloseWithoutSavingToolStripMenuItem
+        {
+            get => closeWithoutSavingToolStripMenuItem;
+        }
+
+        /// <summary>
         /// Constructor for a SoundMapListEditor.
         /// </summary>
         public SoundMapListEditor()
@@ -208,6 +224,16 @@ namespace ConlangAudioHoning
                 UpdateSoundMapEntries();
             }
 
+        }
+
+        private void SaveAndCloseToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            SoundMapSaved = true;
+        }
+
+        private void CloseWithoutSavingToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            SoundMapSaved = false;
         }
     }
 }

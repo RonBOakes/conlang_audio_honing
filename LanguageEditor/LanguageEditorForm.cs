@@ -32,6 +32,7 @@ namespace LanguageEditor
         private FileInfo? languageFileInfo = null;
         private List<TextBox>? nounGenderTxtBoxes = null;
         private LexiconEditor? lexiconEditor = null;
+        private SoundMapListEditor? soundMapEditor = null;
         private DeclensionAffixMapPane? declensionAffixMapPane = null;
 
         public LanguageEditorForm()
@@ -139,10 +140,12 @@ namespace LanguageEditor
             tab_soundMapList.SuspendLayout();
             xPos = 0;
             yPos = 0;
-            SoundMapListEditor soundMapEditor = new SoundMapListEditor();
+            soundMapEditor = new SoundMapListEditor();
             soundMapEditor.Location = new Point(xPos, yPos);
             soundMapEditor.Size = new Size(895, 355);
             tab_soundMapList.Controls.Add(soundMapEditor);
+            tab_soundMapList.Enter += Tab_soundMapList_Enter;
+            tab_soundMapList.Leave += Tab_soundMapList_Leave;
             tab_soundMapList.ResumeLayout(true);
 
             xPos = 0;
@@ -248,6 +251,29 @@ namespace LanguageEditor
             txt_languageNameNativeEnglish.TextChanged += Txt_languageNameNativeEnglish_TextChanged;
 
             languageFileInfo = new FileInfo(filename);
+        }
+
+        private void Tab_soundMapList_Enter(object? sender, EventArgs e)
+        {
+            if ((languageDescription != null) && (soundMapEditor != null))
+            {
+                soundMapEditor.SoundMapList = languageDescription.sound_map_list;
+            }
+        }
+
+        private void Tab_soundMapList_Leave(object? sender, EventArgs e)
+        {
+            if ((languageDescription != null) && (soundMapEditor != null))
+            {
+                if(soundMapEditor.SoundMapSaved)
+                {
+                    languageDescription.sound_map_list = soundMapEditor.SoundMapList;
+                }
+                else
+                {
+                    soundMapEditor.SoundMapList = languageDescription.sound_map_list;
+                }
+            }
         }
 
         private void Tab_lexicon_Enter(object? sender, EventArgs e)
