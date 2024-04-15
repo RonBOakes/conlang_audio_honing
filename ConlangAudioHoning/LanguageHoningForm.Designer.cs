@@ -114,6 +114,8 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
+            setAzureSpeechKeyToolStripMenuItem = new ToolStripMenuItem();
+            setAzureSpeechRegionToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -226,7 +228,7 @@
             // 
             // utilitiesToolStripMenuItem
             // 
-            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, setAmazonPollyURIToolStripMenuItem, setESpeakNgLocationToolStripMenuItem });
+            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, setAmazonPollyURIToolStripMenuItem, setESpeakNgLocationToolStripMenuItem, setAzureSpeechKeyToolStripMenuItem, setAzureSpeechRegionToolStripMenuItem });
             utilitiesToolStripMenuItem.Name = "utilitiesToolStripMenuItem";
             utilitiesToolStripMenuItem.Size = new Size(58, 20);
             utilitiesToolStripMenuItem.Text = "Utilities";
@@ -936,6 +938,20 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += Btn_updateSoundMapList_Click;
             // 
+            // setAzureSpeechKeyToolStripMenuItem
+            // 
+            setAzureSpeechKeyToolStripMenuItem.Name = "setAzureSpeechKeyToolStripMenuItem";
+            setAzureSpeechKeyToolStripMenuItem.Size = new Size(223, 22);
+            setAzureSpeechKeyToolStripMenuItem.Text = "Set Azure Speech Key";
+            setAzureSpeechKeyToolStripMenuItem.Click += setAzureSpeechKeyToolStripMenuItem_Click;
+            // 
+            // setAzureSpeechRegionToolStripMenuItem
+            // 
+            setAzureSpeechRegionToolStripMenuItem.Name = "setAzureSpeechRegionToolStripMenuItem";
+            setAzureSpeechRegionToolStripMenuItem.Size = new Size(223, 22);
+            setAzureSpeechRegionToolStripMenuItem.Text = "Set Azure Speech Region";
+            setAzureSpeechRegionToolStripMenuItem.Click += setAzureSpeechRegionToolStripMenuItem_Click;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1079,5 +1095,7 @@
         private RadioButton rbn_diphthongReplacement;
         private ToolStripMenuItem editLexiconToolStripMenuItem;
         private ToolStripMenuItem setAndAdjustLexicalOrderToolStripMenuItem;
+        private ToolStripMenuItem setAzureSpeechKeyToolStripMenuItem;
+        private ToolStripMenuItem setAzureSpeechRegionToolStripMenuItem;
     }
 }

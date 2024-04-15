@@ -937,6 +937,41 @@ namespace ConlangAudioHoning
 
         }
 
+
+        private void setAzureSpeechKeyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string currentKey = UserConfiguration.AzureSpeechKey;
+            string azureSpeechKey = Microsoft.VisualBasic.Interaction.InputBox("Enter the Speech (Resource) key for Microsoft Azure", "AzureSpeechKey", currentKey ?? string.Empty);
+            if(!string.IsNullOrEmpty(azureSpeechKey))
+            {
+                UserConfiguration.AzureSpeechKey = azureSpeechKey;
+            }
+            if (UserConfiguration.IsAzureSupported)
+            {
+                AzureSpeak azureSpeak = new();
+                Dictionary<String, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
+                speechEngines.Add(azureSpeak.Description, azureSpeak);
+                voices.Add(azureSpeak.Description, azureVoices);
+            }
+        }
+
+        private void setAzureSpeechRegionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string currentRegion = UserConfiguration.AzureSpeechRegion;
+            string azureSpeechRegion = Microsoft.VisualBasic.Interaction.InputBox("Enter the Speech region for Microsoft Azure", "Azure Speech region", currentRegion ?? string.Empty);
+            if (!string.IsNullOrEmpty(azureSpeechRegion))
+            {
+                UserConfiguration.AzureSpeechRegion = azureSpeechRegion;
+            }
+            if (UserConfiguration.IsAzureSupported)
+            {
+                AzureSpeak azureSpeak = new();
+                Dictionary<String, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
+                speechEngines.Add(azureSpeak.Description, azureSpeak);
+                voices.Add(azureSpeak.Description, azureVoices);
+            }
+        }
+
         private void Rbn_vowelToDiphthongStart_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();

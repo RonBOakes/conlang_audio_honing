@@ -27,6 +27,10 @@ namespace ConlangAudioHoning
     {
         private string? _pollyURI;
         private string? _eSpeakNgPath;
+        private string? _azureSpeechKey;
+        private string? _azureSpeechRegion;
+
+        private static UserConfiguration? config = null;
 
         public UserConfiguration()
         { }
@@ -49,6 +53,18 @@ namespace ConlangAudioHoning
             set => _eSpeakNgPath = value;
         }
 
+        public string AzureSpeechKey
+        {
+            get => _azureSpeechKey ?? string.Empty;
+            set => _azureSpeechKey = value;
+        }
+
+        public string AzureSpeechRegion
+        {
+            get => _azureSpeechRegion ?? string.Empty;
+            set => _azureSpeechRegion = value;
+        }
+
         /// <summary>
         /// True if this configuration has settings to load and support Amazon Polly.
         /// </summary>
@@ -64,6 +80,11 @@ namespace ConlangAudioHoning
         public bool IsESpeakNGSupported
         {
             get => (!string.IsNullOrEmpty(ESpeakNgPath));
+        }
+
+        public bool IsAzureSupported
+        {
+            get => (!string.IsNullOrEmpty(AzureSpeechKey) && !string.IsNullOrEmpty(AzureSpeechRegion));
         }
 
         public static JsonSerializerOptions GetJsonSerializerOptions()
@@ -141,6 +162,7 @@ namespace ConlangAudioHoning
             {
                 configuration = new UserConfiguration();
             }
+            config = configuration;
             return configuration;
         }
 
@@ -150,7 +172,10 @@ namespace ConlangAudioHoning
         /// <returns>The current version of the User Configuration.</returns>
         public static UserConfiguration LoadCurrent()
         {
-            UserConfiguration config = new();
+            if (config == null)
+            {
+                config = new();
+            }
             return config;
         }
 

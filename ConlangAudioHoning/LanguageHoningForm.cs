@@ -76,7 +76,7 @@ namespace ConlangAudioHoning
 
             NoEngineSpeak noEngineSpeak = new();
             speechEngines.Add(noEngineSpeak.Description, noEngineSpeak);
-            voices.Add(noEngineSpeak.Description,noEngineSpeak.GetVoices());
+            voices.Add(noEngineSpeak.Description, noEngineSpeak.GetVoices());
 
             if (UserConfiguration.IsESpeakNGSupported)
             {
@@ -94,6 +94,14 @@ namespace ConlangAudioHoning
                 Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
                 speechEngines.Add(pollySpeech.Description, pollySpeech);
                 voices.Add(pollySpeech.Description, amazonPollyVoices);
+            }
+
+            if (UserConfiguration.IsAzureSupported)
+            {
+                AzureSpeak azureSpeak = new();
+                Dictionary<String, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
+                speechEngines.Add(azureSpeak.Description, azureSpeak);
+                voices.Add(azureSpeak.Description, azureVoices);
             }
 
             phoneticChanger = new PhoneticChanger();
