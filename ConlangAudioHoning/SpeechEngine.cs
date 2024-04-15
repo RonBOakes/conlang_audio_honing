@@ -118,7 +118,7 @@ namespace ConlangAudioHoning
         /// <param name="caller">Optional link to the LanguageHoningForm that called this method.  If not
         /// null, the Decline method from that form will be used, allowing progress to be displayed.</param>
         /// <exception cref="ConlangAudioHoningException"></exception>
-        public abstract void Generate(string speed, LanguageHoningForm? caller = null);
+        public abstract void Generate(string speed, LanguageHoningForm? caller = null, VoiceData? voiceData = null);
 
         /// <summary>
         /// Generate speech and save it in the specified Target File.  

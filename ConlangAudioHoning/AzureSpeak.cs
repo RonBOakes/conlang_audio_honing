@@ -42,9 +42,141 @@ namespace ConlangAudioHoning
         }
 
 
-        public override void Generate(string speed, LanguageHoningForm? caller = null)
+        /// <summary>
+        /// Generate the phonetic text and SSML text.
+        /// </summary>
+        /// <param name="speed">SSML &lt;prosody&gt; speed value to be used in the generated SSML.</param>
+        /// <param name="caller">Optional link to the LanguageHoningForm that called this method.  If not
+        /// null, the Decline method from that form will be used, allowing progress to be displayed.</param>
+        /// <exception cref="ConlangAudioHoningException"></exception>
+        /// <param name="voiceData">Option reference to the voiceData for the preferred voice (if set) </param>
+        public override void Generate(string speed, LanguageHoningForm? caller = null, VoiceData? voiceData = null)
         {
-            throw new NotImplementedException();
+            if (LanguageDescription == null)
+            {
+                throw new ConlangAudioHoningException("Cannot Generate Polly Speech without a language description");
+            }
+            if (string.IsNullOrEmpty(SampleText))
+            {
+                throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
+            }
+            bool removeDerivedWords = false;
+            if (!LanguageDescription.derived)
+            {
+                ConlangUtilities.DeriveLexicon(LanguageDescription);
+                removeDerivedWords = true;
+            }
+            bool removeDeclinedWord = false;
+            if (!LanguageDescription.declined)
+            {
+                if (caller != null)
+                {
+                    caller.DeclineLexicon(LanguageDescription);
+                }
+                else
+                {
+                    ConlangUtilities.DeclineLexicon(LanguageDescription);
+                }
+                removeDeclinedWord = true;
+            }
+
+            // Build a lookup dictionary from the lexicon - spelled words to their lexicon entries
+            Dictionary<string, LexiconEntry> wordMap = [];
+            foreach (LexiconEntry entry in LanguageDescription.lexicon)
+            {
+                wordMap[entry.spelled.Trim().ToLower()] = entry;
+            }
+
+            // Get the phonetic representations of the text - ported from Python code.
+            List<List<Dictionary<string, string>>> pronounceMapList = [];
+            pronounceMapList.Clear();
+            using (StringReader sampleTextReader = new(SampleText.ToLower()))
+            {
+                string? line;
+                do
+                {
+                    line = sampleTextReader.ReadLine();
+                    if ((line != null) && (!line.Trim().Equals(string.Empty)))
+                    {
+                        List<Dictionary<string, string>> lineMapList = [];
+                        foreach (string word in line.Split())
+                        {
+                            Dictionary<string, string>? pronounceMap = PronounceWord(word, wordMap);
+                            if (pronounceMap != null)
+                            {
+                                lineMapList.Add(pronounceMap);
+                            }
+                        }
+                        pronounceMapList.Add(lineMapList);
+                    }
+                }
+                while (line != null);
+            }
+
+            SsmlText = "<speak xmlns=\"http://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"http://www.w3.org/2001/mstts\" xmlns:emo=\"http://www.w3.org/2009/10/emotionml\" version=\"1.0\" xml:lang=\"en-US\">\n";
+            if (voiceData == null)
+            {
+                SsmlText += "\t<voice name=\"en-US-RyanMultilingualNeural\">\n";
+            }
+            else
+            {
+                SsmlText += "\t<voice name=\"" + voiceData?.Id + "\">\n";
+            }
+            SsmlText += "\t\t<prosody rate=\"" + speed + "\">\n";
+            SsmlText += "\t\t\t<lang xml:lang=\"" + voiceData?.LanguageCode + "\">\n";
+
+            // Write an English introduction paragraph since reading of a book worked OK (this will get read by the language - maybe mangled)
+            SsmlText += "\t\t\t\t<p>The following is read in the users constructed language</p>\n";
+
+            PhoneticText = string.Empty;
+            int wordWrap = 0;
+
+            foreach (List<Dictionary<string, string>> lineMapList in pronounceMapList)
+            {
+                foreach (Dictionary<string, string> pronounceMap in lineMapList)
+                {
+                    // Build the phoneme tag
+                    if ((!pronounceMap["phonetic"].Trim().Equals(string.Empty)) && (pronounceMap["phonetic"] != ".") && (pronounceMap["phonetic"] != ","))
+                    {
+                        SsmlText += "\t\t\t\t<phoneme alphabet=\"ipa\" ph=\"" + pronounceMap["phonetic"] + "\">" + pronounceMap["word"] + "</phoneme>\n";
+                        PhoneticText += pronounceMap["phonetic"];
+                        wordWrap += pronounceMap["phonetic"].Length;
+                        if (pronounceMap["punctuation"] != "")
+                        {
+                            PhoneticText += pronounceMap["punctuation"];
+                            wordWrap += pronounceMap["punctuation"].Length;
+                        }
+                        PhoneticText += " ";
+                        wordWrap += 1;
+                    }
+                    else if (pronounceMap["punctuation"] == ".")
+                    {
+                        SsmlText += "\t\t\t\t<break strength=\"strong\"/>\n";
+                    }
+                    else if (pronounceMap["punctuation"] == ",")
+                    {
+                        SsmlText += "\t\t\t\t<break strength=\"weak\"/>\n";
+                    }
+                    if (wordWrap >= 80)
+                    {
+                        PhoneticText += "\n";
+                        wordWrap = 0;
+                    }
+                }
+            }
+            SsmlText += "\t\t\t</lang>";
+            SsmlText += "\t\t</prosody>\n";
+            SsmlText += "\t</voice>\n";
+            SsmlText += "</speak>\n";
+
+            if (removeDeclinedWord)
+            {
+                ConlangUtilities.RemoveDeclinedEntries(LanguageDescription);
+            }
+            if (removeDerivedWords)
+            {
+                ConlangUtilities.RemoveDerivedEntries(LanguageDescription);
+            }
         }
 
         public override bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)

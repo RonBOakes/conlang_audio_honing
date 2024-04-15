@@ -1594,7 +1594,17 @@ namespace ConlangAudioHoning
                 {
                     engineName = cbx_speechEngine.Text.Trim();
                 }
-                speechEngines[engineName].Generate(speed, this);
+                string voiceName;
+                if(cbx_voice.SelectedIndex == -1)
+                {
+                    voiceName = string.Empty;
+                }
+                else
+                {
+                    voiceName = cbx_voice.Text.Trim().Split()[0];
+                }
+                SpeechEngine.VoiceData? voiceData = string.IsNullOrEmpty(voiceName) ? null : voices[engineName][voiceName];
+                speechEngines[engineName].Generate(speed, this, voiceData);
                 txt_phonetic.Text = speechEngines[engineName].PhoneticText;
             }
             _ = sb.AppendLine(txt_phonetic.Text.Trim());

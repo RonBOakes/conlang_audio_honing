@@ -23,6 +23,7 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ConlangAudioHoning
 {
@@ -128,7 +129,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void This_FormClosing(Object? sender, FormClosingEventArgs e)
+        private void This_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (languageDirty)
             {
@@ -215,8 +216,18 @@ namespace ConlangAudioHoning
                     engineName = cbx_speechEngine.Text.Trim();
                 }
                 SpeechEngine engine = speechEngines[engineName];
+                string voiceName;
+                if (cbx_voice.SelectedIndex == -1)
+                {
+                    voiceName = string.Empty;
+                }
+                else
+                {
+                    voiceName = cbx_voice.Text.Trim().Split()[0];
+                }
+                SpeechEngine.VoiceData? voiceData = string.IsNullOrEmpty(voiceName) ? null : voices[engineName][voiceName];
                 string speed = cbx_speed.Text.Trim();
-                engine.Generate(speed, this);
+                engine.Generate(speed, this, voiceData);
                 txt_phonetic.Text = engine.PhoneticText;
             }
         }
@@ -949,7 +960,7 @@ namespace ConlangAudioHoning
             if (UserConfiguration.IsAzureSupported)
             {
                 AzureSpeak azureSpeak = new();
-                Dictionary<String, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
+                Dictionary<string, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
                 speechEngines.Add(azureSpeak.Description, azureSpeak);
                 voices.Add(azureSpeak.Description, azureVoices);
             }
@@ -966,7 +977,7 @@ namespace ConlangAudioHoning
             if (UserConfiguration.IsAzureSupported)
             {
                 AzureSpeak azureSpeak = new();
-                Dictionary<String, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
+                Dictionary<string, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
                 speechEngines.Add(azureSpeak.Description, azureSpeak);
                 voices.Add(azureSpeak.Description, azureVoices);
             }
