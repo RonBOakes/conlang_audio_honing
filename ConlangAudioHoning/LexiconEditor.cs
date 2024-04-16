@@ -98,11 +98,17 @@ namespace ConlangAudioHoning
             get; set;
         }
 
+        /// <summary>
+        /// Exports the SaveAndClose menu for access by parent forms.
+        /// </summary>
         public ToolStripMenuItem SaveAndCloseToolStripMenuItem
         {
             get => saveAndCloseToolStripMenuItem;
         }
 
+        /// <summary>
+        /// Exports the close without saving menu for access by parent forms.
+        /// </summary>
         public ToolStripMenuItem CloseWithoutSavingToolStripMenuItem
         {
             get => closeWithoutSavingToolStripMenuItem;

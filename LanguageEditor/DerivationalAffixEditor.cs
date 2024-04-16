@@ -44,7 +44,7 @@ namespace LanguageEditor
                 {
                     _affixRules.type = "SUFFIX";
                 }
-                if (rbn_fixed.Checked == true)
+                if (rbn_fixed.Checked)
                 {
                     if ((_affixRules.pronunciation_add == string.Empty) && (_affixRules.spelling_add == string.Empty))
                     {
@@ -183,155 +183,197 @@ namespace LanguageEditor
             this.Size = controlSize;
             this.BorderStyle = BorderStyle.None;
 
-            lbl_affixType = new Label();
-            lbl_affixType.Text = "Affix Type:";
-            lbl_affixType.Location = new Point(5, 5);
-            lbl_affixType.Size = new Size(200, 25);
-            lbl_affixType.TextAlign = ContentAlignment.MiddleRight;
+            lbl_affixType = new Label
+            {
+                Text = "Affix Type:",
+                Location = new Point(5, 5),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_affixType);
 
-            cmb_affixType = new ComboBox();
-            cmb_affixType.Location = new Point(205, 5);
-            cmb_affixType.Size = new Size(200, 25);
+            cmb_affixType = new ComboBox
+            {
+                Location = new Point(205, 5),
+                Size = new Size(200, 25)
+            };
             cmb_affixType.Items.AddRange(_affixTypes);
             Controls.Add(cmb_affixType);
 
-            gb_ruleType = new GroupBox();
-            gb_ruleType.Location = new Point(5, 30);
-            gb_ruleType.Size = new Size(500, 50);
+            gb_ruleType = new GroupBox
+            {
+                Location = new Point(5, 30),
+                Size = new Size(500, 50)
+            };
             Controls.Add(gb_ruleType);
 
-            rbn_fixed = new RadioButton();
-            rbn_fixed.Text = "Fixed Rule";
-            rbn_fixed.Location = new Point(5, 5);
-            rbn_fixed.Size = new Size(200, 25);
+            rbn_fixed = new RadioButton
+            {
+                Text = "Fixed Rule",
+                Location = new Point(5, 5),
+                Size = new Size(200, 25)
+            };
             gb_ruleType.Controls.Add(rbn_fixed);
 
-            rbn_conditional = new RadioButton();
-            rbn_conditional.Text = "Conditional Rule";
-            rbn_conditional.Location = new Point(205, 5);
-            rbn_conditional.Size = new Size(200, 25);
+            rbn_conditional = new RadioButton
+            {
+                Text = "Conditional Rule",
+                Location = new Point(205, 5),
+                Size = new Size(200, 25)
+            };
             gb_ruleType.Controls.Add(rbn_conditional);
 
             rbn_fixed.Checked = true;
             rbn_conditional.Checked = false;
 
-            lbl_pronunciationAdd = new Label();
-            lbl_pronunciationAdd.Text = "pronunciation Add:";
-            lbl_pronunciationAdd.Location = new Point(5, 90);
-            lbl_pronunciationAdd.Size = new Size(200, 25);
-            lbl_pronunciationAdd.TextAlign = ContentAlignment.MiddleRight;
+            lbl_pronunciationAdd = new Label
+            {
+                Text = "pronunciation Add:",
+                Location = new Point(5, 90),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_pronunciationAdd);
             lbl_pronunciationAdd.Visible = true;
 
-            txt_pronunciationAdd = new TextBox();
-            txt_pronunciationAdd.Location = new Point(205, 90);
-            txt_pronunciationAdd.Size = new Size(200, 25);
+            txt_pronunciationAdd = new TextBox
+            {
+                Location = new Point(205, 90),
+                Size = new Size(200, 25)
+            };
             Controls.Add(txt_pronunciationAdd);
             txt_pronunciationAdd.Visible = true;
             txt_pronunciationAdd.Enabled = true;
 
-            lbl_pronunciationRegex = new Label();
-            lbl_pronunciationRegex.Text = "pronunciation Regex:";
-            lbl_pronunciationRegex.Location = new Point(5, 90);
-            lbl_pronunciationRegex.Size = new Size(200, 25);
-            lbl_pronunciationRegex.TextAlign = ContentAlignment.MiddleRight;
+            lbl_pronunciationRegex = new Label
+            {
+                Text = "pronunciation Regex:",
+                Location = new Point(5, 90),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_pronunciationRegex);
             lbl_pronunciationRegex.Visible = false;
 
-            txt_pronunciationRegex = new TextBox();
-            txt_pronunciationRegex.Location = new Point(205, 90);
-            txt_pronunciationRegex.Size = new Size(200, 25);
+            txt_pronunciationRegex = new TextBox
+            {
+                Location = new Point(205, 90),
+                Size = new Size(200, 25)
+            };
             Controls.Add(txt_pronunciationRegex);
             txt_pronunciationRegex.Visible = false;
             txt_pronunciationRegex.Enabled = false;
 
-            lbl_spellingAdd = new Label();
-            lbl_spellingAdd.Text = "Spelling Add:";
-            lbl_spellingAdd.Location = new Point(5, 120);
-            lbl_spellingAdd.Size = new Size(200, 25);
-            lbl_spellingAdd.TextAlign = ContentAlignment.MiddleRight;
+            lbl_spellingAdd = new Label
+            {
+                Text = "Spelling Add:",
+                Location = new Point(5, 120),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_spellingAdd);
             lbl_spellingAdd.Visible = true;
 
-            txt_spellingAdd = new TextBox();
-            txt_spellingAdd.Location = new Point(205, 120);
-            txt_spellingAdd.Size = new Size(200, 25);
+            txt_spellingAdd = new TextBox
+            {
+                Location = new Point(205, 120),
+                Size = new Size(200, 25)
+            };
             Controls.Add(txt_spellingAdd);
             txt_spellingAdd.Visible = true;
             txt_spellingAdd.Enabled = true;
 
-            lbl_spellingRegex = new Label();
-            lbl_spellingRegex.Text = "Spelling Add:";
-            lbl_spellingRegex.Location = new Point(5, 120);
-            lbl_spellingRegex.Size = new Size(200, 25);
-            lbl_spellingRegex.TextAlign = ContentAlignment.MiddleRight;
+            lbl_spellingRegex = new Label
+            {
+                Text = "Spelling Add:",
+                Location = new Point(5, 120),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_spellingRegex);
             lbl_spellingRegex.Visible = false;
 
-            txt_spellingRegex = new TextBox();
-            txt_spellingRegex.Location = new Point(205, 120);
-            txt_spellingRegex.Size = new Size(200, 25);
+            txt_spellingRegex = new TextBox
+            {
+                Location = new Point(205, 120),
+                Size = new Size(200, 25)
+            };
             Controls.Add(txt_spellingRegex);
             txt_spellingRegex.Visible = true;
             txt_spellingRegex.Enabled = true;
 
-            lbl_tpronunciationAdd = new Label();
-            lbl_tpronunciationAdd.Text = "True pronunciation Add:";
-            lbl_tpronunciationAdd.Location = new Point(5, 150);
-            lbl_tpronunciationAdd.Size = new Size(200, 25);
-            lbl_tpronunciationAdd.TextAlign = ContentAlignment.MiddleRight;
+            lbl_tpronunciationAdd = new Label
+            {
+                Text = "True pronunciation Add:",
+                Location = new Point(5, 150),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_tpronunciationAdd);
             lbl_tpronunciationAdd.Visible = false;
 
-            txt_tpronunciationAdd = new TextBox();
-            txt_tpronunciationAdd.Location = new Point(205, 150);
-            txt_tpronunciationAdd.Size = new Size(200, 25);
+            txt_tpronunciationAdd = new TextBox
+            {
+                Location = new Point(205, 150),
+                Size = new Size(200, 25)
+            };
             Controls.Add(txt_tpronunciationAdd);
             txt_tpronunciationAdd.Visible = false;
             txt_tpronunciationAdd.Enabled = false;
 
-            lbl_tSpellingAdd = new Label();
-            lbl_tSpellingAdd.Text = "True Spelling Add:";
-            lbl_tSpellingAdd.Location = new Point(5, 180);
-            lbl_tSpellingAdd.Size = new Size(200, 25);
-            lbl_tSpellingAdd.TextAlign = ContentAlignment.MiddleRight;
+            lbl_tSpellingAdd = new Label
+            {
+                Text = "True Spelling Add:",
+                Location = new Point(5, 180),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_tSpellingAdd);
             lbl_tSpellingAdd.Visible = false;
 
-            txt_tSpellingAdd = new TextBox();
-            txt_tSpellingAdd.Location = new Point(205, 180);
-            txt_tSpellingAdd.Size = new Size(200, 25);
+            txt_tSpellingAdd = new TextBox
+            {
+                Location = new Point(205, 180),
+                Size = new Size(200, 25)
+            };
             Controls.Add(txt_tSpellingAdd);
             txt_tSpellingAdd.Visible = false;
             txt_tSpellingAdd.Enabled = false;
 
-            lbl_fpronunciationAdd = new Label();
-            lbl_fpronunciationAdd.Text = "False pronunciation Add:";
-            lbl_fpronunciationAdd.Location = new Point(5, 210);
-            lbl_fpronunciationAdd.Size = new Size(200, 25);
-            lbl_fpronunciationAdd.TextAlign = ContentAlignment.MiddleRight;
+            lbl_fpronunciationAdd = new Label
+            {
+                Text = "False pronunciation Add:",
+                Location = new Point(5, 210),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_fpronunciationAdd);
             lbl_fpronunciationAdd.Visible = false;
 
-            txt_fpronunciationAdd = new TextBox();
-            txt_fpronunciationAdd.Location = new Point(205, 210);
-            txt_fpronunciationAdd.Size = new Size(200, 25);
+            txt_fpronunciationAdd = new TextBox
+            {
+                Location = new Point(205, 210),
+                Size = new Size(200, 25)
+            };
             Controls.Add(txt_fpronunciationAdd);
             txt_fpronunciationAdd.Visible = false;
             txt_fpronunciationAdd.Enabled = false;
 
-            lbl_fSpellingAdd = new Label();
-            lbl_fSpellingAdd.Text = "False Spelling Add:";
-            lbl_fSpellingAdd.Location = new Point(5, 240);
-            lbl_fSpellingAdd.Size = new Size(200, 25);
-            lbl_fSpellingAdd.TextAlign = ContentAlignment.MiddleRight;
+            lbl_fSpellingAdd = new Label
+            {
+                Text = "False Spelling Add:",
+                Location = new Point(5, 240),
+                Size = new Size(200, 25),
+                TextAlign = ContentAlignment.MiddleRight
+            };
             Controls.Add(lbl_fSpellingAdd);
             lbl_fSpellingAdd.Visible = false;
 
-            txt_fSpellingAdd = new TextBox();
-            txt_fSpellingAdd.Location = new Point(205, 240);
-            txt_fSpellingAdd.Size = new Size(200, 25);
+            txt_fSpellingAdd = new TextBox
+            {
+                Location = new Point(205, 240),
+                Size = new Size(200, 25)
+            };
             Controls.Add(txt_fSpellingAdd);
             txt_fSpellingAdd.Visible = false;
             txt_fSpellingAdd.Enabled = false;
@@ -341,7 +383,7 @@ namespace LanguageEditor
 
         private void Rbn_fixed_CheckedChanged(object? sender, EventArgs e)
         {
-            if (rbn_fixed.Checked == true)
+            if (rbn_fixed.Checked)
             {
                 this.SuspendLayout();
                 lbl_pronunciationAdd.Visible = true;

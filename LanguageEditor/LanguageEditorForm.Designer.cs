@@ -48,7 +48,7 @@
         {
             lbl_languageNameEnglish = new Label();
             txt_languageNameEnglish = new TextBox();
-            lbl_langageNativePhonetic = new Label();
+            lbl_languageNativePhonetic = new Label();
             txt_languageNativePhonetic = new TextBox();
             lbl_languageNameNativeEnglish = new Label();
             txt_languageNameNativeEnglish = new TextBox();
@@ -66,14 +66,14 @@
             panel_phonemeInventory = new Panel();
             lbl_phonemeInventory = new Label();
             panel_partsOfSpeechList = new Panel();
-            lbl_partsOfSpeach = new Label();
+            lbl_partsOfSpeech = new Label();
             tab_soundMapList = new TabPage();
             tab_derivationalAffixMap = new TabPage();
             tpn_DerivationalAffixMap = new TabControl();
             tabPage1 = new TabPage();
             tabPage2 = new TabPage();
             tab_derivedWordList = new TabPage();
-            tab_declinsionAffixes = new TabPage();
+            tab_declensionAffixes = new TabPage();
             tab_lexicon = new TabPage();
             menuStrip1.SuspendLayout();
             panel_nounGender.SuspendLayout();
@@ -101,15 +101,15 @@
             txt_languageNameEnglish.Size = new Size(363, 23);
             txt_languageNameEnglish.TabIndex = 1;
             // 
-            // lbl_langageNativePhonetic
+            // lbl_languageNativePhonetic
             // 
-            lbl_langageNativePhonetic.AutoSize = true;
-            lbl_langageNativePhonetic.Location = new Point(14, 66);
-            lbl_langageNativePhonetic.Margin = new Padding(4, 0, 4, 0);
-            lbl_langageNativePhonetic.Name = "lbl_langageNativePhonetic";
-            lbl_langageNativePhonetic.Size = new Size(152, 15);
-            lbl_langageNativePhonetic.TabIndex = 2;
-            lbl_langageNativePhonetic.Text = "Language Name (Phonetic)";
+            lbl_languageNativePhonetic.AutoSize = true;
+            lbl_languageNativePhonetic.Location = new Point(14, 66);
+            lbl_languageNativePhonetic.Margin = new Padding(4, 0, 4, 0);
+            lbl_languageNativePhonetic.Name = "lbl_languageNativePhonetic";
+            lbl_languageNativePhonetic.Size = new Size(152, 15);
+            lbl_languageNativePhonetic.TabIndex = 2;
+            lbl_languageNativePhonetic.Text = "Language Name (Phonetic)";
             // 
             // txt_languageNativePhonetic
             // 
@@ -159,14 +159,14 @@
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             loadToolStripMenuItem.Size = new Size(180, 22);
             loadToolStripMenuItem.Text = "Load";
-            loadToolStripMenuItem.Click += loadToolStripMenuItem_Click;
+            loadToolStripMenuItem.Click += LoadToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.Size = new Size(180, 22);
             saveToolStripMenuItem.Text = "Save";
-            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
+            saveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -178,7 +178,7 @@
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             exitToolStripMenuItem.Size = new Size(180, 22);
             exitToolStripMenuItem.Text = "Exit";
-            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
             // panel_nounGender
             // 
@@ -212,7 +212,7 @@
             tpn_Main.Controls.Add(tab_soundMapList);
             tpn_Main.Controls.Add(tab_derivationalAffixMap);
             tpn_Main.Controls.Add(tab_derivedWordList);
-            tpn_Main.Controls.Add(tab_declinsionAffixes);
+            tpn_Main.Controls.Add(tab_declensionAffixes);
             tpn_Main.Controls.Add(tab_lexicon);
             tpn_Main.Location = new Point(18, 124);
             tpn_Main.Name = "tpn_Main";
@@ -225,7 +225,7 @@
             tab_misc.Controls.Add(panel_phonemeInventory);
             tab_misc.Controls.Add(lbl_phonemeInventory);
             tab_misc.Controls.Add(panel_partsOfSpeechList);
-            tab_misc.Controls.Add(lbl_partsOfSpeach);
+            tab_misc.Controls.Add(lbl_partsOfSpeech);
             tab_misc.Location = new Point(4, 24);
             tab_misc.Name = "tab_misc";
             tab_misc.Padding = new Padding(3);
@@ -259,14 +259,14 @@
             panel_partsOfSpeechList.Size = new Size(417, 328);
             panel_partsOfSpeechList.TabIndex = 5;
             // 
-            // lbl_partsOfSpeach
+            // lbl_partsOfSpeech
             // 
-            lbl_partsOfSpeach.AutoSize = true;
-            lbl_partsOfSpeach.Location = new Point(6, 4);
-            lbl_partsOfSpeach.Name = "lbl_partsOfSpeach";
-            lbl_partsOfSpeach.Size = new Size(88, 15);
-            lbl_partsOfSpeach.TabIndex = 4;
-            lbl_partsOfSpeach.Text = "Parts of Speech";
+            lbl_partsOfSpeech.AutoSize = true;
+            lbl_partsOfSpeech.Location = new Point(6, 4);
+            lbl_partsOfSpeech.Name = "lbl_partsOfSpeech";
+            lbl_partsOfSpeech.Size = new Size(88, 15);
+            lbl_partsOfSpeech.TabIndex = 4;
+            lbl_partsOfSpeech.Text = "Parts of Speech";
             // 
             // tab_soundMapList
             // 
@@ -330,15 +330,15 @@
             tab_derivedWordList.Text = "Derived Word Sources";
             tab_derivedWordList.UseVisualStyleBackColor = true;
             // 
-            // tab_declinsionAffixes
+            // tab_declensionAffixes
             // 
-            tab_declinsionAffixes.Location = new Point(4, 24);
-            tab_declinsionAffixes.Name = "tab_declinsionAffixes";
-            tab_declinsionAffixes.Padding = new Padding(3);
-            tab_declinsionAffixes.Size = new Size(895, 355);
-            tab_declinsionAffixes.TabIndex = 4;
-            tab_declinsionAffixes.Text = "Declension Affixes";
-            tab_declinsionAffixes.UseVisualStyleBackColor = true;
+            tab_declensionAffixes.Location = new Point(4, 24);
+            tab_declensionAffixes.Name = "tab_declensionAffixes";
+            tab_declensionAffixes.Padding = new Padding(3);
+            tab_declensionAffixes.Size = new Size(895, 355);
+            tab_declensionAffixes.TabIndex = 4;
+            tab_declensionAffixes.Text = "Declension Affixes";
+            tab_declensionAffixes.UseVisualStyleBackColor = true;
             // 
             // tab_lexicon
             // 
@@ -362,7 +362,7 @@
             Controls.Add(txt_languageNameNativeEnglish);
             Controls.Add(lbl_languageNameNativeEnglish);
             Controls.Add(txt_languageNativePhonetic);
-            Controls.Add(lbl_langageNativePhonetic);
+            Controls.Add(lbl_languageNativePhonetic);
             Controls.Add(txt_languageNameEnglish);
             Controls.Add(lbl_languageNameEnglish);
             Controls.Add(menuStrip1);
@@ -370,7 +370,6 @@
             Margin = new Padding(4, 3, 4, 3);
             Name = "LanguageEditorForm";
             Text = "Conlang Editor";
-            Load += Form1_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             panel_nounGender.ResumeLayout(false);
@@ -387,7 +386,7 @@
 
         private System.Windows.Forms.Label lbl_languageNameEnglish;
         private System.Windows.Forms.TextBox txt_languageNameEnglish;
-        private System.Windows.Forms.Label lbl_langageNativePhonetic;
+        private System.Windows.Forms.Label lbl_languageNativePhonetic;
         private System.Windows.Forms.TextBox txt_languageNativePhonetic;
         private System.Windows.Forms.Label lbl_languageNameNativeEnglish;
         private System.Windows.Forms.TextBox txt_languageNameNativeEnglish;
@@ -403,13 +402,13 @@
         private Panel panel_phonemeInventory;
         private Label lbl_phonemeInventory;
         private Panel panel_partsOfSpeechList;
-        private Label lbl_partsOfSpeach;
+        private Label lbl_partsOfSpeech;
         private TabPage tab_lexicon;
         private TabPage tab_derivationalAffixMap;
         private TabControl tpn_DerivationalAffixMap;
         private TabPage tabPage1;
         private TabPage tabPage2;
-        private TabPage tab_declinsionAffixes;
+        private TabPage tab_declensionAffixes;
         private TabPage tab_derivedWordList;
         private ToolStripMenuItem saveToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;

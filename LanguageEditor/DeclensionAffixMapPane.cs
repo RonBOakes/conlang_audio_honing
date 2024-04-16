@@ -114,11 +114,13 @@ namespace LanguageEditor
             tab.Controls.Clear();
             foreach (Dictionary<string, List<Dictionary<string, Affix>>> entry in _affix_map[tab.Text])
             {
-                PosSubPane posSubPane = new();
-                posSubPane.PosSubMap = entry;
-                posSubPane.Location = new Point(xPos, yPos);
-                posSubPane.Size = new Size(tab.Size.Width, 350);
-                posSubPane.BorderStyle = BorderStyle.FixedSingle;
+                PosSubPane posSubPane = new()
+                {
+                    PosSubMap = entry,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(tab.Size.Width, 350),
+                    BorderStyle = BorderStyle.FixedSingle
+                };
                 tab.Controls.Add(posSubPane);
                 yPos += posSubPane.Height + 5;
             }
@@ -128,9 +130,11 @@ namespace LanguageEditor
         private void InitializeComponent()
         {
             this.Size = InitialSize;
-            tpn_partOfSpeechLevel = new TabControl();
-            tpn_partOfSpeechLevel.Size = this.Size;
-            tpn_partOfSpeechLevel.Location = new System.Drawing.Point(0, 0);
+            tpn_partOfSpeechLevel = new TabControl
+            {
+                Size = this.Size,
+                Location = new System.Drawing.Point(0, 0)
+            };
             this.Controls.Add(tpn_partOfSpeechLevel);
             tpn_partOfSpeechLevel.SelectedIndexChanged += tpn_partOfSpeechLevel_SelectedIndexChanged;
             this.SizeChanged += this_SizeChanged;
@@ -234,11 +238,13 @@ namespace LanguageEditor
                 {
                     foreach (string key in entry.Keys) // Should only be one entry
                     {
-                        DeclensionAffixEditor declensionAffixEditor = new();
-                        declensionAffixEditor.Declension = key;
-                        declensionAffixEditor.AffixRules = entry[key];
-                        declensionAffixEditor.Location = new Point(xPos, yPos);
-                        declensionAffixEditor.BorderStyle = BorderStyle.FixedSingle;
+                        DeclensionAffixEditor declensionAffixEditor = new()
+                        {
+                            Declension = key,
+                            AffixRules = entry[key],
+                            Location = new Point(xPos, yPos),
+                            BorderStyle = BorderStyle.FixedSingle
+                        };
                         tab.Controls.Add(declensionAffixEditor);
                         yPos += declensionAffixEditor.Height + 5;
                     }
@@ -248,10 +254,7 @@ namespace LanguageEditor
 
             void updateData()
             {
-                if (_posSubMap == null)
-                {
-                    _posSubMap = [];
-                }
+                _posSubMap ??= [];
 
                 DeclensionAffixEditor das = new();
                 _posSubMap.Clear();
@@ -281,9 +284,11 @@ namespace LanguageEditor
 
             private void InitializeComponent()
             {
-                tpn_affixLevel = new TabControl();
-                tpn_affixLevel.Size = this.Size;
-                tpn_affixLevel.Location = new System.Drawing.Point(0, 0);
+                tpn_affixLevel = new TabControl
+                {
+                    Size = this.Size,
+                    Location = new System.Drawing.Point(0, 0)
+                };
                 this.Controls.Add(tpn_affixLevel);
                 tpn_affixLevel.SelectedIndexChanged += tpn_affixLevel_SelectedIndexChanged;
                 this.SizeChanged += this_SizeChanged;

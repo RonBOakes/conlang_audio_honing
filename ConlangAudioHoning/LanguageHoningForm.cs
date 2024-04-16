@@ -114,9 +114,9 @@ namespace ConlangAudioHoning
 
             // Hide controls on the Diphthong tab that only show up when certain radio buttons are pressed
             lbl_diphthongStartVowel.Visible = false;
-            cbx_dipthongStartVowel.Visible = false;
+            cbx_diphthongStartVowel.Visible = false;
             lbl_DiphthongEndVowel.Visible = false;
-            cbx_dipthongEndVowel.Visible = false;
+            cbx_diphthongEndVowel.Visible = false;
 
             // Handle the ApplicationExit event to know when the application is exiting.
             Application.ApplicationExit += new EventHandler(OnApplicationExit);
@@ -435,9 +435,9 @@ namespace ConlangAudioHoning
                         _ = sb.Append(IpaUtilities.IpaPhonemesMap[consonant]);
                         _ = cbx_phonemeToChange.Items.Add(sb.ToString());
                     }
-                    cbx_dipthongStartVowel.Visible = false;
+                    cbx_diphthongStartVowel.Visible = false;
                     lbl_diphthongStartVowel.Visible = false;
-                    cbx_dipthongEndVowel.Visible = false;
+                    cbx_diphthongEndVowel.Visible = false;
                     lbl_DiphthongEndVowel.Visible = false;
                     cbx_replacementPhoneme.Visible = true;
                     lbl_replacementCbx.Visible = true;
@@ -468,9 +468,9 @@ namespace ConlangAudioHoning
                         _ = cbx_phonemeToChange.Items.Add(sb.ToString());
                     }
 
-                    cbx_dipthongStartVowel.Visible = false;
+                    cbx_diphthongStartVowel.Visible = false;
                     lbl_diphthongStartVowel.Visible = false;
-                    cbx_dipthongEndVowel.Visible = false;
+                    cbx_diphthongEndVowel.Visible = false;
                     lbl_DiphthongEndVowel.Visible = false;
                     cbx_replacementPhoneme.Visible = true;
                     lbl_replacementCbx.Visible = true;
@@ -481,7 +481,7 @@ namespace ConlangAudioHoning
                 case 2: // Vowel diphthongs
                     cbx_phonemeToChange.Items.Clear();
                     // The SpeakingSpeeds to go into the combo box depend on the selected radio button
-                    if (rbn_vowelToDiphthongStart.Checked || rbn_vowelToDipthongEnd.Checked)
+                    if (rbn_vowelToDiphthongStart.Checked || rbn_vowelToDiphthongEnd.Checked)
                     {
                         // Populate with vowels
                         // When the language was loaded, the phonetic inventory was built, or rebuilt, so we can
@@ -558,18 +558,18 @@ namespace ConlangAudioHoning
 
                     if (rbn_diphthongReplacement.Checked)
                     {
-                        cbx_dipthongStartVowel.Visible = true;
+                        cbx_diphthongStartVowel.Visible = true;
                         lbl_diphthongStartVowel.Visible = true;
-                        cbx_dipthongEndVowel.Visible = true;
+                        cbx_diphthongEndVowel.Visible = true;
                         lbl_DiphthongEndVowel.Visible = true;
                         cbx_replacementPhoneme.Visible = false;
                         lbl_replacementCbx.Visible = false;
                     }
                     else
                     {
-                        cbx_dipthongStartVowel.Visible = false;
+                        cbx_diphthongStartVowel.Visible = false;
                         lbl_diphthongStartVowel.Visible = false;
-                        cbx_dipthongEndVowel.Visible = false;
+                        cbx_diphthongEndVowel.Visible = false;
                         lbl_DiphthongEndVowel.Visible = false;
                         cbx_replacementPhoneme.Visible = true;
                         lbl_replacementCbx.Visible = true;
@@ -678,17 +678,17 @@ namespace ConlangAudioHoning
                         List<SoundMap> rAddingEntries = PhoneticChanger.GetRAddingSoundMapEntries(languageDescription.sound_map_list);
                         cbx_phonemeToChange.Items.AddRange(rAddingEntries.ToArray());
                     }
-                    cbx_dipthongStartVowel.Visible = false;
+                    cbx_diphthongStartVowel.Visible = false;
                     lbl_diphthongStartVowel.Visible = false;
-                    cbx_dipthongEndVowel.Visible = false;
+                    cbx_diphthongEndVowel.Visible = false;
                     lbl_DiphthongEndVowel.Visible = false;
                     cbx_replacementPhoneme.Visible = true;
                     lbl_replacementCbx.Visible = true;
                     break;
                 case 4: // Special Operations
-                    cbx_dipthongStartVowel.Visible = false;
+                    cbx_diphthongStartVowel.Visible = false;
                     lbl_diphthongStartVowel.Visible = false;
-                    cbx_dipthongEndVowel.Visible = false;
+                    cbx_diphthongEndVowel.Visible = false;
                     lbl_DiphthongEndVowel.Visible = false;
                     cbx_replacementPhoneme.Visible = true;
                     lbl_replacementCbx.Visible = true;
@@ -951,7 +951,7 @@ namespace ConlangAudioHoning
                         }
                     }
                 }
-                else if (rbn_vowelToDipthongEnd.Checked)
+                else if (rbn_vowelToDiphthongEnd.Checked)
                 {
                     // Build a list of potential diphthongs from this vowel
                     string vowel = languageDescription.phonetic_inventory["vowels"][phonemeIndex].ToString();
@@ -1346,15 +1346,15 @@ namespace ConlangAudioHoning
                 }
                 else if (rbn_diphthongReplacement.Checked)
                 {
-                    cbx_dipthongStartVowel.Items.Clear();
-                    cbx_dipthongEndVowel.Items.Clear();
+                    cbx_diphthongStartVowel.Items.Clear();
+                    cbx_diphthongEndVowel.Items.Clear();
                     foreach (string replacementVowel in IpaUtilities.Vowels)
                     {
                         StringBuilder sb = new();
                         _ = sb.AppendFormat("{0} -- ", replacementVowel);
                         _ = sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel[0..1]]);
-                        _ = cbx_dipthongStartVowel.Items.Add(sb.ToString());
-                        _ = cbx_dipthongEndVowel.Items.Add(sb.ToString());
+                        _ = cbx_diphthongStartVowel.Items.Add(sb.ToString());
+                        _ = cbx_diphthongEndVowel.Items.Add(sb.ToString());
                     }
                     foreach (string replacementVowel in IpaUtilities.Vowels)
                     {
@@ -1362,8 +1362,8 @@ namespace ConlangAudioHoning
                         _ = sb.AppendFormat("{0}ː -- ", replacementVowel);
                         _ = sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel[0..1]]);
                         _ = sb.Append(" lengthened");
-                        _ = cbx_dipthongStartVowel.Items.Add(sb.ToString());
-                        _ = cbx_dipthongEndVowel.Items.Add(sb.ToString());
+                        _ = cbx_diphthongStartVowel.Items.Add(sb.ToString());
+                        _ = cbx_diphthongEndVowel.Items.Add(sb.ToString());
                     }
                     foreach (string replacementVowel in IpaUtilities.Vowels)
                     {
@@ -1371,8 +1371,8 @@ namespace ConlangAudioHoning
                         _ = sb.AppendFormat("{0}ˑ -- ", replacementVowel);
                         _ = sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel[0..1]]);
                         _ = sb.Append(" half-lengthened");
-                        _ = cbx_dipthongStartVowel.Items.Add(sb.ToString());
-                        _ = cbx_dipthongEndVowel.Items.Add(sb.ToString());
+                        _ = cbx_diphthongStartVowel.Items.Add(sb.ToString());
+                        _ = cbx_diphthongEndVowel.Items.Add(sb.ToString());
                     }
                     foreach (string replacementVowel in IpaUtilities.Vowels)
                     {
@@ -1380,11 +1380,11 @@ namespace ConlangAudioHoning
                         _ = sb.AppendFormat("{0}\u032F -- ", replacementVowel);
                         _ = sb.Append(IpaUtilities.IpaPhonemesMap[replacementVowel[0..1]]);
                         _ = sb.Append(" semi-vowel");
-                        _ = cbx_dipthongStartVowel.Items.Add(sb.ToString());
-                        _ = cbx_dipthongEndVowel.Items.Add(sb.ToString());
+                        _ = cbx_diphthongStartVowel.Items.Add(sb.ToString());
+                        _ = cbx_diphthongEndVowel.Items.Add(sb.ToString());
                     }
-                    cbx_dipthongStartVowel.SelectedIndex = -1;
-                    cbx_dipthongEndVowel.SelectedIndex = -1;
+                    cbx_diphthongStartVowel.SelectedIndex = -1;
+                    cbx_diphthongEndVowel.SelectedIndex = -1;
                 }
             }
             else if (tabPhoneticAlterations.SelectedIndex == 3)  // Rhoticity
@@ -1678,8 +1678,8 @@ namespace ConlangAudioHoning
 
         private bool BuildNewDiphthong(ref string newPhoneme)
         {
-            string startVowel = cbx_dipthongStartVowel.Text.Split()[0];
-            string endVowel = cbx_dipthongEndVowel.Text.Split()[0];
+            string startVowel = cbx_diphthongStartVowel.Text.Split()[0];
+            string endVowel = cbx_diphthongEndVowel.Text.Split()[0];
 
             // Validate the potential diphthong to confirm it is valid
             if ((startVowel[0..1] == endVowel[0..1]) ||

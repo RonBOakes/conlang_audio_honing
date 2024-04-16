@@ -7,9 +7,19 @@ using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// Form version of the Lexicon Editor.  This wraps around the LexiconEditor to allow for its use as an independent form.
+    /// </summary>
     public class LexiconEditorForm : Form
     {
-        private LexiconEditor editor;
+        private readonly LexiconEditor editor;
+
+        /// <summary>
+        /// Constructs a LexiconEditorForm.
+        /// </summary>
+        /// <param name="lexicon">Lexicon to be edited (empty by default)</param>
+        /// <param name="partOfSpeech">Part of Speech list (empty by default)</param>
+        /// <param name="soundMapList">Sound map list (empty by default)</param>
         public LexiconEditorForm(SortedSet<LexiconEntry>? lexicon = null, List<string>? partOfSpeech = null, List<SoundMap>? soundMapList = null)
         {
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -34,11 +44,17 @@ namespace ConlangAudioHoning
             this.Close();
         }
 
+        /// <summary>
+        /// Indicates that the subordinate LexiconEditor has saved its changes.
+        /// </summary>
         public bool Saved
         {
             get => editor.Saved;
         }
 
+        /// <summary>
+        /// Lexicon being edited.
+        /// </summary>
         public SortedSet<LexiconEntry> Lexicon
         {
             get => editor.Lexicon;

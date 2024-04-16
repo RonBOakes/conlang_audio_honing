@@ -172,10 +172,7 @@ namespace ConlangAudioHoning
         /// <returns>The current version of the User Configuration.</returns>
         public static UserConfiguration LoadCurrent()
         {
-            if (config == null)
-            {
-                config = new();
-            }
+            config ??= new();
             return config;
         }
 

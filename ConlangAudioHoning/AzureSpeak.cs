@@ -129,7 +129,6 @@ namespace ConlangAudioHoning
             SsmlText += "\t\t\t<lang xml:lang=\"" + voiceData?.LanguageCode + "\">\n";
 
             // Write an English introduction paragraph since reading of a book worked OK (this will get read by the language - maybe mangled)
-            //SsmlText += "\t\t\t\t<p>The following is read in the users constructed language</p>\n";
 
             PhoneticText = string.Empty;
             int wordWrap = 0;
@@ -217,7 +216,7 @@ namespace ConlangAudioHoning
 
             // Start configuring the speech engine
             speechConfig.SpeechSynthesisVoiceName = voice;
-            SpeechSynthesizer speechSynthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
+            SpeechSynthesizer speechSynthesizer = new(speechConfig, audioConfig);
 
             SpeechSynthesisResult speechSynthesisResult = speechSynthesizer.SpeakSsmlAsync(SsmlText).GetAwaiter().GetResult();
 
@@ -251,7 +250,7 @@ namespace ConlangAudioHoning
 
             string sURI = string.Format("https://{0}.tts.speech.microsoft.com/cognitiveservices/voices/list", speechRegion);
             JsonArray? responseData = null;
-            Uri uri = new Uri(string.Format("{0}?Host={1}.tts.speech.microsoft.com&Ocp-Apim-Subscription-Key={2}",
+            Uri uri = new(string.Format("{0}?Host={1}.tts.speech.microsoft.com&Ocp-Apim-Subscription-Key={2}",
                 sURI, speechRegion, speechKey));
             HttpResponseMessage result = httpClient.GetAsync(uri).Result;
             if (result.StatusCode != System.Net.HttpStatusCode.OK)
@@ -269,17 +268,22 @@ namespace ConlangAudioHoning
                 return voices;
             }
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8601 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8604 // Converting null literal or possible null value to non-nullable type.
             foreach (JsonNode? voiceNode in responseData)
             {
-                if (voiceNode is JsonObject)
+                if (voiceNode is JsonObject voice)
                 {
-                    JsonObject voice = (JsonObject)voiceNode;
-                    VoiceData voiceData = new VoiceData();
-                    voiceData.Name = (string)voice["Name"];
-                    voiceData.Gender = (string)voice["Gender"];
-                    voiceData.Id = (string)voice["ShortName"];
-                    voiceData.LanguageCode = (string)voice["LocaleName"];
-                    voiceData.LanguageName = (string)voice["LocaleName"];
+                    VoiceData voiceData = new()
+                    {
+                        Name = (string)voice["Name"],
+                        Gender = (string)voice["Gender"],
+                        Id = (string)voice["ShortName"],
+                        LanguageCode = (string)voice["LocaleName"],
+                        LanguageName = (string)voice["LocaleName"]
+                    };
                     if (voice.ContainsKey("SecondaryLocaleList"))
                     {
                         voiceData.AdditionalLanguageCodes = new string[((JsonArray)voice["SecondaryLocaleList"]).Count];
@@ -291,6 +295,10 @@ namespace ConlangAudioHoning
                     voices.Add(voiceData.Id, voiceData);
                 }
             }
+#pragma warning restore CS8604 // Converting null literal or possible null value to non-nullable type.
+#pragma warning restore CS8602 // Converting null literal or possible null value to non-nullable type.
+#pragma warning restore CS8601 // Converting null literal or possible null value to non-nullable type.
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             return voices;
         }

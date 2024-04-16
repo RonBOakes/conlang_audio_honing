@@ -117,6 +117,7 @@ namespace ConlangAudioHoning
         /// <param name="speed">SSML &lt;prosody&gt; speed value to be used in the generated SSML.</param>
         /// <param name="caller">Optional link to the LanguageHoningForm that called this method.  If not
         /// null, the Decline method from that form will be used, allowing progress to be displayed.</param>
+        /// <param name="voiceData">Optional voice data.  Required for some speech engines.</param>
         /// <exception cref="ConlangAudioHoningException"></exception>
         public abstract void Generate(string speed, LanguageHoningForm? caller = null, VoiceData? voiceData = null);
 

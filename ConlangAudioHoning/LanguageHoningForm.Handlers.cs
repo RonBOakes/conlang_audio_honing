@@ -583,7 +583,7 @@ namespace ConlangAudioHoning
             }
             else if ((tabPhoneticAlterations.SelectedIndex == 2) && (rbn_diphthongReplacement.Checked))
             {
-                if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_dipthongStartVowel.SelectedIndex == -1) || (cbx_dipthongEndVowel.SelectedIndex == -1))
+                if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_diphthongStartVowel.SelectedIndex == -1) || (cbx_diphthongEndVowel.SelectedIndex == -1))
                 {
                     return;
                 }
@@ -708,7 +708,7 @@ namespace ConlangAudioHoning
             }
             else if ((tabPhoneticAlterations.SelectedIndex == 2) && (rbn_diphthongReplacement.Checked))
             {
-                if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_dipthongStartVowel.SelectedIndex == -1) || (cbx_dipthongEndVowel.SelectedIndex == -1))
+                if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_diphthongStartVowel.SelectedIndex == -1) || (cbx_diphthongEndVowel.SelectedIndex == -1))
                 {
                     return;
                 }
@@ -989,7 +989,7 @@ namespace ConlangAudioHoning
         }
 
 
-        private void setAzureSpeechKeyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetAzureSpeechKeyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string currentKey = UserConfiguration.AzureSpeechKey;
             string azureSpeechKey = Microsoft.VisualBasic.Interaction.InputBox("Enter the Speech (Resource) key for Microsoft Azure", "AzureSpeechKey", currentKey ?? string.Empty);
@@ -1006,7 +1006,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void setAzureSpeechRegionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetAzureSpeechRegionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string currentRegion = UserConfiguration.AzureSpeechRegion;
             string azureSpeechRegion = Microsoft.VisualBasic.Interaction.InputBox("Enter the Speech region for Microsoft Azure", "Azure Speech region", currentRegion ?? string.Empty);

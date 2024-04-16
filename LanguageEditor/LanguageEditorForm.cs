@@ -30,7 +30,6 @@ namespace LanguageEditor
     {
         private LanguageDescription? languageDescription;
         private FileInfo? languageFileInfo = null;
-        private List<TextBox>? nounGenderTxtBoxes = null;
         private LexiconEditor? lexiconEditor = null;
         private SoundMapListEditor? soundMapEditor = null;
         private DeclensionAffixMapPane? declensionAffixMapPane = null;
@@ -40,62 +39,53 @@ namespace LanguageEditor
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new())
+            using OpenFileDialog openFileDialog = new();
+            if (languageFileInfo == null)
             {
-                if (languageFileInfo == null)
-                {
-                    openFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
-                }
-                else
-                {
-                    openFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
-                }
-                openFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.Multiselect = false;
-                openFileDialog.RestoreDirectory = true;
-                openFileDialog.CheckFileExists = true;
+                openFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            }
+            else
+            {
+                openFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+            }
+            openFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = false;
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.CheckFileExists = true;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    LoadLanguage(openFileDialog.FileName);
-                }
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                LoadLanguage(openFileDialog.FileName);
             }
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (SaveFileDialog saveFileDialog = new())
+            using SaveFileDialog saveFileDialog = new();
+            if (languageFileInfo == null)
             {
-                if (languageFileInfo == null)
-                {
-                    saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
-                }
-                else
-                {
-                    saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
-                }
-                saveFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
-                saveFileDialog.FilterIndex = 1;
-                saveFileDialog.RestoreDirectory = true;
-                saveFileDialog.CheckFileExists = false;
-                saveFileDialog.OverwritePrompt = true;
+                saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            }
+            else
+            {
+                saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+            }
+            saveFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.CheckFileExists = false;
+            saveFileDialog.OverwritePrompt = true;
 
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    SaveLanguage(saveFileDialog.FileName);
-                }
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                SaveLanguage(saveFileDialog.FileName);
             }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
@@ -117,32 +107,37 @@ namespace LanguageEditor
             txt_languageNativePhonetic.TextChanged -= Txt_languageNativePhonetic_TextChanged;
             txt_languageNativePhonetic.Text = languageDescription.native_name_phonetic;
             txt_languageNameNativeEnglish.Text = languageDescription.native_name_english;
-            nounGenderTxtBoxes = new List<TextBox>();
             int xPos = 0, yPos = 0;
             panel_nounGender.SuspendLayout();
             panel_nounGender.Controls.Clear();
             foreach (string nounGender in languageDescription.noun_gender_list)
             {
-                TextBox txt_nounGender = new();
-                txt_nounGender.Text = nounGender;
-                txt_nounGender.Location = new Point(xPos, yPos);
-                txt_nounGender.Size = new Size(125, 12);
+                TextBox txt_nounGender = new()
+                {
+                    Text = nounGender,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(125, 12)
+                };
                 yPos += 20;
                 panel_nounGender.Controls.Add(txt_nounGender);
             }
-            TextBox txt_nounGenderBlank = new();
-            txt_nounGenderBlank.Text = "";
-            txt_nounGenderBlank.Location = new Point(xPos, yPos);
-            txt_nounGenderBlank.Size = new Size(125, 12);
+            TextBox txt_nounGenderBlank = new()
+            {
+                Text = "",
+                Location = new Point(xPos, yPos),
+                Size = new Size(125, 12)
+            };
             panel_nounGender.Controls.Add(txt_nounGenderBlank);
             panel_nounGender.ResumeLayout(true);
 
             tab_soundMapList.SuspendLayout();
             xPos = 0;
             yPos = 0;
-            soundMapEditor = new SoundMapListEditor();
-            soundMapEditor.Location = new Point(xPos, yPos);
-            soundMapEditor.Size = new Size(895, 355);
+            soundMapEditor = new SoundMapListEditor
+            {
+                Location = new Point(xPos, yPos),
+                Size = new Size(895, 355)
+            };
             tab_soundMapList.Controls.Add(soundMapEditor);
             tab_soundMapList.Enter += Tab_soundMapList_Enter;
             tab_soundMapList.Leave += Tab_soundMapList_Leave;
@@ -154,17 +149,21 @@ namespace LanguageEditor
             panel_partsOfSpeechList.Controls.Clear();
             foreach (string partOfSpeech in languageDescription.part_of_speech_list)
             {
-                TextBox txt_partOfSpeech = new();
-                txt_partOfSpeech.Text = partOfSpeech;
-                txt_partOfSpeech.Location = new Point(xPos, yPos);
-                txt_partOfSpeech.Size = new Size(125, 12);
+                TextBox txt_partOfSpeech = new()
+                {
+                    Text = partOfSpeech,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(125, 12)
+                };
                 yPos += 20;
                 panel_partsOfSpeechList.Controls.Add(txt_partOfSpeech);
             }
-            TextBox txt_partOfSpeechBlank = new();
-            txt_partOfSpeechBlank.Text = "";
-            txt_partOfSpeechBlank.Location = new Point(xPos, yPos);
-            txt_partOfSpeechBlank.Size = new Size(125, 12);
+            TextBox txt_partOfSpeechBlank = new()
+            {
+                Text = "",
+                Location = new Point(xPos, yPos),
+                Size = new Size(125, 12)
+            };
             panel_partsOfSpeechList.Controls.Add(txt_partOfSpeechBlank);
             panel_partsOfSpeechList.ResumeLayout(true);
 
@@ -176,25 +175,31 @@ namespace LanguageEditor
             panel_phonemeInventory.Controls.Clear();
             foreach (string phoneme in languageDescription.phoneme_inventory)
             {
-                TextBox txt_phoneme = new();
-                txt_phoneme.Text = phoneme;
-                txt_phoneme.Location = new Point(xPos, yPos);
-                txt_phoneme.Size = new Size(125, 12);
+                TextBox txt_phoneme = new()
+                {
+                    Text = phoneme,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(125, 12)
+                };
                 yPos += 20;
                 panel_phonemeInventory.Controls.Add(txt_phoneme);
             }
-            TextBox txt_phonemeBlank = new();
-            txt_phonemeBlank.Text = "";
-            txt_phonemeBlank.Location = new Point(xPos, yPos);
-            txt_phonemeBlank.Size = new Size(125, 12);
+            TextBox txt_phonemeBlank = new()
+            {
+                Text = "",
+                Location = new Point(xPos, yPos),
+                Size = new Size(125, 12)
+            };
             panel_phonemeInventory.Controls.Add(txt_phonemeBlank);
             panel_phonemeInventory.ResumeLayout(true);
 
-            lexiconEditor = new LexiconEditor();
-            lexiconEditor.Size = new Size(895, 355);
-            lexiconEditor.Lexicon = languageDescription.lexicon;
-            lexiconEditor.PartOfSpeechList = languageDescription.part_of_speech_list;
-            lexiconEditor.SoundMapList = languageDescription.sound_map_list;
+            lexiconEditor = new LexiconEditor
+            {
+                Size = new Size(895, 355),
+                Lexicon = languageDescription.lexicon,
+                PartOfSpeechList = languageDescription.part_of_speech_list,
+                SoundMapList = languageDescription.sound_map_list
+            };
             lexiconEditor.SaveAndCloseToolStripMenuItem.Text = "Save";
             lexiconEditor.CloseWithoutSavingToolStripMenuItem.Text = "Do Not Save";
             tab_lexicon.Enter += Tab_lexicon_Enter;
@@ -210,22 +215,25 @@ namespace LanguageEditor
             foreach (string derivationKey in languageDescription.derivational_affix_map.Keys)
             {
                 TabPage tabPage = new(derivationKey);
-                DerivationalAffixEditor editor = new();
-                editor.AffixRules = languageDescription.derivational_affix_map[derivationKey];
-                editor.Location = new Point(5, 5);
+                DerivationalAffixEditor editor = new()
+                {
+                    AffixRules = languageDescription.derivational_affix_map[derivationKey],
+                    Location = new Point(5, 5)
+                };
                 tabPage.Controls.Add(editor);
                 tpn_DerivationalAffixMap.TabPages.Add(tabPage);
             }
             tpn_DerivationalAffixMap.ResumeLayout(true);
             tab_derivationalAffixMap.ResumeLayout(true);
 
-            tab_declinsionAffixes.SuspendLayout();
-            declensionAffixMapPane = new DeclensionAffixMapPane();
-            declensionAffixMapPane.AffixMap = languageDescription.affix_map;
-            declensionAffixMapPane.Size = tab_declinsionAffixes.Size;
-            tab_declinsionAffixes.Controls.Add(declensionAffixMapPane);
-            tab_declinsionAffixes.ResumeLayout(true);
-            DeclensionAffixEditor.SoundMapList = languageDescription.sound_map_list;
+            tab_declensionAffixes.SuspendLayout();
+            declensionAffixMapPane = new DeclensionAffixMapPane
+            {
+                AffixMap = languageDescription.affix_map,
+                Size = tab_declensionAffixes.Size
+            };
+            tab_declensionAffixes.Controls.Add(declensionAffixMapPane);
+            tab_declensionAffixes.ResumeLayout(true);
 
             tab_derivedWordList.SuspendLayout();
             tab_derivedWordList.AutoScroll = true;
@@ -233,17 +241,21 @@ namespace LanguageEditor
             yPos = 0;
             foreach (string derivedWordEntry in languageDescription.derived_word_list)
             {
-                TextBox txt_derivedWord = new();
-                txt_derivedWord.Text = derivedWordEntry;
-                txt_derivedWord.Location = new Point(xPos, yPos);
-                txt_derivedWord.Size = new Size(850, 20);
+                TextBox txt_derivedWord = new()
+                {
+                    Text = derivedWordEntry,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(850, 20)
+                };
                 yPos += 25;
                 tab_derivedWordList.Controls.Add(txt_derivedWord);
             }
-            TextBox txt_derivedWordBlank = new();
-            txt_derivedWordBlank.Text = string.Empty;
-            txt_derivedWordBlank.Location = new Point(xPos, yPos);
-            txt_derivedWordBlank.Size = new Size(850, 20);
+            TextBox txt_derivedWordBlank = new()
+            {
+                Text = string.Empty,
+                Location = new Point(xPos, yPos),
+                Size = new Size(850, 20)
+            };
             tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
             tab_derivedWordList.ResumeLayout(true);
 
@@ -265,7 +277,7 @@ namespace LanguageEditor
         {
             if ((languageDescription != null) && (soundMapEditor != null))
             {
-                if(soundMapEditor.SoundMapSaved)
+                if (soundMapEditor.SoundMapSaved)
                 {
                     languageDescription.sound_map_list = soundMapEditor.SoundMapList;
                 }
@@ -288,9 +300,9 @@ namespace LanguageEditor
 
         private void Tab_lexicon_Leave(object? sender, EventArgs e)
         {
-            if((languageDescription != null) && (lexiconEditor != null))
+            if ((languageDescription != null) && (lexiconEditor != null))
             {
-                if(lexiconEditor.Saved)
+                if (lexiconEditor.Saved)
                 {
                     languageDescription.lexicon = lexiconEditor.Lexicon;
                 }
@@ -310,7 +322,7 @@ namespace LanguageEditor
 
                 if (languageDescription?.sound_map_list != null)
                 {
-                    txt_languageNativePhonetic.Text = ConlangUtilities.SoundOutWord(txt_languageNameNativeEnglish.Text.Trim(), languageDescription?.sound_map_list ?? []);
+                    txt_languageNativePhonetic.Text = ConlangUtilities.SoundOutWord(txt_languageNameNativeEnglish.Text.Trim(), languageDescription.sound_map_list ?? []);
                 }
             }
             finally
@@ -329,7 +341,7 @@ namespace LanguageEditor
 
                 if (languageDescription?.sound_map_list != null)
                 {
-                    txt_languageNameNativeEnglish.Text = ConlangUtilities.SpellWord(txt_languageNativePhonetic.Text.Trim(), languageDescription?.sound_map_list ?? []);
+                    txt_languageNameNativeEnglish.Text = ConlangUtilities.SpellWord(txt_languageNativePhonetic.Text.Trim(), languageDescription.sound_map_list ?? []);
                 }
             }
             finally
@@ -338,6 +350,11 @@ namespace LanguageEditor
                 txt_languageNativePhonetic.TextChanged += Txt_languageNativePhonetic_TextChanged;
             }
         }
+
+        private readonly JsonSerializerOptions JsonSerializerOptions = new()
+        {
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        };
 
         private void SaveLanguage(string filename)
         {
@@ -389,11 +406,8 @@ namespace LanguageEditor
                 languageDescription.derivational_affix_map.Clear();
                 foreach (TabPage tabPage in tpn_DerivationalAffixMap.Controls)
                 {
-                    foreach (DerivationalAffixEditor editor in tabPage.Controls)
-                    {
-                        languageDescription.derivational_affix_map[tabPage.Text.Trim()] = editor.AffixRules;
-                        break; // Ensure that loop only executes once.
-                    }
+                    DerivationalAffixEditor editor = (DerivationalAffixEditor)tabPage.Controls[0];
+                    languageDescription.derivational_affix_map[tabPage.Text.Trim()] = editor.AffixRules;
                 }
 
                 languageDescription.affix_map = declensionAffixMapPane?.AffixMap ?? [];
@@ -420,13 +434,12 @@ namespace LanguageEditor
 #pragma warning restore CS8600
                 historyEntries.Add(history);
 
-                JsonSerializerOptions jsonSerializerOptions = new();
-                jsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                JsonSerializerOptions jsonSerializerOptions = JsonSerializerOptions;
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
                 jsonSerializerOptions.Encoder = encoder;
                 jsonSerializerOptions.WriteIndented = true; // TODO: make an option
 
-                string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription,jsonSerializerOptions);
+                string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
                 File.WriteAllText(filename, jsonString, System.Text.Encoding.UTF8);
             }
         }
