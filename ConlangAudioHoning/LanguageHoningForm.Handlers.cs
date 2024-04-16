@@ -347,6 +347,52 @@ namespace ConlangAudioHoning
                     cbx_recordings.SelectedText = fileInfo.Name;
                 }
             }
+            else if ((engineName.Equals("azure")) && UserConfiguration.IsAzureSupported)
+            {
+                AzureSpeak speechEngine = (AzureSpeak)speechEngines[engineName];
+                DateTime now = DateTime.Now;
+                string targetFileBaseName = string.Format("speech_{0:s}.wav", now);
+                targetFileBaseName = targetFileBaseName.Replace(":", "_");
+
+                string targetFileName;
+                if (languageFileInfo != null)
+                {
+                    targetFileName = languageFileInfo.Directory + "\\" + targetFileBaseName;
+                }
+                else
+                {
+                    targetFileName = Path.GetTempPath() + targetFileBaseName;
+                }
+                string voiceKey = cbx_voice.Text.Trim().Split()[0];
+                string voice = string.Empty;
+                if (voices[engineName].TryGetValue(voiceKey, out SpeechEngine.VoiceData value))
+                {
+                    SpeechEngine.VoiceData voiceData = value;
+                    voice = voiceData.LanguageCode;
+                }
+                string speed = cbx_speed.Text.Trim();
+                speechEngine.SampleText = sampleText;
+                bool ok = speechEngine.GenerateSpeech(targetFileName, voice, speed, this);
+                if (!ok)
+                {
+                    _ = MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    txt_phonetic.Text = speechEngine.PhoneticText;
+                    // Play the audio (wav) file with the Windows Media Player
+                    WMPLib.WindowsMediaPlayer player = new()
+                    {
+                        URL = targetFileName
+                    };
+                    player.controls.play();
+
+                    FileInfo fileInfo = new(targetFileName);
+                    speechFiles.Add(fileInfo.Name, fileInfo);
+                    _ = cbx_recordings.Items.Add(fileInfo.Name);
+                    cbx_recordings.SelectedText = fileInfo.Name;
+                }
+            }
         }
 
         private void DisplayPulmonicConsonantsToolStripMenuItem_Click(object sender, EventArgs e)

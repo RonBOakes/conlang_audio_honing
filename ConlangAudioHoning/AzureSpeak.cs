@@ -1,4 +1,6 @@
 ﻿using ConlangJson;
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ namespace ConlangAudioHoning
     {
         private string speechKey;
         private string speechRegion;
+        private Dictionary<string, VoiceData> voices = [];
 
         public AzureSpeak() : base()
         {
@@ -181,15 +184,61 @@ namespace ConlangAudioHoning
 
         public override bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)
         {
-            throw new NotImplementedException();
+            if (LanguageDescription == null)
+            {
+                return false;
+            }
+            if ((SampleText == null) || (SampleText.Length == 0))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(speechKey) || string.IsNullOrEmpty(speechRegion))
+            {
+                return false;
+            }
+            bool ok = true;
+
+            if (string.IsNullOrEmpty(voice))
+            {
+                voice = LanguageDescription.preferred_voices["azure"] ?? "en-US-AndrewMultilingualNeural";
+            }
+            if (string.IsNullOrEmpty(speed))
+            {
+                speed = "slow";
+            }
+
+            if ((SsmlText == null) || (SsmlText.Trim().Equals(string.Empty)))
+            {
+                Generate(speed, caller, voices[voice]);
+            }
+
+            SpeechConfig speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
+            AudioConfig audioConfig = AudioConfig.FromDefaultSpeakerOutput();
+
+            // Start configuring the speech engine
+            speechConfig.SpeechSynthesisVoiceName = voice;
+            SpeechSynthesizer speechSynthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
+
+            SpeechSynthesisResult speechSynthesisResult = speechSynthesizer.SpeakSsmlAsync(SsmlText).GetAwaiter().GetResult();
+
+            if ((speechSynthesisResult != null) && (speechSynthesisResult.Reason == ResultReason.SynthesizingAudioCompleted))
+            {
+                AudioDataStream stream = AudioDataStream.FromResult(speechSynthesisResult);
+                stream.SaveToWaveFileAsync(targetFile);
+            }
+            else
+            {
+                ok = false;
+            }
+
+            return ok;
         }
 
         public override Dictionary<string, VoiceData> GetVoices()
         {
-            Dictionary<string, VoiceData> voices = [];
+            voices = [];
             HttpHandler httpHandler = HttpHandler.Instance;
             HttpClient httpClient = httpHandler.HttpClient;
-            StringContent content;
 
             if (string.IsNullOrEmpty(speechKey))
             {
@@ -203,7 +252,7 @@ namespace ConlangAudioHoning
             string sURI = string.Format("https://{0}.tts.speech.microsoft.com/cognitiveservices/voices/list", speechRegion);
             JsonArray? responseData = null;
             Uri uri = new Uri(string.Format("{0}?Host={1}.tts.speech.microsoft.com&Ocp-Apim-Subscription-Key={2}",
-                sURI,speechRegion,speechKey));
+                sURI, speechRegion, speechKey));
             HttpResponseMessage result = httpClient.GetAsync(uri).Result;
             if (result.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -215,23 +264,27 @@ namespace ConlangAudioHoning
                 responseData = JsonSerializer.Deserialize<JsonArray>(data);
             }
 
-            foreach(JsonObject voice in responseData)
+            foreach (JsonNode voiceNode in responseData)
             {
-                VoiceData voiceData = new VoiceData();
-                voiceData.Name = (string)voice["Name"];
-                voiceData.Gender = (string)voice["Gender"];
-                voiceData.Id = (string)voice["ShortName"];
-                voiceData.LanguageCode = (string)voice["LocaleName"];
-                voiceData.LanguageName = (string)voice["LocaleName"];
-                if (voice.ContainsKey("SecondaryLocaleList"))
+                if (voiceNode is JsonObject)
                 {
-                    voiceData.AdditionalLanguageCodes = new string[((JsonArray)voice["SecondaryLocaleList"]).Count];
-                    for(int i = 0; i < ((JsonArray)voice["SecondaryLocaleList"]).Count; i++)
+                    JsonObject voice = (JsonObject)voiceNode;
+                    VoiceData voiceData = new VoiceData();
+                    voiceData.Name = (string)voice["Name"];
+                    voiceData.Gender = (string)voice["Gender"];
+                    voiceData.Id = (string)voice["ShortName"];
+                    voiceData.LanguageCode = (string)voice["LocaleName"];
+                    voiceData.LanguageName = (string)voice["LocaleName"];
+                    if (voice.ContainsKey("SecondaryLocaleList"))
                     {
-                        voiceData.AdditionalLanguageCodes[i] = (string)((JsonArray)voice["SecondaryLocaleList"])[i];
+                        voiceData.AdditionalLanguageCodes = new string[((JsonArray)voice["SecondaryLocaleList"]).Count];
+                        for (int i = 0; i < ((JsonArray)voice["SecondaryLocaleList"]).Count; i++)
+                        {
+                            voiceData.AdditionalLanguageCodes[i] = (string)((JsonArray)voice["SecondaryLocaleList"])[i];
+                        }
                     }
+                    voices.Add(voiceData.Id, voiceData);
                 }
-                voices.Add(voiceData.Id, voiceData);
             }
 
             return voices;

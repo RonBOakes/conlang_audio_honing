@@ -258,6 +258,7 @@ namespace ConlangAudioHoning
             // Once the JSON structure is reworked, this will not be needed.
             _ = languageDescription.preferred_voices.TryAdd("Polly", "Brian");
             _ = languageDescription.preferred_voices.TryAdd("espeak-ng", "en-us");
+            _ = languageDescription.preferred_voices.TryAdd("azure", "en-US-AndrewMultilingualNeural");
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
             IpaUtilities.BuildPhoneticInventory(languageDescription);
             phoneticChanger.Language = languageDescription;
