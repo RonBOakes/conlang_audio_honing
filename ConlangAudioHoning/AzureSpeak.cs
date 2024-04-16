@@ -129,7 +129,7 @@ namespace ConlangAudioHoning
             SsmlText += "\t\t\t<lang xml:lang=\"" + voiceData?.LanguageCode + "\">\n";
 
             // Write an English introduction paragraph since reading of a book worked OK (this will get read by the language - maybe mangled)
-            SsmlText += "\t\t\t\t<p>The following is read in the users constructed language</p>\n";
+            //SsmlText += "\t\t\t\t<p>The following is read in the users constructed language</p>\n";
 
             PhoneticText = string.Empty;
             int wordWrap = 0;
@@ -200,7 +200,7 @@ namespace ConlangAudioHoning
 
             if (string.IsNullOrEmpty(voice))
             {
-                voice = LanguageDescription.preferred_voices["azure"] ?? "en-US-AndrewMultilingualNeural";
+                voice = LanguageDescription.preferred_voices["azure"] ?? "en-US-AndrewNeural";
             }
             if (string.IsNullOrEmpty(speed))
             {
@@ -264,7 +264,12 @@ namespace ConlangAudioHoning
                 responseData = JsonSerializer.Deserialize<JsonArray>(data);
             }
 
-            foreach (JsonNode voiceNode in responseData)
+            if (responseData == null)
+            {
+                return voices;
+            }
+
+            foreach (JsonNode? voiceNode in responseData)
             {
                 if (voiceNode is JsonObject)
                 {

@@ -368,7 +368,7 @@ namespace ConlangAudioHoning
                 if (voices[engineName].TryGetValue(voiceKey, out SpeechEngine.VoiceData value))
                 {
                     SpeechEngine.VoiceData voiceData = value;
-                    voice = voiceData.LanguageCode;
+                    voice = voiceData.Id;
                 }
                 string speed = cbx_speed.Text.Trim();
                 speechEngine.SampleText = sampleText;
@@ -380,12 +380,6 @@ namespace ConlangAudioHoning
                 else
                 {
                     txt_phonetic.Text = speechEngine.PhoneticText;
-                    // Play the audio (wav) file with the Windows Media Player
-                    WMPLib.WindowsMediaPlayer player = new()
-                    {
-                        URL = targetFileName
-                    };
-                    player.controls.play();
 
                     FileInfo fileInfo = new(targetFileName);
                     speechFiles.Add(fileInfo.Name, fileInfo);
