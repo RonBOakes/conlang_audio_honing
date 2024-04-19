@@ -34,6 +34,7 @@
             saveAndCloseToolStripMenuItem = new ToolStripMenuItem();
             closeWithoutSavingToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
+            addEntryMenuItem = new ToolStripMenuItem();
             sortByToolStripMenuItem = new ToolStripMenuItem();
             conlangToolStripMenuItem = new ToolStripMenuItem();
             englishToolStripMenuItem = new ToolStripMenuItem();
@@ -84,10 +85,17 @@
             // 
             // editToolStripMenuItem
             // 
-            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sortByToolStripMenuItem, findToolStripMenuItem });
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addEntryMenuItem, sortByToolStripMenuItem, findToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(39, 20);
             editToolStripMenuItem.Text = "Edit";
+            //
+            // addEntryMenuItem
+            //
+            addEntryMenuItem.Name = "addEntryMenuItem";
+            addEntryMenuItem.Size = new Size(119, 22);
+            addEntryMenuItem.Text = "Add Lexicon Entry";
+            addEntryMenuItem.Click += AddEntryMenuItem_Click;
             // 
             // sortByToolStripMenuItem
             // 
@@ -130,7 +138,6 @@
             ResumeLayout(false);
             PerformLayout();
         }
-
         #endregion
 
         private ListBox lbxLexicon;
@@ -139,6 +146,7 @@
         private ToolStripMenuItem saveAndCloseToolStripMenuItem;
         private ToolStripMenuItem closeWithoutSavingToolStripMenuItem;
         private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem addEntryMenuItem;
         private ToolStripMenuItem sortByToolStripMenuItem;
         private ToolStripMenuItem conlangToolStripMenuItem;
         private ToolStripMenuItem englishToolStripMenuItem;

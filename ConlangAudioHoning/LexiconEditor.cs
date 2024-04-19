@@ -272,6 +272,33 @@ namespace ConlangAudioHoning
         [GeneratedRegex(@"^\s*(\S+)\s+\((\S+):\s+(\S+)\)\s*$")]
         private static partial Regex EditorEntryRegex();
 
+        private void AddEntryMenuItem_Click(object sender, EventArgs e)
+        {
+            LexiconEntry word = new();
+            LexiconEntryEditor editor = new(word, PartOfSpeechList, SoundMapList);
+            _ = editor.ShowDialog();
+            if (editor.LexiconEntrySaved)
+            {
+                word = editor.LexiconEntry;
+                lexiconEntries.Add(word);
+                lexiconMap.TryAdd((word.spelled, word.english, word.part_of_speech), word);
+                lbxLexicon.BeginUpdate();
+                lbxLexicon.Items.Clear();
+                foreach (LexiconEntry entry in lexiconEntries)
+                {
+                    if (SortByCriteria == SortByCriteriaTypes.CONLANG)
+                    {
+                        lbxLexicon.Items.Add(string.Format("{0} ({1}: {2})", entry.spelled, entry.english, entry.part_of_speech));
+                    }
+                    else
+                    {
+                        lbxLexicon.Items.Add(string.Format("{1} ({0}: {2})", entry.spelled, entry.english, entry.part_of_speech));
+                    }
+                }
+                lbxLexicon.EndUpdate();
+            }
+        }
+
         private void ConlangToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SortByCriteria = SortByCriteriaTypes.CONLANG;
