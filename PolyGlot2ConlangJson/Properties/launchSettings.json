@@ -2,7 +2,7 @@
   "profiles": {
     "PolyGlot2ConlangJson": {
       "commandName": "Project",
-      "commandLineArgs": "--input=C:\\Users\\ron\\PolyGlot\\newspeak.pgd --output=C:\\Users\\ron\\PolyGlot\\newspeak.json"
+      "commandLineArgs": "--input=C:\\Users\\ron\\Dropbox\\FantasyStory\\Conlang\\Ancient_Halfling\\Ancient_Halfling.pgd --output=C:\\Users\\ron\\Dropbox\\FantasyStory\\Conlang\\Ancient_Halfling\\Ancient_Halfling\\PloyGlot_convert.json"
     }
   }
 }
