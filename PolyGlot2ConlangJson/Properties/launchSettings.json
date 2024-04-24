@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PolyGlot2ConlangJson": {
+      "commandName": "Project",
+      "commandLineArgs": "--input=C:\\Users\\ron\\PolyGlot\\newspeak.pgd --output=C:\\Users\\ron\\PolyGlot\\newspeak.json"
+    }
+  }
+}
