@@ -18,9 +18,7 @@ import json
 import boto3
 import base64
 import logging
-import time
 from contextlib import closing
-from botocore.exceptions import BotoCoreError, ClientError
 
 polly_client = boto3.client("polly")
 s3_client = boto3.client("s3")
