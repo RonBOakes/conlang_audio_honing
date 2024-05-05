@@ -90,6 +90,8 @@ namespace ConlangAudioHoning
             if (UserConfiguration.IsPollySupported)
             {
                 PollySpeech.PollyURI = UserConfiguration.PollyURI;
+                PollySpeech.PollyEmail = UserConfiguration.PollyEmail;
+                PollySpeech.PollyPassword = UserConfiguration.PollyPassword;
                 PollySpeech pollySpeech = new();
                 Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
                 speechEngines.Add(pollySpeech.Description, pollySpeech);
@@ -1596,7 +1598,7 @@ namespace ConlangAudioHoning
                     engineName = cbx_speechEngine.Text.Trim();
                 }
                 string voiceName;
-                if(cbx_voice.SelectedIndex == -1)
+                if (cbx_voice.SelectedIndex == -1)
                 {
                     voiceName = string.Empty;
                 }

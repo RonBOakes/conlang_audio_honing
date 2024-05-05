@@ -48,7 +48,10 @@
             printSampleTextSummaryToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
             setAmazonPollyURIToolStripMenuItem = new ToolStripMenuItem();
+            setAmazonPollyAuthorizationEmailToolStripMenuItem = new ToolStripMenuItem();
             setESpeakNgLocationToolStripMenuItem = new ToolStripMenuItem();
+            setAzureSpeechKeyToolStripMenuItem = new ToolStripMenuItem();
+            setAzureSpeechRegionToolStripMenuItem = new ToolStripMenuItem();
             debugToolStripMenuItem = new ToolStripMenuItem();
             displayPulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripMenuItem();
@@ -114,8 +117,7 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
-            setAzureSpeechKeyToolStripMenuItem = new ToolStripMenuItem();
-            setAzureSpeechRegionToolStripMenuItem = new ToolStripMenuItem();
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -228,7 +230,7 @@
             // 
             // utilitiesToolStripMenuItem
             // 
-            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, setAmazonPollyURIToolStripMenuItem, setESpeakNgLocationToolStripMenuItem, setAzureSpeechKeyToolStripMenuItem, setAzureSpeechRegionToolStripMenuItem });
+            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, setAmazonPollyURIToolStripMenuItem, setAmazonPollyAuthorizationEmailToolStripMenuItem, setAmazonPollyAuthorizationPasswordToolStripMenuItem, setESpeakNgLocationToolStripMenuItem, setAzureSpeechKeyToolStripMenuItem, setAzureSpeechRegionToolStripMenuItem });
             utilitiesToolStripMenuItem.Name = "utilitiesToolStripMenuItem";
             utilitiesToolStripMenuItem.Size = new Size(58, 20);
             utilitiesToolStripMenuItem.Text = "Utilities";
@@ -236,35 +238,56 @@
             // displayGlossOfSampleTextToolStripMenuItem
             // 
             displayGlossOfSampleTextToolStripMenuItem.Name = "displayGlossOfSampleTextToolStripMenuItem";
-            displayGlossOfSampleTextToolStripMenuItem.Size = new Size(223, 22);
+            displayGlossOfSampleTextToolStripMenuItem.Size = new Size(294, 22);
             displayGlossOfSampleTextToolStripMenuItem.Text = "Display Gloss of Sample Text";
             displayGlossOfSampleTextToolStripMenuItem.Click += DisplayGlossOfSampleTextToolStripMenuItem_Click;
             // 
             // printSampleTextSummaryToolStripMenuItem
             // 
             printSampleTextSummaryToolStripMenuItem.Name = "printSampleTextSummaryToolStripMenuItem";
-            printSampleTextSummaryToolStripMenuItem.Size = new Size(223, 22);
+            printSampleTextSummaryToolStripMenuItem.Size = new Size(294, 22);
             printSampleTextSummaryToolStripMenuItem.Text = "Print Sample Text Summary";
             printSampleTextSummaryToolStripMenuItem.Click += PrintSampleTextSummaryToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(220, 6);
+            toolStripSeparator3.Size = new Size(291, 6);
             // 
             // setAmazonPollyURIToolStripMenuItem
             // 
             setAmazonPollyURIToolStripMenuItem.Name = "setAmazonPollyURIToolStripMenuItem";
-            setAmazonPollyURIToolStripMenuItem.Size = new Size(223, 22);
+            setAmazonPollyURIToolStripMenuItem.Size = new Size(294, 22);
             setAmazonPollyURIToolStripMenuItem.Text = "Set Amazon Polly URI";
             setAmazonPollyURIToolStripMenuItem.Click += SetAmazonPollyURIToolStripMenuItem_Click;
+            // 
+            // setAmazonPollyAuthorizationEmailToolStripMenuItem
+            // 
+            setAmazonPollyAuthorizationEmailToolStripMenuItem.Name = "setAmazonPollyAuthorizationEmailToolStripMenuItem";
+            setAmazonPollyAuthorizationEmailToolStripMenuItem.Size = new Size(294, 22);
+            setAmazonPollyAuthorizationEmailToolStripMenuItem.Text = "Set Amazon Polly Authorization email";
+            setAmazonPollyAuthorizationEmailToolStripMenuItem.Click += SetAmazonPollyAuthorizationEmailToolStripMenuItem_Click;
             // 
             // setESpeakNgLocationToolStripMenuItem
             // 
             setESpeakNgLocationToolStripMenuItem.Name = "setESpeakNgLocationToolStripMenuItem";
-            setESpeakNgLocationToolStripMenuItem.Size = new Size(223, 22);
+            setESpeakNgLocationToolStripMenuItem.Size = new Size(294, 22);
             setESpeakNgLocationToolStripMenuItem.Text = "Set eSpeak-ng location";
             setESpeakNgLocationToolStripMenuItem.Click += SetESpeakNgLocationToolStripMenuItem_Click;
+            // 
+            // setAzureSpeechKeyToolStripMenuItem
+            // 
+            setAzureSpeechKeyToolStripMenuItem.Name = "setAzureSpeechKeyToolStripMenuItem";
+            setAzureSpeechKeyToolStripMenuItem.Size = new Size(294, 22);
+            setAzureSpeechKeyToolStripMenuItem.Text = "Set Azure Speech Key";
+            setAzureSpeechKeyToolStripMenuItem.Click += SetAzureSpeechKeyToolStripMenuItem_Click;
+            // 
+            // setAzureSpeechRegionToolStripMenuItem
+            // 
+            setAzureSpeechRegionToolStripMenuItem.Name = "setAzureSpeechRegionToolStripMenuItem";
+            setAzureSpeechRegionToolStripMenuItem.Size = new Size(294, 22);
+            setAzureSpeechRegionToolStripMenuItem.Text = "Set Azure Speech Region";
+            setAzureSpeechRegionToolStripMenuItem.Click += SetAzureSpeechRegionToolStripMenuItem_Click;
             // 
             // debugToolStripMenuItem
             // 
@@ -758,7 +781,7 @@
             lbl_DiphthongEndVowel.AutoSize = true;
             lbl_DiphthongEndVowel.Location = new Point(234, 76);
             lbl_DiphthongEndVowel.Name = "lbl_DiphthongEndVowel";
-            lbl_DiphthongEndVowel.Size = new Size(114, 15);
+            lbl_DiphthongEndVowel.Size = new Size(121, 15);
             lbl_DiphthongEndVowel.TabIndex = 8;
             lbl_DiphthongEndVowel.Text = "Diphthong End Vowel";
             // 
@@ -775,7 +798,7 @@
             lbl_diphthongStartVowel.AutoSize = true;
             lbl_diphthongStartVowel.Location = new Point(6, 76);
             lbl_diphthongStartVowel.Name = "lbl_diphthongStartVowel";
-            lbl_diphthongStartVowel.Size = new Size(118, 15);
+            lbl_diphthongStartVowel.Size = new Size(125, 15);
             lbl_diphthongStartVowel.TabIndex = 6;
             lbl_diphthongStartVowel.Text = "Diphthong Start Vowel";
             // 
@@ -792,7 +815,7 @@
             rbn_diphthongReplacement.AutoSize = true;
             rbn_diphthongReplacement.Location = new Point(6, 56);
             rbn_diphthongReplacement.Name = "rbn_diphthongReplacement";
-            rbn_diphthongReplacement.Size = new Size(152, 19);
+            rbn_diphthongReplacement.Size = new Size(154, 19);
             rbn_diphthongReplacement.TabIndex = 4;
             rbn_diphthongReplacement.Text = "Diphthong Replacement";
             rbn_diphthongReplacement.UseVisualStyleBackColor = true;
@@ -825,7 +848,7 @@
             rbn_vowelToDiphthongEnd.AutoSize = true;
             rbn_vowelToDiphthongEnd.Location = new Point(190, 6);
             rbn_vowelToDiphthongEnd.Name = "rbn_vowelToDiphthongEnd";
-            rbn_vowelToDiphthongEnd.Size = new Size(160, 19);
+            rbn_vowelToDiphthongEnd.Size = new Size(167, 19);
             rbn_vowelToDiphthongEnd.TabIndex = 1;
             rbn_vowelToDiphthongEnd.Text = "Vowel to End of Diphthong";
             rbn_vowelToDiphthongEnd.UseVisualStyleBackColor = true;
@@ -837,7 +860,7 @@
             rbn_vowelToDiphthongStart.Checked = true;
             rbn_vowelToDiphthongStart.Location = new Point(6, 6);
             rbn_vowelToDiphthongStart.Name = "rbn_vowelToDiphthongStart";
-            rbn_vowelToDiphthongStart.Size = new Size(164, 19);
+            rbn_vowelToDiphthongStart.Size = new Size(171, 19);
             rbn_vowelToDiphthongStart.TabIndex = 0;
             rbn_vowelToDiphthongStart.TabStop = true;
             rbn_vowelToDiphthongStart.Text = "Vowel to Start of Diphthong";
@@ -876,7 +899,7 @@
             rbn_replaceRhotacized.AutoSize = true;
             rbn_replaceRhotacized.Location = new Point(6, 31);
             rbn_replaceRhotacized.Name = "rbn_replaceRhotacized";
-            rbn_replaceRhotacized.Size = new Size(204, 19);
+            rbn_replaceRhotacized.Size = new Size(207, 19);
             rbn_replaceRhotacized.TabIndex = 3;
             rbn_replaceRhotacized.Text = "Replace Rhotacized with Phoneme";
             rbn_replaceRhotacized.UseVisualStyleBackColor = true;
@@ -938,19 +961,12 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += Btn_updateSoundMapList_Click;
             // 
-            // setAzureSpeechKeyToolStripMenuItem
+            // setAmazonPollyAuthorizationPasswordToolStripMenuItem
             // 
-            setAzureSpeechKeyToolStripMenuItem.Name = "setAzureSpeechKeyToolStripMenuItem";
-            setAzureSpeechKeyToolStripMenuItem.Size = new Size(223, 22);
-            setAzureSpeechKeyToolStripMenuItem.Text = "Set Azure Speech Key";
-            setAzureSpeechKeyToolStripMenuItem.Click += SetAzureSpeechKeyToolStripMenuItem_Click;
-            // 
-            // setAzureSpeechRegionToolStripMenuItem
-            // 
-            setAzureSpeechRegionToolStripMenuItem.Name = "setAzureSpeechRegionToolStripMenuItem";
-            setAzureSpeechRegionToolStripMenuItem.Size = new Size(223, 22);
-            setAzureSpeechRegionToolStripMenuItem.Text = "Set Azure Speech Region";
-            setAzureSpeechRegionToolStripMenuItem.Click += SetAzureSpeechRegionToolStripMenuItem_Click;
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Name = "setAmazonPollyAuthorizationPasswordToolStripMenuItem";
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Size = new Size(294, 22);
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Text = "Set Amazon Polly Authorization Password";
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Click += SetAmazonPollyAuthorizationPasswordToolStripMenuItem_Click;
             // 
             // LanguageHoningForm
             // 
@@ -1097,5 +1113,7 @@
         private ToolStripMenuItem setAndAdjustLexicalOrderToolStripMenuItem;
         private ToolStripMenuItem setAzureSpeechKeyToolStripMenuItem;
         private ToolStripMenuItem setAzureSpeechRegionToolStripMenuItem;
+        private ToolStripMenuItem setAmazonPollyAuthorizationEmailToolStripMenuItem;
+        private ToolStripMenuItem setAmazonPollyAuthorizationPasswordToolStripMenuItem;
     }
 }

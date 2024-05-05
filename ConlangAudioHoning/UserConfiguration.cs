@@ -26,6 +26,8 @@ namespace ConlangAudioHoning
     internal partial class UserConfiguration
     {
         private string? _pollyURI;
+        private string? _pollyEmail;
+        private string? _pollyPasword;
         private string? _eSpeakNgPath;
         private string? _azureSpeechKey;
         private string? _azureSpeechRegion;
@@ -42,6 +44,21 @@ namespace ConlangAudioHoning
         {
             get => _pollyURI ?? string.Empty;
             set => _pollyURI = value;
+        }
+
+        /// <summary>
+        /// The email address associated with the Amazon Polly usage authorization.
+        /// </summary>
+        public string PollyEmail
+        {
+            get => _pollyEmail ?? string.Empty;
+            set => _pollyEmail = value;
+        }
+
+        public string PollyPassword
+        {
+            get => _pollyPasword ?? string.Empty;
+            set => _pollyPasword = value;
         }
 
         /// <summary>

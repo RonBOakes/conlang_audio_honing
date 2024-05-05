@@ -946,6 +946,26 @@ namespace ConlangAudioHoning
             }
         }
 
+        private void SetAmazonPollyAuthorizationEmailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string pollyEmail = Microsoft.VisualBasic.Interaction.InputBox("Enter the email for Authorizing the use of Amazon Polly", "Amazon Polly Email", PollySpeech.PollyEmail ?? "");
+            if(!string.IsNullOrEmpty(pollyEmail))
+            {
+                PollySpeech.PollyEmail = pollyEmail;
+                UserConfiguration.PollyEmail = pollyEmail;
+            }
+        }
+
+        private void SetAmazonPollyAuthorizationPasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string pollyPassword = Microsoft.VisualBasic.Interaction.InputBox("Enter the password for Authorizing the use of Amazon Polly", "Amazon Polly Password", PollySpeech.PollyPassword ?? "");
+            if(!string.IsNullOrEmpty(pollyPassword))
+            {
+                PollySpeech.PollyPassword = pollyPassword;
+                UserConfiguration.PollyPassword = pollyPassword;
+            }
+        }
+
         private void SetESpeakNgLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using OpenFileDialog openFileDialog = new();

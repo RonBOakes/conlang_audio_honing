@@ -48,6 +48,10 @@ namespace ConlangAudioHoning
 
         public static string PollyURI { get; set; } = "";
 
+        public static string PollyEmail { get; set; } = "";
+
+        public static string PollyPassword { get; set; } = "";
+
         /// <summary>
         /// Key used to access the LanguageDescription preferred_voices dictionary.
         /// </summary>
@@ -196,6 +200,8 @@ namespace ConlangAudioHoning
             };
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
+                content.Headers.Add("authorization_email", PollyEmail);
+                content.Headers.Add("authorization_password", PollyPassword);
                 HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -207,6 +213,8 @@ namespace ConlangAudioHoning
             JsonObject? responseData = null;
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
+                content.Headers.Add("authorization_email", PollyEmail);
+                content.Headers.Add("authorization_password", PollyPassword);
                 HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -306,6 +314,8 @@ namespace ConlangAudioHoning
             };
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
+                content.Headers.Add("authorization_email", PollyEmail);
+                content.Headers.Add("authorization_password", PollyPassword);
                 HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -328,6 +338,8 @@ namespace ConlangAudioHoning
             string taskURI;
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
+                content.Headers.Add("authorization_email", PollyEmail);
+                content.Headers.Add("authorization_password", PollyPassword);
                 HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -355,6 +367,8 @@ namespace ConlangAudioHoning
             {
                 using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
                 {
+                    content.Headers.Add("authorization_email", PollyEmail);
+                    content.Headers.Add("authorization_password", PollyPassword);
                     HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                     if (result.StatusCode != System.Net.HttpStatusCode.OK)
                     {
@@ -384,6 +398,8 @@ namespace ConlangAudioHoning
             requestDict["uri"] = taskURI;
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
+                content.Headers.Add("authorization_email", PollyEmail);
+                content.Headers.Add("authorization_password", PollyPassword);
                 HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -401,9 +417,10 @@ namespace ConlangAudioHoning
             requestDict.Clear();
             requestDict["delete"] = string.Empty;
             requestDict["uri"] = taskURI;
-            // requestDict["uri"] = string.Empty; // Remove or comment out to just delete the newly created file.
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
+                content.Headers.Add("authorization_email", PollyEmail);
+                content.Headers.Add("authorization_password", PollyPassword);
                 _ = httpClient.PostAsync(PollyURI, content).Result;
             }
             if (progressBar != null)
@@ -432,6 +449,8 @@ namespace ConlangAudioHoning
             };
             using (content = new StringContent(JsonSerializer.Serialize<Dictionary<string, string>>(requestDict), Encoding.UTF8, "application/json"))
             {
+                content.Headers.Add("authorization_email", PollyEmail);
+                content.Headers.Add("authorization_password", PollyPassword);
                 HttpResponseMessage result = httpClient.PostAsync(newURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {

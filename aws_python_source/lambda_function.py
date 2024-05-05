@@ -19,6 +19,7 @@ import boto3
 import base64
 import logging
 from contextlib import closing
+from authorization_module import authorize_user
 
 polly_client = boto3.client("polly")
 s3_client = boto3.client("s3")
@@ -204,6 +205,18 @@ def lambda_handler(event, context):
         'statusCode': 500,
         'errorMessage': 'Invalid event received - no headers'
         }
+    if 'authorization_email' not in event['headers']:
+        logger.error("Invald event received - no authorization email")
+        return {
+            'statusCode': 403,
+            'errorMessage': 'ACCESS_DENIED'
+        }
+    if 'authorization_password' not in event['headers']:
+        logger.error("Invald event received - no authorization password")
+        return {
+            'statusCode': 403,
+            'errorMessage': 'ACCESS_DENIED'
+        }
     if 'requestContext' not in event:
         logger.error("Invalid event received - no requestContext")
         return {
@@ -239,6 +252,16 @@ def lambda_handler(event, context):
         return {
         'statusCode': 500,
         'errorMessage': 'Invalid event received - not POST'
+        }
+    
+    headers = event['headers']
+    auth_email = headers['authorization_email']
+    auth_passwd = headers['authorization_password']
+    if not authorize_user(auth_email,auth_passwd):
+        logger.error("Unauthorized user:",extra={'auth_email':auth_email,'auth_passwd':auth_passwd})
+        return {
+            'statusCode': 403,
+            'errorMessage': 'ACCESS_DENIED'
         }
 
     post_data = json.loads(event['body'])
