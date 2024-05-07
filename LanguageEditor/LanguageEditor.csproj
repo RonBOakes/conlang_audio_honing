@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>icons8-select-all-10096x96.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="icons8-select-all-10096x96.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ConlangAudioHoning\ConlangAudioHoning.csproj" />
