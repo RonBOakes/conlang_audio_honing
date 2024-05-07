@@ -1,0 +1,14 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+  <Bundle Name="ConlangAudioHoningInstallerBundle" Manufacturer="Conlang Audio Honing Project" Version="1.0.0.0" UpgradeCode="4646c55a-adec-4e88-b69c-048ecc52166f">
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication LicenseUrl="https://www.gnu.org/licenses/gpl-3.0.en.html#license-text" Theme="hyperlinkLicense" />
+    </BootstrapperApplication>
+
+    <Chain>
+		<MsiPackage SourceFile="ConlangAudioHoningInstaller.msi" />
+		<MsiPackage SourceFile="..\resources\espeak-ng-X64.msi" />
+		<!-- TODO: Add to the list of chained packages. -->
+	</Chain>
+
+  </Bundle>
+</Wix>

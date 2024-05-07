@@ -1,0 +1,15 @@
+﻿<Project Sdk="WixToolset.Sdk/5.0.0">
+  <PropertyGroup>
+    <OutputType>Bundle</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Bal.wixext" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConlangAudioHoningInstaller\ConlangAudioHoningInstaller.wixproj" />
+    <ProjectReference Include="..\ConlangAudioHoning\ConlangAudioHoning.csproj" />
+    <ProjectReference Include="..\ConlangJson\ConlangJson.csproj" />
+    <ProjectReference Include="..\LanguageEditor\LanguageEditor.csproj" />
+    <ProjectReference Include="..\PolyGlot2ConlangJson\PolyGlot2ConlangJson.csproj" />
+  </ItemGroup>
+</Project>
