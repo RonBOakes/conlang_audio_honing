@@ -1,9 +1,13 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Fragment>
-    <ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
-      <Component>
-        <File Source="ConlangAudioHoning.exe" />
-      </Component>
-    </ComponentGroup>
-  </Fragment>
+	<Fragment>
+		<ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
+			<Component>
+				<File Source="ConlangAudioHoning.exe">
+					<Shortcut Name="Conlang Audio Honing" 
+							  Directory="StartMenuFolder"
+							  Advertise="yes"/>
+				</File>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 </Wix>

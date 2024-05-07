@@ -2,7 +2,11 @@
   <Fragment>
     <ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
       <Component>
-        <File Source="LanguageEditor.exe" />
+		  <File Source="LanguageEditor.exe">
+			  <Shortcut Name="Conlang Editor"
+						Directory="StartMenuFolder"
+						Advertise="yes"/>
+		  </File>
       </Component>
     </ComponentGroup>
   </Fragment>
