@@ -7,6 +7,7 @@
     <Chain>
 		<MsiPackage SourceFile="ConlangAudioHoningInstaller.msi" />
 		<MsiPackage SourceFile="..\resources\espeak-ng-X64.msi" />
+		<MsiPackage SourceFile="LanguageEditorInstaller.msi" />
 		<!-- TODO: Add to the list of chained packages. -->
 	</Chain>
 

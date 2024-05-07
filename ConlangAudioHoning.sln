@@ -29,6 +29,8 @@ Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "ConlangAudioHoningInstaller
 EndProject
 Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "ConlangAudioHoningInstaller", "ConlangAudioHoningInstaller\ConlangAudioHoningInstaller.wixproj", "{6F3C264F-91F8-4146-9022-7462BCF51B9E}"
 EndProject
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "LanguageEditorInstaller", "LanguageEditorInstaller\LanguageEditorInstaller.wixproj", "{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,22 @@ Global
 		{6F3C264F-91F8-4146-9022-7462BCF51B9E}.Release|x64.Build.0 = Release|x64
 		{6F3C264F-91F8-4146-9022-7462BCF51B9E}.Release|x86.ActiveCfg = Release|x86
 		{6F3C264F-91F8-4146-9022-7462BCF51B9E}.Release|x86.Build.0 = Release|x86
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Debug|Any CPU.Build.0 = Debug|x64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Debug|ARM64.Build.0 = Debug|ARM64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Debug|x64.ActiveCfg = Debug|x64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Debug|x64.Build.0 = Debug|x64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Debug|x86.ActiveCfg = Debug|x86
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Debug|x86.Build.0 = Debug|x86
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Release|Any CPU.ActiveCfg = Release|x64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Release|Any CPU.Build.0 = Release|x64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Release|ARM64.ActiveCfg = Release|ARM64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Release|ARM64.Build.0 = Release|ARM64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Release|x64.ActiveCfg = Release|x64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Release|x64.Build.0 = Release|x64
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Release|x86.ActiveCfg = Release|x86
+		{DB6836FF-8B3A-4C4C-B72F-519E48E86BDF}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
