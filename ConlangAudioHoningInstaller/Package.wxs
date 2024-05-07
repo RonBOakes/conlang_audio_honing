@@ -1,9 +1,9 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Package Name="ConlangAudioHoningInstaller" Manufacturer="TODO Manufacturer" Version="1.0.0.0" UpgradeCode="1b638398-b99e-4071-86b1-80196800e622">
+  <Package Name="ConlangAudioHoningInstaller" Manufacturer="Conlang Audio Honing Project" Version="1.0.0.0" UpgradeCode="1b638398-b99e-4071-86b1-80196800e622">
     <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
     <Feature Id="Main">
-      <ComponentGroupRef Id="ExampleComponents" />
+      <ComponentGroupRef Id="AppComponents" />
     </Feature>
   </Package>
 </Wix>
