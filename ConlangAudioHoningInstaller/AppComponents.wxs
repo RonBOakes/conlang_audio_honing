@@ -3,10 +3,85 @@
 		<ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
 			<Component>
 				<File Source="ConlangAudioHoning.exe">
-					<Shortcut Name="Conlang Audio Honing" 
+					<Shortcut Name="Conlang Audio Honing"
 							  Directory="StartMenuFolder"
 							  Advertise="yes"/>
 				</File>
+			</Component>
+			<Component>
+				<File Source="ConlangJson.dll" />
+			</Component>
+			<Component>
+				<File Source="ConlangAudioHoning.deps.json" />
+			</Component>
+			<Component>
+				<File Source="ConlangAudioHoning.dll" />
+			</Component>
+			<Component>
+				<File Source="ConlangAudioHoning.pdb" />
+			</Component>
+			<Component>
+				<File Source="ConlangAudioHoning.runtimeconfig.json" />
+			</Component>
+			<Component>
+				<File Source="ConlangAudioHoning.xml" />
+			</Component>
+			<Component>
+				<File Source="ConlangJson.pdb" />
+			</Component>
+			<Component>
+				<File Source="ConlangJson.xml" />
+			</Component>
+			<Component>
+				<File Source="Microsoft.CognitiveServices.Speech.csharp.dll" />
+			</Component>
+		</ComponentGroup>
+		<ComponentGroup Id="NativeComponents" Directory="NATIVE">
+			<Component>
+				<File Source="runtimes\win-x64\native\Microsoft.CognitiveServices.Speech.core.dll" />
+			</Component>
+			<Component>
+				<File Source="runtimes\win-x64\native\Microsoft.CognitiveServices.Speech.extension.audio.sys.dll" />
+			</Component>
+			<Component>
+				<File Source="runtimes\win-x64\native\Microsoft.CognitiveServices.Speech.extension.codec.dll" />
+			</Component>
+			<Component>
+				<File Source="runtimes\win-x64\native\Microsoft.CognitiveServices.Speech.extension.kws.dll" />
+			</Component>
+			<Component>
+				<File Source="runtimes\win-x64\native\Microsoft.CognitiveServices.Speech.extension.kws.ort.dll" />
+			</Component>
+			<Component>
+				<File Source="runtimes\win-x64\native\Microsoft.CognitiveServices.Speech.extension.lu.dll" />
+			</Component>
+		</ComponentGroup>
+		<ComponentGroup Id="AwsPython" Directory="AWSFOLDER">
+			<Component>
+				<File Source="..\aws_python_source\authorization_module.py" />
+			</Component>
+			<Component>
+				<File Source="..\aws_python_source\generate_authorization_entry.py" />
+			</Component>
+			<Component>
+				<File Source="..\aws_python_source\lambda_function.py" />
+			</Component>
+		</ComponentGroup>
+		<ComponentGroup Id="UtilityPython" Directory="PYTHONUTIL">
+			<Component>
+				<File Source="..\conlang_json_python\conlang_lib.py"/>
+			</Component>
+			<Component>
+				<File Source="..\conlang_json_python\lexicon_entry.py"/>
+			</Component>
+			<Component>
+				<File Source="..\conlang_json_python\not_madlibs.py"/>
+			</Component>
+			<Component>
+				<File Source="..\conlang_json_python\parse_vulgrarlang.py"/>
+			</Component>
+			<Component>
+				<File Source="..\conlang_json_python\write_lexicon_csv.py"/>
 			</Component>
 		</ComponentGroup>
 	</Fragment>

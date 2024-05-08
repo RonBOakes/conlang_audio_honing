@@ -8,6 +8,9 @@
 						Advertise="yes"/>
 		  </File>
       </Component>
-    </ComponentGroup>
+		<Component>
+			<File Source="ConlangJson.dll" />
+		</Component>
+	</ComponentGroup>
   </Fragment>
 </Wix>
