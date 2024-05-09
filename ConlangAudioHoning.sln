@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyGlot2ConlangJson", "Pol
 		{ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263} = {ED66CB5B-02B8-4CD7-BC35-E9A6D5A5F263}
 	EndProjectSection
 EndProject
-Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "ConlangAudioHoningInstallerBundle", "ConlangAudioHoningInstallerBundle\ConlangAudioHoningInstallerBundle.wixproj", "{8C0C5816-B0C6-4ADF-B852-D969464EC876}"
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "Conlang Audio Honing Installer", "ConlangAudioHoningInstallerBundle\Conlang Audio Honing Installer.wixproj", "{8C0C5816-B0C6-4ADF-B852-D969464EC876}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3F8C1DC2-4C43-4185-B2CC-72B538A964EF} = {3F8C1DC2-4C43-4185-B2CC-72B538A964EF}
 		{6F3C264F-91F8-4146-9022-7462BCF51B9E} = {6F3C264F-91F8-4146-9022-7462BCF51B9E}
