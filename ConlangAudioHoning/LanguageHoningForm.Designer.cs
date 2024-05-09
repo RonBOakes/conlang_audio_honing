@@ -49,6 +49,7 @@
             toolStripSeparator3 = new ToolStripSeparator();
             setAmazonPollyURIToolStripMenuItem = new ToolStripMenuItem();
             setAmazonPollyAuthorizationEmailToolStripMenuItem = new ToolStripMenuItem();
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem = new ToolStripMenuItem();
             setESpeakNgLocationToolStripMenuItem = new ToolStripMenuItem();
             setAzureSpeechKeyToolStripMenuItem = new ToolStripMenuItem();
             setAzureSpeechRegionToolStripMenuItem = new ToolStripMenuItem();
@@ -57,6 +58,9 @@
             toolStripMenuItem2 = new ToolStripMenuItem();
             printIPAMapToolStripMenuItem = new ToolStripMenuItem();
             printKiToolStripMenuItem = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            viewHelpToolStripMenuItem = new ToolStripMenuItem();
+            aboutConlangAudioHoningToolStripMenuItem = new ToolStripMenuItem();
             txt_SampleText = new TextBox();
             lbl_SampleText = new Label();
             txt_phonetic = new TextBox();
@@ -117,7 +121,6 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
-            setAmazonPollyAuthorizationPasswordToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -131,7 +134,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, debugToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, debugToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1000, 24);
@@ -268,6 +271,13 @@
             setAmazonPollyAuthorizationEmailToolStripMenuItem.Text = "Set Amazon Polly Authorization email";
             setAmazonPollyAuthorizationEmailToolStripMenuItem.Click += SetAmazonPollyAuthorizationEmailToolStripMenuItem_Click;
             // 
+            // setAmazonPollyAuthorizationPasswordToolStripMenuItem
+            // 
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Name = "setAmazonPollyAuthorizationPasswordToolStripMenuItem";
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Size = new Size(294, 22);
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Text = "Set Amazon Polly Authorization Password";
+            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Click += SetAmazonPollyAuthorizationPasswordToolStripMenuItem_Click;
+            // 
             // setESpeakNgLocationToolStripMenuItem
             // 
             setESpeakNgLocationToolStripMenuItem.Name = "setESpeakNgLocationToolStripMenuItem";
@@ -323,6 +333,28 @@
             printKiToolStripMenuItem.Size = new Size(240, 22);
             printKiToolStripMenuItem.Text = "Print Kirshenbaum Missing Info";
             printKiToolStripMenuItem.Click += PrintKiToolStripMenuItem_Click;
+            // 
+            // helpToolStripMenuItem
+            // 
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewHelpToolStripMenuItem, aboutConlangAudioHoningToolStripMenuItem });
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.ShortcutKeys = Keys.F1;
+            helpToolStripMenuItem.Size = new Size(44, 20);
+            helpToolStripMenuItem.Text = "Help";
+            // 
+            // viewHelpToolStripMenuItem
+            // 
+            viewHelpToolStripMenuItem.Name = "viewHelpToolStripMenuItem";
+            viewHelpToolStripMenuItem.ShortcutKeys = Keys.F1;
+            viewHelpToolStripMenuItem.Size = new Size(233, 22);
+            viewHelpToolStripMenuItem.Text = "View Help";
+            viewHelpToolStripMenuItem.Click += ViewHelpToolStripMenuItem_Click;
+            // 
+            // aboutConlangAudioHoningToolStripMenuItem
+            // 
+            aboutConlangAudioHoningToolStripMenuItem.Name = "aboutConlangAudioHoningToolStripMenuItem";
+            aboutConlangAudioHoningToolStripMenuItem.Size = new Size(233, 22);
+            aboutConlangAudioHoningToolStripMenuItem.Text = "About Conlang Audio Honing";
             // 
             // txt_SampleText
             // 
@@ -961,13 +993,6 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += Btn_updateSoundMapList_Click;
             // 
-            // setAmazonPollyAuthorizationPasswordToolStripMenuItem
-            // 
-            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Name = "setAmazonPollyAuthorizationPasswordToolStripMenuItem";
-            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Size = new Size(294, 22);
-            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Text = "Set Amazon Polly Authorization Password";
-            setAmazonPollyAuthorizationPasswordToolStripMenuItem.Click += SetAmazonPollyAuthorizationPasswordToolStripMenuItem_Click;
-            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1005,7 +1030,7 @@
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "LanguageHoningForm";
-            Text = "LanguageHoningForm";
+            Text = "Conlang Audio Honing";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             tabPhoneticAlterations.ResumeLayout(false);
@@ -1115,5 +1140,8 @@
         private ToolStripMenuItem setAzureSpeechRegionToolStripMenuItem;
         private ToolStripMenuItem setAmazonPollyAuthorizationEmailToolStripMenuItem;
         private ToolStripMenuItem setAmazonPollyAuthorizationPasswordToolStripMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripMenuItem viewHelpToolStripMenuItem;
+        private ToolStripMenuItem aboutConlangAudioHoningToolStripMenuItem;
     }
 }

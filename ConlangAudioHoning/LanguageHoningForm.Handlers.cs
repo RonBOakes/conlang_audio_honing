@@ -19,6 +19,7 @@
 using ConlangJson;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
@@ -1109,6 +1110,27 @@ namespace ConlangAudioHoning
             }
             LexicalOrderEditor editor = new(languageDescription, true);
             _ = editor.ShowDialog();
+        }
+
+        private void ViewHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string helpURL = @"https://github.com/RonBOakes/conlang_audio_honing/wiki/Conlang-Audio-Honing-Tool-Help";
+            Process myProcess = new();
+            try
+            {
+                myProcess.StartInfo.UseShellExecute = true;
+                myProcess.StartInfo.FileName = helpURL;
+                myProcess.Start();
+            }
+            catch (System.ComponentModel.Win32Exception noBrowser)
+            {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            }
+            catch (System.Exception other)
+            {
+                MessageBox.Show(other.Message);
+            }
         }
     }
 }
