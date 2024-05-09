@@ -1,5 +1,5 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Package Name="LanguageEditorInstaller" Manufacturer="Conlang Audio Honing Project" Version="1.0.0.0" UpgradeCode="c1eea89a-fb5c-4865-98dd-7d169a2da670">
+  <Package Name="LanguageEditor" Manufacturer="Conlang Audio Honing Project" Version="0.1.0.0" UpgradeCode="c1eea89a-fb5c-4865-98dd-7d169a2da670">
     <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
     <Feature Id="Main">
