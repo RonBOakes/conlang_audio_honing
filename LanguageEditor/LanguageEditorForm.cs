@@ -19,6 +19,7 @@
 using ConlangAudioHoning;
 using ConlangJson;
 using Microsoft.VisualBasic;
+using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -442,6 +443,33 @@ namespace LanguageEditor
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
                 File.WriteAllText(filename, jsonString, System.Text.Encoding.UTF8);
             }
+        }
+
+        private void ViewHelpPageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string helpURL = @"https://github.com/RonBOakes/conlang_audio_honing/wiki/Language-Editor-Help";
+            Process myProcess = new();
+            try
+            {
+                myProcess.StartInfo.UseShellExecute = true;
+                myProcess.StartInfo.FileName = helpURL;
+                myProcess.Start();
+            }
+            catch (System.ComponentModel.Win32Exception noBrowser)
+            {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            }
+            catch (System.Exception other)
+            {
+                MessageBox.Show(other.Message);
+            }
+        }
+
+        private void AboutLanguageEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox aboutBox = new();
+            aboutBox.ShowDialog();
         }
     }
 }

@@ -1132,5 +1132,11 @@ namespace ConlangAudioHoning
                 MessageBox.Show(other.Message);
             }
         }
+
+        private void AboutConlangAudioHoningToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox aboutBox = new();
+            aboutBox.ShowDialog();
+        }
     }
 }

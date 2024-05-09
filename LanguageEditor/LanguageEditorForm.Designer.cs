@@ -58,6 +58,9 @@
             saveToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            viewHelpPageToolStripMenuItem = new ToolStripMenuItem();
+            aboutLanguageEditorToolStripMenuItem = new ToolStripMenuItem();
             panel_nounGender = new Panel();
             vScrollBar1 = new VScrollBar();
             lbl_nounGenderList = new Label();
@@ -139,7 +142,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
@@ -151,34 +154,57 @@
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadToolStripMenuItem, saveToolStripMenuItem, toolStripSeparator1, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(25, 20);
+            fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "File";
             // 
             // loadToolStripMenuItem
             // 
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(180, 22);
+            loadToolStripMenuItem.Size = new Size(100, 22);
             loadToolStripMenuItem.Text = "Load";
             loadToolStripMenuItem.Click += LoadToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(180, 22);
+            saveToolStripMenuItem.Size = new Size(100, 22);
             saveToolStripMenuItem.Text = "Save";
             saveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(97, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(100, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
+            // 
+            // helpToolStripMenuItem
+            // 
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewHelpPageToolStripMenuItem, aboutLanguageEditorToolStripMenuItem });
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.ShortcutKeys = Keys.F1;
+            helpToolStripMenuItem.Size = new Size(44, 20);
+            helpToolStripMenuItem.Text = "Help";
+            // 
+            // viewHelpPageToolStripMenuItem
+            // 
+            viewHelpPageToolStripMenuItem.Name = "viewHelpPageToolStripMenuItem";
+            viewHelpPageToolStripMenuItem.ShortcutKeys = Keys.F1;
+            viewHelpPageToolStripMenuItem.Size = new Size(196, 22);
+            viewHelpPageToolStripMenuItem.Text = "View Help Page";
+            viewHelpPageToolStripMenuItem.Click += ViewHelpPageToolStripMenuItem_Click;
+            // 
+            // aboutLanguageEditorToolStripMenuItem
+            // 
+            aboutLanguageEditorToolStripMenuItem.Name = "aboutLanguageEditorToolStripMenuItem";
+            aboutLanguageEditorToolStripMenuItem.Size = new Size(196, 22);
+            aboutLanguageEditorToolStripMenuItem.Text = "About Language Editor";
+            aboutLanguageEditorToolStripMenuItem.Click += AboutLanguageEditorToolStripMenuItem_Click;
             // 
             // panel_nounGender
             // 
@@ -413,5 +439,8 @@
         private ToolStripMenuItem saveToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripMenuItem viewHelpPageToolStripMenuItem;
+        private ToolStripMenuItem aboutLanguageEditorToolStripMenuItem;
     }
 }

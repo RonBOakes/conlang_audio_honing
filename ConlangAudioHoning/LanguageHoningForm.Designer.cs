@@ -355,6 +355,7 @@
             aboutConlangAudioHoningToolStripMenuItem.Name = "aboutConlangAudioHoningToolStripMenuItem";
             aboutConlangAudioHoningToolStripMenuItem.Size = new Size(233, 22);
             aboutConlangAudioHoningToolStripMenuItem.Text = "About Conlang Audio Honing";
+            aboutConlangAudioHoningToolStripMenuItem.Click += AboutConlangAudioHoningToolStripMenuItem_Click;
             // 
             // txt_SampleText
             // 
