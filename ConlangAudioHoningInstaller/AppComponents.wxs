@@ -33,6 +33,25 @@
 				<File Source="ConlangJson.xml" />
 			</Component>
 			<Component>
+				<File Source="LanguageEditor.exe">
+					<Shortcut Name="Language Editor"
+							  Directory="StartMenuFolder"
+							  Advertise="yes"/>
+				</File>
+			</Component>
+			<Component>
+				<File Source="LanguageEditor.dll"/>
+			</Component>
+			<Component>
+				<File Source="LanguageEditor.pdb"/>
+			</Component>
+			<Component>
+				<File Source="LanguageEditor.runtimeconfig.json"/>
+			</Component>
+			<Component>
+				<File Source="LanguageEditor.deps.json"/>
+			</Component>
+			<Component>
 				<File Source="Microsoft.CognitiveServices.Speech.csharp.dll" />
 			</Component>
 		</ComponentGroup>

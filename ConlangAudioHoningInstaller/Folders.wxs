@@ -1,14 +1,12 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 	<Fragment>
 		<StandardDirectory Id="ProgramFiles6432Folder">
-			<Directory Id="PROJFOLDER" Name="!(bind.Property.Manufacturer)">
-				<Directory Id="INSTALLFOLDER" Name="!(bind.Property.ProductName)">
-					<Directory Id="AWSFOLDER" Name="aws_python_source"  />
-					<Directory Id="PYTHONUTIL" Name="python_utilities" />
-					<Directory Id="RUNTIMES" Name="runtimes">
-						<Directory Id="WINX64" Name="win-x64">
-							<Directory Id="NATIVE" Name="native" />
-						</Directory>
+			<Directory Id="INSTALLFOLDER" Name="!(bind.Property.ProductName)">
+				<Directory Id="AWSFOLDER" Name="aws_python_source"  />
+				<Directory Id="PYTHONUTIL" Name="python_utilities" />
+				<Directory Id="RUNTIMES" Name="runtimes">
+					<Directory Id="WINX64" Name="win-x64">
+						<Directory Id="NATIVE" Name="native" />
 					</Directory>
 				</Directory>
 			</Directory>
