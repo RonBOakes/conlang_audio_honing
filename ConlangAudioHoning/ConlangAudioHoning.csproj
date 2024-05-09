@@ -11,6 +11,14 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>icons8-sound-9696x96.ico</ApplicationIcon>
+    <Title>Conlang Audio Honing Tool</Title>
+    <Version>0.1.0.0</Version>
+    <Authors>Conlang Audio Honing Project</Authors>
+    <Description>A tool for honing the sound and phonetics of a conlang</Description>
+    <Copyright>2024 Ronald B. Oakes</Copyright>
+    <PackageProjectUrl>https://github.com/RonBOakes/conlang_audio_honing</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/RonBOakes/conlang_audio_honing.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

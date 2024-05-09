@@ -7,10 +7,26 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>icons8-select-all-10096x96.ico</ApplicationIcon>
+    <RepositoryUrl>https://github.com/RonBOakes/conlang_audio_honing.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Title>Conlang Language Editor</Title>
+    <Version>0.1.0.0</Version>
+    <Authors>Conalng Audio Honing Project</Authors>
+    <Description>An editor for conlangs in the Conlang JSON object format</Description>
+    <Copyright>2024 Ronald B. Oakes</Copyright>
+    <PackageProjectUrl>https://github.com/RonBOakes/conlang_audio_honing</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="icons8-select-all-10096x96.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
