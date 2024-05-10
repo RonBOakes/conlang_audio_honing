@@ -125,7 +125,7 @@ namespace ConlangAudioHoning
                 filePath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
             }
 
-            Match commitInPathMatch = MyRegex().Match(filePath);
+            Match commitInPathMatch = VersionPatterRegex().Match(filePath);
             if (commitInPathMatch.Success)
             {
                 filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
@@ -160,7 +160,7 @@ namespace ConlangAudioHoning
                 filePath = Application.UserAppDataPath.Trim() + @"\LanguageHoningConfig.json";
             }
 
-            Match commitInPathMatch = MyRegex().Match(filePath);
+            Match commitInPathMatch = VersionPatterRegex().Match(filePath);
             if (commitInPathMatch.Success)
             {
                 filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
@@ -193,7 +193,7 @@ namespace ConlangAudioHoning
             return config;
         }
 
-        [GeneratedRegex(@"\\((\d+\.\d+\.\d+)\+[0-9a-f]+)\\")]
-        private static partial Regex MyRegex();
+        [GeneratedRegex(@"\\((\d+\.\d+\.\d+\.\d+)\+[0-9a-f]+)\\")]
+        private static partial Regex VersionPatterRegex();
     }
 }
