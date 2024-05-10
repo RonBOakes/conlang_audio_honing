@@ -18,8 +18,8 @@ import json
 import pdb
 import re
 import random
+import sys
 from argparse import ArgumentParser
-sys.path.insert(0, '../speak_general')
 from lexicon_entry import LEXICON_ENTRY
 from conlang_lib import spell_word, decline_word, derive_words
 

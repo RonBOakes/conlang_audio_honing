@@ -39,7 +39,7 @@ namespace LanguageEditor
 
         #region Assembly Attribute Accessors
 
-        public string AssemblyTitle
+        public static string AssemblyTitle
         {
             get
             {
@@ -52,19 +52,25 @@ namespace LanguageEditor
                         return titleAttribute.Title;
                     }
                 }
+#pragma warning disable SYSLIB0012 // Type or member is obsolete
+#pragma warning disable CS8603 // Possible null reference return.
                 return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+#pragma warning restore CS8603 // Possible null reference return.
+#pragma warning restore SYSLIB0012 // Type or member is obsolete
             }
         }
 
-        public string AssemblyVersion
+        public static string AssemblyVersion
         {
             get
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
         }
 
-        public string AssemblyDescription
+        public static string AssemblyDescription
         {
             get
             {
@@ -77,7 +83,7 @@ namespace LanguageEditor
             }
         }
 
-        public string AssemblyProduct
+        public static string AssemblyProduct
         {
             get
             {
@@ -90,7 +96,7 @@ namespace LanguageEditor
             }
         }
 
-        public string AssemblyCopyright
+        public static string AssemblyCopyright
         {
             get
             {
@@ -103,7 +109,7 @@ namespace LanguageEditor
             }
         }
 
-        public string AssemblyCompany
+        public static string AssemblyCompany
         {
             get
             {
