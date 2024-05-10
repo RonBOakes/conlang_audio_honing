@@ -148,8 +148,12 @@
             SuspendLayout();
             // 
             // menuStrip1
-            // 
+            //
+#if DEBUG
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, debugToolStripMenuItem, helpToolStripMenuItem });
+#else
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, helpToolStripMenuItem });
+#endif
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1000, 24);
@@ -1065,7 +1069,7 @@
             PerformLayout();
         }
 
-        #endregion
+#endregion
 
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
