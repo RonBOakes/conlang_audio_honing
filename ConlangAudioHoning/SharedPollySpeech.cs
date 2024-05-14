@@ -26,13 +26,13 @@ namespace ConlangAudioHoning
     /// <summary>
     /// Class used for interacting with Amazon Polly for speech generation and related operations.
     /// </summary>
-    internal class PollySpeech : SpeechEngine
+    internal class SharedPollySpeech : SpeechEngine
     {
 
         /// <summary>
         /// Constructor for the Amazon Polly interface.
         /// </summary>
-        public PollySpeech() : base()
+        public SharedPollySpeech() : base()
         {
             Description = "Amazon Polly";
         }
@@ -41,7 +41,7 @@ namespace ConlangAudioHoning
         /// Constructor for the Amazon Polly interface.
         /// </summary>
         /// <param name="languageDescription">LanguageDescription object for the language to work with.</param>
-        public PollySpeech(LanguageDescription languageDescription) : base(languageDescription)
+        public SharedPollySpeech(LanguageDescription languageDescription) : base(languageDescription)
         {
             Description = "Amazon Polly";
         }
@@ -187,9 +187,9 @@ namespace ConlangAudioHoning
         /// Get all of the Amazon Polly voices from Amazon Web Services.
         /// </summary>
         /// <returns></returns>
-        public override Dictionary<string, PollySpeech.VoiceData> GetVoices()
+        public override Dictionary<string, SharedPollySpeech.VoiceData> GetVoices()
         {
-            Dictionary<string, PollySpeech.VoiceData> voices = [];
+            Dictionary<string, SharedPollySpeech.VoiceData> voices = [];
             HttpHandler httpHandler = HttpHandler.Instance;
             HttpClient httpClient = httpHandler.HttpClient;
             StringContent content;

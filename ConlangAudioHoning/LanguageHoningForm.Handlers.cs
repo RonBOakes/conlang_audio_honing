@@ -263,7 +263,7 @@ namespace ConlangAudioHoning
             string engineName = cbx_speechEngine.Text.Trim();
             if ((engineName.Equals("Amazon Polly")) && (UserConfiguration.IsPollySupported))
             {
-                PollySpeech pollySpeech = (PollySpeech)speechEngines[engineName];
+                SharedPollySpeech pollySpeech = (SharedPollySpeech)speechEngines[engineName];
                 DateTime now = DateTime.Now;
                 string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
                 targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -924,11 +924,11 @@ namespace ConlangAudioHoning
 
         private void SetAmazonPollyURIToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string pollyURI = Microsoft.VisualBasic.Interaction.InputBox("Enter the URI for Amazon Polly", "Amazon Polly URI", PollySpeech.PollyURI ?? "");
-            if (PollySpeech.TestURI(pollyURI))
+            string pollyURI = Microsoft.VisualBasic.Interaction.InputBox("Enter the URI for Amazon Polly", "Amazon Polly URI", SharedPollySpeech.PollyURI ?? "");
+            if (SharedPollySpeech.TestURI(pollyURI))
             {
-                PollySpeech.PollyURI = pollyURI;
-                PollySpeech pollySpeech = new();
+                SharedPollySpeech.PollyURI = pollyURI;
+                SharedPollySpeech pollySpeech = new();
                 Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
                 if (speechEngines.ContainsKey(pollySpeech.Description))
                 {
@@ -949,20 +949,20 @@ namespace ConlangAudioHoning
 
         private void SetAmazonPollyAuthorizationEmailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string pollyEmail = Microsoft.VisualBasic.Interaction.InputBox("Enter the email for Authorizing the use of Amazon Polly", "Amazon Polly Email", PollySpeech.PollyEmail ?? "");
+            string pollyEmail = Microsoft.VisualBasic.Interaction.InputBox("Enter the email for Authorizing the use of Amazon Polly", "Amazon Polly Email", SharedPollySpeech.PollyEmail ?? "");
             if(!string.IsNullOrEmpty(pollyEmail))
             {
-                PollySpeech.PollyEmail = pollyEmail;
+                SharedPollySpeech.PollyEmail = pollyEmail;
                 UserConfiguration.PollyEmail = pollyEmail;
             }
         }
 
         private void SetAmazonPollyAuthorizationPasswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string pollyPassword = Microsoft.VisualBasic.Interaction.InputBox("Enter the password for Authorizing the use of Amazon Polly", "Amazon Polly Password", PollySpeech.PollyPassword ?? "");
+            string pollyPassword = Microsoft.VisualBasic.Interaction.InputBox("Enter the password for Authorizing the use of Amazon Polly", "Amazon Polly Password", SharedPollySpeech.PollyPassword ?? "");
             if(!string.IsNullOrEmpty(pollyPassword))
             {
-                PollySpeech.PollyPassword = pollyPassword;
+                SharedPollySpeech.PollyPassword = pollyPassword;
                 UserConfiguration.PollyPassword = pollyPassword;
             }
         }

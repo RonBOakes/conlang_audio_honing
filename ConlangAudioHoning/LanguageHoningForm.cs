@@ -89,10 +89,10 @@ namespace ConlangAudioHoning
 
             if (UserConfiguration.IsPollySupported)
             {
-                PollySpeech.PollyURI = UserConfiguration.PollyURI;
-                PollySpeech.PollyEmail = UserConfiguration.PollyEmail;
-                PollySpeech.PollyPassword = UserConfiguration.PollyPassword;
-                PollySpeech pollySpeech = new();
+                SharedPollySpeech.PollyURI = UserConfiguration.PollyURI;
+                SharedPollySpeech.PollyEmail = UserConfiguration.PollyEmail;
+                SharedPollySpeech.PollyPassword = UserConfiguration.PollyPassword;
+                SharedPollySpeech pollySpeech = new();
                 Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
                 speechEngines.Add(pollySpeech.Description, pollySpeech);
                 voices.Add(pollySpeech.Description, amazonPollyVoices);
