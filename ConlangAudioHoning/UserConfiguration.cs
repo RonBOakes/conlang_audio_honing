@@ -27,7 +27,7 @@ namespace ConlangAudioHoning
     {
         private string? _pollyURI;
         private string? _pollyEmail;
-        private string? _pollyPasword;
+        private string? _pollyPassword;
         private string? _eSpeakNgPath;
         private string? _azureSpeechKey;
         private string? _azureSpeechRegion;
@@ -57,8 +57,8 @@ namespace ConlangAudioHoning
 
         public string PollyPassword
         {
-            get => _pollyPasword ?? string.Empty;
-            set => _pollyPasword = value;
+            get => _pollyPassword ?? string.Empty;
+            set => _pollyPassword = value;
         }
 
         /// <summary>
