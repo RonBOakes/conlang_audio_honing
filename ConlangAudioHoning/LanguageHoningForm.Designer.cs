@@ -140,6 +140,7 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
+            setAmazonPollyProfileToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -252,7 +253,7 @@
             // 
             // utilitiesToolStripMenuItem
             // 
-            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, useSharedAmazonPollyToolStripMenuItem, setAmazonPollyURIToolStripMenuItem, setAmazonPollyAuthorizationEmailToolStripMenuItem, setAmazonPollyAuthorizationPasswordToolStripMenuItem, useUnsharedAmazonPollyToolStripMenuItem, toolStripSeparator4, setESpeakNgLocationToolStripMenuItem, toolStripSeparator5, setAzureSpeechKeyToolStripMenuItem, setAzureSpeechRegionToolStripMenuItem });
+            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, useSharedAmazonPollyToolStripMenuItem, setAmazonPollyURIToolStripMenuItem, setAmazonPollyAuthorizationEmailToolStripMenuItem, setAmazonPollyAuthorizationPasswordToolStripMenuItem, useUnsharedAmazonPollyToolStripMenuItem, setAmazonPollyProfileToolStripMenuItem, toolStripSeparator4, setESpeakNgLocationToolStripMenuItem, toolStripSeparator5, setAzureSpeechKeyToolStripMenuItem, setAzureSpeechRegionToolStripMenuItem });
             utilitiesToolStripMenuItem.Name = "utilitiesToolStripMenuItem";
             utilitiesToolStripMenuItem.Size = new Size(58, 20);
             utilitiesToolStripMenuItem.Text = "Utilities";
@@ -1039,6 +1040,13 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += Btn_updateSoundMapList_Click;
             // 
+            // setAmazonPollyProfileToolStripMenuItem
+            // 
+            setAmazonPollyProfileToolStripMenuItem.Name = "setAmazonPollyProfileToolStripMenuItem";
+            setAmazonPollyProfileToolStripMenuItem.Size = new Size(294, 22);
+            setAmazonPollyProfileToolStripMenuItem.Text = "Set Amazon Polly Profile";
+            setAmazonPollyProfileToolStripMenuItem.Click += SetAmazonPollyProfileToolStripMenuItem_Click;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1193,5 +1201,6 @@
         private ToolStripMenuItem useUnsharedAmazonPollyToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripSeparator toolStripSeparator5;
+        private ToolStripMenuItem setAmazonPollyProfileToolStripMenuItem;
     }
 }

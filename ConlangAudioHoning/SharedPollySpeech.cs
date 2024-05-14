@@ -1,5 +1,5 @@
 ﻿/*
-* Class for Processing speech using Amazon Polly.
+* Class for Processing speech using Amazon Polly via the shared REST interface.
 * 
 * Copyright (C) 2024 Ronald B. Oakes
 *

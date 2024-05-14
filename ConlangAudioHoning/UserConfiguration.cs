@@ -28,6 +28,7 @@ namespace ConlangAudioHoning
         private string? _pollyURI;
         private string? _pollyEmail;
         private string? _pollyPassword;
+        private string? _pollyProfile;
         private string? _eSpeakNgPath;
         private string? _azureSpeechKey;
         private string? _azureSpeechRegion;
@@ -77,9 +78,22 @@ namespace ConlangAudioHoning
             set => _pollyPassword = value;
         }
 
+        /// <summary>
+        /// Does this configuration support/use the nonshared (direct) Amazon Polly 
+        /// system for text to speech?
+        /// </summary>
         public bool UseNonSharedPolly
         {
             get; set;
+        }
+
+        /// <summary>
+        /// Holds the Amazon SSO Profile to be used for nonshared Amazon Polly.
+        /// </summary>
+        public string PollyProfile
+        {
+            get => _pollyProfile ?? string.Empty;
+            set => _pollyProfile = value;
         }
 
         /// <summary>

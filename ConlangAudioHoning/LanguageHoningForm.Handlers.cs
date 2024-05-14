@@ -967,6 +967,16 @@ namespace ConlangAudioHoning
             }
         }
 
+        private void SetAmazonPollyProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string pollyProfile = Microsoft.VisualBasic.Interaction.InputBox("Enter the Amazon SSO Profile to use for Amazon Polly", "Amazon SSO Profile", NonSharedPollySpeech.PollySSOProfile ?? "");
+            if(!string.IsNullOrEmpty(pollyProfile))
+            {
+                NonSharedPollySpeech.PollySSOProfile = pollyProfile;
+                UserConfiguration.PollyProfile = pollyProfile;
+            }
+        }
+
         private void SetESpeakNgLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using OpenFileDialog openFileDialog = new();
@@ -1149,6 +1159,7 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = false;
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
                 useUnsharedAmazonPollyToolStripMenuItem.Visible = true;
+                setAmazonPollyProfileToolStripMenuItem.Visible = true;
             }
             else
             {
@@ -1158,6 +1169,7 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = true;
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
                 useUnsharedAmazonPollyToolStripMenuItem.Visible = false;
+                setAmazonPollyProfileToolStripMenuItem.Visible = false;
             }
         }
 

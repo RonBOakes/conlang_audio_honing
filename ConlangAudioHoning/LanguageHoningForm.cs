@@ -74,13 +74,14 @@ namespace ConlangAudioHoning
 
             UserConfiguration = UserConfiguration.LoadFromFile();
 
-            if(UserConfiguration.UseSharedPolly)
+            if (UserConfiguration.UseSharedPolly)
             {
                 useSharedAmazonPollyToolStripMenuItem.Checked = true;
                 setAmazonPollyURIToolStripMenuItem.Visible = true;
                 setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = true;
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
                 useUnsharedAmazonPollyToolStripMenuItem.Visible = false;
+                setAmazonPollyProfileToolStripMenuItem.Visible = false;
             }
             else
             {
@@ -89,7 +90,9 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = false;
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
                 useUnsharedAmazonPollyToolStripMenuItem.Visible = true;
+                setAmazonPollyProfileToolStripMenuItem.Visible = true;
             }
+            useUnsharedAmazonPollyToolStripMenuItem.Checked = UserConfiguration.UseNonSharedPolly;
 
 
             NoEngineSpeak noEngineSpeak = new();
@@ -107,13 +110,24 @@ namespace ConlangAudioHoning
 
             if (UserConfiguration.IsPollySupported)
             {
-                SharedPollySpeech.PollyURI = UserConfiguration.PollyURI;
-                SharedPollySpeech.PollyEmail = UserConfiguration.PollyEmail;
-                SharedPollySpeech.PollyPassword = UserConfiguration.PollyPassword;
-                SharedPollySpeech pollySpeech = new();
-                Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
-                speechEngines.Add(pollySpeech.Description, pollySpeech);
-                voices.Add(pollySpeech.Description, amazonPollyVoices);
+                if (UserConfiguration.UseSharedPolly)
+                {
+                    SharedPollySpeech.PollyURI = UserConfiguration.PollyURI;
+                    SharedPollySpeech.PollyEmail = UserConfiguration.PollyEmail;
+                    SharedPollySpeech.PollyPassword = UserConfiguration.PollyPassword;
+                    SharedPollySpeech pollySpeech = new();
+                    Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
+                    speechEngines.Add(pollySpeech.Description, pollySpeech);
+                    voices.Add(pollySpeech.Description, amazonPollyVoices);
+                }
+                else // Nonshared Polly must be set.
+                {
+                    NonSharedPollySpeech.PollySSOProfile = UserConfiguration.PollyProfile;
+                    NonSharedPollySpeech nonSharedPollySpeech = new();
+                    Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = nonSharedPollySpeech.GetVoices();
+                    speechEngines.Add(nonSharedPollySpeech.Description, nonSharedPollySpeech);
+                    voices.Add(nonSharedPollySpeech.Description, amazonPollyVoices);
+                }
             }
 
             if (UserConfiguration.IsAzureSupported)
