@@ -38,7 +38,18 @@ namespace ConlangAudioHoning
         { }
 
         /// <summary>
-        /// The URI to be used to access Amazon Polly.  
+        /// Does this configuration use a shared Amazon Polly (REST) interface?<br/>
+        /// If set to true, then PollyURI, PollyEmail, and PollyPassword must be populated
+        /// in order for it to use Amazon Polly.  If set to false then UseNonSharedPolly
+        /// must be set to true to use Amazon Polly.
+        /// </summary>
+        public bool UseSharedPolly
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// The URI to be used to access Shared Amazon Polly.  
         /// </summary>
         public string PollyURI
         {
@@ -47,7 +58,7 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// The email address associated with the Amazon Polly usage authorization.
+        /// The email address associated with the Shared Amazon Polly usage authorization.
         /// </summary>
         public string PollyEmail
         {
@@ -55,10 +66,20 @@ namespace ConlangAudioHoning
             set => _pollyEmail = value;
         }
 
+        /// <summary>
+        /// Password for using shared Amazon Polly.  Note, this is stored in
+        /// plain text in the configuration JSON file, and transmitted over an
+        /// SSL connection.  It is not a highly secure password.
+        /// </summary>
         public string PollyPassword
         {
             get => _pollyPassword ?? string.Empty;
             set => _pollyPassword = value;
+        }
+
+        public bool UseNonSharedPolly
+        {
+            get; set;
         }
 
         /// <summary>
@@ -87,7 +108,9 @@ namespace ConlangAudioHoning
         /// </summary>
         public bool IsPollySupported
         {
-            get => (!string.IsNullOrEmpty(PollyURI));
+            get => ((UseSharedPolly && (!string.IsNullOrEmpty(PollyURI) && !string.IsNullOrEmpty(PollyEmail) && !string.IsNullOrEmpty(PollyPassword))) ||
+                (UseNonSharedPolly));
+
         }
 
 

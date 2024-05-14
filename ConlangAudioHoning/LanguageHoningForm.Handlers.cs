@@ -302,7 +302,7 @@ namespace ConlangAudioHoning
                     cbx_recordings.SelectedText = fileInfo.Name;
                 }
             }
-            else if ((engineName.Equals("espeak-ng")) && (UserConfiguration.IsESpeakNGSupported))
+            else if ((engineName.Equals("eSpeak-ng")) && (UserConfiguration.IsESpeakNGSupported))
             {
                 ESpeakNGSpeak speechEngine = (ESpeakNGSpeak)speechEngines[engineName];
                 DateTime now = DateTime.Now;
@@ -348,7 +348,7 @@ namespace ConlangAudioHoning
                     cbx_recordings.SelectedText = fileInfo.Name;
                 }
             }
-            else if ((engineName.Equals("azure")) && UserConfiguration.IsAzureSupported)
+            else if ((engineName.Equals("Microsoft Azure")) && UserConfiguration.IsAzureSupported)
             {
                 AzureSpeak speechEngine = (AzureSpeak)speechEngines[engineName];
                 DateTime now = DateTime.Now;
@@ -1137,6 +1137,42 @@ namespace ConlangAudioHoning
         {
             AboutBox aboutBox = new();
             aboutBox.ShowDialog();
+        }
+
+        private void UseSharedAmazonPollyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (UserConfiguration.UseSharedPolly)
+            {
+                UserConfiguration.UseSharedPolly = false;
+                useSharedAmazonPollyToolStripMenuItem.Checked = false;
+                setAmazonPollyURIToolStripMenuItem.Visible = false;
+                setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = false;
+                setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
+                useUnsharedAmazonPollyToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                UserConfiguration.UseSharedPolly = true;
+                useSharedAmazonPollyToolStripMenuItem.Checked = true;
+                setAmazonPollyURIToolStripMenuItem.Visible = true;
+                setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = true;
+                setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
+                useUnsharedAmazonPollyToolStripMenuItem.Visible = false;
+            }
+        }
+
+        private void useUnsharedAmazonPollyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(UserConfiguration.UseNonSharedPolly)
+            {
+                UserConfiguration.UseNonSharedPolly = false;
+                useUnsharedAmazonPollyToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                UserConfiguration.UseNonSharedPolly = true;
+                useUnsharedAmazonPollyToolStripMenuItem.Checked = true;
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace ConlangAudioHoning
 
         public AzureSpeak() : base()
         {
-            Description = "azure";
+            Description = "Microsoft Azure";
 
             speechKey = UserConfiguration.LoadCurrent().AzureSpeechKey;
             speechRegion = UserConfiguration.LoadCurrent().AzureSpeechRegion;
@@ -46,7 +46,7 @@ namespace ConlangAudioHoning
         /// </summary>
         public AzureSpeak(LanguageDescription languageDescription) : base(languageDescription)
         {
-            Description = "azure";
+            Description = "Microsoft Azure";
 
             speechKey = UserConfiguration.LoadCurrent().AzureSpeechKey;
             speechRegion = UserConfiguration.LoadCurrent().AzureSpeechRegion;
@@ -57,7 +57,7 @@ namespace ConlangAudioHoning
         /// </summary>
         public override string PreferredVoiceKey
         {
-            get => "azure";
+            get => "Microsoft Azure";
         }
 
 

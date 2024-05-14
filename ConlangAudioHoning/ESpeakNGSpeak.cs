@@ -28,7 +28,7 @@ namespace ConlangAudioHoning
     {
         public ESpeakNGSpeak() : base()
         {
-            Description = "espeak-ng";
+            Description = "eSpeak-ng";
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace ConlangAudioHoning
         /// </summary>
         public ESpeakNGSpeak(LanguageDescription languageDescription) : base(languageDescription)
         {
-            Description = "espeak-ng";
+            Description = "eSpeak-ng";
         }
 
         public static string ESpeakNGPath { get; set; } = "";
@@ -46,7 +46,7 @@ namespace ConlangAudioHoning
         /// </summary>
         public override string PreferredVoiceKey
         {
-            get => "espeak-ng";
+            get => "eSpeak-ng";
         }
 
         /// <summary>

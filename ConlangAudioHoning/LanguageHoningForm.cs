@@ -74,6 +74,24 @@ namespace ConlangAudioHoning
 
             UserConfiguration = UserConfiguration.LoadFromFile();
 
+            if(UserConfiguration.UseSharedPolly)
+            {
+                useSharedAmazonPollyToolStripMenuItem.Checked = true;
+                setAmazonPollyURIToolStripMenuItem.Visible = true;
+                setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = true;
+                setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
+                useUnsharedAmazonPollyToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                useSharedAmazonPollyToolStripMenuItem.Checked = false;
+                setAmazonPollyURIToolStripMenuItem.Visible = false;
+                setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = false;
+                setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
+                useUnsharedAmazonPollyToolStripMenuItem.Visible = true;
+            }
+
+
             NoEngineSpeak noEngineSpeak = new();
             speechEngines.Add(noEngineSpeak.Description, noEngineSpeak);
             voices.Add(noEngineSpeak.Description, noEngineSpeak.GetVoices());
