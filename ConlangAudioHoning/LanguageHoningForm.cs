@@ -82,6 +82,7 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
                 useUnsharedAmazonPollyToolStripMenuItem.Visible = false;
                 setAmazonPollyProfileToolStripMenuItem.Visible = false;
+                setAmazonPollyS3BucketNameToolStripMenuItem.Visible = false;
             }
             else
             {
@@ -91,6 +92,7 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
                 useUnsharedAmazonPollyToolStripMenuItem.Visible = true;
                 setAmazonPollyProfileToolStripMenuItem.Visible = true;
+                setAmazonPollyS3BucketNameToolStripMenuItem.Visible = true;
             }
             useUnsharedAmazonPollyToolStripMenuItem.Checked = UserConfiguration.UseNonSharedPolly;
 
@@ -123,6 +125,7 @@ namespace ConlangAudioHoning
                 else // Nonshared Polly must be set.
                 {
                     NonSharedPollySpeech.PollySSOProfile = UserConfiguration.PollyProfile;
+                    NonSharedPollySpeech.PollyS3Bucket = UserConfiguration.PollyS3Bucket;
                     NonSharedPollySpeech nonSharedPollySpeech = new();
                     Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = nonSharedPollySpeech.GetVoices();
                     speechEngines.Add(nonSharedPollySpeech.Description, nonSharedPollySpeech);

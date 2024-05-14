@@ -31,13 +31,16 @@ using Amazon.SecurityToken;
 using Amazon;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
+using Amazon.S3;
+using Amazon.S3.Model;
 
 namespace ConlangAudioHoning
 {
     internal class NonSharedPollySpeech : SpeechEngine
     {
-        AmazonPollyClient pollyClient;
-        AmazonSecurityTokenServiceClient ssoProfileClient;
+        private readonly AmazonPollyClient pollyClient;
+        private readonly AmazonS3Client s3Client;
+        private readonly Dictionary<string, Amazon.Polly.Model.Voice> voiceModels = [];
 
         /// <summary>
         /// Constructor for the Amazon Polly interface.
@@ -59,10 +62,8 @@ namespace ConlangAudioHoning
                 throw new NonSharedPollyException("Unable to create NonSharedPollySpeech object:", ex);
             }
 
-            // Log into the SSO
-            ssoProfileClient = new(credentials);
-
             pollyClient = new AmazonPollyClient(credentials,RegionEndpoint.GetBySystemName(credentials.Region));
+            s3Client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
         }
 
         /// <summary>
@@ -87,8 +88,8 @@ namespace ConlangAudioHoning
             }
 
             // Log into the SSO
-            ssoProfileClient = new(credentials);
             pollyClient = new AmazonPollyClient(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
+            s3Client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
         }
 
         /// <summary>
@@ -103,6 +104,15 @@ namespace ConlangAudioHoning
         /// Amazon SSO Profile to use for Amazon Polly.
         /// </summary>
         public static string? PollySSOProfile
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Name of the AWS S3 bucket where this Polly nonshared (direct) instance
+        /// will store its files.
+        /// </summary>
+        public static string? PollyS3Bucket
         {
             get; set;
         }
@@ -230,16 +240,135 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Generate Amazon Polly Speech and save it in the specified Target File.  
+        /// </summary>
+        /// <param name="targetFile">String containing the name of the file where the speech audio will be saved.</param>
+        /// <param name="voice">Optional: Amazon Polly Voice to be used.  If empty, either the preferred voice from
+        /// the language description or "Brian" will be used.</param>
+        /// <param name="speed">Optional: SSML &lt;prosody&gt; speed value to be used in the generated SSML.
+        /// If empty, "slow" will be used.</param>
+        /// <param name="caller">LanguageHoningForm used to call this method.  If not null, this method
+        /// will display the progress of getting the speech from Amazon Web Services using that form's 
+        /// ProgressBar.</param>
+        /// <returns>true if successful, false otherwise.</returns>
         public override bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)
         {
-            throw new NotImplementedException();
+            if (LanguageDescription == null)
+            {
+                return false;
+            }
+            if ((SampleText == null) || (SampleText.Length == 0))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(voice))
+            {
+                voice = LanguageDescription.preferred_voices["Polly"] ?? "Brian";
+            }
+            if (string.IsNullOrEmpty(speed))
+            {
+                speed = "slow";
+            }
+
+            if ((SsmlText == null) || (SsmlText.Trim().Equals(string.Empty)))
+            {
+                Generate(speed, caller);
+            }
+
+            if(voiceModels.Count == 0)
+            {
+                _ = GetVoices();
+            }
+
+            if (!CreateBucketIfNeeded())
+            {
+                return false;
+            }
+
+            StartSpeechSynthesisTaskRequest request = new()
+            {
+                Engine = Engine.Neural,
+                OutputFormat = OutputFormat.Mp3,
+                OutputS3BucketName = PollyS3Bucket,
+                TextType = TextType.Ssml,
+                Text = SsmlText,
+                VoiceId = voiceModels[voice].Id
+            };
+
+            try
+            {
+                // Start the speech generation.
+                Task<StartSpeechSynthesisTaskResponse> responseTask = pollyClient.StartSpeechSynthesisTaskAsync(request);
+
+                while(!responseTask.IsCompleted)
+                {
+                    Thread.Sleep(5000);
+                }
+
+                // Wait for it to finish.
+                StartSpeechSynthesisTaskResponse response = responseTask.Result;
+                if (response != null) 
+                {
+                    SynthesisTask task = response.SynthesisTask;
+                    string outputURIString = task.OutputUri;
+
+                    // List all of the files currently in the S3 Bucket
+                    ListObjectsV2Request listObjectsV2Request = new()
+                    {
+                        BucketName = PollyS3Bucket
+                    };
+                    ListObjectsV2Response listObjectsV2Response = s3Client.ListObjectsV2Async(listObjectsV2Request).Result;
+                    S3Object? s3AudioFile = null;
+                    if (listObjectsV2Response != null)
+                    {
+                        foreach (var s3file in from S3Object s3file in listObjectsV2Response.S3Objects
+                                               where outputURIString.Contains(s3file.Key)
+                                               select s3file)
+                        {
+                            s3AudioFile = s3file;
+                        }
+
+                        if (s3AudioFile == null)
+                        {
+                            return false;
+                        }
+                        // Get the S3 Object
+                        GetObjectRequest getObjectRequest = new()
+                        {
+                            BucketName = PollyS3Bucket,
+                            Key = s3AudioFile.Key
+                        };
+                        GetObjectResponse getObjectResponse = s3Client.GetObjectAsync(getObjectRequest).Result;
+
+                        // Write the data out to the target file
+                        CancellationToken cancellationToken = new();
+                        getObjectResponse.WriteResponseStreamToFileAsync(targetFile, false, cancellationToken).Wait();
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public override Dictionary<string, VoiceData> GetVoices()
         {
             Dictionary<string, SharedPollySpeech.VoiceData> voices = [];
 
-            DescribeVoicesRequest request = new DescribeVoicesRequest
+            DescribeVoicesRequest request = new()
             {
                 Engine = Amazon.Polly.Engine.Neural,
                 IncludeAdditionalLanguageCodes = true
@@ -257,13 +386,45 @@ namespace ConlangAudioHoning
                         Id = voice.Id,
                         LanguageCode = voice.LanguageCode,
                         LanguageName = voice.LanguageName,
-                        SupportedEngines = voice.SupportedEngines.ToArray()
+                        SupportedEngines = [.. voice.SupportedEngines]
                     };
                     voices.Add(voiceData.Name, voiceData);
+                    voiceModels.Add(voice.Name, voice);
                 }
             }
 
             return voices;
+        }
+
+        /// <summary>
+        /// Create an Amazon S3 Bucket for the current PollyS3Bucket, if needed.
+        /// </summary>
+        private bool CreateBucketIfNeeded()
+        {
+            ListBucketsResponse response = s3Client.ListBucketsAsync().Result;
+            foreach(S3Bucket bucket in response.Buckets)
+            {
+                if(bucket.BucketName == PollyS3Bucket)
+                {
+                    return true;
+                }
+            }
+
+            PutBucketRequest request = new()
+            {
+                BucketName = PollyS3Bucket,
+                UseClientRegion = true,
+
+            };
+            try
+            {
+                _ = s3Client.PutBucketAsync(request).Result;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -272,7 +433,7 @@ namespace ConlangAudioHoning
         /// </summary>
         /// <returns>the AWS credentials</returns>
         /// <exception cref="NonSharedPollyException">If an exception occurs in the process.</exception>
-        private SSOAWSCredentials LoadSsoCredentials()
+        private static SSOAWSCredentials LoadSsoCredentials()
         {
             CredentialProfileStoreChain chain = new();
             if (!chain.TryGetAWSCredentials(PollySSOProfile, out AWSCredentials credentials))

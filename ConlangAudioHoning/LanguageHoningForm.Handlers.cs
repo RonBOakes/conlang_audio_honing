@@ -263,44 +263,89 @@ namespace ConlangAudioHoning
             string engineName = cbx_speechEngine.Text.Trim();
             if ((engineName.Equals("Amazon Polly")) && (UserConfiguration.IsPollySupported))
             {
-                SharedPollySpeech pollySpeech = (SharedPollySpeech)speechEngines[engineName];
-                DateTime now = DateTime.Now;
-                string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
-                targetFileBaseName = targetFileBaseName.Replace(":", "_");
+                if (UserConfiguration.UseSharedPolly)
+                {
+                    SharedPollySpeech pollySpeech = (SharedPollySpeech)speechEngines[engineName];
+                    DateTime now = DateTime.Now;
+                    string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
+                    targetFileBaseName = targetFileBaseName.Replace(":", "_");
 
-                string targetFileName;
-                if (languageFileInfo != null)
-                {
-                    targetFileName = languageFileInfo.Directory + "\\" + targetFileBaseName;
-                }
-                else
-                {
-                    targetFileName = Path.GetTempPath() + targetFileBaseName;
-                }
-
-                string voice = cbx_voice.Text.Trim().Split()[0];
-                string speed = cbx_speed.Text.Trim();
-
-                bool ok = pollySpeech.GenerateSpeech(targetFileName, voice, speed, this);
-                if (!ok)
-                {
-                    _ = MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    txt_phonetic.Text = pollySpeech.PhoneticText;
-                    // Play the audio (MP3) file with the Windows Media Player
-                    WMPLib.WindowsMediaPlayer player = new()
+                    string targetFileName;
+                    if (languageFileInfo != null)
                     {
-                        URL = targetFileName
-                    };
-                    player.controls.play();
+                        targetFileName = languageFileInfo.Directory + "\\" + targetFileBaseName;
+                    }
+                    else
+                    {
+                        targetFileName = Path.GetTempPath() + targetFileBaseName;
+                    }
 
-                    FileInfo fileInfo = new(targetFileName);
-                    speechFiles.Add(fileInfo.Name, fileInfo);
-                    _ = cbx_recordings.Items.Add(fileInfo.Name);
-                    cbx_recordings.SelectedText = fileInfo.Name;
+                    string voice = cbx_voice.Text.Trim().Split()[0];
+                    string speed = cbx_speed.Text.Trim();
+
+                    bool ok = pollySpeech.GenerateSpeech(targetFileName, voice, speed, this);
+                    if (!ok)
+                    {
+                        _ = MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        txt_phonetic.Text = pollySpeech.PhoneticText;
+                        // Play the audio (MP3) file with the Windows Media Player
+                        WMPLib.WindowsMediaPlayer player = new()
+                        {
+                            URL = targetFileName
+                        };
+                        player.controls.play();
+
+                        FileInfo fileInfo = new(targetFileName);
+                        speechFiles.Add(fileInfo.Name, fileInfo);
+                        _ = cbx_recordings.Items.Add(fileInfo.Name);
+                        cbx_recordings.SelectedText = fileInfo.Name;
+                    }
                 }
+                else
+                {
+                    NonSharedPollySpeech pollySpeech = (NonSharedPollySpeech)speechEngines[engineName];
+                    DateTime now = DateTime.Now;
+                    string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
+                    targetFileBaseName = targetFileBaseName.Replace(":", "_");
+
+                    string targetFileName;
+                    if (languageFileInfo != null)
+                    {
+                        targetFileName = languageFileInfo.Directory + "\\" + targetFileBaseName;
+                    }
+                    else
+                    {
+                        targetFileName = Path.GetTempPath() + targetFileBaseName;
+                    }
+
+                    string voice = cbx_voice.Text.Trim().Split()[0];
+                    string speed = cbx_speed.Text.Trim();
+
+                    bool ok = pollySpeech.GenerateSpeech(targetFileName, voice, speed, this);
+                    if (!ok)
+                    {
+                        _ = MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        txt_phonetic.Text = pollySpeech.PhoneticText;
+                        // Play the audio (MP3) file with the Windows Media Player
+                        WMPLib.WindowsMediaPlayer player = new()
+                        {
+                            URL = targetFileName
+                        };
+                        player.controls.play();
+
+                        FileInfo fileInfo = new(targetFileName);
+                        speechFiles.Add(fileInfo.Name, fileInfo);
+                        _ = cbx_recordings.Items.Add(fileInfo.Name);
+                        cbx_recordings.SelectedText = fileInfo.Name;
+                    }
+                }
+
             }
             else if ((engineName.Equals("eSpeak-ng")) && (UserConfiguration.IsESpeakNGSupported))
             {
@@ -950,7 +995,7 @@ namespace ConlangAudioHoning
         private void SetAmazonPollyAuthorizationEmailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string pollyEmail = Microsoft.VisualBasic.Interaction.InputBox("Enter the email for Authorizing the use of Amazon Polly", "Amazon Polly Email", SharedPollySpeech.PollyEmail ?? "");
-            if(!string.IsNullOrEmpty(pollyEmail))
+            if (!string.IsNullOrEmpty(pollyEmail))
             {
                 SharedPollySpeech.PollyEmail = pollyEmail;
                 UserConfiguration.PollyEmail = pollyEmail;
@@ -960,7 +1005,7 @@ namespace ConlangAudioHoning
         private void SetAmazonPollyAuthorizationPasswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string pollyPassword = Microsoft.VisualBasic.Interaction.InputBox("Enter the password for Authorizing the use of Amazon Polly", "Amazon Polly Password", SharedPollySpeech.PollyPassword ?? "");
-            if(!string.IsNullOrEmpty(pollyPassword))
+            if (!string.IsNullOrEmpty(pollyPassword))
             {
                 SharedPollySpeech.PollyPassword = pollyPassword;
                 UserConfiguration.PollyPassword = pollyPassword;
@@ -970,10 +1015,20 @@ namespace ConlangAudioHoning
         private void SetAmazonPollyProfileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string pollyProfile = Microsoft.VisualBasic.Interaction.InputBox("Enter the Amazon SSO Profile to use for Amazon Polly", "Amazon SSO Profile", NonSharedPollySpeech.PollySSOProfile ?? "");
-            if(!string.IsNullOrEmpty(pollyProfile))
+            if (!string.IsNullOrEmpty(pollyProfile))
             {
                 NonSharedPollySpeech.PollySSOProfile = pollyProfile;
                 UserConfiguration.PollyProfile = pollyProfile;
+            }
+        }
+
+        private void SetAmazonPollyS3BucketNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string pollyS3Bucket = Microsoft.VisualBasic.Interaction.InputBox("Enter the name of the S3 Bucket to use for Amazon Polly", "Amazon Polly S3 Bucket", NonSharedPollySpeech.PollyS3Bucket ?? "");
+            if (!string.IsNullOrEmpty(pollyS3Bucket))
+            {
+                NonSharedPollySpeech.PollyS3Bucket = pollyS3Bucket;
+                UserConfiguration.PollyS3Bucket = pollyS3Bucket;
             }
         }
 
@@ -1024,7 +1079,7 @@ namespace ConlangAudioHoning
         {
             string currentKey = UserConfiguration.AzureSpeechKey;
             string azureSpeechKey = Microsoft.VisualBasic.Interaction.InputBox("Enter the Speech (Resource) key for Microsoft Azure", "AzureSpeechKey", currentKey ?? string.Empty);
-            if(!string.IsNullOrEmpty(azureSpeechKey))
+            if (!string.IsNullOrEmpty(azureSpeechKey))
             {
                 UserConfiguration.AzureSpeechKey = azureSpeechKey;
             }
@@ -1124,7 +1179,9 @@ namespace ConlangAudioHoning
 
         private void ViewHelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
+#pragma warning disable S1075 // URIs should not be hardcoded
             string helpURL = @"https://github.com/RonBOakes/conlang_audio_honing/wiki/Conlang-Audio-Honing-Tool-Help";
+#pragma warning restore S1075 // URIs should not be hardcoded
             Process myProcess = new();
             try
             {
@@ -1160,6 +1217,7 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
                 useUnsharedAmazonPollyToolStripMenuItem.Visible = true;
                 setAmazonPollyProfileToolStripMenuItem.Visible = true;
+                setAmazonPollyS3BucketNameToolStripMenuItem.Visible = true;
             }
             else
             {
@@ -1170,12 +1228,13 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
                 useUnsharedAmazonPollyToolStripMenuItem.Visible = false;
                 setAmazonPollyProfileToolStripMenuItem.Visible = false;
+                setAmazonPollyS3BucketNameToolStripMenuItem.Visible = false;
             }
         }
 
-        private void useUnsharedAmazonPollyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UseUnsharedAmazonPollyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(UserConfiguration.UseNonSharedPolly)
+            if (UserConfiguration.UseNonSharedPolly)
             {
                 UserConfiguration.UseNonSharedPolly = false;
                 useUnsharedAmazonPollyToolStripMenuItem.Checked = false;

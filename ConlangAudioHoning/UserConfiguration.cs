@@ -29,6 +29,7 @@ namespace ConlangAudioHoning
         private string? _pollyEmail;
         private string? _pollyPassword;
         private string? _pollyProfile;
+        private string? _pollyS3Bucket;
         private string? _eSpeakNgPath;
         private string? _azureSpeechKey;
         private string? _azureSpeechRegion;
@@ -94,6 +95,16 @@ namespace ConlangAudioHoning
         {
             get => _pollyProfile ?? string.Empty;
             set => _pollyProfile = value;
+        }
+
+        /// <summary>
+        /// Name of the AWS S3 bucket where this Polly nonshared (direct) instance
+        /// will store its files.
+        /// </summary>
+        public string PollyS3Bucket
+        {
+            get => _pollyS3Bucket ?? string.Empty;
+            set => _pollyS3Bucket = value;
         }
 
         /// <summary>
