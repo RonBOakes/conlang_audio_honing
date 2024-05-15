@@ -139,6 +139,7 @@ namespace LanguageEditor
                 Location = new Point(xPos, yPos),
                 Size = new Size(895, 355)
             };
+            soundMapEditor.SoundMapList = languageDescription.sound_map_list;
             tab_soundMapList.Controls.Add(soundMapEditor);
             tab_soundMapList.Enter += Tab_soundMapList_Enter;
             tab_soundMapList.Leave += Tab_soundMapList_Leave;
@@ -376,12 +377,6 @@ namespace LanguageEditor
                     {
                         languageDescription.noun_gender_list.Add(txt_nounGender.Text.Trim());
                     }
-                }
-
-                languageDescription.sound_map_list.Clear();
-                foreach (SoundMapEditor editor in tab_soundMapList.Controls)
-                {
-                    languageDescription.sound_map_list.Add(editor.SoundMapData);
                 }
 
                 languageDescription.part_of_speech_list.Clear();
