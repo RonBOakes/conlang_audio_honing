@@ -66,8 +66,8 @@
             setAmazonPollyURIToolStripMenuItem = new ToolStripMenuItem();
             setAmazonPollyAuthorizationEmailToolStripMenuItem = new ToolStripMenuItem();
             setAmazonPollyAuthorizationPasswordToolStripMenuItem = new ToolStripMenuItem();
-            useUnsharedAmazonPollyToolStripMenuItem = new ToolStripMenuItem();
             setAmazonPollyProfileToolStripMenuItem = new ToolStripMenuItem();
+            setAmazonPollyS3BucketNameToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             setESpeakNgLocationToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
@@ -141,7 +141,6 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
-            setAmazonPollyS3BucketNameToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -254,7 +253,7 @@
             // 
             // utilitiesToolStripMenuItem
             // 
-            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, useSharedAmazonPollyToolStripMenuItem, setAmazonPollyURIToolStripMenuItem, setAmazonPollyAuthorizationEmailToolStripMenuItem, setAmazonPollyAuthorizationPasswordToolStripMenuItem, useUnsharedAmazonPollyToolStripMenuItem, setAmazonPollyProfileToolStripMenuItem, setAmazonPollyS3BucketNameToolStripMenuItem, toolStripSeparator4, setESpeakNgLocationToolStripMenuItem, toolStripSeparator5, setAzureSpeechKeyToolStripMenuItem, setAzureSpeechRegionToolStripMenuItem });
+            utilitiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { displayGlossOfSampleTextToolStripMenuItem, printSampleTextSummaryToolStripMenuItem, toolStripSeparator3, useSharedAmazonPollyToolStripMenuItem, setAmazonPollyURIToolStripMenuItem, setAmazonPollyAuthorizationEmailToolStripMenuItem, setAmazonPollyAuthorizationPasswordToolStripMenuItem, setAmazonPollyProfileToolStripMenuItem, setAmazonPollyS3BucketNameToolStripMenuItem, toolStripSeparator4, setESpeakNgLocationToolStripMenuItem, toolStripSeparator5, setAzureSpeechKeyToolStripMenuItem, setAzureSpeechRegionToolStripMenuItem });
             utilitiesToolStripMenuItem.Name = "utilitiesToolStripMenuItem";
             utilitiesToolStripMenuItem.Size = new Size(58, 20);
             utilitiesToolStripMenuItem.Text = "Utilities";
@@ -307,20 +306,19 @@
             setAmazonPollyAuthorizationPasswordToolStripMenuItem.Text = "Set Amazon Polly Authorization Password";
             setAmazonPollyAuthorizationPasswordToolStripMenuItem.Click += SetAmazonPollyAuthorizationPasswordToolStripMenuItem_Click;
             // 
-            // useUnsharedAmazonPollyToolStripMenuItem
-            // 
-            useUnsharedAmazonPollyToolStripMenuItem.CheckOnClick = true;
-            useUnsharedAmazonPollyToolStripMenuItem.Name = "useUnsharedAmazonPollyToolStripMenuItem";
-            useUnsharedAmazonPollyToolStripMenuItem.Size = new Size(294, 22);
-            useUnsharedAmazonPollyToolStripMenuItem.Text = "Use Unshared Amazon Polly";
-            useUnsharedAmazonPollyToolStripMenuItem.Click += UseUnsharedAmazonPollyToolStripMenuItem_Click;
-            // 
             // setAmazonPollyProfileToolStripMenuItem
             // 
             setAmazonPollyProfileToolStripMenuItem.Name = "setAmazonPollyProfileToolStripMenuItem";
             setAmazonPollyProfileToolStripMenuItem.Size = new Size(294, 22);
             setAmazonPollyProfileToolStripMenuItem.Text = "Set Amazon Polly Profile";
             setAmazonPollyProfileToolStripMenuItem.Click += SetAmazonPollyProfileToolStripMenuItem_Click;
+            // 
+            // setAmazonPollyS3BucketNameToolStripMenuItem
+            // 
+            setAmazonPollyS3BucketNameToolStripMenuItem.Name = "setAmazonPollyS3BucketNameToolStripMenuItem";
+            setAmazonPollyS3BucketNameToolStripMenuItem.Size = new Size(294, 22);
+            setAmazonPollyS3BucketNameToolStripMenuItem.Text = "Set Amazon Polly S3 Bucket Name";
+            setAmazonPollyS3BucketNameToolStripMenuItem.Click += SetAmazonPollyS3BucketNameToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
@@ -1048,13 +1046,6 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += Btn_updateSoundMapList_Click;
             // 
-            // setAmazonPollyS3BucketNameToolStripMenuItem
-            // 
-            setAmazonPollyS3BucketNameToolStripMenuItem.Name = "setAmazonPollyS3BucketNameToolStripMenuItem";
-            setAmazonPollyS3BucketNameToolStripMenuItem.Size = new Size(294, 22);
-            setAmazonPollyS3BucketNameToolStripMenuItem.Text = "Set Amazon Polly S3 Bucket Name";
-            setAmazonPollyS3BucketNameToolStripMenuItem.Click += SetAmazonPollyS3BucketNameToolStripMenuItem_Click;
-            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1206,7 +1197,6 @@
         private ToolStripMenuItem viewHelpToolStripMenuItem;
         private ToolStripMenuItem aboutConlangAudioHoningToolStripMenuItem;
         private ToolStripMenuItem useSharedAmazonPollyToolStripMenuItem;
-        private ToolStripMenuItem useUnsharedAmazonPollyToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem setAmazonPollyProfileToolStripMenuItem;

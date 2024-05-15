@@ -80,15 +80,6 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// Does this configuration support/use the nonshared (direct) Amazon Polly 
-        /// system for text to speech?
-        /// </summary>
-        public bool UseNonSharedPolly
-        {
-            get; set;
-        }
-
-        /// <summary>
         /// Holds the Amazon SSO Profile to be used for nonshared Amazon Polly.
         /// </summary>
         public string PollyProfile
@@ -134,7 +125,7 @@ namespace ConlangAudioHoning
         public bool IsPollySupported
         {
             get => ((UseSharedPolly && (!string.IsNullOrEmpty(PollyURI) && !string.IsNullOrEmpty(PollyEmail) && !string.IsNullOrEmpty(PollyPassword))) ||
-                (UseNonSharedPolly));
+                (!UseSharedPolly && (!string.IsNullOrEmpty(PollyProfile) && !string.IsNullOrEmpty(PollyS3Bucket))));
 
         }
 

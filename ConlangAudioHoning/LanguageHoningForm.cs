@@ -80,7 +80,6 @@ namespace ConlangAudioHoning
                 setAmazonPollyURIToolStripMenuItem.Visible = true;
                 setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = true;
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
-                useUnsharedAmazonPollyToolStripMenuItem.Visible = false;
                 setAmazonPollyProfileToolStripMenuItem.Visible = false;
                 setAmazonPollyS3BucketNameToolStripMenuItem.Visible = false;
             }
@@ -90,11 +89,9 @@ namespace ConlangAudioHoning
                 setAmazonPollyURIToolStripMenuItem.Visible = false;
                 setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = false;
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
-                useUnsharedAmazonPollyToolStripMenuItem.Visible = true;
                 setAmazonPollyProfileToolStripMenuItem.Visible = true;
                 setAmazonPollyS3BucketNameToolStripMenuItem.Visible = true;
             }
-            useUnsharedAmazonPollyToolStripMenuItem.Checked = UserConfiguration.UseNonSharedPolly;
 
 
             NoEngineSpeak noEngineSpeak = new();

@@ -1215,7 +1215,6 @@ namespace ConlangAudioHoning
                 setAmazonPollyURIToolStripMenuItem.Visible = false;
                 setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = false;
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
-                useUnsharedAmazonPollyToolStripMenuItem.Visible = true;
                 setAmazonPollyProfileToolStripMenuItem.Visible = true;
                 setAmazonPollyS3BucketNameToolStripMenuItem.Visible = true;
             }
@@ -1226,23 +1225,8 @@ namespace ConlangAudioHoning
                 setAmazonPollyURIToolStripMenuItem.Visible = true;
                 setAmazonPollyAuthorizationEmailToolStripMenuItem.Visible = true;
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
-                useUnsharedAmazonPollyToolStripMenuItem.Visible = false;
                 setAmazonPollyProfileToolStripMenuItem.Visible = false;
                 setAmazonPollyS3BucketNameToolStripMenuItem.Visible = false;
-            }
-        }
-
-        private void UseUnsharedAmazonPollyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (UserConfiguration.UseNonSharedPolly)
-            {
-                UserConfiguration.UseNonSharedPolly = false;
-                useUnsharedAmazonPollyToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                UserConfiguration.UseNonSharedPolly = true;
-                useUnsharedAmazonPollyToolStripMenuItem.Checked = true;
             }
         }
     }

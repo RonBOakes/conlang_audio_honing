@@ -345,6 +345,15 @@ namespace ConlangAudioHoning
                         // Write the data out to the target file
                         CancellationToken cancellationToken = new();
                         getObjectResponse.WriteResponseStreamToFileAsync(targetFile, false, cancellationToken).Wait();
+
+                        // Delete all files in the S3 Bucket (to clean up from past issues)
+                        foreach(S3Object s3file in listObjectsV2Response.S3Objects)
+                        {
+                            DeleteObjectRequest deleteObjectRequest = new();
+                            deleteObjectRequest.BucketName = PollyS3Bucket;
+                            deleteObjectRequest.Key = s3file.Key;
+                            s3Client.DeleteObjectAsync(deleteObjectRequest).Wait();
+                        }
                     }
                     else
                     {
