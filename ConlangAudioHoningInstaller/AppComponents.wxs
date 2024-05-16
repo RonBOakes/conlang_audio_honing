@@ -26,6 +26,24 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 				</File>
 			</Component>
 			<Component>
+				<File Source="AWSSDK.Core.dll" />
+			</Component>
+			<Component>
+				<File Source="AWSSDK.Polly.dll" />
+			</Component>
+			<Component>
+				<File Source="AWSSDK.S3.dll" />
+			</Component>
+			<Component>
+				<File Source="AWSSDK.SecurityToken.dll" />
+			</Component>
+			<Component>
+				<File Source="AWSSDK.SSO.dll" />
+			</Component>
+			<Component>
+				<File Source="AWSSDK.SSOOIDC.dll" />
+			</Component>
+			<Component>
 				<File Source="ConlangJson.dll" />
 			</Component>
 			<Component>
