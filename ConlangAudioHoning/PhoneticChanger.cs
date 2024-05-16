@@ -822,11 +822,11 @@ namespace ConlangAudioHoning
                     if (!string.IsNullOrEmpty(SampleText))
                     {
                         string wordPattern = @"(\s+)" + oldSpelling + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2", RegexOptions.IgnoreCase);
                         wordPattern = "^" + oldSpelling + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
-                        wordPattern = @"(\s+)" + oldSpelling + "$";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
+                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1", RegexOptions.IgnoreCase);
+                        wordPattern = @"(\s+)" + oldSpelling + @"[.,?!]?\s*$";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled, RegexOptions.IgnoreCase);
                     }
                 }
             }
@@ -873,11 +873,11 @@ namespace ConlangAudioHoning
                     if (!string.IsNullOrEmpty(SampleText))
                     {
                         string wordPattern = @"(\s+)" + oldPhonetic + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2", RegexOptions.IgnoreCase);
                         wordPattern = "^" + oldPhonetic + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
-                        wordPattern = @"(\s+)" + oldPhonetic + "$";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
+                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1", RegexOptions.IgnoreCase);
+                        wordPattern = @"(\s+)" + oldPhonetic + @"[.,?!]?\s*$";
+                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled, RegexOptions.IgnoreCase);
                     }
                 }
             }

@@ -854,6 +854,8 @@ namespace ConlangAudioHoning
                 if (result == DialogResult.Yes)
                 {
                     languageDescription.sound_map_list = soundMapListEditorForm.SoundMapList;
+                    sampleText = txt_SampleText.Text;
+                    phoneticChanger.SampleText = sampleText;
                     phoneticChanger.UpdatePronunciation();
                     if (sampleText != string.Empty)
                     {
@@ -869,6 +871,8 @@ namespace ConlangAudioHoning
                 }
                 else if (result == DialogResult.No)
                 {
+                    sampleText = txt_SampleText.Text;
+                    phoneticChanger.SampleText = sampleText;
                     phoneticChanger.UpdateSpelling();
                     languageDescription.sound_map_list = soundMapListEditorForm.SoundMapList;
                     if (sampleText != string.Empty)
