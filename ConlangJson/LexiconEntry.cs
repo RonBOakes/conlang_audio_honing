@@ -266,62 +266,7 @@ namespace ConlangJson
             ArgumentNullException.ThrowIfNull(other);
 
             LexicalOrderCompSpelling spellingComp = new();
-            LexicalOrderCompEnglish englishComp = new();
-
-            int spellingResult = spellingComp.Compare(this, other);
-            if (spellingResult != 0)
-            {
-                return spellingResult;
-            }
-
-            int partOfSpeechResult = string.Compare(this.part_of_speech, other.part_of_speech);
-            if (partOfSpeechResult != 0)
-            {
-                return partOfSpeechResult;
-            }
-
-            int englishResult = englishComp.Compare(this, other);
-            if (englishResult != 0)
-            {
-                return englishResult;
-            }
-
-            if (phonetic != other.phonetic)
-            {
-                return string.Compare(phonetic, other.phonetic);
-            }
-
-            if (derived_word != other.derived_word)
-            {
-                if (derived_word)
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
-
-            if (declined_word != other.declined_word)
-            {
-                if (declined_word)
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
-
-            if (declensions != other.declensions)
-            {
-                return string.Compare(JsonSerializer.Serialize<List<string>>(declensions), JsonSerializer.Serialize<List<string>>(other.declensions));
-            }
-
-            return string.Compare(JsonSerializer.Serialize<JsonObject>(metadata), JsonSerializer.Serialize<JsonObject>(other.metadata));
-
+            return spellingComp.Compare(this, other);
         }
 
         /// <summary>
@@ -352,7 +297,56 @@ namespace ConlangJson
                 }
                 else if (xVal == yVal)
                 {
-                    return 0;
+                    int partOfSpeechResult = string.Compare(x.part_of_speech, y.part_of_speech);
+                    if (partOfSpeechResult != 0)
+                    {
+                        return partOfSpeechResult;
+                    }
+
+                    LexicalOrderCompEnglish englishComp = new();
+
+                    int englishResult = englishComp.Compare(x, y);
+                    if (englishResult != 0)
+                    {
+                        return englishResult;
+                    }
+
+                    if (x.phonetic != y.phonetic)
+                    {
+                        return string.Compare(x.phonetic, y.phonetic);
+                    }
+
+                    if (x.derived_word != y.derived_word)
+                    {
+                        if (x.derived_word)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            return 1;
+                        }
+                    }
+
+                    if (x.declined_word != y.declined_word)
+                    {
+                        if (x.declined_word)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            return 1;
+                        }
+                    }
+
+                    if (x.declensions != y.declensions)
+                    {
+                        return string.Compare(JsonSerializer.Serialize<List<string>>(x.declensions), JsonSerializer.Serialize<List<string>>(y.declensions));
+                    }
+
+                    return string.Compare(JsonSerializer.Serialize<JsonObject>(x.metadata), JsonSerializer.Serialize<JsonObject>(y.metadata));
+
                 }
                 else
                 {
@@ -455,7 +449,10 @@ namespace ConlangJson
                 }
                 StringComparer strComp = StringComparer.Create(System.Globalization.CultureInfo.CurrentCulture, true);
 
-                return strComp.Compare(x.english, y.english);
+                string xComparisonString = string.Format("{0}-{1}({2})", x.english, x.part_of_speech, x.phonetic);
+                string yComparisonString = string.Format("{0}-{1}({2})", y.english, y.part_of_speech, y.phonetic);
+
+                return strComp.Compare(xComparisonString, yComparisonString);
             }
         }
 
