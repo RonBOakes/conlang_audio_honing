@@ -399,7 +399,7 @@ namespace ConlangAudioHoning
         {
             sampleText = txt_SampleText.Text;
             sampleText = sampleText.Trim();
-            File.WriteAllText(filename, sampleText);
+            File.WriteAllText(filename, sampleText, System.Text.Encoding.UTF8);
 
             // Clear the dirty indication
             sampleDirty = false;
