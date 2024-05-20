@@ -59,6 +59,12 @@ namespace ConlangAudioHoning
         public LanguageHoningForm()
         {
             InitializeComponent();
+            menuStrip1.Items.Clear();
+#if DEBUG
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, debugToolStripMenuItem, helpToolStripMenuItem });
+#else
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, helpToolStripMenuItem });
+#endif
 
             // Checks to ensure that the form from the designer doesn't exceed 1024x768
             if (this.Width > 1024)
