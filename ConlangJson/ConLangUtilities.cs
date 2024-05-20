@@ -185,20 +185,19 @@ namespace ConlangJson
         public static bool DeriveLexicon(LanguageDescription language)
         {
             bool ok = false;
-#pragma warning disable IDE0028 // Simplify collection initialization
-            Dictionary<string, LexiconEntry> wordMap = new();
-            Dictionary<(string, string), LexiconEntry> wordMapTuple = new();
-            List<LexiconEntry> lexiconFragment = new();
-#pragma warning restore IDE0028 // Simplify collection initialization
+            Dictionary<string, LexiconEntry> wordMap = [];
+            Dictionary<(string, string), LexiconEntry> wordMapTuple = [];
+            List<LexiconEntry> lexiconFragment = [];
 
             // Build the word map and word map tuple from the lexicon in the language
-#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
-            foreach (LexiconEntry entry in language.lexicon)
-            {
-                // If the word is a root word, then put it in the word maps
-                // In order to match with words in the derived_word_list, spaces need to be 
-                // replaced with underscores.
-                if (entry.declensions.Contains("root"))
+            //
+            // If the word is a root word, then put it in the word maps
+            // In order to match with words in the derived_word_list, spaces need to be 
+            // replaced with underscores.
+            foreach (LexiconEntry entry in from LexiconEntry word in language.lexicon
+                                          where word.declensions.Contains("root")
+                                          select word)
+
                 {
                     string wmEnglish = entry.english.Replace(' ', '_');
                     _ = wordMap.TryAdd(wmEnglish, entry);
@@ -209,8 +208,6 @@ namespace ConlangJson
                     }
                     _ = wordMapTuple.TryAdd((wmEnglish, partOfSpeech), entry);
                 }
-            }
-#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
 
             // Iterate over the derived_word_list
             foreach (string words in language.derived_word_list)
