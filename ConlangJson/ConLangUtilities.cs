@@ -65,7 +65,7 @@ namespace ConlangJson
         public static string SoundOutWord(string word, List<SoundMap> soundMapList)
         {
             string phonetic = word;
-            foreach (SoundMap soundMap in soundMapList)
+            foreach (SoundMap soundMap in soundMapList.Reverse<SoundMap>())
             {
                 if (!string.IsNullOrEmpty(soundMap.pronunciation_regex))
                 {
