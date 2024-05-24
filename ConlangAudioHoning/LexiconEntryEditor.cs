@@ -93,15 +93,6 @@ namespace ConlangAudioHoning
         {
             InitializeComponent();
 
-            if (lexiconEntry == null)
-            {
-                LexiconEntry = new LexiconEntry();
-            }
-            else
-            {
-                LexiconEntry = lexiconEntry;
-            }
-
             if (partOfSpeechList == null)
             {
                 _partOfSpeechList = [];
@@ -123,6 +114,15 @@ namespace ConlangAudioHoning
             else
             {
                 _soundMapList = soundMapList;
+            }
+
+            if (lexiconEntry == null)
+            {
+                LexiconEntry = new LexiconEntry();
+            }
+            else
+            {
+                LexiconEntry = lexiconEntry;
             }
 
             dirty = false;
