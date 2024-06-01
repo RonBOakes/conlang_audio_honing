@@ -271,7 +271,7 @@ def derive_words(derived_word_list,derivational_affix_map,lexicon,affix_map,soun
                 rule = rule_split[0].strip()
                 # Turn all gendered nouns into just 'n'
                 if rule_part_of_speech != 'num':
-                    rule_part_of_speech = re.sub('\s*n\w*\s*','n',rule_part_of_speech)
+                    rule_part_of_speech = re.sub(r'\s*n\w*\s*','n',rule_part_of_speech)
 
             # look for the root word
             word = rule
