@@ -586,7 +586,7 @@ namespace ConlangJson
                         NewWord: newWord,
                         Declensions: declensions,
                         PartOfSpeech: partOfSpeech,
-                        Phonetic: phonetic
+                        Phonetic: newWord
                     );
                     phoneticList.Add(newWordData);
                 }
