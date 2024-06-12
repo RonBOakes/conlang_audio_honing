@@ -169,7 +169,7 @@ namespace ConlangAudioHoning
                     {
                         foreach (string wordIterator in line.Split())
                         {
-                            string word = wordIterator.Trim();
+                            string word = wordIterator.Trim().ToLower();
                             Match wordMatch = MyRegex().Match(word);
                             if (wordMatch.Success)
                             {
