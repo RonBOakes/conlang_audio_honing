@@ -717,7 +717,7 @@ namespace ConlangAudioHoning
                         // Ensure that there is a blank at the top of the drop down list
                         cbx_phonemeToChange.Items.Clear();
                         List<SoundMap> rAddingEntries = PhoneticChanger.GetRAddingSoundMapEntries(languageDescription.sound_map_list);
-                        cbx_phonemeToChange.Items.AddRange(rAddingEntries.ToArray());
+                        cbx_phonemeToChange.Items.AddRange([.. rAddingEntries]);
                     }
                     cbx_diphthongStartVowel.Visible = false;
                     lbl_diphthongStartVowel.Visible = false;
@@ -1996,11 +1996,9 @@ namespace ConlangAudioHoning
                     {
                         txt_phonetic.Text = pollySpeech.PhoneticText;
                         // Play the audio (MP3) file with the Windows Media Player
-                        WMPLib.WindowsMediaPlayer player = new()
-                        {
-                            URL = targetFileName
-                        };
-                        player.controls.play();
+                        Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\','/')));
+                        AudioPlayer.PlayAudio(targetURI);
+              
 
                         FileInfo fileInfo = new(targetFileName);
                         speechFiles.Add(fileInfo.Name, fileInfo);
@@ -2037,11 +2035,8 @@ namespace ConlangAudioHoning
                     {
                         txt_phonetic.Text = pollySpeech.PhoneticText;
                         // Play the audio (MP3) file with the Windows Media Player
-                        WMPLib.WindowsMediaPlayer player = new()
-                        {
-                            URL = targetFileName
-                        };
-                        player.controls.play();
+                        Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
+                        AudioPlayer.PlayAudio(targetURI);
 
                         FileInfo fileInfo = new(targetFileName);
                         speechFiles.Add(fileInfo.Name, fileInfo);
@@ -2085,11 +2080,8 @@ namespace ConlangAudioHoning
                 {
                     txt_phonetic.Text = speechEngine.PhoneticText;
                     // Play the audio (wav) file with the Windows Media Player
-                    WMPLib.WindowsMediaPlayer player = new()
-                    {
-                        URL = targetFileName
-                    };
-                    player.controls.play();
+                    Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
+                    AudioPlayer.PlayAudio(targetURI);
 
                     FileInfo fileInfo = new(targetFileName);
                     speechFiles.Add(fileInfo.Name, fileInfo);
@@ -2235,11 +2227,8 @@ namespace ConlangAudioHoning
             string fileName = cbx_recordings.Text;
             string targetFileName = speechFiles[fileName].FullName;
             // Play the audio (OGG) file with the default application
-            WMPLib.WindowsMediaPlayer player = new()
-            {
-                URL = targetFileName
-            };
-            player.controls.play();
+            Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
+            AudioPlayer.PlayAudio(targetURI);
         }
 
         private void Cbx_phonemeToChange_SelectedIndexChanged(object sender, EventArgs e)
