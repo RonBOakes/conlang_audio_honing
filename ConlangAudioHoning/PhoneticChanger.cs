@@ -27,7 +27,7 @@ namespace ConlangAudioHoning
     /// <summary>
     /// Handles the phonetic changes for the Conlang Honing Application.
     /// </summary>
-    internal class PhoneticChanger
+    internal partial class PhoneticChanger
     {
 
         /// <summary>
@@ -119,12 +119,7 @@ namespace ConlangAudioHoning
                 {
                     string oldSpelled = word.spelled;
                     word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
-                    string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
-                    SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
-                    wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
-                    SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
-                    wordPattern = @"(\s+)" + oldSpelled + "$";
-                    SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
+                    UpdateSampleText(oldSpelled, word.spelled);
                     word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
@@ -475,12 +470,7 @@ namespace ConlangAudioHoning
                 {
                     string oldSpelled = word.spelled;
                     word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
-                    string wordPattern = @"(\s+)" + oldSpelled + @"([.,?!]?\s+)";
-                    SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2");
-                    wordPattern = "^" + oldSpelled + @"([.,?!]?\s+)";
-                    SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1");
-                    wordPattern = @"(\s+)" + oldSpelled + "$";
-                    SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled);
+                    UpdateSampleText(oldSpelled, word.spelled);
                 }
             }
 
@@ -821,12 +811,7 @@ namespace ConlangAudioHoning
                     word.spelled = newSpelling;
                     if (!string.IsNullOrEmpty(SampleText))
                     {
-                        string wordPattern = @"(\s+)" + oldSpelling + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2", RegexOptions.IgnoreCase);
-                        wordPattern = "^" + oldSpelling + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1", RegexOptions.IgnoreCase);
-                        wordPattern = @"(\s+)" + oldSpelling + @"[.,?!]?\s*$";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled, RegexOptions.IgnoreCase);
+                        UpdateSampleText(oldSpelling, word.spelled);
                     }
                 }
             }
@@ -870,15 +855,6 @@ namespace ConlangAudioHoning
                     word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
 
                     word.phonetic = newPhonetic;
-                    if (!string.IsNullOrEmpty(SampleText))
-                    {
-                        string wordPattern = @"(\s+)" + oldPhonetic + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled + "$2", RegexOptions.IgnoreCase);
-                        wordPattern = "^" + oldPhonetic + @"([.,?!]?\s+)";
-                        SampleText = Regex.Replace(SampleText, wordPattern, word.spelled + "$1", RegexOptions.IgnoreCase);
-                        wordPattern = @"(\s+)" + oldPhonetic + @"[.,?!]?\s*$";
-                        SampleText = Regex.Replace(SampleText, wordPattern, "$1" + word.spelled, RegexOptions.IgnoreCase);
-                    }
                 }
             }
             // Update the phonetic inventory
@@ -1006,6 +982,63 @@ namespace ConlangAudioHoning
             }
         }
 
+        private void UpdateSampleText(string oldSpelled, string newSpelled)
+        {
+            Regex wordMatcher = WordPatternRegex();
+            StringBuilder sampleTextBuilder = new();
+
+            using (StringReader sampleTextReader = new(SampleText))
+            {
+                string? line;
+                do
+                {
+                    line = sampleTextReader.ReadLine();
+                    if ((line != null) && (!line.Trim().Equals(string.Empty)))
+                    {
+                        foreach (string wordIterator in line.Split())
+                        {
+                            string word = wordIterator.Trim();
+                            bool firstCharUpper = char.IsUpper(word[0]);
+                            word = word.ToLower();
+                            string punctuation = string.Empty;
+                            Match wordMatch = wordMatcher.Match(word);
+                            if (wordMatch.Success)
+                            {
+                                word = wordMatch.Groups[1].Value;
+                                punctuation = wordMatch.Groups[2].Value;
+                            }
+                            if (word.Equals(oldSpelled))
+                            {
+                                if (firstCharUpper)
+                                {
+                                    sampleTextBuilder.AppendFormat("{0}{1} ", StringExtensions.FirstCharToUpper(newSpelled), punctuation);
+                                }
+                                else
+                                {
+                                    sampleTextBuilder.AppendFormat("{0}{1} ", newSpelled, punctuation);
+                                }
+                            }
+                            else
+                            {
+                                if(firstCharUpper)
+                                {
+                                    sampleTextBuilder.AppendFormat("{0}{1} ", StringExtensions.FirstCharToUpper(word), punctuation);
+                                }
+                                else
+                                {
+                                    sampleTextBuilder.AppendFormat("{0}{1} ", word, punctuation);
+                                }
+
+                            }
+                        }
+                    }
+                }
+                while (line != null);
+            }
+
+            SampleText = sampleTextBuilder.ToString().Trim();
+        }
+
         private sealed class StringTupleLengthComp : IComparer<(string, string)>
         {
             private static int Compare((string, string) x, (string, string) y)
@@ -1027,5 +1060,29 @@ namespace ConlangAudioHoning
             public string NewPhoneme { get; set; }
             public LexiconEntry OldVersion { get; set; }
         }
+
+        [GeneratedRegex(@"(\w+)([.,?!])", RegexOptions.Compiled)]
+        private static partial Regex WordPatternRegex();
+    }
+    
+    /// <summary>
+    /// String extensions - currently only FirstCharToUpper
+    /// </summary>
+    public static class StringExtensions
+    {
+        /// <summary>
+        /// Make the first character upper case
+        /// </summary>
+        /// <param name="input">String to convert</param>
+        /// <returns>String with the first character of each word in upper case.</returns>
+        /// <exception cref="ArgumentNullException">If a null string is passed in.</exception>
+        /// <exception cref="ArgumentException">If an empty string is passed in.</exception>
+        public static string FirstCharToUpper(this string input) =>
+            input switch
+            {
+                null => throw new ArgumentNullException(nameof(input)),
+                "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+                _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
+            };
     }
 }

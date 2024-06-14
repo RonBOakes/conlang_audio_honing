@@ -61,11 +61,13 @@ namespace ConlangAudioHoning
         {
             InitializeComponent();
             menuStrip1.Items.Clear();
+#pragma warning disable IDE0300 // Simplify collection initialization
 #if DEBUG
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, debugToolStripMenuItem, helpToolStripMenuItem });
 #else
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, helpToolStripMenuItem });
 #endif
+#pragma warning restore IDE0300 // Simplify collection initialization
 
             // Checks to ensure that the form from the designer doesn't exceed 1024x768
             if (this.Width > 1024)
