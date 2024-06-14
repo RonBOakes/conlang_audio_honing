@@ -141,6 +141,8 @@
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
             btn_updateSoundMapList = new Button();
+            tb_Volume = new TrackBar();
+            label1 = new Label();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -150,6 +152,7 @@
             tabPageVowelDiphthongs.SuspendLayout();
             tabPageRhoticity.SuspendLayout();
             tabPageSpecialOperations.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)tb_Volume).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
@@ -1046,11 +1049,30 @@
             btn_updateSoundMapList.UseVisualStyleBackColor = true;
             btn_updateSoundMapList.Click += Btn_updateSoundMapList_Click;
             // 
+            // tb_Volume
+            // 
+            tb_Volume.Location = new Point(692, 172);
+            tb_Volume.Maximum = 100;
+            tb_Volume.Name = "tb_Volume";
+            tb_Volume.Size = new Size(292, 45);
+            tb_Volume.TabIndex = 34;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(692, 203);
+            label1.Name = "label1";
+            label1.Size = new Size(47, 15);
+            label1.TabIndex = 35;
+            label1.Text = "Volume";
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1000, 496);
+            Controls.Add(label1);
+            Controls.Add(tb_Volume);
             Controls.Add(tabPhoneticAlterations);
             Controls.Add(label10);
             Controls.Add(cbx_speechEngine);
@@ -1098,6 +1120,7 @@
             tabPageRhoticity.ResumeLayout(false);
             tabPageRhoticity.PerformLayout();
             tabPageSpecialOperations.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)tb_Volume).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1201,5 +1224,7 @@
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem setAmazonPollyProfileToolStripMenuItem;
         private ToolStripMenuItem setAmazonPollyS3BucketNameToolStripMenuItem;
+        private TrackBar tb_Volume;
+        private Label label1;
     }
 }

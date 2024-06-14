@@ -145,6 +145,8 @@ namespace ConlangAudioHoning
                 voices.Add(azureSpeak.Description, azureVoices);
             }
 
+            tb_Volume.Value = 75;
+
             phoneticChanger = new PhoneticChanger();
 
             changesToBeMade.Clear();
@@ -1997,7 +1999,7 @@ namespace ConlangAudioHoning
                         txt_phonetic.Text = pollySpeech.PhoneticText;
                         // Play the audio (MP3) file with the Windows Media Player
                         Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\','/')));
-                        AudioPlayer.PlayAudio(targetURI);
+                        AudioPlayer.PlayAudio(targetURI, (double)tb_Volume.Value/100.0);
               
 
                         FileInfo fileInfo = new(targetFileName);
@@ -2036,7 +2038,7 @@ namespace ConlangAudioHoning
                         txt_phonetic.Text = pollySpeech.PhoneticText;
                         // Play the audio (MP3) file with the Windows Media Player
                         Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
-                        AudioPlayer.PlayAudio(targetURI);
+                        AudioPlayer.PlayAudio(targetURI, (double)tb_Volume.Value / 100.0);
 
                         FileInfo fileInfo = new(targetFileName);
                         speechFiles.Add(fileInfo.Name, fileInfo);
@@ -2081,7 +2083,7 @@ namespace ConlangAudioHoning
                     txt_phonetic.Text = speechEngine.PhoneticText;
                     // Play the audio (wav) file with the Windows Media Player
                     Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
-                    AudioPlayer.PlayAudio(targetURI);
+                    AudioPlayer.PlayAudio(targetURI, (double)tb_Volume.Value / 100.0);
 
                     FileInfo fileInfo = new(targetFileName);
                     speechFiles.Add(fileInfo.Name, fileInfo);
@@ -2228,7 +2230,7 @@ namespace ConlangAudioHoning
             string targetFileName = speechFiles[fileName].FullName;
             // Play the audio (OGG) file with the default application
             Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
-            AudioPlayer.PlayAudio(targetURI);
+            AudioPlayer.PlayAudio(targetURI, (double)tb_Volume.Value / 100.0);
         }
 
         private void Cbx_phonemeToChange_SelectedIndexChanged(object sender, EventArgs e)
