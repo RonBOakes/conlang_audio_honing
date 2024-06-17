@@ -60,6 +60,14 @@ namespace ConlangAudioHoning
             get => "Microsoft Azure";
         }
 
+        /// <summary>
+        /// Key used in the Conlang JSON structure to index the preferred voice.
+        /// </summary>
+        public override string PreferredVoiceJsonKey
+        {
+            get => "Azure";
+        }
+
 
         /// <summary>
         /// Generate the phonetic text and SSML text.

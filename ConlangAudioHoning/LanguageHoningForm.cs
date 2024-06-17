@@ -252,7 +252,7 @@ namespace ConlangAudioHoning
                     _ = cbx_voice.Items.Add(voiceMenu);
                 }
                 if ((languageDescription != null) &&
-                    (languageDescription.preferred_voices.TryGetValue(speechEngines[selectedEngine].PreferredVoiceKey, out string? value)) &&
+                    (languageDescription.preferred_voices.TryGetValue(speechEngines[selectedEngine].PreferredVoiceJsonKey, out string? value)) &&
                     (!string.IsNullOrEmpty(value)))
                 {
                     string preferredVoice = value.Trim();
@@ -299,11 +299,6 @@ namespace ConlangAudioHoning
 
             languageFileInfo = new FileInfo(filename);
 
-            // Temporary work around to put the Polly voice into the preferred voices map.  
-            // Once the JSON structure is reworked, this will not be needed.
-            _ = languageDescription.preferred_voices.TryAdd("Polly", "Brian");
-            _ = languageDescription.preferred_voices.TryAdd("espeak-ng", "en-us");
-            _ = languageDescription.preferred_voices.TryAdd("azure", "en-US-AndrewNeural");
             IpaUtilities.SubstituteLatinIpaReplacements(languageDescription);
             IpaUtilities.BuildPhoneticInventory(languageDescription);
             phoneticChanger.Language = languageDescription;
@@ -2000,9 +1995,9 @@ namespace ConlangAudioHoning
                     {
                         txt_phonetic.Text = pollySpeech.PhoneticText;
                         // Play the audio (MP3) file with the Windows Media Player
-                        Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\','/')));
-                        AudioPlayer.PlayAudio(targetURI, (double)tb_Volume.Value/100.0);
-              
+                        Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
+                        AudioPlayer.PlayAudio(targetURI, (double)tb_Volume.Value / 100.0);
+
 
                         FileInfo fileInfo = new(targetFileName);
                         speechFiles.Add(fileInfo.Name, fileInfo);
@@ -2927,6 +2922,16 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
                 setAmazonPollyProfileToolStripMenuItem.Visible = false;
                 setAmazonPollyS3BucketNameToolStripMenuItem.Visible = false;
+            }
+        }
+
+        private void cbx_voice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedVoice = cbx_voice.Text.Trim().Split()[0];
+            string voiceEngineKey = cbx_speechEngine.Text.Trim();
+            if (languageDescription != null)
+            {
+                languageDescription.preferred_voices[speechEngines[voiceEngineKey].PreferredVoiceJsonKey] = selectedVoice;
             }
         }
     }

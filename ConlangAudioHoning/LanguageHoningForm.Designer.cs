@@ -595,6 +595,7 @@
             cbx_voice.Size = new Size(246, 23);
             cbx_voice.Sorted = true;
             cbx_voice.TabIndex = 20;
+            cbx_voice.SelectedIndexChanged += cbx_voice_SelectedIndexChanged;
             // 
             // label6
             // 

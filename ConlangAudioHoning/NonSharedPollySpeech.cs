@@ -101,6 +101,14 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
+        /// Key used in the Conlang JSON structure to index the preferred voice.
+        /// </summary>
+        public override string PreferredVoiceJsonKey
+        {
+            get => "Polly";
+        }
+
+        /// <summary>
         /// Amazon SSO Profile to use for Amazon Polly.
         /// </summary>
         public static string? PollySSOProfile

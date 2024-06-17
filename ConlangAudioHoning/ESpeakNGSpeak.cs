@@ -50,6 +50,14 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
+        /// Key used in the Conlang JSON structure to index the preferred voice.
+        /// </summary>
+        public override string PreferredVoiceJsonKey
+        {
+            get => "espeak-ng";
+        }
+
+        /// <summary>
         /// Generate the phonetic text and SSML text.
         /// </summary>
         /// <param name="speed">SSML &lt;prosody&gt; speed value to be used in the generated SSML.</param>
