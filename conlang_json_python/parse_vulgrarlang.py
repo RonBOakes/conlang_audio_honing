@@ -105,10 +105,10 @@ def main(argv):
     get_IPA_patterns(vulgarlang)
     
     # Parse the spelling rules
-    sound_map_list = parse_spelling_rules(spelling_rule_list)
+    spelling_pronounciation_rules = parse_spelling_rules(spelling_rule_list)
     
     # Parse the grammar rules.  This will build the affix_map and part of the lexicon
-    affix_map,lexicon_fragment1 = parse_grammar_rules(grammar,part_of_speech_set,sound_map_list,
+    affix_map,lexicon_fragment1 = parse_grammar_rules(grammar,part_of_speech_set,spelling_pronounciation_rules,
         {
             'IPA_VOWELS_PATTERN':IPA_VOWELS_PATTERN,
             'IPA_CONSONANT_PATTERN':IPA_CONSONANT_PATTERN,
@@ -118,7 +118,7 @@ def main(argv):
     
     # Parse the derivation affixes.
     derivational_affix_map = parse_derivational_affix_list(derivational_affix_list,
-        sound_map_list,
+        spelling_pronounciation_rules,
         {
             'IPA_VOWELS_PATTERN':IPA_VOWELS_PATTERN,
             'IPA_CONSONANT_PATTERN':IPA_CONSONANT_PATTERN,
@@ -127,7 +127,7 @@ def main(argv):
         })
 
     # Parse the word list to build the main part of the lexicon
-    lexicon_fragment2 = parse_word_list(word_list,affix_map,sound_map_list)
+    lexicon_fragment2 = parse_word_list(word_list,affix_map,spelling_pronounciation_rules)
 
     # Merge the two parts of the lexicon we have so far.
     lexicon = lexicon_fragment1 + lexicon_fragment2
@@ -138,7 +138,7 @@ def main(argv):
                             derivational_affix_map,
                             lexicon,
                             affix_map,
-                            sound_map_list,
+                            spelling_pronounciation_rules,
                             arguments.decline)
     
         lexicon += add_lexicon
@@ -147,7 +147,7 @@ def main(argv):
     if arguments.decline:
         add_lexicon = []
         for word in lexicon:
-            add_lexicon += decline_word(word,affix_map,sound_map_list)
+            add_lexicon += decline_word(word,affix_map,spelling_pronounciation_rules)
         lexicon += add_lexicon
         
     # Attempt to remove duplicate entries in the lexicon.
@@ -195,7 +195,7 @@ def main(argv):
                             'english_name':vulgarlang['anglicizedName']['value'].strip(),
                             'phonetic_characters':'ipa',
                             'native_name_phonetic':vulgarlang['ipaLangName']['value'].strip(),
-                            'native_name_english':spell_word(vulgarlang['ipaLangName']['value'].strip(), sound_map_list).capitalize(),
+                            'native_name_english':spell_word(vulgarlang['ipaLangName']['value'].strip(), spelling_pronounciation_rules).capitalize(),
                          }
     if arguments.voice:
         language_structure['preferred_voices'] = {'Polly':arguments.voice,'espeak-ng':arguments.espeak_language }
@@ -216,7 +216,7 @@ def main(argv):
     language_structure['word_order'] = word_order
     language_structure['adjective_position'] = adjective_position
     language_structure['pre_post_position'] = pre_post_position
-    language_structure['sound_map_list'] = sound_map_list
+    language_structure['spelling_pronounciation_rules'] = spelling_pronounciation_rules
     language_structure['lexical_order_list'] = lexical_order_list
     language_structure['affix_map'] = affix_map
     language_structure['derivational_affix_map'] = derivational_affix_map
@@ -310,9 +310,9 @@ def parse_spelling_rules(spelling_rule_list):
 
     # Initialize the sound map list with two default entries. 
     # These are the syllable separators.
-    sound_map_list = []
-    sound_map_list.append({'phoneme':'ˈ','romanization':'','spelling_regex':'ˈ','pronunciation_regex':'&&&&&&'})
-    sound_map_list.append({'phoneme':'ˌ','romanization':'','spelling_regex':'ˌ','pronunciation_regex':'&&&&&&'})
+    spelling_pronounciation_rules = []
+    spelling_pronounciation_rules.append({'phoneme':'ˈ','romanization':'','spelling_regex':'ˈ','pronunciation_regex':'&&&&&&'})
+    spelling_pronounciation_rules.append({'phoneme':'ˌ','romanization':'','spelling_regex':'ˌ','pronunciation_regex':'&&&&&&'})
     
     # Parse each spelling rule in turn and add it to the list.  
     # It is important to preserve the order since both Vulgarlang and the 
@@ -320,7 +320,7 @@ def parse_spelling_rules(spelling_rule_list):
     for spelling_rule in spelling_rule_list:
         sound_map_list_addition = parse_spelling_rule(spelling_rule)
         if sound_map_list_addition:
-            sound_map_list += sound_map_list_addition
+            spelling_pronounciation_rules += sound_map_list_addition
     
     # Update the global spelling patterns which are now known thanks to
     # information gleened as a side effect of parsing the spelling rules.
@@ -328,7 +328,7 @@ def parse_spelling_rules(spelling_rule_list):
     SPELLING_CONSONANT_PATTERN = '[^' + ''.join(SPELLING_VOWEL_SET) + ']'
     
     # Perform a number of global substitutions on the rules to replace 'C' and 'V' with the actual patterns.
-    for sound_map in sound_map_list:
+    for sound_map in spelling_pronounciation_rules:
         sound_map['pronunciation_regex'] = re.sub('C',SPELLING_CONSONANT_PATTERN, sound_map['pronunciation_regex'])
         sound_map['pronunciation_regex'] = re.sub('V',SPELLING_VOWEL_PATTERN, sound_map['pronunciation_regex'])
         sound_map['romanization'] = re.sub('C',SPELLING_CONSONANT_PATTERN, sound_map['romanization'])
@@ -338,7 +338,7 @@ def parse_spelling_rules(spelling_rule_list):
         sound_map['phoneme'] = re.sub('C',IPA_CONSONANT_PATTERN, sound_map['phoneme'])
         sound_map['phoneme'] = re.sub('V',IPA_VOWELS_PATTERN, sound_map['phoneme'])
     
-    return sound_map_list
+    return spelling_pronounciation_rules
 #end def parse_spelling_rules(spelling_rule_list)
 
 # Parse an individual spelling rule from Vulgarlang and build the Conlang JSON
@@ -356,7 +356,7 @@ def parse_spelling_rule(spelling_rule):
     group_repl_pattern1 = re.compile(r'([VC])(.+?)\s*>\s*\1\1')
     group_repl_pattern2 = re.compile(r'([VC])(.+?)\s*>\s*\1(.+?)')
 
-    sound_map_list = []
+    spelling_pronounciation_rules = []
     sound_map = {}
 
     if not re.match(r'^\s*/.*',spelling_rule):
@@ -371,7 +371,7 @@ def parse_spelling_rule(spelling_rule):
                 'spelling_regex':r'('+group_repl_match1.group(1)+r')'+group_repl_match1.group(2),
                 'pronunciation_regex':r'('+group_repl_match1.group(1)+r')\1'
             }
-            sound_map_list.append(sound_map)
+            spelling_pronounciation_rules.append(sound_map)
         elif group_repl_match2:
             sound_map = {
                 'phoneme':'$1'+group_repl_match2.group(2),
@@ -379,7 +379,7 @@ def parse_spelling_rule(spelling_rule):
                 'spelling_regex':r'('+group_repl_match2.group(1)+r')'+group_repl_match2.group(2),
                 'pronunciation_regex':r'('+group_repl_match2.group(1)+r')'+group_repl_match2.group(3)
             }
-            sound_map_list.append(sound_map)
+            spelling_pronounciation_rules.append(sound_map)
         else:
             # Split the rule into parts based on the > used to split the Vulgarlang spelling rule
             # into its pattern and replacement sections.  Then process these as needed.
@@ -424,11 +424,11 @@ def parse_spelling_rule(spelling_rule):
                     sound_map['pronunciation_regex']=sound_map['romanization']
                 #print ("\t",end="")
                 #print(sound_map)
-                sound_map_list.append(sound_map)
+                spelling_pronounciation_rules.append(sound_map)
                 # If we have discovered a new vowel in our romanization, add it to the set 
                 if phoneme in IPA_VOWEL_SET and roman not in SPELLING_VOWEL_SET:
                     SPELLING_VOWEL_SET.add(roman)
-        return sound_map_list
+        return spelling_pronounciation_rules
 #end def parse_spelling_rule
 
 # Parse the Vulgarlang Sound Change Notation for spelling rules.
@@ -542,7 +542,7 @@ def parse_sound_change(phoneme,roman,sound_change):
 
 # Parses the Vulgarlang word list and uses it to build a partial
 # lexicon in the format to be put into the Conlang JSON object format.
-def parse_word_list(word_list,affix_map,sound_map_list):
+def parse_word_list(word_list,affix_map,spelling_pronounciation_rules):
     lexicon_fragment = []
     for word in word_list:
         word = word.replace('\u2060','') # Remove the Word Joiners that have a pernicious habit of sneaking into words.
@@ -557,10 +557,10 @@ def parse_word_list(word_list,affix_map,sound_map_list):
         english_parts = word_parts[0].strip()
         english_list = english_parts.split(',')
         for english in english_list:
-            lexicon_fragment.append(LEXICON_ENTRY(phonetic.strip(),spell_word(phonetic,sound_map_list),english.strip(),part_of_speech.strip(),'root'))
+            lexicon_fragment.append(LEXICON_ENTRY(phonetic.strip(),spell_word(phonetic,spelling_pronounciation_rules),english.strip(),part_of_speech.strip(),'root'))
     return lexicon_fragment
                  
-#end def parse_word_list(word_list,affix_map,sound_map_list)
+#end def parse_word_list(word_list,affix_map,spelling_pronounciation_rules)
 
 # Extracts the phonetic inventory from the Vulgarlang fields that contain 
 # this information.
@@ -586,7 +586,7 @@ def get_phoneme_inventory(vulgarlang):
 #end get_phoneme_inventory 
 
 # Parse the derived word affix rules in a Vulgarlang output.
-def parse_derivational_affix_list(derivational_affix_list,sound_map_list,patterns):
+def parse_derivational_affix_list(derivational_affix_list,spelling_pronounciation_rules,patterns):
     IPA_VOWELS_PATTERN        = patterns['IPA_VOWELS_PATTERN']
     IPA_CONSONANT_PATTERN     = patterns['IPA_CONSONANT_PATTERN']
     SPELLING_VOWEL_PATTERN     = patterns['SPELLING_VOWEL_PATTERN']
@@ -619,8 +619,8 @@ def parse_derivational_affix_list(derivational_affix_list,sound_map_list,pattern
         
         # Apply each match and build the appropriate map entry.
         if vowel_prefix_match:
-            t_spelling_add = spell_word(vowel_prefix_match.group(1),sound_map_list)
-            f_spelling_add = spell_word(vowel_prefix_match.group(2),sound_map_list)
+            t_spelling_add = spell_word(vowel_prefix_match.group(1),spelling_pronounciation_rules)
+            f_spelling_add = spell_word(vowel_prefix_match.group(2),spelling_pronounciation_rules)
             map_entry = {
                 'type':'PREFIX',
                 'pronunciation_regex':'^'+IPA_VOWELS_PATTERN,
@@ -631,8 +631,8 @@ def parse_derivational_affix_list(derivational_affix_list,sound_map_list,pattern
                 'f_spelling_add':f_spelling_add
             }
         elif vowel_suffix_match:
-            t_spelling_add = spell_word(vowel_suffix_match.group(1),sound_map_list)
-            f_spelling_add = spell_word(vowel_suffix_match.group(2),sound_map_list)
+            t_spelling_add = spell_word(vowel_suffix_match.group(1),spelling_pronounciation_rules)
+            f_spelling_add = spell_word(vowel_suffix_match.group(2),spelling_pronounciation_rules)
             map_entry = {
                 'type':'SUFFIX',
                 'pronunciation_regex':IPA_VOWELS_PATTERN+'$',
@@ -643,8 +643,8 @@ def parse_derivational_affix_list(derivational_affix_list,sound_map_list,pattern
                 'f_spelling_add':f_spelling_add
             }
         elif consonant_prefix_match:
-            t_spelling_add = spell_word(consonant_prefix_match.group(1),sound_map_list)
-            f_spelling_add = spell_word(consonant_prefix_match.group(2),sound_map_list)
+            t_spelling_add = spell_word(consonant_prefix_match.group(1),spelling_pronounciation_rules)
+            f_spelling_add = spell_word(consonant_prefix_match.group(2),spelling_pronounciation_rules)
             map_entry = {
                 'type':'PREFIX',
                 'pronunciation_regex':'^'+IPA_CONSONANT_PATTERN,
@@ -655,8 +655,8 @@ def parse_derivational_affix_list(derivational_affix_list,sound_map_list,pattern
                 'f_spelling_add':f_spelling_add
             }
         elif consonant_suffix_match:
-            t_spelling_add = spell_word(consonant_suffix_match.group(1),sound_map_list)
-            f_spelling_add = spell_word(consonant_suffix_match.group(2),sound_map_list)
+            t_spelling_add = spell_word(consonant_suffix_match.group(1),spelling_pronounciation_rules)
+            f_spelling_add = spell_word(consonant_suffix_match.group(2),spelling_pronounciation_rules)
             map_entry = {
                 'type':'SUFFIX',
                 'pronunciation_regex':IPA_CONSONANT_PATTERN+'$',
@@ -670,13 +670,13 @@ def parse_derivational_affix_list(derivational_affix_list,sound_map_list,pattern
             map_entry = {
                 'type':'PREFIX',
                 'pronunciation_add':prefix_match.group(1),
-                'spelling_add':spell_word(prefix_match.group(1),sound_map_list),
+                'spelling_add':spell_word(prefix_match.group(1),spelling_pronounciation_rules),
             }
         elif suffix_match:
             map_entry = {
                 'type':'SUFFIX',
                 'pronunciation_add':suffix_match.group(1),
-                'spelling_add':spell_word(suffix_match.group(1),sound_map_list),
+                'spelling_add':spell_word(suffix_match.group(1),spelling_pronounciation_rules),
             }
         else:
             print("Invalid derivation rule: " + derivational_affix)
@@ -688,7 +688,7 @@ def parse_derivational_affix_list(derivational_affix_list,sound_map_list,pattern
 #end def parse_derivational_affix_list
 
 # Parse the grammar rules section of a Vulgarlang save file.
-def parse_grammar_rules(grammar,part_of_speech_set,sound_map_list,patterns):
+def parse_grammar_rules(grammar,part_of_speech_set,spelling_pronounciation_rules,patterns):
     IPA_VOWELS_PATTERN        = patterns['IPA_VOWELS_PATTERN']
     IPA_CONSONANT_PATTERN     = patterns['IPA_CONSONANT_PATTERN']
     SPELLING_VOWEL_PATTERN     = patterns['SPELLING_VOWEL_PATTERN']
@@ -947,7 +947,7 @@ def parse_grammar_rules(grammar,part_of_speech_set,sound_map_list,patterns):
                         affix_rule = line_parts[1].strip()
                     if affix_type != '':
                         last_affix_type = affix_type
-                    affix_type, map_entry = parse_affix_rule(affix_rule,sound_map_list,patterns)
+                    affix_type, map_entry = parse_affix_rule(affix_rule,spelling_pronounciation_rules,patterns)
                     if affix_type == '':
                         affix_type = last_affix_type
                     elif last_affix_type == 'TBD':
@@ -961,7 +961,7 @@ def parse_grammar_rules(grammar,part_of_speech_set,sound_map_list,patterns):
                     word_parts = line_parts[1].split('=')
                     english = word_parts[0].strip()
                     phonetic = word_parts[1].strip()
-                    spelled = spell_word(phonetic,sound_map_list)
+                    spelled = spell_word(phonetic,spelling_pronounciation_rules)
                     if part_of_speech == '':
                         print("ERROR: rule found without part of speech set")
                         exit()
@@ -1051,7 +1051,7 @@ prefix_pattern             = re.compile(r'^\s*(\S+)-\s*$')
 particle_pattern           = re.compile(r'^\s*(\S+\s+)-\s*$')
 suffix_pattern             = re.compile(r'^\s*-(\S+)\s*$')
 
-def parse_affix_rule(affix_rule,sound_map_list,patterns):
+def parse_affix_rule(affix_rule,spelling_pronounciation_rules,patterns):
     IPA_VOWELS_PATTERN        = patterns['IPA_VOWELS_PATTERN']
     IPA_CONSONANT_PATTERN     = patterns['IPA_CONSONANT_PATTERN']
     SPELLING_VOWEL_PATTERN     = patterns['SPELLING_VOWEL_PATTERN']
@@ -1075,8 +1075,8 @@ def parse_affix_rule(affix_rule,sound_map_list,patterns):
     suffix_match = suffix_pattern.match(affix_rule)
     
     if vowel_prefix_match:
-        t_spelling_add = spell_word(vowel_prefix_match.group(1),sound_map_list)
-        f_spelling_add = spell_word(vowel_prefix_match.group(2),sound_map_list)
+        t_spelling_add = spell_word(vowel_prefix_match.group(1),spelling_pronounciation_rules)
+        f_spelling_add = spell_word(vowel_prefix_match.group(2),spelling_pronounciation_rules)
         affix_type = 'prefix'
         map_entry = {
             'pronunciation_regex':'^'+IPA_VOWELS_PATTERN,
@@ -1087,8 +1087,8 @@ def parse_affix_rule(affix_rule,sound_map_list,patterns):
             'f_spelling_add':f_spelling_add
         }
     elif vowel_particle_match:
-        t_spelling_add = spell_word(vowel_particle_match.group(1).strip(),sound_map_list)
-        f_spelling_add = spell_word(vowel_particle_match.group(2).strip(),sound_map_list)
+        t_spelling_add = spell_word(vowel_particle_match.group(1).strip(),spelling_pronounciation_rules)
+        f_spelling_add = spell_word(vowel_particle_match.group(2).strip(),spelling_pronounciation_rules)
         affix_type = 'particle'
         map_entry = {
             'pronunciation_regex':'^'+IPA_VOWELS_PATTERN,
@@ -1099,8 +1099,8 @@ def parse_affix_rule(affix_rule,sound_map_list,patterns):
             'f_spelling_add':f_spelling_add
         }
     elif vowel_suffix_match:
-        t_spelling_add = spell_word(vowel_suffix_match.group(1).strip(),sound_map_list)
-        f_spelling_add = spell_word(vowel_suffix_match.group(2).strip(),sound_map_list)
+        t_spelling_add = spell_word(vowel_suffix_match.group(1).strip(),spelling_pronounciation_rules)
+        f_spelling_add = spell_word(vowel_suffix_match.group(2).strip(),spelling_pronounciation_rules)
         affix_type = 'suffix'
         map_entry = {
             'pronunciation_regex':IPA_VOWELS_PATTERN+'$',
@@ -1111,8 +1111,8 @@ def parse_affix_rule(affix_rule,sound_map_list,patterns):
             'f_spelling_add':f_spelling_add
         }
     elif consonant_prefix_match:
-        t_spelling_add = spell_word(consonant_prefix_match.group(1).strip(),sound_map_list)
-        f_spelling_add = spell_word(consonant_prefix_match.group(2).strip(),sound_map_list)
+        t_spelling_add = spell_word(consonant_prefix_match.group(1).strip(),spelling_pronounciation_rules)
+        f_spelling_add = spell_word(consonant_prefix_match.group(2).strip(),spelling_pronounciation_rules)
         affix_type = 'prefix'
         map_entry = {
             'pronunciation_regex':'^'+IPA_CONSONANT_PATTERN,
@@ -1123,8 +1123,8 @@ def parse_affix_rule(affix_rule,sound_map_list,patterns):
             'f_spelling_add':f_spelling_add
         }
     elif consonant_particle_match:
-        t_spelling_add = spell_word(consonant_particle_match.group(1).strip(),sound_map_list)
-        f_spelling_add = spell_word(consonant_particle_match.group(2).strip(),sound_map_list)
+        t_spelling_add = spell_word(consonant_particle_match.group(1).strip(),spelling_pronounciation_rules)
+        f_spelling_add = spell_word(consonant_particle_match.group(2).strip(),spelling_pronounciation_rules)
         affix_type = 'particle'
         map_entry = {
             'pronunciation_regex':'^'+IPA_CONSONANT_PATTERN,
@@ -1135,8 +1135,8 @@ def parse_affix_rule(affix_rule,sound_map_list,patterns):
             'f_spelling_add':f_spelling_add
         }
     elif consonant_suffix_match:
-        t_spelling_add = spell_word(consonant_suffix_match.group(1).strip(),sound_map_list)
-        f_spelling_add = spell_word(consonant_suffix_match.group(2).strip(),sound_map_list)
+        t_spelling_add = spell_word(consonant_suffix_match.group(1).strip(),spelling_pronounciation_rules)
+        f_spelling_add = spell_word(consonant_suffix_match.group(2).strip(),spelling_pronounciation_rules)
         affix_type = 'suffix'
         map_entry = {
             'pronunciation_regex':IPA_CONSONANT_PATTERN+'$',
@@ -1150,19 +1150,19 @@ def parse_affix_rule(affix_rule,sound_map_list,patterns):
         affix_type = 'prefix'
         map_entry = {
             'pronunciation_add':prefix_match.group(1),
-            'spelling_add':spell_word(prefix_match.group(1).strip(),sound_map_list),
+            'spelling_add':spell_word(prefix_match.group(1).strip(),spelling_pronounciation_rules),
         }
     elif particle_match:
         affix_type = 'particle'
         map_entry = {
             'pronunciation_add':particle_match.group(1),
-            'spelling_add':spell_word(particle_match.group(1).strip(),sound_map_list),
+            'spelling_add':spell_word(particle_match.group(1).strip(),spelling_pronounciation_rules),
         }
     elif suffix_match:
         affix_type = 'suffix'
         map_entry = {
             'pronunciation_add':suffix_match.group(1),
-            'spelling_add':spell_word(suffix_match.group(1).strip(),sound_map_list),
+            'spelling_add':spell_word(suffix_match.group(1).strip(),spelling_pronounciation_rules),
         }
     elif re.match(r'V\(C\)\*#\s+>\s+__',affix_rule):
         affix_type = 'replacement'

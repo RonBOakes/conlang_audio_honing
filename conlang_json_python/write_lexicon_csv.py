@@ -50,7 +50,7 @@ if not language_structure["derived"]:
     add_lexicon += derive_words(language_structure['derived_word_list'],
                                 language_structure['derivational_affix_map'],
                                 language_structure['lexicon'],
-                                language_structure['sound_map_list'],
+                                language_structure['spelling_pronounciation_rules'],
                                 false)
     clean_lexicon = dedup_lexicon(add_lexicon)
     if len(clean_lexicon) < len(add_lexicon):
@@ -62,7 +62,7 @@ if not language_structure["derived"]:
 if not language_structure["declined"]:
     add_lexicon = []
     for word in lexicon:
-        add_lexicon += decline_word(word,language_structure['affix_map'],language_structure['sound_map_list'])
+        add_lexicon += decline_word(word,language_structure['affix_map'],language_structure['spelling_pronounciation_rules'])
     clean_lexicon = dedup_lexicon(add_lexicon)
     if len(clean_lexicon) < len(add_lexicon):
         add_lexicon = clean_lexicon

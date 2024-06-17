@@ -82,7 +82,7 @@ def process_affix_map_tuple(affix_map_tuple,phonetic,part_of_speech,prior_declen
         return phonetic_list
         
     for entry in affix_map[affix]:
-        # Strip emphisys marks off the beginning of phonetic strings.
+        # Strip emphasis marks off the beginning of phonetic strings.
         if phonetic[0:1] == 'ˈ':
             phonetic2 = phonetic[1:]
         else:
@@ -146,7 +146,7 @@ def process_affix_list_layer(affix_map_list,phonetic,part_of_speech):
 #end def process_affix_list_layer
 
 # Decline a word.
-def decline_word(word,affix_map,sound_map_list,derived_word=False):
+def decline_word(word,affix_map,spelling_pronounciation_rules,derived_word=False):
 
     phonetic_list = []
     
@@ -164,13 +164,13 @@ def decline_word(word,affix_map,sound_map_list,derived_word=False):
             phonetic = phonetic_parts[0].strip()
         english_parts = word_parts[0].strip()
         english_list = english_parts.split(',')
-        word_source_metatdata = LEXICON_ENTRY(phonetic=phonetic,spelled=spell_word(phonetic, sound_map_list),english=english_list[0],part_of_speech=part_of_speech,declension=[]).as_map()
+        word_source_metatdata = LEXICON_ENTRY(phonetic=phonetic,spelled=spell_word(phonetic, spelling_pronounciation_rules),english=english_list[0],part_of_speech=part_of_speech,declension=[]).as_map()
     elif isinstance(word,dict):
         # Words as dictionaries are expected to have the parts below.  Extract these then turn it into a LEXICON_ENTRY
         phonetic = word['phonetic']
         part_of_speech = word['part_of_speech']
         english_list = [word['english']]
-        word_source_metatdata = LEXICON_ENTRY(phonetic=phonetic,spelled=spell_word(phonetic, sound_map_list),english=english_list[0],part_of_speech=part_of_speech,declension=[]).as_map()
+        word_source_metatdata = LEXICON_ENTRY(phonetic=phonetic,spelled=spell_word(phonetic, spelling_pronounciation_rules),english=english_list[0],part_of_speech=part_of_speech,declension=[]).as_map()
     elif isinstance(word,LEXICON_ENTRY):
         # Extract the needed parts from any LEXICON_ENTRY
         phonetic = word.phonetic
@@ -200,7 +200,7 @@ def decline_word(word,affix_map,sound_map_list,derived_word=False):
         declensions = phonetic_entry[1]
         part_of_speech = phonetic_entry[2]
         root = phonetic_entry[3]
-        spelled = spell_word(phonetic, sound_map_list)
+        spelled = spell_word(phonetic, spelling_pronounciation_rules)
         for english in english_list:
             lexent = LEXICON_ENTRY(phonetic,spelled,english.strip(),part_of_speech,declensions,derived_word=derived_word,declined_word=True,metadata={'source':{'declined_word':word_source_metatdata}})
             lexicon_fragment.append(lexent)
@@ -210,7 +210,7 @@ def decline_word(word,affix_map,sound_map_list,derived_word=False):
 #end decline_word
 
 # Derive words based on the Vulgarlang format still used by the Conlang JSON objects.
-def derive_words(derived_word_list,derivational_affix_map,lexicon,affix_map,sound_map_list,decline=True):
+def derive_words(derived_word_list,derivational_affix_map,lexicon,affix_map,spelling_pronounciation_rules,decline=True):
 
     word_map = {}
     word_map_tupple = {}
@@ -331,7 +331,7 @@ def derive_words(derived_word_list,derivational_affix_map,lexicon,affix_map,soun
         # Build all of the LEXICON_ENTRYs for this word - each English word or defination gets its own entry.
         for eng in english.split(','):
             eng = eng.strip()
-            entry = LEXICON_ENTRY(phonetic,spell_word(phonetic,sound_map_list),eng, part_of_speech, ['root'],derived_word=True,declined_word=False,metadata={'source':{'derrived_word':words}})
+            entry = LEXICON_ENTRY(phonetic,spell_word(phonetic,spelling_pronounciation_rules),eng, part_of_speech, ['root'],derived_word=True,declined_word=False,metadata={'source':{'derrived_word':words}})
             wm_english = eng.replace(' ','_')
             word_map[wm_english] = entry
             part_of_speech = entry.part_of_speech
@@ -341,7 +341,7 @@ def derive_words(derived_word_list,derivational_affix_map,lexicon,affix_map,soun
             word_lexicon_fragment = [entry]
             new_word_line = eng + " : " + part_of_speech +" =" + phonetic
             if decline:
-                word_lexicon_fragment = decline_word(new_word_line,affix_map,sound_map_list,derived_word=True)
+                word_lexicon_fragment = decline_word(new_word_line,affix_map,spelling_pronounciation_rules,derived_word=True)
             lexicon_fragment += word_lexicon_fragment
                 
     return lexicon_fragment
@@ -349,10 +349,10 @@ def derive_words(derived_word_list,derivational_affix_map,lexicon,affix_map,soun
 #end def derive_words
 
 # Convert a word from phonetic representation into romanized representation.
-def spell_word(phonetic, sound_map_list):
+def spell_word(phonetic, spelling_pronounciation_rules):
     spelled = phonetic
 
-    for sound_map in sound_map_list:
+    for sound_map in spelling_pronounciation_rules:
         if 'romanization' in sound_map:
             # Change the regular expression replace/substitute from PERL to Python.
             romanization = sound_map['romanization'].replace('$','\\')
