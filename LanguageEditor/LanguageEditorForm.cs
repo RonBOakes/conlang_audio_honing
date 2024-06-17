@@ -445,7 +445,9 @@ namespace LanguageEditor
 
         private void ViewHelpPageToolStripMenuItem_Click(object sender, EventArgs e)
         {
+#pragma warning disable S1075 // URIs should not be hardcoded
             string helpURL = @"https://github.com/RonBOakes/conlang_audio_honing/wiki/Language-Editor-Help";
+#pragma warning restore S1075 // URIs should not be hardcoded
             Process myProcess = new();
             try
             {
