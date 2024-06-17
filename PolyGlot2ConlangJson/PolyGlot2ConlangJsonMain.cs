@@ -68,6 +68,6 @@ if (inputFileInfo.Exists)
 
         LanguageDescription language = new();
 
-        language.sound_map_list = SoundMapBuilder.BuildSoundMap(polyGlotLanguage);
+        language.spelling_pronunciation_rules = SoundMapBuilder.BuildSoundMap(polyGlotLanguage);
     }
 }

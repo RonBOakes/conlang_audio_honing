@@ -63,7 +63,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Update the language loaded into this PhoneticChanger by replacing the oldPhoneme with
         /// the newPhoneme in the lexicon.  The phonetic_inventory will also be updated.  The
-        /// sound_map_list may also be updated depending on user interactions.
+        /// spelling_pronounciation_rules may also be updated depending on user interactions.
         /// </summary>
         /// <param name="oldPhoneme">Phoneme to be replaced.</param>
         /// <param name="newPhoneme">Replacement phoneme.</param>
@@ -75,15 +75,15 @@ namespace ConlangAudioHoning
             }
 
             SoundMapListEditorForm soundMapListEditorForm = new();
-            _ = Language.sound_map_list.GetRange(0, Language.sound_map_list.Count);
-            soundMapListEditorForm.SoundMapList = Language.sound_map_list;
+            _ = Language.spelling_pronunciation_rules.GetRange(0, Language.spelling_pronunciation_rules.Count);
+            soundMapListEditorForm.SoundMapList = Language.spelling_pronunciation_rules;
             soundMapListEditorForm.PhonemeReplacementPairs.Add((oldPhoneme, newPhoneme));
             soundMapListEditorForm.UpdatePhonemeReplacements();
             _ = soundMapListEditorForm.ShowDialog();
             // ShowDialog is modal
             if (soundMapListEditorForm.SoundMapSaved)
             {
-                Language.sound_map_list = soundMapListEditorForm.SoundMapList;
+                Language.spelling_pronunciation_rules = soundMapListEditorForm.SoundMapList;
             }
 
             string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
@@ -118,7 +118,7 @@ namespace ConlangAudioHoning
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
                     string oldSpelled = word.spelled;
-                    word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                    word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
                     UpdateSampleText(oldSpelled, word.spelled);
                     word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
@@ -184,7 +184,7 @@ namespace ConlangAudioHoning
                                     {
                                         affix.pronunciation_add = affix.pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
                                     }
-                                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.sound_map_list);
+                                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.spelling_pronunciation_rules);
                                 }
                                 if (!string.IsNullOrEmpty(affix.pronunciation_regex))
                                 {
@@ -225,7 +225,7 @@ namespace ConlangAudioHoning
                                     {
                                         affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
                                     }
-                                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.sound_map_list);
+                                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.spelling_pronunciation_rules);
                                 }
                                 if (!string.IsNullOrEmpty(affix.f_pronunciation_add))
                                 {
@@ -246,7 +246,7 @@ namespace ConlangAudioHoning
                                     {
                                         affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
                                     }
-                                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.sound_map_list);
+                                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.spelling_pronunciation_rules);
                                 }
                             }
                         }
@@ -277,7 +277,7 @@ namespace ConlangAudioHoning
                     {
                         affix.pronunciation_add = affix.pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
                     }
-                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.sound_map_list);
+                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.spelling_pronunciation_rules);
                 }
                 if (!string.IsNullOrEmpty(affix.pronunciation_regex))
                 {
@@ -318,7 +318,7 @@ namespace ConlangAudioHoning
                     {
                         affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
                     }
-                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.sound_map_list);
+                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.spelling_pronunciation_rules);
                 }
                 if (!string.IsNullOrEmpty(affix.f_pronunciation_add))
                 {
@@ -339,7 +339,7 @@ namespace ConlangAudioHoning
                     {
                         affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(diphthongReplacementMap[diphthong], diphthong);
                     }
-                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.sound_map_list);
+                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.spelling_pronunciation_rules);
                 }
             }
 
@@ -350,7 +350,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Update the language loaded into this PhoneticChanger by replacing each of the the oldPhoneme with
         /// the newPhoneme from the change list within the lexicon.  The phonetic_inventory will also be updated.  
-        /// The sound_map_list may also be updated depending on user interactions.
+        /// The spelling_pronounciation_rules may also be updated depending on user interactions.
         /// <br/>The changes will be applied so that they impact independently without any inherent sequence.  
         /// If one entry has a value in "oldPhoneme" and it also in "newPhoneme" these changes will be made
         /// independently and will not impact each other.  Circular changes are supported: e.g. p-&gt;b, 
@@ -376,7 +376,7 @@ namespace ConlangAudioHoning
 
             SoundMapListEditorForm soundMapListEditorForm = new()
             {
-                SoundMapList = Language.sound_map_list
+                SoundMapList = Language.spelling_pronunciation_rules
             };
             soundMapListEditorForm.PhonemeReplacementPairs.AddRange(changeList);
             soundMapListEditorForm.UpdatePhonemeReplacements();
@@ -384,7 +384,7 @@ namespace ConlangAudioHoning
             // ShowDialog is modal
             if (soundMapListEditorForm.SoundMapSaved)
             {
-                Language.sound_map_list = soundMapListEditorForm.SoundMapList;
+                Language.spelling_pronunciation_rules = soundMapListEditorForm.SoundMapList;
             }
 
             string changeHistoryTimestamp = string.Format("{0:yyyyMMdd.hhmmssfffffff}", DateTime.Now);
@@ -469,7 +469,7 @@ namespace ConlangAudioHoning
                 if (!oldVersion.phonetic.Equals(word.phonetic))
                 {
                     string oldSpelled = word.spelled;
-                    word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                    word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
                     UpdateSampleText(oldSpelled, word.spelled);
                 }
             }
@@ -525,7 +525,7 @@ namespace ConlangAudioHoning
                                         (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
                                         affix.pronunciation_add = affix.pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
                                     }
-                                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.sound_map_list);
+                                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.spelling_pronunciation_rules);
                                 }
                                 if (!string.IsNullOrEmpty(affix.pronunciation_regex))
                                 {
@@ -590,7 +590,7 @@ namespace ConlangAudioHoning
                                         (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
                                         affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
                                     }
-                                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.sound_map_list);
+                                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.spelling_pronunciation_rules);
                                 }
                                 if (!string.IsNullOrEmpty(affix.f_pronunciation_add))
                                 {
@@ -623,7 +623,7 @@ namespace ConlangAudioHoning
                                         (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
                                         affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
                                     }
-                                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.sound_map_list);
+                                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.spelling_pronunciation_rules);
                                 }
                             }
                         }
@@ -667,7 +667,7 @@ namespace ConlangAudioHoning
                         (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
                         affix.pronunciation_add = affix.pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
                     }
-                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.sound_map_list);
+                    affix.spelling_add = ConlangUtilities.SpellWord(affix.pronunciation_add, Language.spelling_pronunciation_rules);
                 }
                 if (!string.IsNullOrEmpty(affix.pronunciation_regex))
                 {
@@ -732,7 +732,7 @@ namespace ConlangAudioHoning
                         (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
                         affix.t_pronunciation_add = affix.t_pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
                     }
-                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.sound_map_list);
+                    affix.t_spelling_add = ConlangUtilities.SpellWord(affix.t_pronunciation_add, Language.spelling_pronunciation_rules);
                 }
                 if (!string.IsNullOrEmpty(affix.f_pronunciation_add))
                 {
@@ -765,7 +765,7 @@ namespace ConlangAudioHoning
                         (string oldPhoneme, string newPhoneme) = interimReplacementMap[interimReplacementSymbol];
                         affix.f_pronunciation_add = affix.f_pronunciation_add.Replace(interimReplacementSymbol, newPhoneme);
                     }
-                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.sound_map_list);
+                    affix.f_spelling_add = ConlangUtilities.SpellWord(affix.f_pronunciation_add, Language.spelling_pronunciation_rules);
                 }
             }
 #pragma warning restore S1481 // Unused local variables should be removed
@@ -775,7 +775,7 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// Update the spelling of every word in the lexicon based on the current sound_map_list.
+        /// Update the spelling of every word in the lexicon based on the current spelling_pronounciation_rules.
         /// </summary>
         public void UpdateSpelling()
         {
@@ -787,7 +787,7 @@ namespace ConlangAudioHoning
             foreach (LexiconEntry word in Language.lexicon)
             {
                 string oldSpelling = word.spelled;
-                string newSpelling = ConlangUtilities.SpellWord(word.phonetic, Language.sound_map_list);
+                string newSpelling = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
                 LexiconEntry oldVersion = word.copy();
                 if (!oldSpelling.Equals(newSpelling))
                 {
@@ -820,7 +820,7 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// Update the pronunciation of every word in the lexicon based on the current sound_map_list.
+        /// Update the pronunciation of every word in the lexicon based on the current spelling_pronounciation_rules.
         /// </summary>
         public void UpdatePronunciation()
         {
@@ -833,7 +833,7 @@ namespace ConlangAudioHoning
             foreach (LexiconEntry word in Language.lexicon)
             {
                 string oldPhonetic = word.phonetic;
-                string newPhonetic = ConlangUtilities.SoundOutWord(word.spelled, Language.sound_map_list);
+                string newPhonetic = ConlangUtilities.SoundOutWord(word.spelled, Language.spelling_pronunciation_rules);
                 LexiconEntry oldVersion = word.copy();
                 if (!oldPhonetic.Equals(newPhonetic))
                 {
@@ -942,9 +942,9 @@ namespace ConlangAudioHoning
         /// </summary>
         /// <param name="soundMapList">List of spelling/pronunciation rules to be searched.</param>
         /// <returns>List of rules that create non-rhotacized vowels, or add "r" to the spelled word</returns>
-        public static List<SoundMap> GetRAddingSoundMapEntries(List<SoundMap> soundMapList)
+        public static List<SpellingPronunciationRules> GetRAddingSoundMapEntries(List<SpellingPronunciationRules> soundMapList)
         {
-            List<SoundMap> rAddingEntries = [];
+            List<SpellingPronunciationRules> rAddingEntries = [];
 
             // Build the pattern to look for "r" phonemes and rhoticity.
             StringBuilder patternBuilder = new();
@@ -956,7 +956,7 @@ namespace ConlangAudioHoning
             _ = patternBuilder.Append(']');
             Regex rPresentRegex = new(patternBuilder.ToString().Trim(), RegexOptions.Compiled);
 
-            foreach (SoundMap soundMap in soundMapList)
+            foreach (SpellingPronunciationRules soundMap in soundMapList)
             {
                 if ((soundMap.romanization.Contains('r')) && !rPresentRegex.IsMatch(soundMap.spelling_regex))
                 {
@@ -970,7 +970,7 @@ namespace ConlangAudioHoning
             return rAddingEntries;
         }
 
-        public static void ReplaceSoundMapEntry(SoundMap oldEntry, SoundMap newEntry, List<SoundMap> soundMapList)
+        public static void ReplaceSoundMapEntry(SpellingPronunciationRules oldEntry, SpellingPronunciationRules newEntry, List<SpellingPronunciationRules> soundMapList)
         {
             for (int i = 0; i < soundMapList.Count; i++)
             {

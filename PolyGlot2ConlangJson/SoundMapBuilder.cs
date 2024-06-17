@@ -27,9 +27,9 @@ namespace PolyGlot2ConlangJson
 {
     internal static class SoundMapBuilder
     {
-        public static List<SoundMap> BuildSoundMap(XElement polyGlotLanguage)
+        public static List<SpellingPronunciationRules> BuildSoundMap(XElement polyGlotLanguage)
         {
-            List<SoundMap> soundMapList = new();
+            List<SpellingPronunciationRules> soundMapList = new();
 
             IEnumerable<XElement> proCollection = polyGlotLanguage.Descendants("pronunciationCollection");
             foreach(XElement p in proCollection) 
@@ -39,7 +39,7 @@ namespace PolyGlot2ConlangJson
                 {
                     XElement? proGuideBase = proGuide.Element("proGuideBase");
                     XElement? proGuidePhon = proGuide.Element("proGuidePhon");
-                    SoundMap soundMap = new SoundMap();
+                    SpellingPronunciationRules soundMap = new SpellingPronunciationRules();
                     soundMap.phoneme = proGuidePhon?.Value ?? string.Empty;
                     soundMap.pronunciation_regex = proGuideBase?.Value ?? string.Empty;
                     soundMap.romanization = proGuideBase?.Value ?? string.Empty;

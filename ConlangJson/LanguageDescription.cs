@@ -41,7 +41,7 @@ namespace ConlangJson
         private string? _adjective_position;
         private string? _pre_post_position;
         private Dictionary<string, string[]>? _phonetic_inventory;
-        private List<SoundMap>? _sound_map_list;
+        private List<SpellingPronunciationRules>? _spelling_pronunciation_rules;
         private List<string>? _lexical_order_list;
         private Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? _affix_map;
         private Dictionary<string, DerivationalAffix>? _derivational_affix_map;
@@ -58,7 +58,7 @@ namespace ConlangJson
             _noun_gender_list = [];
             _part_of_speech_list = [];
             _phoneme_inventory = [];
-            _sound_map_list = [];
+            _spelling_pronunciation_rules = [];
             _lexical_order_list = [];
             _affix_map = [];
             _derivational_affix_map = [];
@@ -394,11 +394,11 @@ namespace ConlangJson
         /// <br/>Optional, Recommended.
         /// </summary>
 #pragma warning disable IDE1006 // Naming Styles
-        public List<SoundMap> sound_map_list
+        public List<SpellingPronunciationRules> spelling_pronunciation_rules
 #pragma warning restore IDE1006 // Naming Styles
         {
-            get => _sound_map_list ?? [];
-            set => _sound_map_list = value;
+            get => _spelling_pronunciation_rules ?? [];
+            set => _spelling_pronunciation_rules = value;
         }
 
         /// <summary>

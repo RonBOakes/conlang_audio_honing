@@ -27,7 +27,7 @@ namespace ConlangAudioHoning
     {
         private static Size controlSize = new(850, 50);
 
-        private SoundMap? _soundMapData;
+        private SpellingPronunciationRules? _soundMapData;
         private bool _enabled;
 
         private TextBox? _lastFocused = null;
@@ -35,11 +35,11 @@ namespace ConlangAudioHoning
         /// <summary>
         /// SoundMap object being edited in this editor.
         /// </summary>
-        public SoundMap SoundMapData
+        public SpellingPronunciationRules SoundMapData
         {
             get
             {
-                _soundMapData ??= new SoundMap();
+                _soundMapData ??= new SpellingPronunciationRules();
                 _soundMapData.pronunciation_regex = txt_pronunciationRegex.Text;
                 _soundMapData.phoneme = txt_phoneme.Text;
                 _soundMapData.romanization = txt_romanization.Text;
@@ -96,7 +96,7 @@ namespace ConlangAudioHoning
         /// Returns true if the SoundMap being edited is in a valid state.  That is
         /// if it satisfies both of the dependency requirements found in 
         /// https://github.com/RonBOakes/conlang_json/blob/main/doc/conlang_json_spec.pdf
-        /// section on sound_map_list entries.
+        /// section on spelling_pronounciation_rules entries.
         /// </summary>
         public bool ValidMap
         {

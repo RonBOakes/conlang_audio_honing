@@ -35,14 +35,14 @@ namespace ConlangJson
         /// representation.
         /// </summary>
         /// <param name="phonetic">Phonetic representation of a word using IPA.</param>
-        /// <param name="soundMapList">The SoundMapList (sound_map_list) from the Language.  
+        /// <param name="soundMapList">The SoundMapList (spelling_pronounciation_rules) from the Language.  
         /// This must be ordered so that processing from the first to the last element will 
         /// produce the correct spelling.</param>
         /// <returns>The Romanized or Latinized version of the word.</returns>
-        public static string SpellWord(string phonetic, List<SoundMap> soundMapList)
+        public static string SpellWord(string phonetic, List<SpellingPronunciationRules> soundMapList)
         {
             string spelled = phonetic;
-            foreach (SoundMap soundMap in soundMapList)
+            foreach (SpellingPronunciationRules soundMap in soundMapList)
             {
                 if (!string.IsNullOrEmpty(soundMap.spelling_regex))
                 {
@@ -58,14 +58,14 @@ namespace ConlangJson
         /// form in IPA.
         /// </summary>
         /// <param name="word">The Romanized or Latinized version of the word.</param>
-        /// <param name="soundMapList">The SoundMapList (sound_map_list) from the Language.  
+        /// <param name="soundMapList">The SoundMapList (spelling_pronounciation_rules) from the Language.  
         /// This must be ordered so that processing from the last to the first element will 
         /// produce the correct phonetic representation.</param>
         /// <returns>The phonetic representation of the word in IPA.</returns>
-        public static string SoundOutWord(string word, List<SoundMap> soundMapList)
+        public static string SoundOutWord(string word, List<SpellingPronunciationRules> soundMapList)
         {
             string phonetic = word;
-            foreach (SoundMap soundMap in soundMapList.Reverse<SoundMap>())
+            foreach (SpellingPronunciationRules soundMap in soundMapList.Reverse<SpellingPronunciationRules>())
             {
                 if (!string.IsNullOrEmpty(soundMap.pronunciation_regex))
                 {
@@ -82,7 +82,7 @@ namespace ConlangJson
         /// <param name="word">LexiconEntry for the word to be declined</param>
         /// <param name="affixMap">AffixMap (affix_map) from the language containing the word 
         /// to be declined</param>
-        /// <param name="soundMapList">The SoundMapList (sound_map_list) from the Language.  
+        /// <param name="soundMapList">The SoundMapList (spelling_pronounciation_rules) from the Language.  
         /// This must be ordered so that processing from the first to the last element will 
         /// produce the correct spelling, and processing in the reverse order will produce
         /// the correct pronunciation.</param>
@@ -91,7 +91,7 @@ namespace ConlangJson
         /// <returns>A List of LexiconEntry objects containing the new words created by 
         /// declining the word parameter according to the supplied AffixMap's rules.</returns>
         public static List<LexiconEntry> DeclineWord(LexiconEntry word, Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>> affixMap,
-            List<SoundMap> soundMapList, bool derivedWord = false)
+            List<SpellingPronunciationRules> soundMapList, bool derivedWord = false)
         {
             // Safety check - never decline a word already marked as declined, or a word with
             // a source metadata entry
@@ -169,7 +169,7 @@ namespace ConlangJson
             List<LexiconEntry> addLexicon = [];
             foreach (LexiconEntry word in language.lexicon)
             {
-                addLexicon.AddRange(DeclineWord(word, language.affix_map, language.sound_map_list));
+                addLexicon.AddRange(DeclineWord(word, language.affix_map, language.spelling_pronunciation_rules));
             }
             foreach (LexiconEntry word in addLexicon)
             {
@@ -350,7 +350,7 @@ namespace ConlangJson
                     phonetic.Append(phoneticPart);
                 }
 
-                string spelled = SpellWord(phonetic.ToString(), language.sound_map_list);
+                string spelled = SpellWord(phonetic.ToString(), language.spelling_pronunciation_rules);
                 Dictionary<string, Dictionary<string, string>> metadataDict = new() { { "source", new Dictionary<string, string> { { "derived_word", words } } } };
                 JsonObject? metadata = JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(metadataDict));
 

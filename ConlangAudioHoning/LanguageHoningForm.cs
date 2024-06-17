@@ -197,7 +197,7 @@ namespace ConlangAudioHoning
             foreach (LexiconEntry word in language.lexicon)
             {
                 ProgressBar.Text = word.phonetic.ToString();
-                addLexicon.AddRange(ConlangUtilities.DeclineWord(word, language.affix_map, language.sound_map_list));
+                addLexicon.AddRange(ConlangUtilities.DeclineWord(word, language.affix_map, language.spelling_pronunciation_rules));
                 ProgressBar.PerformStep();
             }
             ProgressBar.Style = ProgressBarStyle.Marquee;
@@ -720,7 +720,7 @@ namespace ConlangAudioHoning
                     {
                         // Ensure that there is a blank at the top of the drop down list
                         cbx_phonemeToChange.Items.Clear();
-                        List<SoundMap> rAddingEntries = PhoneticChanger.GetRAddingSoundMapEntries(languageDescription.sound_map_list);
+                        List<SpellingPronunciationRules> rAddingEntries = PhoneticChanger.GetRAddingSoundMapEntries(languageDescription.spelling_pronunciation_rules);
                         cbx_phonemeToChange.Items.AddRange([.. rAddingEntries]);
                     }
                     cbx_diphthongStartVowel.Visible = false;
@@ -1583,7 +1583,7 @@ namespace ConlangAudioHoning
             }
             else
             {
-                foreach (SoundMap soundMap in languageDescription.sound_map_list)
+                foreach (SpellingPronunciationRules soundMap in languageDescription.spelling_pronunciation_rules)
                 {
                     if ((soundMap.phoneme.Contains(checkChar)) || (soundMap.spelling_regex.Contains(checkChar)))
                     {
@@ -2286,8 +2286,8 @@ namespace ConlangAudioHoning
             }
             else if ((tabPhoneticAlterations.SelectedIndex == 3) && rbn_replaceRSpelling.Checked && cbx_phonemeToChange.SelectedItem != null)
             {
-                SoundMap mapToReplace = (SoundMap)cbx_phonemeToChange.SelectedItem;
-                SoundMap replacementMap = mapToReplace.copy();
+                SpellingPronunciationRules mapToReplace = (SpellingPronunciationRules)cbx_phonemeToChange.SelectedItem;
+                SpellingPronunciationRules replacementMap = mapToReplace.copy();
                 string phonemeToAdd = cbx_replacementPhoneme.Text.Split()[0];
                 string diacriticAtEnd = string.Format("{0}$", IpaUtilities.DiacriticPattern);
                 if (!string.IsNullOrEmpty(replacementMap.spelling_regex))
@@ -2306,7 +2306,7 @@ namespace ConlangAudioHoning
                     }
                     replacementMap.phoneme += phonemeToAdd;
                 }
-                PhoneticChanger.ReplaceSoundMapEntry(mapToReplace, replacementMap, languageDescription.sound_map_list);
+                PhoneticChanger.ReplaceSoundMapEntry(mapToReplace, replacementMap, languageDescription.spelling_pronunciation_rules);
                 phoneticChanger.UpdatePronunciation();
                 if (sampleText != string.Empty)
                 {
@@ -2539,7 +2539,7 @@ namespace ConlangAudioHoning
             }
             SoundMapListEditorForm soundMapListEditorForm = new()
             {
-                SoundMapList = languageDescription.sound_map_list,
+                SoundMapList = languageDescription.spelling_pronunciation_rules,
                 HeaderText = "No specific changes - editing the entire list"
             };
             soundMapListEditorForm.UpdatePhonemeReplacements();
@@ -2550,7 +2550,7 @@ namespace ConlangAudioHoning
                 DialogResult result = MessageBox.Show("Preserve the spelling (Yes)?\nNo preserves the pronunciation.", "Spelling or pronunciation", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes)
                 {
-                    languageDescription.sound_map_list = soundMapListEditorForm.SoundMapList;
+                    languageDescription.spelling_pronunciation_rules = soundMapListEditorForm.SoundMapList;
                     sampleText = txt_SampleText.Text;
                     phoneticChanger.SampleText = sampleText;
                     phoneticChanger.UpdatePronunciation();
@@ -2571,7 +2571,7 @@ namespace ConlangAudioHoning
                     sampleText = txt_SampleText.Text;
                     phoneticChanger.SampleText = sampleText;
                     phoneticChanger.UpdateSpelling();
-                    languageDescription.sound_map_list = soundMapListEditorForm.SoundMapList;
+                    languageDescription.spelling_pronunciation_rules = soundMapListEditorForm.SoundMapList;
                     if (sampleText != string.Empty)
                     {
                         sampleText = phoneticChanger.SampleText;
@@ -2859,7 +2859,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            LexiconEditorForm lexiconEditorForm = new(languageDescription.lexicon, languageDescription.part_of_speech_list, languageDescription.sound_map_list);
+            LexiconEditorForm lexiconEditorForm = new(languageDescription.lexicon, languageDescription.part_of_speech_list, languageDescription.spelling_pronunciation_rules);
             _ = lexiconEditorForm.ShowDialog();
             if (lexiconEditorForm.Saved)
             {

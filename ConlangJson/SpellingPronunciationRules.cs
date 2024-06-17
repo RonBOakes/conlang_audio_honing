@@ -24,13 +24,13 @@ namespace ConlangJson
     /// Defines the .NET/C# structure that corresponds to the Sound Map Entries.  Each object of this class
     /// will encapsulate one entry in the higher-level Sound Map.
     /// </summary>
-    public sealed class SoundMap : IEquatable<SoundMap?>
+    public sealed class SpellingPronunciationRules : IEquatable<SpellingPronunciationRules?>
     {
 
         /// <summary>
         /// Constructor used to build an empty SoundMap object.  All of the members are set to the default values.
         /// </summary>
-        public SoundMap()
+        public SpellingPronunciationRules()
         {
             this.phoneme = string.Empty;
             this.romanization = string.Empty;
@@ -61,7 +61,7 @@ namespace ConlangJson
         /// portion of a word's Romanized or Latinized version in the conlang with a specific phonetic representation.  
         /// The matched text will then be replaced with the value from the phoneme below.<br/> Optional, Recommended, 
         /// Required if phoneme is present.<br/>Set to an empty string if not present.</param>
-        public SoundMap(string phoneme, string romanization, string spelling_regex, string pronunciation_regex)
+        public SpellingPronunciationRules(string phoneme, string romanization, string spelling_regex, string pronunciation_regex)
         {
             this.phoneme = phoneme;
             this.romanization = romanization;
@@ -116,10 +116,10 @@ namespace ConlangJson
         /// </summary>
         /// <returns>A new SoundMap with the same data.</returns>
 #pragma warning disable IDE1006 // Naming Styles
-        public SoundMap copy()
+        public SpellingPronunciationRules copy()
 #pragma warning restore IDE1006 // Naming Styles
         {
-            SoundMap copy = new(this.phoneme, this.romanization, this.spelling_regex, this.pronunciation_regex);
+            SpellingPronunciationRules copy = new(this.phoneme, this.romanization, this.spelling_regex, this.pronunciation_regex);
             return copy;
         }
 
@@ -130,7 +130,7 @@ namespace ConlangJson
         /// <returns>true if the objects are the same, false otherwise.</returns>
         public override bool Equals(object? obj)
         {
-            return obj is SoundMap map &&
+            return obj is SpellingPronunciationRules map &&
                 phoneme == map.phoneme &&
                    romanization == map.romanization &&
                    spelling_regex == map.spelling_regex &&
@@ -143,7 +143,7 @@ namespace ConlangJson
         /// </summary>
         /// <param name="other">SoundMap object to be compared to this SoundMap.</param>
         /// <returns>true if the SoundMap objects represent the same data.</returns>
-        public bool Equals(SoundMap? other)
+        public bool Equals(SpellingPronunciationRules? other)
         {
             return other is not null &&
                    phoneme == other.phoneme &&

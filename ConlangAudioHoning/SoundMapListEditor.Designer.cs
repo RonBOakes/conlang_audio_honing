@@ -44,7 +44,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ConlangJson.SoundMap soundMap2 = new ConlangJson.SoundMap();
+            ConlangJson.SpellingPronunciationRules soundMap2 = new ConlangJson.SpellingPronunciationRules();
             btnAddAbove = new Button();
             btnAddBelow = new Button();
             lbx_soundMapListEntries = new ListBox();

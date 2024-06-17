@@ -24,7 +24,7 @@ namespace ConlangAudioHoning
     {
         private static Size controlSize = new(850, 280);
 
-        private List<SoundMap>? _soundMapList;
+        private List<SpellingPronunciationRules>? _soundMapList;
         private List<string>? _partOfSpeechList;
 
         private LexiconEntry? _lexiconEntry;
@@ -88,7 +88,7 @@ namespace ConlangAudioHoning
         private CheckBox ckb_declinedWord;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public LexiconEntryEditor(LexiconEntry? lexiconEntry = null, List<string>? partOfSpeechList = null, List<SoundMap>? soundMapList = null)
+        public LexiconEntryEditor(LexiconEntry? lexiconEntry = null, List<string>? partOfSpeechList = null, List<SpellingPronunciationRules>? soundMapList = null)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
@@ -144,7 +144,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        internal List<SoundMap> SoundMapList
+        internal List<SpellingPronunciationRules> SoundMapList
         {
             set
             {

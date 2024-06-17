@@ -109,7 +109,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Holds the soundMapList for passing to the LexiconEntryEditor.
         /// </summary>
-        public List<SoundMap> SoundMapList
+        public List<SpellingPronunciationRules> SoundMapList
         {
             get; set;
         }
@@ -136,7 +136,7 @@ namespace ConlangAudioHoning
         /// <param name="lexicon">Lexicon to be edited (empty by default)</param>
         /// <param name="partOfSpeech">Part of Speech list (empty by default)</param>
         /// <param name="soundMapList">Sound map list (empty by default)</param>
-        public LexiconEditor(SortedSet<LexiconEntry>? lexicon = null, List<string>? partOfSpeech = null, List<SoundMap>? soundMapList = null)
+        public LexiconEditor(SortedSet<LexiconEntry>? lexicon = null, List<string>? partOfSpeech = null, List<SpellingPronunciationRules>? soundMapList = null)
         {
             SortByCriteria = SortByCriteriaTypes.CONLANG;
 

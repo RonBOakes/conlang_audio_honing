@@ -647,9 +647,9 @@ namespace ConlangAudioHoning
                 }
             }
 
-            if (language.sound_map_list != null)
+            if (language.spelling_pronunciation_rules != null)
             {
-                foreach (SoundMap soundMap in language.sound_map_list)
+                foreach (SpellingPronunciationRules soundMap in language.spelling_pronunciation_rules)
                 {
                     soundMap.phoneme = SubstituteLatinIpaReplacements(soundMap.phoneme);
                     soundMap.spelling_regex = SubstituteLatinIpaReplacements(soundMap.spelling_regex);

@@ -78,7 +78,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// List of SoundMap objects being edited.  The order of this list is important.
         /// </summary>
-        public List<SoundMap> SoundMapList
+        public List<SpellingPronunciationRules> SoundMapList
         {
             get => SoundMapListEditor.SoundMapList;
             set => SoundMapListEditor.SoundMapList = value;

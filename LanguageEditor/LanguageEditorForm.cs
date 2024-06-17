@@ -139,7 +139,7 @@ namespace LanguageEditor
                 Location = new Point(xPos, yPos),
                 Size = new Size(895, 355)
             };
-            soundMapEditor.SoundMapList = languageDescription.sound_map_list;
+            soundMapEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
             tab_soundMapList.Controls.Add(soundMapEditor);
             tab_soundMapList.Enter += Tab_soundMapList_Enter;
             tab_soundMapList.Leave += Tab_soundMapList_Leave;
@@ -200,7 +200,7 @@ namespace LanguageEditor
                 Size = new Size(895, 355),
                 Lexicon = languageDescription.lexicon,
                 PartOfSpeechList = languageDescription.part_of_speech_list,
-                SoundMapList = languageDescription.sound_map_list
+                SoundMapList = languageDescription.spelling_pronunciation_rules
             };
             lexiconEditor.SaveAndCloseToolStripMenuItem.Text = "Save";
             lexiconEditor.CloseWithoutSavingToolStripMenuItem.Text = "Do Not Save";
@@ -271,7 +271,7 @@ namespace LanguageEditor
         {
             if ((languageDescription != null) && (soundMapEditor != null))
             {
-                soundMapEditor.SoundMapList = languageDescription.sound_map_list;
+                soundMapEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
             }
         }
 
@@ -281,11 +281,11 @@ namespace LanguageEditor
             {
                 if (soundMapEditor.SoundMapSaved)
                 {
-                    languageDescription.sound_map_list = soundMapEditor.SoundMapList;
+                    languageDescription.spelling_pronunciation_rules = soundMapEditor.SoundMapList;
                 }
                 else
                 {
-                    soundMapEditor.SoundMapList = languageDescription.sound_map_list;
+                    soundMapEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
                 }
             }
         }
@@ -295,7 +295,7 @@ namespace LanguageEditor
             if ((languageDescription != null) && (lexiconEditor != null))
             {
                 lexiconEditor.PartOfSpeechList = languageDescription.part_of_speech_list;
-                lexiconEditor.SoundMapList = languageDescription.sound_map_list;
+                lexiconEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
                 lexiconEditor.Lexicon = languageDescription.lexicon;
             }
         }
@@ -322,9 +322,9 @@ namespace LanguageEditor
                 txt_languageNameNativeEnglish.TextChanged -= Txt_languageNameNativeEnglish_TextChanged;
                 txt_languageNativePhonetic.TextChanged -= Txt_languageNativePhonetic_TextChanged;
 
-                if (languageDescription?.sound_map_list != null)
+                if (languageDescription?.spelling_pronunciation_rules != null)
                 {
-                    txt_languageNativePhonetic.Text = ConlangUtilities.SoundOutWord(txt_languageNameNativeEnglish.Text.Trim(), languageDescription.sound_map_list ?? []);
+                    txt_languageNativePhonetic.Text = ConlangUtilities.SoundOutWord(txt_languageNameNativeEnglish.Text.Trim(), languageDescription.spelling_pronunciation_rules ?? []);
                 }
             }
             finally
@@ -341,9 +341,9 @@ namespace LanguageEditor
                 txt_languageNameNativeEnglish.TextChanged -= Txt_languageNameNativeEnglish_TextChanged;
                 txt_languageNativePhonetic.TextChanged -= Txt_languageNativePhonetic_TextChanged;
 
-                if (languageDescription?.sound_map_list != null)
+                if (languageDescription?.spelling_pronunciation_rules != null)
                 {
-                    txt_languageNameNativeEnglish.Text = ConlangUtilities.SpellWord(txt_languageNativePhonetic.Text.Trim(), languageDescription.sound_map_list ?? []);
+                    txt_languageNameNativeEnglish.Text = ConlangUtilities.SpellWord(txt_languageNativePhonetic.Text.Trim(), languageDescription.spelling_pronunciation_rules ?? []);
                 }
             }
             finally

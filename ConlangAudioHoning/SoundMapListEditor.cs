@@ -27,13 +27,13 @@ namespace ConlangAudioHoning
     /// </summary>
     public partial class SoundMapListEditor : Panel
     {
-        private List<SoundMap> _soundMapList;
+        private List<SpellingPronunciationRules> _soundMapList;
         private List<(string, string)> _phonemeReplacementPairs = [];
 
         /// <summary>
         /// List of SoundMap objects being edited.  The order of this list is important.
         /// </summary>
-        public List<SoundMap> SoundMapList
+        public List<SpellingPronunciationRules> SoundMapList
         {
             get
             {
@@ -176,7 +176,7 @@ namespace ConlangAudioHoning
             int index = lbx_soundMapListEntries.SelectedIndex;
             if (index >= 0)
             {
-                SoundMap soundMapToEdit = SoundMapList[index];
+                SpellingPronunciationRules soundMapToEdit = SoundMapList[index];
                 this.soundMapEditor.SoundMapData = soundMapToEdit.copy();
             }
         }
@@ -199,7 +199,7 @@ namespace ConlangAudioHoning
         {
             lbx_soundMapListEntries.SuspendLayout();
             lbx_soundMapListEntries.Items.Clear();
-            foreach (SoundMap map in _soundMapList)
+            foreach (SpellingPronunciationRules map in _soundMapList)
             {
                 StringBuilder sb = new();
                 _ = sb.AppendFormat("Phonetic Regex: {0}, ", map.pronunciation_regex);
