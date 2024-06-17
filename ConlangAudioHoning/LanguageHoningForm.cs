@@ -83,6 +83,8 @@ namespace ConlangAudioHoning
 
             UserConfiguration = UserConfiguration.LoadFromFile();
 
+            useCompactJsonToolStripItem.Checked = false;
+
             if (UserConfiguration.UseSharedPolly)
             {
                 useSharedAmazonPollyToolStripMenuItem.Checked = true;
@@ -340,9 +342,10 @@ namespace ConlangAudioHoning
             languageDirty = false;
         }
 
-        private readonly JsonSerializerOptions JsonSerializerOptions = new()
+        private readonly JsonSerializerOptions DefaultJsonSerializerOptions = new()
         {
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+            WriteIndented = true
         };
 
         private void SaveLanguage(string filename)
@@ -366,10 +369,11 @@ namespace ConlangAudioHoning
 #pragma warning restore CS8600
                 historyEntries.Add(history);
 
-                JsonSerializerOptions jsonSerializerOptions = JsonSerializerOptions;
+#pragma warning disable CA1869 // Cache and reuse 'JsonSerializerOptions' instances
+                JsonSerializerOptions jsonSerializerOptions = new(DefaultJsonSerializerOptions);
+#pragma warning restore CA1869 // Cache and reuse 'JsonSerializerOptions' instances
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
                 jsonSerializerOptions.Encoder = encoder;
-                jsonSerializerOptions.WriteIndented = true;
 
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
                 File.WriteAllText(filename, jsonString, System.Text.Encoding.UTF8);
@@ -2932,6 +2936,20 @@ namespace ConlangAudioHoning
             if (languageDescription != null)
             {
                 languageDescription.preferred_voices[speechEngines[voiceEngineKey].PreferredVoiceJsonKey] = selectedVoice;
+            }
+        }
+
+        private void useCompactJsonToolStripItem_Click(object sender, EventArgs e)
+        {
+            if (!useCompactJsonToolStripItem.Checked)
+            {
+                DefaultJsonSerializerOptions.WriteIndented = false;
+                useCompactJsonToolStripItem.Checked = true;
+            }
+            else
+            {
+                DefaultJsonSerializerOptions.WriteIndented = true;
+                useCompactJsonToolStripItem.Checked = false;
             }
         }
     }

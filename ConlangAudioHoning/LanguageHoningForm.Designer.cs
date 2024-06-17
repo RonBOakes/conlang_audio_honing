@@ -48,6 +48,7 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             loadToolStripMenuItem = new ToolStripMenuItem();
             saveToolStripMenuItem = new ToolStripMenuItem();
+            useCompactJsonToolStripItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             toolStripMenuItem1 = new ToolStripMenuItem();
             saveSampleMenu = new ToolStripMenuItem();
@@ -166,7 +167,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadToolStripMenuItem, saveToolStripMenuItem, toolStripSeparator2, toolStripMenuItem1, saveSampleMenu, toolStripSeparator1, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadToolStripMenuItem, saveToolStripMenuItem, useCompactJsonToolStripItem, toolStripSeparator2, toolStripMenuItem1, saveSampleMenu, toolStripSeparator1, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "File";
@@ -185,6 +186,13 @@
             saveToolStripMenuItem.Size = new Size(227, 22);
             saveToolStripMenuItem.Text = "Save Language File";
             saveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
+            // 
+            // useCompactJsonToolStripItem
+            // 
+            useCompactJsonToolStripItem.Name = "useCompactJsonToolStripItem";
+            useCompactJsonToolStripItem.Size = new Size(227, 22);
+            useCompactJsonToolStripItem.Text = "Use Compact JSON";
+            useCompactJsonToolStripItem.Click += useCompactJsonToolStripItem_Click;
             // 
             // toolStripSeparator2
             // 
@@ -1227,5 +1235,6 @@
         private ToolStripMenuItem setAmazonPollyS3BucketNameToolStripMenuItem;
         private TrackBar tb_Volume;
         private Label label1;
+        private ToolStripMenuItem useCompactJsonToolStripItem;
     }
 }
