@@ -2536,7 +2536,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            SoundMapListEditorForm soundMapListEditorForm = new()
+            SpellingPronunciationRuleListEditorForm soundMapListEditorForm = new()
             {
                 SoundMapList = languageDescription.spelling_pronunciation_rules,
                 HeaderText = "No specific changes - editing the entire list"
@@ -2929,7 +2929,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void cbx_voice_SelectedIndexChanged(object sender, EventArgs e)
+        private void Cbx_voice_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedVoice = cbx_voice.Text.Trim().Split()[0];
             string voiceEngineKey = cbx_speechEngine.Text.Trim();
@@ -2939,7 +2939,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void useCompactJsonToolStripItem_Click(object sender, EventArgs e)
+        private void UseCompactJsonToolStripItem_Click(object sender, EventArgs e)
         {
             if (!useCompactJsonToolStripItem.Checked)
             {

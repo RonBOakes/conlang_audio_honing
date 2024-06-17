@@ -192,7 +192,7 @@
             useCompactJsonToolStripItem.Name = "useCompactJsonToolStripItem";
             useCompactJsonToolStripItem.Size = new Size(227, 22);
             useCompactJsonToolStripItem.Text = "Use Compact JSON";
-            useCompactJsonToolStripItem.Click += useCompactJsonToolStripItem_Click;
+            useCompactJsonToolStripItem.Click += UseCompactJsonToolStripItem_Click;
             // 
             // toolStripSeparator2
             // 
@@ -603,7 +603,7 @@
             cbx_voice.Size = new Size(246, 23);
             cbx_voice.Sorted = true;
             cbx_voice.TabIndex = 20;
-            cbx_voice.SelectedIndexChanged += cbx_voice_SelectedIndexChanged;
+            cbx_voice.SelectedIndexChanged += Cbx_voice_SelectedIndexChanged;
             // 
             // label6
             // 

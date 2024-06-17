@@ -378,7 +378,7 @@ namespace ConlangAudioHoning
 
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
-            Name = "SoundMapListEditor";
+            Name = "SpellingPronounciationRuleListEditor";
             Text = "Lexicon Entry Editor";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();

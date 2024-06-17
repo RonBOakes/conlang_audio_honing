@@ -23,7 +23,7 @@ namespace ConlangAudioHoning
     /// <summary>
     /// User Control used to edit a single SoundMap entry.
     /// </summary>
-    public class SoundMapEditor : UserControl
+    public class SpellingPronunciationRuleEditor : UserControl
     {
         private static Size controlSize = new(850, 50);
 
@@ -85,7 +85,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Instantiates a SoundMapEditor panel.
         /// </summary>
-        public SoundMapEditor()
+        public SpellingPronunciationRuleEditor()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();

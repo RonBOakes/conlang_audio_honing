@@ -66,8 +66,9 @@ if (inputFileInfo.Exists)
         using StreamReader reader = new(entry.Open());
         XElement polyGlotLanguage = XElement.Load(reader);
 
-        LanguageDescription language = new();
-
-        language.spelling_pronunciation_rules = SoundMapBuilder.BuildSoundMap(polyGlotLanguage);
+        LanguageDescription language = new()
+        {
+            spelling_pronunciation_rules = SoundMapBuilder.BuildSoundMap(polyGlotLanguage)
+        };
     }
 }

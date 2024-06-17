@@ -25,16 +25,16 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace ConlangAudioHoning
 {
-    internal class SoundMapListEditorForm : Form
+    internal class SpellingPronunciationRuleListEditorForm : Form
     {
-        private readonly SoundMapListEditor SoundMapListEditor;
+        private readonly SpellingPronunciationRuleListEditor SoundMapListEditor;
 
-        public SoundMapListEditorForm()
+        public SpellingPronunciationRuleListEditorForm()
         {
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
 
-            SoundMapListEditor = new SoundMapListEditor();
+            SoundMapListEditor = new SpellingPronunciationRuleListEditor();
 
             SuspendLayout();
 

@@ -25,7 +25,7 @@ namespace ConlangAudioHoning
     /// Panel for editing the SoundMap List used for spelling and pronunciation of a 
     /// language.
     /// </summary>
-    public partial class SoundMapListEditor : Panel
+    public partial class SpellingPronunciationRuleListEditor : Panel
     {
         private List<SpellingPronunciationRules> _soundMapList;
         private List<(string, string)> _phonemeReplacementPairs = [];
@@ -100,9 +100,9 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// Constructor for a SoundMapListEditor.
+        /// Constructor for a SpellingPronunciationRuleListEditor.
         /// </summary>
-        public SoundMapListEditor()
+        public SpellingPronunciationRuleListEditor()
         {
             InitializeComponent();
 

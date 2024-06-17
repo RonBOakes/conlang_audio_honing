@@ -39,11 +39,13 @@ namespace PolyGlot2ConlangJson
                 {
                     XElement? proGuideBase = proGuide.Element("proGuideBase");
                     XElement? proGuidePhon = proGuide.Element("proGuidePhon");
-                    SpellingPronunciationRules soundMap = new SpellingPronunciationRules();
-                    soundMap.phoneme = proGuidePhon?.Value ?? string.Empty;
-                    soundMap.pronunciation_regex = proGuideBase?.Value ?? string.Empty;
-                    soundMap.romanization = proGuideBase?.Value ?? string.Empty;
-                    soundMap.spelling_regex = proGuidePhon?.Value ?? string.Empty;
+                    SpellingPronunciationRules soundMap = new SpellingPronunciationRules
+                    {
+                        phoneme = proGuidePhon?.Value ?? string.Empty,
+                        pronunciation_regex = proGuideBase?.Value ?? string.Empty,
+                        romanization = proGuideBase?.Value ?? string.Empty,
+                        spelling_regex = proGuidePhon?.Value ?? string.Empty
+                    };
                     soundMapList.Add(soundMap);
                 }
             }

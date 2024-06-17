@@ -63,7 +63,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Update the language loaded into this PhoneticChanger by replacing the oldPhoneme with
         /// the newPhoneme in the lexicon.  The phonetic_inventory will also be updated.  The
-        /// spelling_pronounciation_rules may also be updated depending on user interactions.
+        /// spelling_pronunciation_rules may also be updated depending on user interactions.
         /// </summary>
         /// <param name="oldPhoneme">Phoneme to be replaced.</param>
         /// <param name="newPhoneme">Replacement phoneme.</param>
@@ -74,7 +74,7 @@ namespace ConlangAudioHoning
                 return;
             }
 
-            SoundMapListEditorForm soundMapListEditorForm = new();
+            SpellingPronunciationRuleListEditorForm soundMapListEditorForm = new();
             _ = Language.spelling_pronunciation_rules.GetRange(0, Language.spelling_pronunciation_rules.Count);
             soundMapListEditorForm.SoundMapList = Language.spelling_pronunciation_rules;
             soundMapListEditorForm.PhonemeReplacementPairs.Add((oldPhoneme, newPhoneme));
@@ -350,7 +350,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Update the language loaded into this PhoneticChanger by replacing each of the the oldPhoneme with
         /// the newPhoneme from the change list within the lexicon.  The phonetic_inventory will also be updated.  
-        /// The spelling_pronounciation_rules may also be updated depending on user interactions.
+        /// The spelling_pronunciation_rules may also be updated depending on user interactions.
         /// <br/>The changes will be applied so that they impact independently without any inherent sequence.  
         /// If one entry has a value in "oldPhoneme" and it also in "newPhoneme" these changes will be made
         /// independently and will not impact each other.  Circular changes are supported: e.g. p-&gt;b, 
@@ -374,7 +374,7 @@ namespace ConlangAudioHoning
             changeList.Sort(new StringTupleLengthComp());
             changeList.Reverse();
 
-            SoundMapListEditorForm soundMapListEditorForm = new()
+            SpellingPronunciationRuleListEditorForm soundMapListEditorForm = new()
             {
                 SoundMapList = Language.spelling_pronunciation_rules
             };
@@ -775,7 +775,7 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// Update the spelling of every word in the lexicon based on the current spelling_pronounciation_rules.
+        /// Update the spelling of every word in the lexicon based on the current spelling_pronunciation_rules.
         /// </summary>
         public void UpdateSpelling()
         {
@@ -820,7 +820,7 @@ namespace ConlangAudioHoning
         }
 
         /// <summary>
-        /// Update the pronunciation of every word in the lexicon based on the current spelling_pronounciation_rules.
+        /// Update the pronunciation of every word in the lexicon based on the current spelling_pronunciation_rules.
         /// </summary>
         public void UpdatePronunciation()
         {

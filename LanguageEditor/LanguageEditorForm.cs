@@ -32,7 +32,7 @@ namespace LanguageEditor
         private LanguageDescription? languageDescription;
         private FileInfo? languageFileInfo = null;
         private LexiconEditor? lexiconEditor = null;
-        private SoundMapListEditor? soundMapEditor = null;
+        private SpellingPronunciationRuleListEditor? soundMapEditor = null;
         private DeclensionAffixMapPane? declensionAffixMapPane = null;
 
         public LanguageEditorForm()
@@ -135,12 +135,12 @@ namespace LanguageEditor
             tab_soundMapList.SuspendLayout();
             xPos = 0;
             yPos = 0;
-            soundMapEditor = new SoundMapListEditor
+            soundMapEditor = new SpellingPronunciationRuleListEditor
             {
                 Location = new Point(xPos, yPos),
-                Size = new Size(895, 355)
+                Size = new Size(895, 355),
+                SoundMapList = languageDescription.spelling_pronunciation_rules
             };
-            soundMapEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
             tab_soundMapList.Controls.Add(soundMapEditor);
             tab_soundMapList.Enter += Tab_soundMapList_Enter;
             tab_soundMapList.Leave += Tab_soundMapList_Leave;

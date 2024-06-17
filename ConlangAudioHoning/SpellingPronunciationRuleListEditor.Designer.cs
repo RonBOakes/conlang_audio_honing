@@ -16,7 +16,7 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */namespace ConlangAudioHoning
 {
-    partial class SoundMapListEditor
+    partial class SpellingPronunciationRuleListEditor
     {
         /// <summary>
         /// Required designer variable.
@@ -48,7 +48,7 @@
             btnAddAbove = new Button();
             btnAddBelow = new Button();
             lbx_soundMapListEntries = new ListBox();
-            soundMapEditor = new SoundMapEditor();
+            soundMapEditor = new SpellingPronunciationRuleEditor();
             btnReplaceSelected = new Button();
             btnEditSelected = new Button();
             btnDeleteSelected = new Button();
@@ -188,7 +188,7 @@
             label1.TabIndex = 13;
             label1.Text = "Phoneme Being Replaced:";
             // 
-            // SoundMapListEditor
+            // SpellingPronounciationRuleListEditor
             // 
             Controls.Add(menuStrip1);
             menuStrip1.ResumeLayout(false);
@@ -204,7 +204,7 @@
             Controls.Add(lbx_soundMapListEntries);
             Controls.Add(btnAddBelow);
             Controls.Add(btnAddAbove);
-            Name = "SoundMapListEditor";
+            Name = "SpellingPronounciationRuleListEditor";
             Text = "Spelling/Pronunciation List Editor";
             ResumeLayout(false);
             PerformLayout();
@@ -218,7 +218,7 @@
         private Button btnAddAbove;
         private Button btnAddBelow;
         private ListBox lbx_soundMapListEntries;
-        private SoundMapEditor soundMapEditor;
+        private SpellingPronunciationRuleEditor soundMapEditor;
         private Button btnReplaceSelected;
         private Button btnEditSelected;
         private Button btnDeleteSelected;
