@@ -34,6 +34,7 @@ namespace LanguageEditor
         private LexiconEditor? lexiconEditor = null;
         private SpellingPronunciationRuleListEditor? soundMapEditor = null;
         private DeclensionAffixMapPane? declensionAffixMapPane = null;
+        private LexicalOrderEditor? lexicalOrderEditor = null;
 
         public LanguageEditorForm()
         {
@@ -262,6 +263,17 @@ namespace LanguageEditor
             tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
             tab_derivedWordList.ResumeLayout(true);
 
+            lexicalOrderEditor = new(languageDescription, true);
+            lexicalOrderEditor.Size = new Size(895, 355);
+            lexicalOrderEditor.SaveAndCloseToolStripMenuItem.Text = "Save";
+            lexicalOrderEditor.CloseWithoutSavingToolStripMenuItem.Text = "Do Not Save";
+            tab_LexicalOrder.Enter += Tab_lexicalOrder_Enter;
+            tab_LexicalOrder.Leave += Tab_lexicalOrder_Leave;
+            tab_LexicalOrder.SuspendLayout();
+            tab_LexicalOrder.Controls.Clear();
+            tab_LexicalOrder.Controls.Add(lexicalOrderEditor);
+            tab_LexicalOrder.ResumeLayout(true);
+
             txt_languageNativePhonetic.TextChanged += Txt_languageNativePhonetic_TextChanged;
             txt_languageNameNativeEnglish.TextChanged += Txt_languageNameNativeEnglish_TextChanged;
 
@@ -312,6 +324,31 @@ namespace LanguageEditor
                 else
                 {
                     lexiconEditor.Lexicon = languageDescription.lexicon;
+                }
+            }
+        }
+
+        private void Tab_lexicalOrder_Enter(object? sender, EventArgs e)
+        {
+            if ((languageDescription != null) && (lexicalOrderEditor != null))
+            {
+                lexicalOrderEditor.Language = languageDescription;
+                lexicalOrderEditor.RegenerateLexicalOrder();
+            }
+        }
+
+        private void Tab_lexicalOrder_Leave(object? sender, EventArgs e)
+        {
+            if ((languageDescription != null) && (lexicalOrderEditor != null))
+            {
+                if (lexicalOrderEditor.Saved)
+                {
+                    languageDescription.lexical_order_list = lexicalOrderEditor.Language.lexical_order_list;
+                }
+                else
+                {
+                    lexicalOrderEditor.Language = languageDescription;
+                    lexicalOrderEditor.RegenerateLexicalOrder();
                 }
             }
         }

@@ -51,7 +51,7 @@ namespace ConlangAudioHoning
         public bool Saved
         { get; private set; } = false;
 
-        private readonly List<string> charList;
+        private List<string> charList;
 
         /// <summary>
         /// Construct a Lexical Order Editor
@@ -81,6 +81,20 @@ namespace ConlangAudioHoning
             lbxCharacters.EndUpdate();
         }
 
+        /// <summary>
+        /// Regenerate the characters, usually due to an update of the loaded language.
+        /// </summary>
+        public void RegenerateLexicalOrder()
+        {
+            charList = RegenerateLexicalOrder(Language);
+            lbxCharacters.BeginUpdate();
+            lbxCharacters.Items.Clear();
+            foreach (string str in charList)
+            {
+                lbxCharacters.Items.Add(str);
+            }
+            lbxCharacters.EndUpdate();
+        }
 
         private static List<string> RegenerateLexicalOrder(LanguageDescription language)
         {

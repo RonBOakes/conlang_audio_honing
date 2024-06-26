@@ -79,6 +79,7 @@
             tab_derivedWordList = new TabPage();
             tab_declensionAffixes = new TabPage();
             tab_lexicon = new TabPage();
+            tab_LexicalOrder = new TabPage();
             menuStrip1.SuspendLayout();
             panel_nounGender.SuspendLayout();
             tpn_Main.SuspendLayout();
@@ -161,33 +162,33 @@
             // loadToolStripMenuItem
             // 
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(180, 22);
+            loadToolStripMenuItem.Size = new Size(176, 22);
             loadToolStripMenuItem.Text = "Load";
             loadToolStripMenuItem.Click += LoadToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(180, 22);
+            saveToolStripMenuItem.Size = new Size(176, 22);
             saveToolStripMenuItem.Text = "Save";
             saveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
             // 
             // useCompactJsonToolStripItem
             // 
             useCompactJsonToolStripItem.Name = "useCompactJsonToolStripItem";
-            useCompactJsonToolStripItem.Size = new Size(180, 22);
+            useCompactJsonToolStripItem.Size = new Size(176, 22);
             useCompactJsonToolStripItem.Text = "Use Compact JSON";
             useCompactJsonToolStripItem.Click += UseCompactJsonToolStripItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(173, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(176, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
@@ -248,6 +249,7 @@
             tpn_Main.Controls.Add(tab_derivedWordList);
             tpn_Main.Controls.Add(tab_declensionAffixes);
             tpn_Main.Controls.Add(tab_lexicon);
+            tpn_Main.Controls.Add(tab_LexicalOrder);
             tpn_Main.Location = new Point(18, 124);
             tpn_Main.Name = "tpn_Main";
             tpn_Main.SelectedIndex = 0;
@@ -385,6 +387,16 @@
             tab_lexicon.Text = "Lexicon";
             tab_lexicon.UseVisualStyleBackColor = true;
             // 
+            // tab_LexicalOrder
+            // 
+            tab_LexicalOrder.Location = new Point(4, 24);
+            tab_LexicalOrder.Name = "tab_LexicalOrder";
+            tab_LexicalOrder.Padding = new Padding(3);
+            tab_LexicalOrder.Size = new Size(895, 355);
+            tab_LexicalOrder.TabIndex = 6;
+            tab_LexicalOrder.Text = "Lexical Order";
+            tab_LexicalOrder.UseVisualStyleBackColor = true;
+            // 
             // LanguageEditorForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -451,5 +463,6 @@
         private ToolStripMenuItem viewHelpPageToolStripMenuItem;
         private ToolStripMenuItem aboutLanguageEditorToolStripMenuItem;
         private ToolStripMenuItem useCompactJsonToolStripItem;
+        private TabPage tab_LexicalOrder;
     }
 }
