@@ -2872,7 +2872,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            LexicalOrderEditor editor = new(languageDescription, true);
+            LexicalOrderEditorForm editor = new(languageDescription, true);
             _ = editor.ShowDialog();
         }
 

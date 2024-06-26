@@ -94,7 +94,7 @@
             lbxCharacters.ItemHeight = 15;
             lbxCharacters.Location = new Point(12, 27);
             lbxCharacters.Name = "lbxCharacters";
-            lbxCharacters.Size = new Size(86, 364);
+            lbxCharacters.Size = new Size(86, 289);
             lbxCharacters.TabIndex = 1;
             // 
             // btnMoveUp
@@ -119,14 +119,11 @@
             // 
             // LexicalOrderEditor
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(237, 400);
+            ClientSize = new Size(237, 322);
             Controls.Add(btnMoveDown);
             Controls.Add(btnMoveUp);
             Controls.Add(lbxCharacters);
             Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
             Name = "LexicalOrderEditor";
             Text = "LexicalOrderEditor";
             menuStrip1.ResumeLayout(false);

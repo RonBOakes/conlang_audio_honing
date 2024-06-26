@@ -116,4 +116,8 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
     <ProjectReference Include="..\ConlangJson\ConlangJson.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="LexicalOrderEditorForm.cs" />
+  </ItemGroup>
+
 </Project>

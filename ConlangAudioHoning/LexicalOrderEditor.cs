@@ -19,7 +19,7 @@ using System.Text;
 
 namespace ConlangAudioHoning
 {
-    public partial class LexicalOrderEditor : Form
+    public partial class LexicalOrderEditor : Panel
     {
         /// <summary>
         /// Language having its lexical order edited.
@@ -28,6 +28,28 @@ namespace ConlangAudioHoning
         {
             get; set;
         }
+
+        /// <summary>
+        /// Exports the SaveAndClose menu for access by parent forms.
+        /// </summary>
+        public ToolStripMenuItem SaveAndCloseToolStripMenuItem
+        {
+            get => saveAndCloseToolStripMenuItem;
+        }
+
+        /// <summary>
+        /// Exports the close without saving menu for access by parent forms.
+        /// </summary>
+        public ToolStripMenuItem CloseWithoutSavingToolStripMenuItem
+        {
+            get => closeWithoutToolStripMenuItem;
+        }
+
+        /// <summary>
+        /// This is set to true if the user has requested saving the edited lexicon.
+        /// </summary>
+        public bool Saved
+        { get; private set; } = false;
 
         private readonly List<string> charList;
 
@@ -92,12 +114,12 @@ namespace ConlangAudioHoning
             Language.lexical_order_list = charList;
             LexiconEntry.LexicalOrderList = charList;
             Language.RefreshLexiconOrder();
-            this.Close();
+            Saved = true;
         }
 
         private void CloseWithoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Saved = false;
         }
 
         private void BtnMoveUp_Click(object sender, EventArgs e)

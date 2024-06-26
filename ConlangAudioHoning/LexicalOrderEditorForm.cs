@@ -27,23 +27,20 @@ namespace ConlangAudioHoning
     /// <summary>
     /// Form version of the Lexicon Editor.  This wraps around the LexiconEditor to allow for its use as an independent form.
     /// </summary>
-    public class LexiconEditorForm : Form
+    public class LexicalOrderEditorForm : Form
     {
-        private readonly LexiconEditor editor;
+        private readonly LexicalOrderEditor editor;
 
         /// <summary>
         /// Constructs a LexiconEditorForm.
         /// </summary>
-        /// <param name="lexicon">Lexicon to be edited (empty by default)</param>
-        /// <param name="partOfSpeech">Part of Speech list (empty by default)</param>
-        /// <param name="soundMapList">Sound map list (empty by default)</param>
-        public LexiconEditorForm(SortedSet<LexiconEntry>? lexicon = null, List<string>? partOfSpeech = null, List<SpellingPronunciationRules>? soundMapList = null)
+        public LexicalOrderEditorForm(LanguageDescription language, bool regenerate = false)
         {
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(420, 470);
 
-            editor = new LexiconEditor(lexicon, partOfSpeech,soundMapList);
+            editor = new LexicalOrderEditor(language, regenerate);
 
             editor.SaveAndCloseToolStripMenuItem.Click += SaveAndCloseToolStripMenuItem_Click;
             editor.CloseWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;
@@ -67,15 +64,6 @@ namespace ConlangAudioHoning
         public bool Saved
         {
             get => editor.Saved;
-        }
-
-        /// <summary>
-        /// Lexicon being edited.
-        /// </summary>
-        public SortedSet<LexiconEntry> Lexicon
-        {
-            get => editor.Lexicon;
-            set => editor.Lexicon = value;
         }
     }
 }
