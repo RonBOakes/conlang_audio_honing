@@ -312,7 +312,7 @@
             tab_soundMapList.Padding = new Padding(3);
             tab_soundMapList.Size = new Size(895, 355);
             tab_soundMapList.TabIndex = 0;
-            tab_soundMapList.Text = "Sound Map (Spelling)";
+            tab_soundMapList.Text = "Spelling/Pronunciation";
             tab_soundMapList.UseVisualStyleBackColor = true;
             // 
             // tab_derivationalAffixMap
