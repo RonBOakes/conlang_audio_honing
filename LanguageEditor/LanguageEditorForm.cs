@@ -26,6 +26,7 @@ using System.Text.Json.Nodes;
 using System.Text.Unicode;
 using System.Threading.Channels;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace LanguageEditor
 {
@@ -242,6 +243,9 @@ namespace LanguageEditor
                 tabPage.Controls.Add(editor);
                 tpn_DerivationalAffixMap.TabPages.Add(tabPage);
             }
+            TabPage addDerivationalAffix = new("+");
+            addDerivationalAffix.Enter += AddDerivationalAffix_Enter;
+            tpn_DerivationalAffixMap.TabPages.Add(addDerivationalAffix);
             tpn_DerivationalAffixMap.ResumeLayout(true);
             tab_derivationalAffixMap.ResumeLayout(true);
 
@@ -295,6 +299,30 @@ namespace LanguageEditor
             txt_languageNameNativeEnglish.TextChanged += Txt_languageNameNativeEnglish_TextChanged;
 
             languageFileInfo = new FileInfo(filename);
+        }
+
+        private void AddDerivationalAffix_Enter(object? sender, EventArgs e)
+        {
+            if(languageDescription == null)
+            {
+                return;
+            }
+            string newIndex = Microsoft.VisualBasic.Interaction.InputBox("Enter the new Derivation Key", "Derivation Key", "");
+            newIndex = newIndex.ToUpper();
+            newIndex = Regex.Replace(newIndex, @"\s+", ".");
+            DerivationalAffix derivationalAffix = new DerivationalAffix();
+            languageDescription.derivational_affix_map[newIndex] = derivationalAffix;
+            DerivationalAffixEditor editor = new()
+            {
+                AffixRules = languageDescription.derivational_affix_map[newIndex],
+                Location = new Point(5, 5)
+            };
+            TabPage tabPage = new(newIndex);
+            tabPage.Controls.Add(editor);
+            tpn_DerivationalAffixMap.SuspendLayout();
+            tpn_DerivationalAffixMap.TabPages.Insert(tpn_DerivationalAffixMap.TabPages.Count - 1, tabPage);
+            tpn_DerivationalAffixMap.ResumeLayout(true);
+            tpn_DerivationalAffixMap.SelectedTab = tabPage;
         }
 
         private void Txt_partOfSpeech_Leave1(object? sender, EventArgs e)
