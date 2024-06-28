@@ -122,6 +122,8 @@ namespace LanguageEditor
                     Size = new Size(125, 12)
                 };
                 yPos += 20;
+                txt_nounGender.Enter += Txt_nounGender_Enter;
+                txt_nounGender.Leave += Txt_nounGender_Leave;
                 panel_nounGender.Controls.Add(txt_nounGender);
             }
             TextBox txt_nounGenderBlank = new()
@@ -130,6 +132,8 @@ namespace LanguageEditor
                 Location = new Point(xPos, yPos),
                 Size = new Size(125, 12)
             };
+            txt_nounGenderBlank.Enter += Txt_nounGender_Enter;
+            txt_nounGenderBlank.Leave += Txt_nounGender_Leave;
             panel_nounGender.Controls.Add(txt_nounGenderBlank);
             panel_nounGender.ResumeLayout(true);
 
@@ -278,6 +282,11 @@ namespace LanguageEditor
             txt_languageNameNativeEnglish.TextChanged += Txt_languageNameNativeEnglish_TextChanged;
 
             languageFileInfo = new FileInfo(filename);
+        }
+
+        private void Txt_nounGenderBlank_Leave(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void Tab_soundMapList_Enter(object? sender, EventArgs e)
@@ -521,6 +530,80 @@ namespace LanguageEditor
                 DefaultJsonSerializerOptions.WriteIndented = true;
                 useCompactJsonToolStripItem.Checked = false;
             }
+        }
+
+        // TODO: Move with rest of private members
+        private string nounGenderText;
+        private void Txt_nounGender_Enter(object? sender, EventArgs e)
+        {
+            if((sender == null) || (sender.GetType() != typeof(TextBox)))
+            {
+                return;
+            }
+            TextBox nounGender = (TextBox)sender;
+            nounGenderText = nounGender.Text.Trim();
+        }
+
+        private void Txt_nounGender_Leave(object? sender, EventArgs e)
+        {
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
+            {
+                return;
+            }
+            if(languageDescription == null)
+            {
+                return;
+            }
+            TextBox nounGender = (TextBox)sender;
+            if(nounGender.Text.Trim().Equals(nounGenderText))
+            {
+                return;
+            }
+            if(string.IsNullOrEmpty(nounGenderText))
+            {
+                languageDescription.noun_gender_list.Add(nounGender.Text.Trim());
+            }
+            else if (string.IsNullOrEmpty(nounGender.Text.Trim()))
+            {
+                languageDescription.noun_gender_list.Remove(nounGenderText);
+            }
+            else
+            {
+                for(int i = 0; i < languageDescription.noun_gender_list.Count; i++)
+                {
+                    if (languageDescription.noun_gender_list[i].Equals(nounGenderText))
+                    {
+                        languageDescription.noun_gender_list[i] = nounGender.Text.Trim();
+                        break;
+                    }
+                }
+            }
+            int xPos = 0, yPos = 0;
+            panel_nounGender.SuspendLayout();
+            panel_nounGender.Controls.Clear();
+            foreach (string noun2 in languageDescription.noun_gender_list)
+            {
+                TextBox txt_nounGender = new()
+                {
+                    Text = noun2,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(125, 12)
+                };
+                yPos += 20;
+                txt_nounGender.Enter += Txt_nounGender_Enter;
+                txt_nounGender.Leave += Txt_nounGender_Leave;
+                panel_nounGender.Controls.Add(txt_nounGender);
+            }
+            TextBox txt_nounGenderBlank = new()
+            {
+                Text = "",
+                Location = new Point(xPos, yPos),
+                Size = new Size(125, 12)
+            };
+            txt_nounGenderBlank.Enter += Txt_nounGender_Enter;
+            txt_nounGenderBlank.Leave += Txt_nounGender_Leave;
+            panel_nounGender.Controls.Add(txt_nounGenderBlank);
+            panel_nounGender.ResumeLayout(true);
         }
     }
 }
