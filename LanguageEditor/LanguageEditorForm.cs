@@ -25,6 +25,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Unicode;
 using System.Threading.Channels;
+using System.Linq;
+
 namespace LanguageEditor
 {
     public partial class LanguageEditorForm : Form
@@ -35,6 +37,11 @@ namespace LanguageEditor
         private SpellingPronunciationRuleListEditor? soundMapEditor = null;
         private DeclensionAffixMapPane? declensionAffixMapPane = null;
         private LexicalOrderEditor? lexicalOrderEditor = null;
+
+        private string nounGenderText = "";
+        private bool nounGenderUpdateRuning = false;
+        private string partOfSpeechText = "";
+        private bool partOfSpeechUpdateRuning = false;
 
         public LanguageEditorForm()
         {
@@ -164,6 +171,8 @@ namespace LanguageEditor
                     Size = new Size(125, 12)
                 };
                 yPos += 20;
+                txt_partOfSpeech.Enter += Txt_partOfSpeech_Enter;
+                txt_partOfSpeech.Leave += Txt_partOfSpeech_Leave;
                 panel_partsOfSpeechList.Controls.Add(txt_partOfSpeech);
             }
             TextBox txt_partOfSpeechBlank = new()
@@ -172,6 +181,8 @@ namespace LanguageEditor
                 Location = new Point(xPos, yPos),
                 Size = new Size(125, 12)
             };
+            txt_partOfSpeechBlank.Enter += Txt_partOfSpeech_Enter;
+            txt_partOfSpeechBlank.Leave += Txt_partOfSpeech_Leave;
             panel_partsOfSpeechList.Controls.Add(txt_partOfSpeechBlank);
             panel_partsOfSpeechList.ResumeLayout(true);
 
@@ -267,8 +278,10 @@ namespace LanguageEditor
             tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
             tab_derivedWordList.ResumeLayout(true);
 
-            lexicalOrderEditor = new(languageDescription, true);
-            lexicalOrderEditor.Size = new Size(895, 355);
+            lexicalOrderEditor = new(languageDescription, true)
+            {
+                Size = new Size(895, 355)
+            };
             lexicalOrderEditor.SaveAndCloseToolStripMenuItem.Text = "Save";
             lexicalOrderEditor.CloseWithoutSavingToolStripMenuItem.Text = "Do Not Save";
             tab_LexicalOrder.Enter += Tab_lexicalOrder_Enter;
@@ -282,6 +295,11 @@ namespace LanguageEditor
             txt_languageNameNativeEnglish.TextChanged += Txt_languageNameNativeEnglish_TextChanged;
 
             languageFileInfo = new FileInfo(filename);
+        }
+
+        private void Txt_partOfSpeech_Leave1(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void Txt_nounGenderBlank_Leave(object? sender, EventArgs e)
@@ -532,8 +550,6 @@ namespace LanguageEditor
             }
         }
 
-        // TODO: Move with rest of private members
-        private string nounGenderText;
         private void Txt_nounGender_Enter(object? sender, EventArgs e)
         {
             if((sender == null) || (sender.GetType() != typeof(TextBox)))
@@ -554,6 +570,11 @@ namespace LanguageEditor
             {
                 return;
             }
+            if(nounGenderUpdateRuning)
+            {
+                return;
+            }
+            nounGenderUpdateRuning = true;
             TextBox nounGender = (TextBox)sender;
             if(nounGender.Text.Trim().Equals(nounGenderText))
             {
@@ -604,6 +625,111 @@ namespace LanguageEditor
             txt_nounGenderBlank.Leave += Txt_nounGender_Leave;
             panel_nounGender.Controls.Add(txt_nounGenderBlank);
             panel_nounGender.ResumeLayout(true);
+            nounGenderUpdateRuning = false;
+        }
+
+        private void Txt_partOfSpeech_Enter(object? sender, EventArgs e)
+        {
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
+            {
+                return;
+            }
+            TextBox partOfSpeech = (TextBox)sender;
+            partOfSpeechText = partOfSpeech.Text.Trim();
+        }
+
+        private void Txt_partOfSpeech_Leave(object? sender, EventArgs e)
+        {
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
+            {
+                return;
+            }
+            if (languageDescription == null)
+            {
+                return;
+            }
+            if(partOfSpeechUpdateRuning)
+            {
+                return;
+            }
+            partOfSpeechUpdateRuning = true;
+            TextBox partOfSpeech = (TextBox)sender;
+            if(partOfSpeech.Text.Trim().Equals(partOfSpeechText))
+            {
+                return;
+            }
+            if(string.IsNullOrEmpty(partOfSpeechText))
+            {
+                languageDescription.part_of_speech_list.Add(partOfSpeech.Text.Trim());
+            }
+            else if (string.IsNullOrEmpty(partOfSpeech.Text.Trim()))
+            {
+                languageDescription.part_of_speech_list.Remove(partOfSpeechText);
+                DialogResult result = MessageBox.Show("Remove all words of this Part of Speech from the Lexicon?", "Remove Words",MessageBoxButtons.YesNo);
+                if(result == DialogResult.Yes)
+                {
+                    languageDescription.lexicon = lexiconEditor?.Lexicon ?? [];
+#pragma warning disable IDE0028 // Simplify collection initialization
+                    List<LexiconEntry> entriesToRemove = new();
+#pragma warning restore IDE0028 // Simplify collection initialization
+                    entriesToRemove.AddRange(from LexiconEntry entry in languageDescription.lexicon
+                                             where entry.part_of_speech.Equals(partOfSpeechText)
+                                             select entry);
+                    foreach (LexiconEntry entry in entriesToRemove)
+                    {
+                        languageDescription.lexicon.Remove(entry);
+                    }
+                    if(lexiconEditor != null)
+                    {
+                        lexiconEditor.Lexicon = languageDescription.lexicon;
+                    }
+                }
+            }
+            else
+            {
+                for(int i = 0; i < languageDescription.part_of_speech_list.Count; i++)
+                {
+                    if (languageDescription.part_of_speech_list[i].Equals(partOfSpeechText))
+                    {
+                        languageDescription.part_of_speech_list[i] = partOfSpeech.Text.Trim();
+                        foreach (var entry in from LexiconEntry entry in languageDescription.lexicon
+                                              where entry.part_of_speech.Equals(partOfSpeechText)
+                                              select entry)
+                        {
+                            entry.part_of_speech = partOfSpeech.Text.Trim();
+                        }
+                    }
+                }
+            }
+            languageDescription.part_of_speech_list.Sort();
+            int xPos = 0;
+            int yPos = 0;
+            panel_partsOfSpeechList.SuspendLayout();
+            panel_partsOfSpeechList.Controls.Clear();
+            foreach (string partOfSpeech2 in languageDescription.part_of_speech_list)
+            {
+                TextBox txt_partOfSpeech = new()
+                {
+                    Text = partOfSpeech2,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(125, 12)
+                };
+                yPos += 20;
+                txt_partOfSpeech.Enter += Txt_partOfSpeech_Enter;
+                txt_partOfSpeech.Leave += Txt_partOfSpeech_Leave;
+                panel_partsOfSpeechList.Controls.Add(txt_partOfSpeech);
+            }
+            TextBox txt_partOfSpeechBlank = new()
+            {
+                Text = "",
+                Location = new Point(xPos, yPos),
+                Size = new Size(125, 12)
+            };
+            txt_partOfSpeechBlank.Enter += Txt_partOfSpeech_Enter;
+            txt_partOfSpeechBlank.Leave += Txt_partOfSpeech_Leave;
+            panel_partsOfSpeechList.Controls.Add(txt_partOfSpeechBlank);
+            panel_partsOfSpeechList.ResumeLayout(true);
+            partOfSpeechUpdateRuning = false;
         }
     }
 }
