@@ -40,9 +40,9 @@ namespace LanguageEditor
         private LexicalOrderEditor? lexicalOrderEditor = null;
 
         private string nounGenderText = "";
-        private bool nounGenderUpdateRuning = false;
+        private bool nounGenderUpdateRunning = false;
         private string partOfSpeechText = "";
-        private bool partOfSpeechUpdateRuning = false;
+        private bool partOfSpeechUpdateRunning = false;
 
         public LanguageEditorForm()
         {
@@ -309,8 +309,8 @@ namespace LanguageEditor
             }
             string newIndex = Microsoft.VisualBasic.Interaction.InputBox("Enter the new Derivation Key", "Derivation Key", "");
             newIndex = newIndex.ToUpper();
-            newIndex = Regex.Replace(newIndex, @"\s+", ".");
-            DerivationalAffix derivationalAffix = new DerivationalAffix();
+            newIndex = WhiteSpaceRegex().Replace(newIndex, ".");
+            DerivationalAffix derivationalAffix = new();
             languageDescription.derivational_affix_map[newIndex] = derivationalAffix;
             DerivationalAffixEditor editor = new()
             {
@@ -598,11 +598,11 @@ namespace LanguageEditor
             {
                 return;
             }
-            if(nounGenderUpdateRuning)
+            if(nounGenderUpdateRunning)
             {
                 return;
             }
-            nounGenderUpdateRuning = true;
+            nounGenderUpdateRunning = true;
             TextBox nounGender = (TextBox)sender;
             if(nounGender.Text.Trim().Equals(nounGenderText))
             {
@@ -653,7 +653,7 @@ namespace LanguageEditor
             txt_nounGenderBlank.Leave += Txt_nounGender_Leave;
             panel_nounGender.Controls.Add(txt_nounGenderBlank);
             panel_nounGender.ResumeLayout(true);
-            nounGenderUpdateRuning = false;
+            nounGenderUpdateRunning = false;
         }
 
         private void Txt_partOfSpeech_Enter(object? sender, EventArgs e)
@@ -676,11 +676,11 @@ namespace LanguageEditor
             {
                 return;
             }
-            if(partOfSpeechUpdateRuning)
+            if(partOfSpeechUpdateRunning)
             {
                 return;
             }
-            partOfSpeechUpdateRuning = true;
+            partOfSpeechUpdateRunning = true;
             TextBox partOfSpeech = (TextBox)sender;
             if(partOfSpeech.Text.Trim().Equals(partOfSpeechText))
             {
@@ -757,7 +757,10 @@ namespace LanguageEditor
             txt_partOfSpeechBlank.Leave += Txt_partOfSpeech_Leave;
             panel_partsOfSpeechList.Controls.Add(txt_partOfSpeechBlank);
             panel_partsOfSpeechList.ResumeLayout(true);
-            partOfSpeechUpdateRuning = false;
+            partOfSpeechUpdateRunning = false;
         }
+
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex WhiteSpaceRegex();
     }
 }

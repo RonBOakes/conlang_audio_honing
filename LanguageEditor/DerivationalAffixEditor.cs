@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace LanguageEditor
 {
-    internal class DerivationalAffixEditor : UserControl
+    internal class DerivationalAffixEditor : Panel
     {
         private Size controlSize = new(500, 200);
 
@@ -91,7 +91,7 @@ namespace LanguageEditor
                         _affixRules.f_spelling_add = txt_fSpellingAdd.Text.Trim();
                     }
                 }
-                return _affixRules; ;
+                return _affixRules;
             }
             set
             {
@@ -139,10 +139,10 @@ namespace LanguageEditor
         }
 
         private static readonly string[] _affixTypes =
-        {
+        [
             "PREFIX",
             "SUFFIX",
-        };
+        ];
 
         private Label lbl_affixType;
         private Label lbl_pronunciationAdd;
