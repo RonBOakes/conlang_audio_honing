@@ -48,7 +48,6 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
   <ItemGroup>
     <ProjectReference Include="..\ConlangAudioHoning\ConlangAudioHoning.csproj" />
     <ProjectReference Include="..\ConlangJson\ConlangJson.csproj" />
-    <ProjectReference Include="..\ConlangSharedGUI\ConlangSharedGUI.csproj" />
   </ItemGroup>
 
 </Project>
