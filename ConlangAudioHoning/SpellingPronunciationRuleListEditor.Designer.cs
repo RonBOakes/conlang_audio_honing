@@ -204,7 +204,7 @@
             Controls.Add(lbx_soundMapListEntries);
             Controls.Add(btnAddBelow);
             Controls.Add(btnAddAbove);
-            Name = "SpellingPronounciationRuleListEditor";
+            Name = "SpellingPronunciationRuleListEditor";
             Text = "Spelling/Pronunciation List Editor";
             ResumeLayout(false);
             PerformLayout();

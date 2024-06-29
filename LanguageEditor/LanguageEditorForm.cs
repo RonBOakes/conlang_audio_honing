@@ -238,7 +238,8 @@ namespace LanguageEditor
                 DerivationalAffixEditor editor = new()
                 {
                     AffixRules = languageDescription.derivational_affix_map[derivationKey],
-                    Location = new Point(5, 5)
+                    Location = new Point(5, 5),
+                    SpellingPronunciationRules = languageDescription.spelling_pronunciation_rules
                 };
                 tabPage.Controls.Add(editor);
                 tpn_DerivationalAffixMap.TabPages.Add(tabPage);
@@ -315,7 +316,8 @@ namespace LanguageEditor
             DerivationalAffixEditor editor = new()
             {
                 AffixRules = languageDescription.derivational_affix_map[newIndex],
-                Location = new Point(5, 5)
+                Location = new Point(5, 5),
+                SpellingPronunciationRules = languageDescription.spelling_pronunciation_rules
             };
             TabPage tabPage = new(newIndex);
             tabPage.Controls.Add(editor);

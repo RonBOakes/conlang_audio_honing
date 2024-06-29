@@ -22,7 +22,7 @@ namespace ConlangAudioHoning
     /// Menu item to provide a top-level menu for inserting IPA characters and 
     /// latin diacritics into TextBoxes or other controls.
     /// </summary>
-    internal class CharacterInsertToolStripMenuItem : ToolStripMenuItem
+    public class CharacterInsertToolStripMenuItem : ToolStripMenuItem
     {
         // First level menus
 #pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables

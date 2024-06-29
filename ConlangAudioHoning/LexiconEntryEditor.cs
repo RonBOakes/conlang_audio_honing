@@ -24,7 +24,7 @@ namespace ConlangAudioHoning
     {
         private static Size controlSize = new(850, 280);
 
-        private List<SpellingPronunciationRules>? _soundMapList;
+        private List<SpellingPronunciationRules>? _spellingPronunciationRuleList;
         private List<string>? _partOfSpeechList;
 
         private LexiconEntry? _lexiconEntry;
@@ -109,11 +109,11 @@ namespace ConlangAudioHoning
 
             if (soundMapList == null)
             {
-                _soundMapList = [];
+                _spellingPronunciationRuleList = [];
             }
             else
             {
-                _soundMapList = soundMapList;
+                _spellingPronunciationRuleList = soundMapList;
             }
 
             if (lexiconEntry == null)
@@ -144,15 +144,15 @@ namespace ConlangAudioHoning
             }
         }
 
-        internal List<SpellingPronunciationRules> SoundMapList
+        internal List<SpellingPronunciationRules> SpellingPronunciationRuleList
         {
             set
             {
-                _soundMapList = value;
+                _spellingPronunciationRuleList = value;
             }
             private get
             {
-                return _soundMapList ?? [];
+                return _spellingPronunciationRuleList ?? [];
             }
         }
 
@@ -378,7 +378,7 @@ namespace ConlangAudioHoning
 
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
-            Name = "SpellingPronounciationRuleListEditor";
+            Name = "SpellingPronunciationRuleListEditor";
             Text = "Lexicon Entry Editor";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
@@ -398,9 +398,9 @@ namespace ConlangAudioHoning
                 txt_spelled.TextChanged -= Txt_spelled_TextChanged;
                 txt_phonetic.TextChanged -= Txt_phonetic_TextChanged;
 
-                if (_soundMapList != null)
+                if (_spellingPronunciationRuleList != null)
                 {
-                    txt_phonetic.Text = ConlangUtilities.SoundOutWord(txt_spelled.Text.Trim(), _soundMapList);
+                    txt_phonetic.Text = ConlangUtilities.SoundOutWord(txt_spelled.Text.Trim(), _spellingPronunciationRuleList);
                 }
             }
             finally
@@ -418,9 +418,9 @@ namespace ConlangAudioHoning
                 txt_spelled.TextChanged -= Txt_spelled_TextChanged;
                 txt_phonetic.TextChanged -= Txt_phonetic_TextChanged;
 
-                if (_soundMapList != null)
+                if (_spellingPronunciationRuleList != null)
                 {
-                    txt_spelled.Text = ConlangUtilities.SpellWord(txt_phonetic.Text.Trim(), _soundMapList);
+                    txt_spelled.Text = ConlangUtilities.SpellWord(txt_phonetic.Text.Trim(), _spellingPronunciationRuleList);
                 }
             }
             finally

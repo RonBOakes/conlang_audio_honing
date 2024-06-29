@@ -133,7 +133,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
+            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _spellingPronunciationRuleList
             if (index >= 0)
             {
                 SoundMapList.Insert(index, soundMapEditor.SoundMapData.copy());
@@ -147,7 +147,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
+            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _spellingPronunciationRuleList
             index += 1;
             if (index > 0)
             {
@@ -217,7 +217,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _soundMapList
+            int index = lbx_soundMapListEntries.SelectedIndex; // Index will be the index to _spellingPronunciationRuleList
             if (index >= 0)
             {
                 SoundMapList[index] = soundMapEditor.SoundMapData.copy();
