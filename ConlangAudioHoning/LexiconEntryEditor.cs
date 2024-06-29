@@ -102,7 +102,7 @@ namespace ConlangAudioHoning
                 _partOfSpeechList = partOfSpeechList;
                 if (cmb_partOfSpeech != null)
                 {
-                    cmb_partOfSpeech.Items.AddRange(_partOfSpeechList.ToArray());
+                    cmb_partOfSpeech.Items.AddRange([.. _partOfSpeechList]);
                     cmb_partOfSpeech.SelectedIndex = 0;
                 }
             }
@@ -135,7 +135,7 @@ namespace ConlangAudioHoning
             set
             {
                 _partOfSpeechList = value;
-                cmb_partOfSpeech.Items.AddRange(_partOfSpeechList.ToArray());
+                cmb_partOfSpeech.Items.AddRange([.. _partOfSpeechList]);
                 cmb_partOfSpeech.SelectedIndex = 0;
             }
             private get
@@ -274,7 +274,7 @@ namespace ConlangAudioHoning
 
             if (_partOfSpeechList != null)
             {
-                cmb_partOfSpeech.Items.AddRange(_partOfSpeechList.ToArray());
+                cmb_partOfSpeech.Items.AddRange([.. _partOfSpeechList]);
                 cmb_partOfSpeech.SelectedIndex = 0;
             }
             else
@@ -340,7 +340,7 @@ namespace ConlangAudioHoning
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { controlsToolStripMenuItem });
+            menuStrip1.Items.AddRange([controlsToolStripMenuItem]);
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1007, 24);
@@ -349,7 +349,7 @@ namespace ConlangAudioHoning
             // 
             // controlsToolStripMenuItem
             // 
-            controlsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveAndCloseToolStripMenuItem, closeWithoutSavingToolStripMenuItem });
+            controlsToolStripMenuItem.DropDownItems.AddRange([saveAndCloseToolStripMenuItem, closeWithoutSavingToolStripMenuItem]);
             controlsToolStripMenuItem.Name = "controlsToolStripMenuItem";
             controlsToolStripMenuItem.Size = new Size(64, 20);
             controlsToolStripMenuItem.Text = "Controls";

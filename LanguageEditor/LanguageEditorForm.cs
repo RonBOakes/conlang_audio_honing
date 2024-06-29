@@ -239,8 +239,10 @@ namespace LanguageEditor
                 {
                     AffixRules = languageDescription.derivational_affix_map[derivationKey],
                     Location = new Point(5, 5),
-                    SpellingPronunciationRules = languageDescription.spelling_pronunciation_rules
+                    SpellingPronunciationRules = languageDescription.spelling_pronunciation_rules,
+                    DerivationKey = derivationKey,
                 };
+                editor.Delete += DerivationalAffixEditor_Delete;
                 tabPage.Controls.Add(editor);
                 tpn_DerivationalAffixMap.TabPages.Add(tabPage);
             }
@@ -302,6 +304,61 @@ namespace LanguageEditor
             languageFileInfo = new FileInfo(filename);
         }
 
+        private void DerivationalAffixEditor_Delete(object? sender, EventArgs e)
+        {
+            if(e == null)
+            {
+                return;
+            }
+            if(e.GetType() != typeof(DerivationalAffixEditor.DerivationalAffixEntryDeleteEventArgs))
+            {
+                return;
+            }
+            if(sender.GetType() != typeof(DerivationalAffixEditor))
+            {
+                return;
+            }
+            if(languageDescription == null)
+            {
+                return;
+            }
+            DerivationalAffixEditor.DerivationalAffixEntryDeleteEventArgs eventArgs = (DerivationalAffixEditor.DerivationalAffixEntryDeleteEventArgs)e;
+
+#pragma warning disable S2589 // Boolean expressions should not be gratuitous
+            string derivationKey = eventArgs?.DerivationKey ?? string.Empty;
+#pragma warning restore S2589 // Boolean expressions should not be gratuitous
+
+#pragma warning disable CA1853 // Unnecessary call to 'Dictionary.ContainsKey(key)'
+            if (languageDescription.derivational_affix_map.ContainsKey(derivationKey))
+            {
+                languageDescription.derivational_affix_map.Remove(derivationKey);
+                DialogResult result = MessageBox.Show(string.Format("Remove Derived Word Rules based on {0}?", derivationKey), "Remove Rules", MessageBoxButtons.YesNo);
+                if(result == DialogResult.Yes)
+                {
+                    List<string> rulesToRemove =
+                    [
+                        .. from string rule in languageDescription.derived_word_list
+                                               where rule.Contains(derivationKey)
+                                               select rule,
+                    ];
+                    foreach (string ruleToRemove in rulesToRemove)
+                    {
+                        languageDescription.derived_word_list.Remove(ruleToRemove);
+                    }
+                }
+                tpn_DerivationalAffixMap.SuspendLayout();
+                // current should be set to the tab containing the editor where "Delete" was pressed.
+                TabPage? current = tpn_DerivationalAffixMap.SelectedTab;
+                if (current != null)
+                {
+                    tpn_DerivationalAffixMap.SelectedTab = null;
+                    tpn_DerivationalAffixMap.TabPages.Remove(current);
+                }
+                tpn_DerivationalAffixMap.ResumeLayout(true);
+            }
+#pragma warning restore CA1853 // Unnecessary call to 'Dictionary.ContainsKey(key)'
+        }
+
         private void AddDerivationalAffix_Enter(object? sender, EventArgs e)
         {
             if(languageDescription == null)
@@ -317,8 +374,10 @@ namespace LanguageEditor
             {
                 AffixRules = languageDescription.derivational_affix_map[newIndex],
                 Location = new Point(5, 5),
-                SpellingPronunciationRules = languageDescription.spelling_pronunciation_rules
+                SpellingPronunciationRules = languageDescription.spelling_pronunciation_rules,
+                DerivationKey = newIndex,
             };
+            editor.Delete += DerivationalAffixEditor_Delete;
             TabPage tabPage = new(newIndex);
             tabPage.Controls.Add(editor);
             tpn_DerivationalAffixMap.SuspendLayout();

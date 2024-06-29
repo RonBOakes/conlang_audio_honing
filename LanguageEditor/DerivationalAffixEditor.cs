@@ -140,6 +140,11 @@ namespace LanguageEditor
             }
         }
 
+        public string DerivationKey
+        {
+            get; set;
+        }
+
         public List<SpellingPronunciationRules> SpellingPronunciationRules
         {
             private get;
@@ -153,6 +158,7 @@ namespace LanguageEditor
         ];
 
 #pragma warning disable S1450
+        private Button btn_delete;
         private Label lbl_affixType;
         private Label lbl_pronunciationAdd;
         private Label lbl_spellingAdd;
@@ -196,11 +202,21 @@ namespace LanguageEditor
             this.Size = controlSize;
             this.BorderStyle = BorderStyle.None;
 
+            btn_delete = new Button
+            {
+                Text = "Delete",
+                Location = new Point(5, 25),
+                Size = new Size(100, 25),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            Controls.Add(btn_delete);
+            btn_delete.Click += Btn_delete_Click;
+
             lbl_affixType = new Label
             {
                 Text = "Affix Type:",
-                Location = new Point(5, 25),
-                Size = new Size(200, 25),
+                Location = new Point(105, 25),
+                Size = new Size(95, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
             Controls.Add(lbl_affixType);
@@ -425,6 +441,22 @@ namespace LanguageEditor
 
             Controls.Add(menuStrip1);
         }
+
+        private void Btn_delete_Click(object? sender, EventArgs e)
+        {
+            DerivationalAffixEntryDeleteEventArgs args = new()
+            {
+                DerivationKey = DerivationKey
+            };
+            Delete?.Invoke(this, args);
+        }
+
+        public class DerivationalAffixEntryDeleteEventArgs : EventArgs
+        {
+            public string? DerivationKey {  get; set; }
+        }
+
+        public event EventHandler Delete;
 
         private void Txt_fSpellingAdd_TextChanged(object? sender, EventArgs e)
         {
