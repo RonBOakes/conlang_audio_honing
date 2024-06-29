@@ -498,8 +498,15 @@ namespace LanguageEditor
                 languageDescription.derivational_affix_map.Clear();
                 foreach (TabPage tabPage in tpn_DerivationalAffixMap.Controls)
                 {
-                    DerivationalAffixEditor editor = (DerivationalAffixEditor)tabPage.Controls[0];
-                    languageDescription.derivational_affix_map[tabPage.Text.Trim()] = editor.AffixRules;
+                    foreach (object control in tabPage.Controls)
+                    {
+                        if(control.GetType() == typeof(DerivationalAffixEditor))
+                        {
+                            DerivationalAffixEditor editor = (DerivationalAffixEditor)control;
+                            languageDescription.derivational_affix_map[tabPage.Text.Trim()] = editor.AffixRules;
+                            break;
+                        }
+                    }
                 }
 
                 languageDescription.affix_map = declensionAffixMapPane?.AffixMap ?? [];

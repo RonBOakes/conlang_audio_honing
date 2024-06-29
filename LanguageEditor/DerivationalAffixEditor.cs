@@ -29,7 +29,7 @@ namespace LanguageEditor
 {
     internal class DerivationalAffixEditor : Panel
     {
-        private Size controlSize = new(500, 200);
+        private Size controlSize = new(500, 300);
 
         private DerivationalAffix? _affixRules;
 
@@ -258,6 +258,7 @@ namespace LanguageEditor
             txt_pronunciationAdd.Visible = true;
             txt_pronunciationAdd.Enabled = true;
             txt_pronunciationAdd.GotFocus += Txt_GotFocus;
+            txt_pronunciationAdd.TextChanged += Txt_pronunciationAdd_TextChanged;
 
             lbl_pronunciationRegex = new Label
             {
@@ -298,6 +299,7 @@ namespace LanguageEditor
             txt_spellingAdd.Visible = true;
             txt_spellingAdd.Enabled = true;
             txt_spellingAdd.GotFocus += Txt_GotFocus;
+            txt_spellingAdd.TextChanged += Txt_spellingAdd_TextChanged;
 
             lbl_spellingRegex = new Label
             {
@@ -338,11 +340,12 @@ namespace LanguageEditor
             txt_tPronunciationAdd.Visible = false;
             txt_tPronunciationAdd.Enabled = false;
             txt_tPronunciationAdd.GotFocus += Txt_GotFocus;
+            txt_tPronunciationAdd.TextChanged += Txt_tPronunciationAdd_TextChanged;
 
             lbl_tSpellingAdd = new Label
             {
                 Text = "True Spelling Add:",
-                Location = new Point(5, 180),
+                Location = new Point(5, 200),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -351,13 +354,14 @@ namespace LanguageEditor
 
             txt_tSpellingAdd = new TextBox
             {
-                Location = new Point(205, 180),
+                Location = new Point(205, 200),
                 Size = new Size(200, 25)
             };
             Controls.Add(txt_tSpellingAdd);
             txt_tSpellingAdd.Visible = false;
             txt_tSpellingAdd.Enabled = false;
             txt_tSpellingAdd.GotFocus += Txt_GotFocus;
+            txt_tSpellingAdd.TextChanged += Txt_tSpellingAdd_TextChanged;
 
             lbl_fPronunciationAdd = new Label
             {
@@ -378,6 +382,7 @@ namespace LanguageEditor
             txt_fPronunciationAdd.Visible = false;
             txt_fPronunciationAdd.Enabled = false;
             txt_fPronunciationAdd.GotFocus += Txt_GotFocus;
+            txt_fPronunciationAdd.TextChanged += Txt_fPronunciationAdd_TextChanged;
 
             lbl_fSpellingAdd = new Label
             {
@@ -398,6 +403,7 @@ namespace LanguageEditor
             txt_fSpellingAdd.Visible = false;
             txt_fSpellingAdd.Enabled = false;
             txt_fSpellingAdd.GotFocus += Txt_GotFocus;
+            txt_fSpellingAdd.TextChanged += Txt_fSpellingAdd_TextChanged;
 
             rbn_fixed.CheckedChanged += Rbn_fixed_CheckedChanged;
 
@@ -417,8 +423,121 @@ namespace LanguageEditor
             menuStrip1.ResumeLayout(true);
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
 
-
             Controls.Add(menuStrip1);
+        }
+
+        private void Txt_fSpellingAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_fPronunciationAdd.TextChanged -= Txt_fPronunciationAdd_TextChanged;
+                txt_fSpellingAdd.TextChanged -= Txt_fSpellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_fPronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_fSpellingAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_fPronunciationAdd.TextChanged += Txt_fPronunciationAdd_TextChanged;
+                txt_fSpellingAdd.TextChanged += Txt_fSpellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_fPronunciationAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_fPronunciationAdd.TextChanged -= Txt_fPronunciationAdd_TextChanged;
+                txt_fSpellingAdd.TextChanged -= Txt_fSpellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_fSpellingAdd.Text = ConlangUtilities.SpellWord(txt_fPronunciationAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_fPronunciationAdd.TextChanged += Txt_fPronunciationAdd_TextChanged;
+                txt_fSpellingAdd.TextChanged += Txt_fSpellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_tSpellingAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_tPronunciationAdd.TextChanged -= Txt_tPronunciationAdd_TextChanged;
+                txt_tSpellingAdd.TextChanged -= Txt_tSpellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_tPronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_tSpellingAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_tPronunciationAdd.TextChanged += Txt_tPronunciationAdd_TextChanged;
+                txt_tSpellingAdd.TextChanged += Txt_tSpellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_tPronunciationAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_tPronunciationAdd.TextChanged -= Txt_tPronunciationAdd_TextChanged;
+                txt_tSpellingAdd.TextChanged -= Txt_tSpellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_tSpellingAdd.Text = ConlangUtilities.SpellWord(txt_tPronunciationAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_tPronunciationAdd.TextChanged += Txt_tPronunciationAdd_TextChanged;
+                txt_tSpellingAdd.TextChanged += Txt_tSpellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_spellingAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_pronunciationAdd.TextChanged -= Txt_pronunciationAdd_TextChanged;
+                txt_spellingAdd.TextChanged -= Txt_spellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_pronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_spellingAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_pronunciationAdd.TextChanged += Txt_pronunciationAdd_TextChanged;
+                txt_spellingAdd.TextChanged += Txt_spellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_pronunciationAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_pronunciationAdd.TextChanged -= Txt_pronunciationAdd_TextChanged;
+                txt_spellingAdd.TextChanged -= Txt_spellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_spellingAdd.Text = ConlangUtilities.SpellWord(txt_pronunciationAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_pronunciationAdd.TextChanged += Txt_pronunciationAdd_TextChanged;
+                txt_spellingAdd.TextChanged += Txt_spellingAdd_TextChanged;
+            }
         }
 
         private void Rbn_fixed_CheckedChanged(object? sender, EventArgs e)
@@ -449,7 +568,7 @@ namespace LanguageEditor
                 lbl_fSpellingAdd.Visible = false;
                 txt_fSpellingAdd.Visible = false;
                 txt_fSpellingAdd.Enabled = false;
-                this.controlSize.Height = 150;
+                this.controlSize.Height = 170;
                 this.Size = this.controlSize;
                 this.ResumeLayout(true);
             }
@@ -479,7 +598,7 @@ namespace LanguageEditor
                 lbl_fSpellingAdd.Visible = true;
                 txt_fSpellingAdd.Visible = true;
                 txt_fSpellingAdd.Enabled = true;
-                this.controlSize.Height = 270;
+                this.controlSize.Height = 290;
                 this.Size = this.controlSize;
                 this.ResumeLayout(true);
             }
