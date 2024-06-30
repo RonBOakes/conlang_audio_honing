@@ -168,6 +168,12 @@ namespace LanguageEditor
             }
         }
 
+        public List<SpellingPronunciationRules> SpellingPronunciationRules
+        {
+            private get;
+            set;
+        }
+
         public string? PartOfSpeech
         {
             private get; set;
@@ -185,7 +191,7 @@ namespace LanguageEditor
         private Label lbl_spellingAdd;
         private Label lbl_pronunciationRegex;
         private Label lbl_spellingRegex;
-        private Label lbl_tpronunciationAdd;
+        private Label lbl_tPronunciationAdd;
         private Label lbl_tSpellingAdd;
         private Label lbl_fPronunciationAdd;
         private Label lbl_fSpellingAdd;
@@ -294,6 +300,7 @@ namespace LanguageEditor
                 Size = new Size(200, 25)
             };
             txt_pronunciationAdd.GotFocus += Txt_GotFocus;
+            txt_pronunciationAdd.TextChanged += Txt_pronunciationAdd_TextChanged;
             Controls.Add(txt_pronunciationAdd);
             txt_pronunciationAdd.Visible = true;
             txt_pronunciationAdd.Enabled = true;
@@ -335,6 +342,7 @@ namespace LanguageEditor
             };
             Controls.Add(txt_spellingAdd);
             txt_spellingAdd.GotFocus += Txt_GotFocus;
+            txt_spellingAdd.TextChanged += Txt_spellingAdd_TextChanged;
             txt_spellingAdd.Visible = true;
             txt_spellingAdd.Enabled = true;
 
@@ -358,15 +366,15 @@ namespace LanguageEditor
             txt_spellingRegex.Visible = true;
             txt_spellingRegex.Enabled = true;
 
-            lbl_tpronunciationAdd = new Label
+            lbl_tPronunciationAdd = new Label
             {
                 Text = "True pronunciation Add:",
                 Location = new Point(5, 170),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
-            Controls.Add(lbl_tpronunciationAdd);
-            lbl_tpronunciationAdd.Visible = false;
+            Controls.Add(lbl_tPronunciationAdd);
+            lbl_tPronunciationAdd.Visible = false;
 
             txt_tPronunciationAdd = new TextBox
             {
@@ -375,6 +383,7 @@ namespace LanguageEditor
             };
             Controls.Add(txt_tPronunciationAdd);
             txt_tPronunciationAdd.GotFocus += Txt_GotFocus;
+            txt_tPronunciationAdd.TextChanged += Txt_tPronunciationAdd_TextChanged;
             txt_tPronunciationAdd.Visible = false;
             txt_tPronunciationAdd.Enabled = false;
 
@@ -395,6 +404,7 @@ namespace LanguageEditor
             };
             Controls.Add(txt_tSpellingAdd);
             txt_tSpellingAdd.GotFocus += Txt_GotFocus;
+            txt_tSpellingAdd.TextChanged += Txt_tSpellingAdd_TextChanged;
             txt_tSpellingAdd.Visible = false;
             txt_tSpellingAdd.Enabled = false;
 
@@ -415,6 +425,7 @@ namespace LanguageEditor
             };
             Controls.Add(txt_fPronunciationAdd);
             txt_fPronunciationAdd.GotFocus += Txt_GotFocus;
+            txt_fPronunciationAdd.TextChanged += Txt_fPronunciationAdd_TextChanged;
             txt_fPronunciationAdd.Visible = false;
             txt_fPronunciationAdd.Enabled = false;
 
@@ -435,6 +446,7 @@ namespace LanguageEditor
             };
             Controls.Add(txt_fSpellingAdd);
             txt_fSpellingAdd.GotFocus += Txt_GotFocus;
+            txt_fSpellingAdd.TextChanged += Txt_fSpellingAdd_TextChanged;
             txt_fSpellingAdd.Visible = false;
             txt_fSpellingAdd.Enabled = false;
 
@@ -468,6 +480,120 @@ namespace LanguageEditor
             Controls.Add(menuStrip1);
         }
 
+        private void Txt_fSpellingAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_fPronunciationAdd.TextChanged -= Txt_fPronunciationAdd_TextChanged;
+                txt_fSpellingAdd.TextChanged -= Txt_fSpellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_fPronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_fSpellingAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_fPronunciationAdd.TextChanged += Txt_fPronunciationAdd_TextChanged;
+                txt_fSpellingAdd.TextChanged += Txt_fSpellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_fPronunciationAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_fPronunciationAdd.TextChanged -= Txt_fPronunciationAdd_TextChanged;
+                txt_fSpellingAdd.TextChanged -= Txt_fSpellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_fSpellingAdd.Text = ConlangUtilities.SpellWord(txt_fPronunciationAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_fPronunciationAdd.TextChanged += Txt_fPronunciationAdd_TextChanged;
+                txt_fSpellingAdd.TextChanged += Txt_fSpellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_tSpellingAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_tPronunciationAdd.TextChanged -= Txt_tPronunciationAdd_TextChanged;
+                txt_tSpellingAdd.TextChanged -= Txt_tSpellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_tPronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_tSpellingAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_tPronunciationAdd.TextChanged += Txt_tPronunciationAdd_TextChanged;
+                txt_tSpellingAdd.TextChanged += Txt_tSpellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_tPronunciationAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_tPronunciationAdd.TextChanged -= Txt_tPronunciationAdd_TextChanged;
+                txt_tSpellingAdd.TextChanged -= Txt_tSpellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_tSpellingAdd.Text = ConlangUtilities.SpellWord(txt_tPronunciationAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_tPronunciationAdd.TextChanged += Txt_tPronunciationAdd_TextChanged;
+                txt_tSpellingAdd.TextChanged += Txt_tSpellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_spellingAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_pronunciationAdd.TextChanged -= Txt_pronunciationAdd_TextChanged;
+                txt_spellingAdd.TextChanged -= Txt_spellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_pronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_spellingAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_pronunciationAdd.TextChanged += Txt_pronunciationAdd_TextChanged;
+                txt_spellingAdd.TextChanged += Txt_spellingAdd_TextChanged;
+            }
+        }
+
+        private void Txt_pronunciationAdd_TextChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                txt_pronunciationAdd.TextChanged -= Txt_pronunciationAdd_TextChanged;
+                txt_spellingAdd.TextChanged -= Txt_spellingAdd_TextChanged;
+
+                if (SpellingPronunciationRules != null)
+                {
+                    txt_spellingAdd.Text = ConlangUtilities.SpellWord(txt_pronunciationAdd.Text.Trim(), SpellingPronunciationRules);
+                }
+            }
+            finally
+            {
+                txt_pronunciationAdd.TextChanged += Txt_pronunciationAdd_TextChanged;
+                txt_spellingAdd.TextChanged += Txt_spellingAdd_TextChanged;
+            }
+        }
+
         private void Txt_declension_TextChanged(object? sender, EventArgs e)
         {
             DeclensionChanged = true;
@@ -496,7 +622,7 @@ namespace LanguageEditor
                 lbl_spellingRegex.Visible = false;
                 txt_spellingRegex.Visible = false;
                 txt_spellingRegex.Enabled = false;
-                lbl_tpronunciationAdd.Visible = false;
+                lbl_tPronunciationAdd.Visible = false;
                 txt_tPronunciationAdd.Visible = false;
                 txt_tPronunciationAdd.Enabled = false;
                 lbl_tSpellingAdd.Visible = false;
@@ -526,7 +652,7 @@ namespace LanguageEditor
                 lbl_spellingRegex.Visible = true;
                 txt_spellingRegex.Visible = true;
                 txt_spellingRegex.Enabled = true;
-                lbl_tpronunciationAdd.Visible = true;
+                lbl_tPronunciationAdd.Visible = true;
                 txt_tPronunciationAdd.Visible = true;
                 txt_tPronunciationAdd.Enabled = true;
                 lbl_tSpellingAdd.Visible = true;
