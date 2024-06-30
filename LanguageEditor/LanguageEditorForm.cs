@@ -255,8 +255,9 @@ namespace LanguageEditor
             tab_declensionAffixes.SuspendLayout();
             declensionAffixMapPane = new DeclensionAffixMapPane
             {
+                SpellingPronunciationRules = languageDescription.spelling_pronunciation_rules,
                 AffixMap = languageDescription.affix_map,
-                Size = tab_declensionAffixes.Size
+                Size = tab_declensionAffixes.Size,
             };
             tab_declensionAffixes.Controls.Add(declensionAffixMapPane);
             tab_declensionAffixes.ResumeLayout(true);
@@ -314,7 +315,7 @@ namespace LanguageEditor
             {
                 return;
             }
-            if(sender.GetType() != typeof(DerivationalAffixEditor))
+            if(sender?.GetType() != typeof(DerivationalAffixEditor))
             {
                 return;
             }

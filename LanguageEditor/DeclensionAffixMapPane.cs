@@ -49,8 +49,13 @@ namespace LanguageEditor
                 createPartOfSpeechTabs();
                 partOfSpeechTabIndex = 0;
                 loadPartOfSpeechTab(0);
-                // TODO: update to populate contents
             }
+        }
+
+        public List<SpellingPronunciationRules> SpellingPronunciationRules
+        {
+            private get;
+            set;
         }
 
         private TabControl tpn_partOfSpeechLevel;
@@ -119,7 +124,8 @@ namespace LanguageEditor
                     PosSubMap = entry,
                     Location = new Point(xPos, yPos),
                     Size = new Size(tab.Size.Width, 350),
-                    BorderStyle = BorderStyle.FixedSingle
+                    BorderStyle = BorderStyle.FixedSingle,
+                    SpellingPronunciationRules = SpellingPronunciationRules,
                 };
                 tab.Controls.Add(posSubPane);
                 yPos += posSubPane.Height + 5;
@@ -140,7 +146,9 @@ namespace LanguageEditor
             this.SizeChanged += this_SizeChanged;
         }
 
+#pragma warning disable S3260 // Non-derived "private" classes and records should be "sealed"
         private class PosSubPane : UserControl
+#pragma warning restore S3260 // Non-derived "private" classes and records should be "sealed"
         {
             private Dictionary<string, List<Dictionary<string, Affix>>>? _posSubMap;
             private bool dataChanged;
@@ -171,6 +179,12 @@ namespace LanguageEditor
                 {
                     dataChanged = value;
                 }
+            }
+
+            public List<SpellingPronunciationRules>? SpellingPronunciationRules
+            {
+                private get;
+                set;
             }
 
             private TabControl tpn_affixLevel = new();
@@ -243,7 +257,8 @@ namespace LanguageEditor
                             Declension = key,
                             AffixRules = entry[key],
                             Location = new Point(xPos, yPos),
-                            BorderStyle = BorderStyle.FixedSingle
+                            BorderStyle = BorderStyle.FixedSingle,
+                            SpellingPronunciationRules = SpellingPronunciationRules ?? [],
                         };
                         tab.Controls.Add(declensionAffixEditor);
                         yPos += declensionAffixEditor.Height + 5;
@@ -262,16 +277,12 @@ namespace LanguageEditor
                 {
                     string affix = tab.Text;
                     List<Dictionary<string, Affix>> entryList = [];
-                    foreach (Control ctl in tab.Controls)
-                    {
-                        if (ctl.GetType().IsInstanceOfType(das))
-                        {
-                            DeclensionAffixEditor declensionAffixEditor = (DeclensionAffixEditor)ctl;
-                            string declension = declensionAffixEditor.Declension;
-                            Affix affixRules = declensionAffixEditor.AffixRules;
-                            entryList.Add(new Dictionary<string, Affix> { { declension, affixRules } });
-                        }
-                    }
+                    entryList.AddRange(from Control ctl in tab.Controls
+                                       where ctl.GetType().IsInstanceOfType(das)
+                                       let declensionAffixEditor = (DeclensionAffixEditor)ctl
+                                       let declension = declensionAffixEditor.Declension
+                                       let affixRules = declensionAffixEditor.AffixRules
+                                       select new Dictionary<string, Affix> { { declension, affixRules } });
                     _posSubMap[affix] = entryList;
                 }
             }
