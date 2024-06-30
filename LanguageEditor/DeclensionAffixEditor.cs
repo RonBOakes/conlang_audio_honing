@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using ConlangAudioHoning;
 using ConlangJson;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,10 @@ using System.Threading.Tasks;
 
 namespace LanguageEditor
 {
-    internal class DeclensionAffixEditor : UserControl
+    internal class DeclensionAffixEditor : Panel
     {
 
-        private Size controlSize = new(850, 200);
+        private Size controlSize = new(850, 270);
 
         private Affix? _affixRules;
 
@@ -96,9 +97,9 @@ namespace LanguageEditor
                     {
                         _affixRules.pronunciation_regex = txt_pronunciationRegex.Text.Trim();
                         _affixRules.spelling_regex = txt_spellingRegex.Text.Trim();
-                        _affixRules.t_pronunciation_add = txt_tpronunciationAdd.Text.Trim();
+                        _affixRules.t_pronunciation_add = txt_tPronunciationAdd.Text.Trim();
                         _affixRules.t_spelling_add = txt_tSpellingAdd.Text.Trim();
-                        _affixRules.f_pronunciation_add = txt_fpronunciationAdd.Text.Trim();
+                        _affixRules.f_pronunciation_add = txt_fPronunciationAdd.Text.Trim();
                         _affixRules.f_spelling_add = txt_fSpellingAdd.Text.Trim();
                     }
                 }
@@ -119,9 +120,9 @@ namespace LanguageEditor
                         txt_spellingAdd.Text = value.spelling_add;
                         txt_pronunciationRegex.Text = "";
                         txt_spellingRegex.Text = "";
-                        txt_tpronunciationAdd.Text = "";
+                        txt_tPronunciationAdd.Text = "";
                         txt_tSpellingAdd.Text = "";
-                        txt_fpronunciationAdd.Text = "";
+                        txt_fPronunciationAdd.Text = "";
                         txt_fSpellingAdd.Text = "";
                     }
                     else
@@ -133,9 +134,9 @@ namespace LanguageEditor
                         txt_spellingAdd.Text = "";
                         txt_pronunciationRegex.Text = value.pronunciation_regex;
                         txt_spellingRegex.Text = value.spelling_regex;
-                        txt_tpronunciationAdd.Text = value.t_pronunciation_add;
+                        txt_tPronunciationAdd.Text = value.t_pronunciation_add;
                         txt_tSpellingAdd.Text = value.t_spelling_add;
-                        txt_fpronunciationAdd.Text = value.f_pronunciation_add;
+                        txt_fPronunciationAdd.Text = value.f_pronunciation_add;
                         txt_fSpellingAdd.Text = value.f_spelling_add;
                     }
                 }
@@ -145,13 +146,13 @@ namespace LanguageEditor
 
         public bool DeclensionChanged
         {
-            get 
-            { 
-                return declensionChanged; 
+            get
+            {
+                return declensionChanged;
             }
-            private set 
-            { 
-                declensionChanged = value; 
+            private set
+            {
+                declensionChanged = value;
             }
         }
 
@@ -161,8 +162,8 @@ namespace LanguageEditor
             {
                 return affixRulesChanged;
             }
-            private set 
-            { 
+            private set
+            {
                 affixRulesChanged = value;
             }
         }
@@ -175,7 +176,7 @@ namespace LanguageEditor
         private Label lbl_spellingRegex;
         private Label lbl_tpronunciationAdd;
         private Label lbl_tSpellingAdd;
-        private Label lbl_fpronunciationAdd;
+        private Label lbl_fPronunciationAdd;
         private Label lbl_fSpellingAdd;
 
         private GroupBox gb_ruleType;
@@ -187,10 +188,15 @@ namespace LanguageEditor
         private TextBox txt_spellingAdd;
         private TextBox txt_pronunciationRegex;
         private TextBox txt_spellingRegex;
-        private TextBox txt_tpronunciationAdd;
+        private TextBox txt_tPronunciationAdd;
         private TextBox txt_tSpellingAdd;
-        private TextBox txt_fpronunciationAdd;
+        private TextBox txt_fPronunciationAdd;
         private TextBox txt_fSpellingAdd;
+
+        private MenuStrip menuStrip1;
+
+        private TextBox _lastFocused;
+
 #pragma warning restore S1450
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -210,7 +216,7 @@ namespace LanguageEditor
             lbl_declension = new Label
             {
                 Text = "Declension:",
-                Location = new Point(5, 5),
+                Location = new Point(5, 25),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -218,14 +224,15 @@ namespace LanguageEditor
 
             txt_declension = new TextBox
             {
-                Location = new Point(205, 5),
+                Location = new Point(205, 25),
                 Size = new Size(200, 25)
             };
+            txt_declension.GotFocus += Txt_GotFocus;
             Controls.Add(txt_declension);
 
             gb_ruleType = new GroupBox
             {
-                Location = new Point(5, 30),
+                Location = new Point(5, 50),
                 Size = new Size(500, 50)
             };
             Controls.Add(gb_ruleType);
@@ -252,7 +259,7 @@ namespace LanguageEditor
             lbl_pronunciationAdd = new Label
             {
                 Text = "pronunciation Add:",
-                Location = new Point(5, 90),
+                Location = new Point(5, 110),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -261,9 +268,10 @@ namespace LanguageEditor
 
             txt_pronunciationAdd = new TextBox
             {
-                Location = new Point(205, 90),
+                Location = new Point(205, 110),
                 Size = new Size(200, 25)
             };
+            txt_pronunciationAdd.GotFocus += Txt_GotFocus;
             Controls.Add(txt_pronunciationAdd);
             txt_pronunciationAdd.Visible = true;
             txt_pronunciationAdd.Enabled = true;
@@ -271,7 +279,7 @@ namespace LanguageEditor
             lbl_pronunciationRegex = new Label
             {
                 Text = "pronunciation Regex:",
-                Location = new Point(5, 90),
+                Location = new Point(5, 110),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -280,17 +288,18 @@ namespace LanguageEditor
 
             txt_pronunciationRegex = new TextBox
             {
-                Location = new Point(205, 90),
+                Location = new Point(205, 110),
                 Size = new Size(200, 25)
             };
             Controls.Add(txt_pronunciationRegex);
+            txt_pronunciationRegex.GotFocus += Txt_GotFocus;
             txt_pronunciationRegex.Visible = false;
             txt_pronunciationRegex.Enabled = false;
 
             lbl_spellingAdd = new Label
             {
                 Text = "Spelling Add:",
-                Location = new Point(5, 120),
+                Location = new Point(5, 140),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -299,17 +308,18 @@ namespace LanguageEditor
 
             txt_spellingAdd = new TextBox
             {
-                Location = new Point(205, 120),
+                Location = new Point(205, 140),
                 Size = new Size(200, 25)
             };
             Controls.Add(txt_spellingAdd);
+            txt_spellingAdd.GotFocus += Txt_GotFocus;
             txt_spellingAdd.Visible = true;
             txt_spellingAdd.Enabled = true;
 
             lbl_spellingRegex = new Label
             {
                 Text = "Spelling Add:",
-                Location = new Point(5, 120),
+                Location = new Point(5, 140),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -318,36 +328,38 @@ namespace LanguageEditor
 
             txt_spellingRegex = new TextBox
             {
-                Location = new Point(205, 120),
+                Location = new Point(205, 140),
                 Size = new Size(200, 25)
             };
             Controls.Add(txt_spellingRegex);
+            txt_spellingRegex.GotFocus += Txt_GotFocus;
             txt_spellingRegex.Visible = true;
             txt_spellingRegex.Enabled = true;
 
             lbl_tpronunciationAdd = new Label
             {
                 Text = "True pronunciation Add:",
-                Location = new Point(5, 150),
+                Location = new Point(5, 170),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
             Controls.Add(lbl_tpronunciationAdd);
             lbl_tpronunciationAdd.Visible = false;
 
-            txt_tpronunciationAdd = new TextBox
+            txt_tPronunciationAdd = new TextBox
             {
-                Location = new Point(205, 150),
+                Location = new Point(205, 170),
                 Size = new Size(200, 25)
             };
-            Controls.Add(txt_tpronunciationAdd);
-            txt_tpronunciationAdd.Visible = false;
-            txt_tpronunciationAdd.Enabled = false;
+            Controls.Add(txt_tPronunciationAdd);
+            txt_tPronunciationAdd.GotFocus += Txt_GotFocus;
+            txt_tPronunciationAdd.Visible = false;
+            txt_tPronunciationAdd.Enabled = false;
 
             lbl_tSpellingAdd = new Label
             {
                 Text = "True Spelling Add:",
-                Location = new Point(5, 180),
+                Location = new Point(5, 200),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -356,36 +368,38 @@ namespace LanguageEditor
 
             txt_tSpellingAdd = new TextBox
             {
-                Location = new Point(205, 180),
+                Location = new Point(205, 200),
                 Size = new Size(200, 25)
             };
             Controls.Add(txt_tSpellingAdd);
+            txt_tSpellingAdd.GotFocus += Txt_GotFocus;
             txt_tSpellingAdd.Visible = false;
             txt_tSpellingAdd.Enabled = false;
 
-            lbl_fpronunciationAdd = new Label
+            lbl_fPronunciationAdd = new Label
             {
                 Text = "False pronunciation Add:",
-                Location = new Point(5, 210),
+                Location = new Point(5, 230),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
-            Controls.Add(lbl_fpronunciationAdd);
-            lbl_fpronunciationAdd.Visible = false;
+            Controls.Add(lbl_fPronunciationAdd);
+            lbl_fPronunciationAdd.Visible = false;
 
-            txt_fpronunciationAdd = new TextBox
+            txt_fPronunciationAdd = new TextBox
             {
-                Location = new Point(205, 210),
+                Location = new Point(205, 230),
                 Size = new Size(200, 25)
             };
-            Controls.Add(txt_fpronunciationAdd);
-            txt_fpronunciationAdd.Visible = false;
-            txt_fpronunciationAdd.Enabled = false;
+            Controls.Add(txt_fPronunciationAdd);
+            txt_fPronunciationAdd.GotFocus += Txt_GotFocus;
+            txt_fPronunciationAdd.Visible = false;
+            txt_fPronunciationAdd.Enabled = false;
 
             lbl_fSpellingAdd = new Label
             {
                 Text = "False Spelling Add:",
-                Location = new Point(5, 240),
+                Location = new Point(5, 270),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -394,10 +408,11 @@ namespace LanguageEditor
 
             txt_fSpellingAdd = new TextBox
             {
-                Location = new Point(205, 240),
+                Location = new Point(205, 270),
                 Size = new Size(200, 25)
             };
             Controls.Add(txt_fSpellingAdd);
+            txt_fSpellingAdd.GotFocus += Txt_GotFocus;
             txt_fSpellingAdd.Visible = false;
             txt_fSpellingAdd.Enabled = false;
 
@@ -407,11 +422,28 @@ namespace LanguageEditor
             txt_pronunciationRegex.TextChanged += Txt_TextChanged;
             txt_spellingAdd.TextChanged += Txt_TextChanged;
             txt_spellingRegex.TextChanged += Txt_TextChanged;
-            txt_tpronunciationAdd.TextChanged += Txt_TextChanged;
+            txt_tPronunciationAdd.TextChanged += Txt_TextChanged;
             txt_tSpellingAdd.TextChanged += Txt_TextChanged;
-            txt_fpronunciationAdd.TextChanged += Txt_TextChanged;
+            txt_fPronunciationAdd.TextChanged += Txt_TextChanged;
             txt_fSpellingAdd.TextChanged += Txt_TextChanged;
 
+            menuStrip1 = new MenuStrip();
+            menuStrip1.SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1007, 24);
+            menuStrip1.TabIndex = 7;
+            menuStrip1.Text = "menuStrip1";
+
+            CharacterInsertToolStripMenuItem ciMenu = new();
+            _ = menuStrip1.Items.Add(ciMenu);
+            menuStrip1.ResumeLayout(true);
+            ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
+
+            Controls.Add(menuStrip1);
         }
 
         private void Txt_declension_TextChanged(object? sender, EventArgs e)
@@ -443,18 +475,18 @@ namespace LanguageEditor
                 txt_spellingRegex.Visible = false;
                 txt_spellingRegex.Enabled = false;
                 lbl_tpronunciationAdd.Visible = false;
-                txt_tpronunciationAdd.Visible = false;
-                txt_tpronunciationAdd.Enabled = false;
+                txt_tPronunciationAdd.Visible = false;
+                txt_tPronunciationAdd.Enabled = false;
                 lbl_tSpellingAdd.Visible = false;
                 txt_tSpellingAdd.Visible = false;
                 txt_tSpellingAdd.Enabled = false;
-                lbl_fpronunciationAdd.Visible = false;
-                txt_fpronunciationAdd.Visible = false;
-                txt_fpronunciationAdd.Enabled = false;
+                lbl_fPronunciationAdd.Visible = false;
+                txt_fPronunciationAdd.Visible = false;
+                txt_fPronunciationAdd.Enabled = false;
                 lbl_fSpellingAdd.Visible = false;
                 txt_fSpellingAdd.Visible = false;
                 txt_fSpellingAdd.Enabled = false;
-                this.controlSize.Height = 150;
+                this.controlSize.Height = 180;
                 this.Size = this.controlSize;
                 this.ResumeLayout(true);
             }
@@ -473,20 +505,58 @@ namespace LanguageEditor
                 txt_spellingRegex.Visible = true;
                 txt_spellingRegex.Enabled = true;
                 lbl_tpronunciationAdd.Visible = true;
-                txt_tpronunciationAdd.Visible = true;
-                txt_tpronunciationAdd.Enabled = true;
+                txt_tPronunciationAdd.Visible = true;
+                txt_tPronunciationAdd.Enabled = true;
                 lbl_tSpellingAdd.Visible = true;
                 txt_tSpellingAdd.Visible = true;
                 txt_tSpellingAdd.Enabled = true;
-                lbl_fpronunciationAdd.Visible = true;
-                txt_fpronunciationAdd.Visible = true;
-                txt_fpronunciationAdd.Enabled = true;
+                lbl_fPronunciationAdd.Visible = true;
+                txt_fPronunciationAdd.Visible = true;
+                txt_fPronunciationAdd.Enabled = true;
                 lbl_fSpellingAdd.Visible = true;
                 txt_fSpellingAdd.Visible = true;
                 txt_fSpellingAdd.Enabled = true;
-                this.controlSize.Height = 270;
+                this.controlSize.Height = 300;
                 this.Size = this.controlSize;
                 this.ResumeLayout(true);
+            }
+        }
+
+
+        private void CharInsetToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            if (sender == null)
+            {
+                return;
+            }
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            if (String.IsNullOrEmpty(menuItem.Text))
+            {
+                return;
+            }
+            string charToInsert = menuItem.Text.Split()[0];
+            PasteIntoFocusedBox(charToInsert);
+        }
+
+        /// <summary>
+        /// Append the supplied string to which of the four text boxes that most recently
+        /// had focus.
+        /// </summary>
+        /// <param name="textToAppend">string containing the text to append.</param>
+        public void PasteIntoFocusedBox(string textToAppend)
+        {
+            if ((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
+            {
+                Clipboard.SetText(textToAppend);
+                _lastFocused.Paste();
+            }
+        }
+
+        private void Txt_GotFocus(Object? sender, EventArgs e)
+        {
+            if (sender is TextBox box)
+            {
+                _lastFocused = box;
             }
         }
 

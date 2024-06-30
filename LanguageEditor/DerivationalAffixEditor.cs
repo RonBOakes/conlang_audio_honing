@@ -636,6 +636,7 @@ namespace LanguageEditor
             }
 
         }
+
         private void CharInsetToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             if (sender == null)
