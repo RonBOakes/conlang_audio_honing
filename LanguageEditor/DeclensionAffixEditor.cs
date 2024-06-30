@@ -168,7 +168,18 @@ namespace LanguageEditor
             }
         }
 
+        public string? PartOfSpeech
+        {
+            private get; set;
+        }
+
+        public string ? AffixType
+        {
+            private get; set;
+        }
+
 #pragma warning disable S1450
+        private Button btn_delete;
         private Label lbl_declension;
         private Label lbl_pronunciationAdd;
         private Label lbl_spellingAdd;
@@ -213,11 +224,22 @@ namespace LanguageEditor
             this.Size = controlSize;
             this.BorderStyle = BorderStyle.None;
 
+
+            btn_delete = new Button
+            {
+                Text = "Delete",
+                Location = new Point(5, 25),
+                Size = new Size(100, 25),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            Controls.Add(btn_delete);
+            btn_delete.Click += Btn_delete_Click;
+
             lbl_declension = new Label
             {
                 Text = "Declension:",
-                Location = new Point(5, 25),
-                Size = new Size(200, 25),
+                Location = new Point(105, 25),
+                Size = new Size(95, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
             Controls.Add(lbl_declension);
@@ -560,6 +582,25 @@ namespace LanguageEditor
             }
         }
 
+        private void Btn_delete_Click(object? sender, EventArgs e)
+        {
+            DeclensionAffixEntryDeleteEventArgs args = new()
+            {
+                PartOfSpeech = PartOfSpeech,
+                AffixType = AffixType,
+                Declension = Declension,
+            };
+            Delete?.Invoke(this, args);
+        }
+
+        public class DeclensionAffixEntryDeleteEventArgs : EventArgs
+        {
+            public string? PartOfSpeech { get; set; }
+            public string? AffixType { get; set; }
+            public string? Declension { get; set; }
+        }
+
+        public event EventHandler Delete;
         public event EventHandler Changed;
     }
 }
