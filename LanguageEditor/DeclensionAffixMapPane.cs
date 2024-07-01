@@ -199,7 +199,14 @@ namespace LanguageEditor
                 string affixType = buttonMatch.Groups[1].Value;
                 string partOfSpeech = buttonMatch.Groups[2].Value;
 
-                TabPage? posTab = tpn_partOfSpeechLevel.TabPages[partOfSpeech];
+                TabPage? posTab = null;
+                foreach (var tabPage1 in from TabPage tabPage1 in tpn_partOfSpeechLevel.TabPages
+                                         where tabPage1.Text.Trim().Equals(partOfSpeech.Trim())
+                                         select tabPage1)
+                {
+                    posTab = tabPage1;
+                }
+
                 if (posTab == null)
                 {
                     return;
@@ -210,8 +217,16 @@ namespace LanguageEditor
                     return;
                 }
                 PosSubPane posPane = (PosSubPane)posControl;
-                TabPage? affixTab = posPane.tpn_affixLevel.TabPages[affixType];
-                if(affixTab == null)
+
+                TabPage? affixTab = null;
+                foreach (var tabPage2 in from TabPage tabPage2 in posPane.tpn_affixLevel.TabPages
+                                         where tabPage2.Text.Trim().Equals(affixType.Trim())
+                                         select tabPage2)
+                {
+                    affixTab = tabPage2;
+                }
+
+                if (affixTab == null)
                 {
                     return;
                 }
@@ -219,11 +234,13 @@ namespace LanguageEditor
                 int controlInx = 0;
                 int xPos = 0, yPos = 0;
                 Control ctl;
+#pragma warning disable S1121 // Assignments should not be made from within sub-expressions
                 while ((ctl = affixTab.Controls[controlInx]).GetType() == typeof(DeclensionAffixEditor))
                 {
                     yPos += ctl.Height + 5;
                     controlInx += 1;
                 }
+#pragma warning restore S1121 // Assignments should not be made from within sub-expressions
 
                 affixTab.SuspendLayout();
                 Affix rules = new();
