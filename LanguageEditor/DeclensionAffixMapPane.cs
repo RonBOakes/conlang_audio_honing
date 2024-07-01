@@ -27,7 +27,7 @@ using System.Windows.Controls.Primitives;
 
 namespace LanguageEditor
 {
-    internal class DeclensionAffixMapPane : Panel
+    internal partial class DeclensionAffixMapPane : Panel
     {
         private static Size InitialSize = new(895, 355);
         private Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? _affix_map;
@@ -72,9 +72,9 @@ namespace LanguageEditor
             set
             {
                 _affix_map = value;
-                createPartOfSpeechTabs();
+                CreatePartOfSpeechTabs();
                 partOfSpeechTabIndex = 0;
-                loadPartOfSpeechTab(0);
+                LoadPartOfSpeechTab(0);
             }
         }
 
@@ -95,7 +95,7 @@ namespace LanguageEditor
             InitializeComponent();
         }
 
-        private void createPartOfSpeechTabs()
+        private void CreatePartOfSpeechTabs()
         {
             if (_affix_map != null)
             {
@@ -113,17 +113,17 @@ namespace LanguageEditor
             }
         }
 
-        public void tpn_partOfSpeechLevel_SelectedIndexChanged(object? sender, EventArgs e)
+        public void Tpn_partOfSpeechLevel_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            loadPartOfSpeechTab(tpn_partOfSpeechLevel.SelectedIndex);
+            LoadPartOfSpeechTab(tpn_partOfSpeechLevel.SelectedIndex);
         }
 
-        public void this_SizeChanged(object? sender, EventArgs e)
+        public void DeclensionAffixMapPane_SizeChanged(object? sender, EventArgs e)
         {
             tpn_partOfSpeechLevel.Size = new Size(this.Size.Width - 2, this.Size.Height - 2);
         }
 
-        private void loadPartOfSpeechTab(int newTabIndex)
+        private void LoadPartOfSpeechTab(int newTabIndex)
         {
             if ((_affix_map == null) || (tpn_partOfSpeechLevel == null) || (tpn_partOfSpeechLevel.TabPages.Count < 1))
             {
@@ -178,8 +178,8 @@ namespace LanguageEditor
                 Location = new System.Drawing.Point(0, 0),
             };
             this.Controls.Add(tpn_partOfSpeechLevel);
-            tpn_partOfSpeechLevel.SelectedIndexChanged += tpn_partOfSpeechLevel_SelectedIndexChanged;
-            this.SizeChanged += this_SizeChanged;
+            tpn_partOfSpeechLevel.SelectedIndexChanged += Tpn_partOfSpeechLevel_SelectedIndexChanged;
+            this.SizeChanged += DeclensionAffixMapPane_SizeChanged;
         }
 
 
@@ -191,7 +191,7 @@ namespace LanguageEditor
             }
             Button addButton = (Button)sender;
             string buttonText = addButton.Text;
-            Match buttonMatch = Regex.Match(buttonText, @"^\s*Add\s+(\w+)\s+Declension\s+to\s+(\w+)\s*$");
+            Match buttonMatch = ButtonTextRegex().Match(buttonText);
             if (buttonMatch.Success)
             {
                 string affixType = buttonMatch.Groups[1].Value;
@@ -210,7 +210,7 @@ namespace LanguageEditor
                     return;
                 }
                 Control posControl = posTab.Controls[0];
-                if ((!(posControl is PosSubPane)))
+                if ((posControl is not PosSubPane))
                 {
                     return;
                 }
@@ -486,5 +486,8 @@ namespace LanguageEditor
                 this.SizeChanged += PosSubPane_SizeChanged;
             }
         }
+
+        [GeneratedRegex(@"^\s*Add\s+(\w+)\s+Declension\s+to\s+(\w+)\s*$")]
+        private static partial Regex ButtonTextRegex();
     }
 }

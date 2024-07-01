@@ -34,23 +34,18 @@ namespace LanguageEditor
 
         private Affix? _affixRules;
 
-        private bool declensionChanged = false;
-        private bool affixRulesChanged = false;
-
         private string? oldDeclension = null;
 
         public string Declension
         {
             get
             {
-                declensionChanged = false;
                 return txt_declension.Text ??= string.Empty;
             }
             set
             {
                 txt_declension.Text = value;
                 oldDeclension = value;
-                declensionChanged = false;
             }
         }
 
@@ -106,7 +101,6 @@ namespace LanguageEditor
                         _affixRules.f_spelling_add = txt_fSpellingAdd.Text.Trim();
                     }
                 }
-                affixRulesChanged = false;
                 return _affixRules;
             }
             set
@@ -143,31 +137,6 @@ namespace LanguageEditor
                         txt_fSpellingAdd.Text = value.f_spelling_add;
                     }
                 }
-                affixRulesChanged = false;
-            }
-        }
-
-        public bool DeclensionChanged
-        {
-            get
-            {
-                return declensionChanged;
-            }
-            private set
-            {
-                declensionChanged = value;
-            }
-        }
-
-        public bool AffixRulesChanged
-        {
-            get
-            {
-                return affixRulesChanged;
-            }
-            private set
-            {
-                affixRulesChanged = value;
             }
         }
 
@@ -598,7 +567,6 @@ namespace LanguageEditor
 
         private void Txt_declension_TextChanged(object? sender, EventArgs e)
         {
-            DeclensionChanged = true;
             DeclensionAffixChangedEventArgs args = new()
             {
                 PartOfSpeech = PartOfSpeech,
@@ -613,7 +581,6 @@ namespace LanguageEditor
 
         private void Txt_TextChanged(object? sender, EventArgs e)
         {
-            AffixRulesChanged = true;
             DeclensionAffixChangedEventArgs args = new()
             {
                 PartOfSpeech = PartOfSpeech,
