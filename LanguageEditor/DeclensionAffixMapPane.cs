@@ -53,15 +53,18 @@ namespace LanguageEditor
                 {
                     string partOfSpeech = tab.Text;
                     Control control = tab.Controls[0];
-                    if (control.GetType() == typeof(PosSubPane))
+                    if (control is not PosSubPane)
                     {
-                        PosSubPane subPane = (PosSubPane)control;
-                        if (subPane.DataChanged)
-                        {
-                            _affix_map[partOfSpeech].Clear();
-                            _affix_map[partOfSpeech].Add(subPane.PosSubMap);
-                        }
+                        return _affix_map;
                     }
+                    PosSubPane subPane = (PosSubPane)control;
+                    if (subPane.DataChanged)
+                    {
+                        _affix_map[partOfSpeech].Clear();
+                        _affix_map[partOfSpeech].Add(subPane.PosSubMap);
+                    }
+
+                    return _affix_map;
                 }
 
                 return _affix_map;
@@ -131,16 +134,11 @@ namespace LanguageEditor
                 TabPage oldTab = tpn_partOfSpeechLevel.TabPages[partOfSpeechTabIndex];
                 string oldPartOfSpeech = oldTab.Text;
                 _affix_map[oldPartOfSpeech].Clear();
-                foreach (Control control1 in oldTab.Controls)
-                {
-                    if (control1.GetType() == typeof(PosSubPane))
-                    {
-                        PosSubPane subPane = (PosSubPane)control1;
-                        Dictionary<string, List<Dictionary<string, Affix>>> PosSubMap = subPane.PosSubMap;
-                        _affix_map[oldPartOfSpeech].Add(PosSubMap);
-                    }
-                }
-
+                _affix_map[oldPartOfSpeech].AddRange(from Control control1 in oldTab.Controls
+                                                     where control1 is PosSubPane
+                                                     let subPane = (PosSubPane)control1
+                                                     let PosSubMap = subPane.PosSubMap
+                                                     select PosSubMap);
                 oldTab.SuspendLayout();
                 oldTab.Controls.Clear();
                 oldTab.ResumeLayout(true);
@@ -212,7 +210,7 @@ namespace LanguageEditor
                     return;
                 }
                 Control posControl = posTab.Controls[0];
-                if ((posControl == null) || (posControl.GetType() != typeof(PosSubPane)))
+                if ((!(posControl is PosSubPane)))
                 {
                     return;
                 }
@@ -248,6 +246,8 @@ namespace LanguageEditor
                 {
                     Declension = string.Empty,
                     AffixRules = rules,
+                    PartOfSpeech = partOfSpeech,
+                    AffixType = affixType,
                     Location = new Point(xPos, yPos),
                     BorderStyle = BorderStyle.FixedSingle,
                     SpellingPronunciationRules = SpellingPronunciationRules ?? [],
@@ -259,14 +259,18 @@ namespace LanguageEditor
                 ctl.Location = new Point(xPos, yPos);
                 affixTab.Controls.Add(ctl);
                 affixTab.ResumeLayout(true);
+
+                if (_affix_map != null)
+                {
+                    _affix_map[partOfSpeech][0][affixType][0].TryAdd(string.Empty, rules);
+                    posPane.PosSubMap = _affix_map[partOfSpeech][0];
+                }
             }
         }
 
 
 
-#pragma warning disable S3260 // Non-derived "private" classes and records should be "sealed"
-        private class PosSubPane : Panel
-#pragma warning restore S3260 // Non-derived "private" classes and records should be "sealed"
+        private sealed class PosSubPane : Panel
         {
             private Dictionary<string, List<Dictionary<string, Affix>>>? _posSubMap;
             private bool dataChanged;
@@ -388,6 +392,8 @@ namespace LanguageEditor
                         {
                             Declension = key,
                             AffixRules = entry[key],
+                            PartOfSpeech = PartOfSpeech,
+                            AffixType = tab.Text,
                             Location = new Point(xPos, yPos),
                             BorderStyle = BorderStyle.FixedSingle,
                             SpellingPronunciationRules = SpellingPronunciationRules ?? [],
@@ -416,6 +422,30 @@ namespace LanguageEditor
 
             internal void DeclensionAffixEditor_Changed(object? sender, EventArgs e)
             {
+                if(_posSubMap == null)
+                { 
+                    return; 
+                }
+                if((sender == null) || (sender.GetType() != typeof(DeclensionAffixEditor)))
+                {
+                    return;
+                }
+                DeclensionAffixEditor editor = (DeclensionAffixEditor)sender;
+                if(e.GetType() == typeof(DeclensionAffixEditor.DeclensionAffixChangedEventArgs))
+                {
+                    DeclensionAffixEditor.DeclensionAffixChangedEventArgs e2 = (DeclensionAffixEditor.DeclensionAffixChangedEventArgs)e;
+                    if((e2.DeclensionTextChanged) && (!string.IsNullOrEmpty(e2.AffixType)) && (e2.Declension != null))
+                    {
+                        foreach (var (subDict, temp) in from Dictionary<string, Affix> subDict in _posSubMap[e2.AffixType]
+                                                        where subDict.ContainsKey(e2.Declension)
+                                                        let temp = subDict[e2.Declension]
+                                                        select (subDict, temp))
+                        {
+                            subDict.Remove(e2.Declension);
+                            subDict.Add(editor.Declension, temp);
+                        }
+                    }
+                }
                 dataChanged = true;
             }
 
@@ -443,7 +473,6 @@ namespace LanguageEditor
             {
                 tpn_affixLevel.Size = new Size(this.Size.Width - 2, this.Size.Height - 2);
             }
-
 
             private void InitializeComponent()
             {

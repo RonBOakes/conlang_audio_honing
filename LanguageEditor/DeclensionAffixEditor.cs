@@ -37,6 +37,8 @@ namespace LanguageEditor
         private bool declensionChanged = false;
         private bool affixRulesChanged = false;
 
+        private string? oldDeclension = null;
+
         public string Declension
         {
             get
@@ -47,6 +49,7 @@ namespace LanguageEditor
             set
             {
                 txt_declension.Text = value;
+                oldDeclension = value;
                 declensionChanged = false;
             }
         }
@@ -179,7 +182,7 @@ namespace LanguageEditor
             private get; set;
         }
 
-        public string ? AffixType
+        public string? AffixType
         {
             private get; set;
         }
@@ -596,13 +599,30 @@ namespace LanguageEditor
         private void Txt_declension_TextChanged(object? sender, EventArgs e)
         {
             DeclensionChanged = true;
-            Changed?.Invoke(this, EventArgs.Empty);
+            DeclensionAffixChangedEventArgs args = new()
+            {
+                PartOfSpeech = PartOfSpeech,
+                AffixType = AffixType,
+                Declension = oldDeclension,
+                DeclensionTextChanged = true,
+                RuleTextChanged = false
+            };
+            Changed?.Invoke(this, args);
+            oldDeclension = txt_declension.Text.Trim();
         }
 
         private void Txt_TextChanged(object? sender, EventArgs e)
         {
             AffixRulesChanged = true;
-            Changed?.Invoke(this, EventArgs.Empty);
+            DeclensionAffixChangedEventArgs args = new()
+            {
+                PartOfSpeech = PartOfSpeech,
+                AffixType = AffixType,
+                Declension = Declension,
+                DeclensionTextChanged = false,
+                RuleTextChanged = true
+            };
+            Changed?.Invoke(this, args);
         }
 
         private void Rbn_fixed_CheckedChanged(object? sender, EventArgs e)
@@ -723,6 +743,12 @@ namespace LanguageEditor
             public string? PartOfSpeech { get; set; }
             public string? AffixType { get; set; }
             public string? Declension { get; set; }
+        }
+
+        public class DeclensionAffixChangedEventArgs : DeclensionAffixEntryDeleteEventArgs
+        {
+            public bool DeclensionTextChanged { get; set; }
+            public bool RuleTextChanged { get; set; }
         }
 
         public event EventHandler Delete;
