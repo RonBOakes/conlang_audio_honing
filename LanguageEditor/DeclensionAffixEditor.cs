@@ -696,7 +696,7 @@ namespace LanguageEditor
 
         private void Btn_delete_Click(object? sender, EventArgs e)
         {
-            DeclensionAffixEntryDeleteEventArgs args = new()
+            DeclensionAffixEntryEventArgs args = new()
             {
                 PartOfSpeech = PartOfSpeech,
                 AffixType = AffixType,
@@ -705,14 +705,14 @@ namespace LanguageEditor
             Delete?.Invoke(this, args);
         }
 
-        public class DeclensionAffixEntryDeleteEventArgs : EventArgs
+        public class DeclensionAffixEntryEventArgs : EventArgs
         {
             public string? PartOfSpeech { get; set; }
             public string? AffixType { get; set; }
             public string? Declension { get; set; }
         }
 
-        public class DeclensionAffixChangedEventArgs : DeclensionAffixEntryDeleteEventArgs
+        public class DeclensionAffixChangedEventArgs : DeclensionAffixEntryEventArgs
         {
             public bool DeclensionTextChanged { get; set; }
             public bool RuleTextChanged { get; set; }
