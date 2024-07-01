@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 
@@ -42,7 +43,7 @@ namespace LanguageEditor
         {
             get
             {
-                if ((_affix_map == null) || (tpn_partOfSpeechLevel ==  null))
+                if ((_affix_map == null) || (tpn_partOfSpeechLevel == null))
                 {
                     return [];
                 }
@@ -52,10 +53,10 @@ namespace LanguageEditor
                 {
                     string partOfSpeech = tab.Text;
                     Control control = tab.Controls[0];
-                    if(control.GetType() == typeof(PosSubPane))
+                    if (control.GetType() == typeof(PosSubPane))
                     {
                         PosSubPane subPane = (PosSubPane)control;
-                        if(subPane.DataChanged)
+                        if (subPane.DataChanged)
                         {
                             _affix_map[partOfSpeech].Clear();
                             _affix_map[partOfSpeech].Add(subPane.PosSubMap);
@@ -130,7 +131,7 @@ namespace LanguageEditor
                 TabPage oldTab = tpn_partOfSpeechLevel.TabPages[partOfSpeechTabIndex];
                 string oldPartOfSpeech = oldTab.Text;
                 _affix_map[oldPartOfSpeech].Clear();
-                foreach(Control control1 in oldTab.Controls)
+                foreach (Control control1 in oldTab.Controls)
                 {
                     if (control1.GetType() == typeof(PosSubPane))
                     {
@@ -155,11 +156,13 @@ namespace LanguageEditor
             {
                 PosSubPane posSubPane = new()
                 {
-                    PosSubMap = entry,
+                    ParentPane = this,
+                    PartOfSpeech = tab.Text,
                     Location = new Point(xPos, yPos),
                     Size = new Size(tab.Size.Width - 2, tab.Size.Height - 20),
                     BorderStyle = BorderStyle.FixedSingle,
                     SpellingPronunciationRules = SpellingPronunciationRules,
+                    PosSubMap = entry,
                 };
                 tab.Controls.Add(posSubPane);
                 yPos += posSubPane.Height + 5;
@@ -181,6 +184,69 @@ namespace LanguageEditor
             this.SizeChanged += this_SizeChanged;
         }
 
+
+        private void AddButton_Click(object? sender, EventArgs e)
+        {
+            if ((sender == null) || (sender.GetType() != typeof(Button)))
+            {
+                return;
+            }
+            Button addButton = (Button)sender;
+            string buttonText = addButton.Text;
+            Match buttonMatch = Regex.Match(buttonText, @"^\s*Add\s+(\w+)\s+Declension\s+to\s+(\w+)\s*$");
+            if (buttonMatch.Success)
+            {
+                string affixType = buttonMatch.Groups[1].Value;
+                string partOfSpeech = buttonMatch.Groups[2].Value;
+
+                TabPage? posTab = tpn_partOfSpeechLevel.TabPages[partOfSpeech];
+                if (posTab == null)
+                {
+                    return;
+                }
+                Control posControl = posTab.Controls[0];
+                if ((posControl == null) || (posControl.GetType() != typeof(PosSubPane)))
+                {
+                    return;
+                }
+                PosSubPane posPane = (PosSubPane)posControl;
+                TabPage? affixTab = posPane.tpn_affixLevel.TabPages[affixType];
+                if(affixTab == null)
+                {
+                    return;
+                }
+
+                int controlInx = 0;
+                int xPos = 0, yPos = 0;
+                Control ctl;
+                while ((ctl = affixTab.Controls[controlInx]).GetType() == typeof(DeclensionAffixEditor))
+                {
+                    yPos += ctl.Height + 5;
+                    controlInx += 1;
+                }
+
+                affixTab.SuspendLayout();
+                Affix rules = new();
+                DeclensionAffixEditor editor = new()
+                {
+                    Declension = string.Empty,
+                    AffixRules = rules,
+                    Location = new Point(xPos, yPos),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    SpellingPronunciationRules = SpellingPronunciationRules ?? [],
+                };
+                editor.Changed += posPane.DeclensionAffixEditor_Changed;
+                affixTab.Controls.Remove(ctl);
+                affixTab.Controls.Add(editor);
+                yPos += editor.Height + 5;
+                ctl.Location = new Point(xPos, yPos);
+                affixTab.Controls.Add(ctl);
+                affixTab.ResumeLayout(true);
+            }
+        }
+
+
+
 #pragma warning disable S3260 // Non-derived "private" classes and records should be "sealed"
         private class PosSubPane : Panel
 #pragma warning restore S3260 // Non-derived "private" classes and records should be "sealed"
@@ -199,9 +265,9 @@ namespace LanguageEditor
                 {
                     _posSubMap = value;
                     DataChanged = false;
-                    createAffixTabs();
+                    CreateAffixTabs();
                     affixTabIndex = 0;
-                    loadAffixTab(0);
+                    LoadAffixTab(0);
                 }
             }
 
@@ -223,7 +289,19 @@ namespace LanguageEditor
                 set;
             }
 
-            private TabControl tpn_affixLevel = new();
+            public string? PartOfSpeech
+            {
+                private get;
+                set;
+            }
+
+            public DeclensionAffixMapPane? ParentPane
+            {
+                private get;
+                set;
+            }
+
+            internal TabControl tpn_affixLevel = new();
             private int affixTabIndex = 0;
 
             public PosSubPane()
@@ -231,12 +309,12 @@ namespace LanguageEditor
                 InitializeComponent();
             }
 
-            public void tpn_affixLevel_SelectedIndexChanged(object? sender, EventArgs e)
+            public void Tpn_affixLevel_SelectedIndexChanged(object? sender, EventArgs e)
             {
-                loadAffixTab(tpn_affixLevel.SelectedIndex);
+                LoadAffixTab(tpn_affixLevel.SelectedIndex);
             }
 
-            private void createAffixTabs()
+            private void CreateAffixTabs()
             {
                 if (_posSubMap != null)
                 {
@@ -254,7 +332,7 @@ namespace LanguageEditor
                 }
             }
 
-            private void loadAffixTab(int newTabIndex)
+            private void LoadAffixTab(int newTabIndex)
             {
                 if ((_posSubMap == null) || (tpn_affixLevel == null) || (tpn_affixLevel.TabPages.Count < 1))
                 {
@@ -302,10 +380,24 @@ namespace LanguageEditor
                         yPos += declensionAffixEditor.Height + 5;
                     }
                 }
+                string buttonText = string.Format("Add {0} Declension to {1}", tab.Text, PartOfSpeech);
+                Button addButton = new()
+                {
+                    Text = buttonText,
+                    Size = new Size(300, 25),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Location = new Point(xPos, yPos)
+                };
+                if (ParentPane != null)
+                {
+                    addButton.Click += ParentPane.AddButton_Click;
+                }
+                tab.Controls.Add(addButton);
+
                 tab.ResumeLayout(true);
             }
 
-            private void DeclensionAffixEditor_Changed(object? sender, EventArgs e)
+            internal void DeclensionAffixEditor_Changed(object? sender, EventArgs e)
             {
                 dataChanged = true;
             }
@@ -344,7 +436,7 @@ namespace LanguageEditor
                     Location = new System.Drawing.Point(0, 0)
                 };
                 this.Controls.Add(tpn_affixLevel);
-                tpn_affixLevel.SelectedIndexChanged += tpn_affixLevel_SelectedIndexChanged;
+                tpn_affixLevel.SelectedIndexChanged += Tpn_affixLevel_SelectedIndexChanged;
                 this.SizeChanged += PosSubPane_SizeChanged;
             }
         }
