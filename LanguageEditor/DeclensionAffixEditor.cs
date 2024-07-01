@@ -230,7 +230,6 @@ namespace LanguageEditor
             this.Size = controlSize;
             this.BorderStyle = BorderStyle.None;
 
-
             btn_delete = new Button
             {
                 Text = "Delete",
@@ -432,7 +431,7 @@ namespace LanguageEditor
             lbl_fSpellingAdd = new Label
             {
                 Text = "False Spelling Add:",
-                Location = new Point(5, 270),
+                Location = new Point(5, 260),
                 Size = new Size(200, 25),
                 TextAlign = ContentAlignment.MiddleRight
             };
@@ -441,7 +440,7 @@ namespace LanguageEditor
 
             txt_fSpellingAdd = new TextBox
             {
-                Location = new Point(205, 270),
+                Location = new Point(205, 260),
                 Size = new Size(200, 25)
             };
             Controls.Add(txt_fSpellingAdd);

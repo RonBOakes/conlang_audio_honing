@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace LanguageEditor
 {
-    internal class DeclensionAffixMapPane : UserControl
+    internal class DeclensionAffixMapPane : Panel
     {
         private static Size InitialSize = new(895, 355);
         private Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>>? _affix_map;
@@ -94,7 +94,7 @@ namespace LanguageEditor
 
         public void this_SizeChanged(object? sender, EventArgs e)
         {
-            tpn_partOfSpeechLevel.Size = this.Size;
+            tpn_partOfSpeechLevel.Size = new Size(this.Size.Width - 2, this.Size.Height - 2);
         }
 
         private void loadPartOfSpeechTab(int newTabIndex)
@@ -114,7 +114,7 @@ namespace LanguageEditor
             TabPage tab = tpn_partOfSpeechLevel.TabPages[newTabIndex];
             tab.Size = this.Size;
             tab.SuspendLayout();
-            tab.AutoScroll = true;
+            tab.AutoScroll = false;
             int xPos = 0, yPos = 0;
             tab.Controls.Clear();
             foreach (Dictionary<string, List<Dictionary<string, Affix>>> entry in _affix_map[tab.Text])
@@ -123,7 +123,7 @@ namespace LanguageEditor
                 {
                     PosSubMap = entry,
                     Location = new Point(xPos, yPos),
-                    Size = new Size(tab.Size.Width, 350),
+                    Size = new Size(tab.Size.Width - 2, tab.Size.Height - 20),
                     BorderStyle = BorderStyle.FixedSingle,
                     SpellingPronunciationRules = SpellingPronunciationRules,
                 };
@@ -138,8 +138,9 @@ namespace LanguageEditor
             this.Size = InitialSize;
             tpn_partOfSpeechLevel = new TabControl
             {
-                Size = this.Size,
-                Location = new System.Drawing.Point(0, 0)
+                // Size = this.size,
+                Size = new Size(this.Size.Width - 2, this.Size.Height - 2),
+                Location = new System.Drawing.Point(0, 0),
             };
             this.Controls.Add(tpn_partOfSpeechLevel);
             tpn_partOfSpeechLevel.SelectedIndexChanged += tpn_partOfSpeechLevel_SelectedIndexChanged;
@@ -147,7 +148,7 @@ namespace LanguageEditor
         }
 
 #pragma warning disable S3260 // Non-derived "private" classes and records should be "sealed"
-        private class PosSubPane : UserControl
+        private class PosSubPane : Panel
 #pragma warning restore S3260 // Non-derived "private" classes and records should be "sealed"
         {
             private Dictionary<string, List<Dictionary<string, Affix>>>? _posSubMap;
@@ -289,7 +290,7 @@ namespace LanguageEditor
 
             public void this_SizeChanged(object? sender, EventArgs e)
             {
-                tpn_affixLevel.Size = this.Size;
+                tpn_affixLevel.Size = new Size(this.Size.Width - 2, this.Size.Height - 2);
             }
 
 
@@ -297,7 +298,7 @@ namespace LanguageEditor
             {
                 tpn_affixLevel = new TabControl
                 {
-                    Size = this.Size,
+                    Size = new Size(this.Size.Width - 2, this.Size.Height - 2),
                     Location = new System.Drawing.Point(0, 0)
                 };
                 this.Controls.Add(tpn_affixLevel);
