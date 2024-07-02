@@ -16,11 +16,6 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using ConlangJson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConlangAudioHoning
 {
@@ -43,7 +38,7 @@ namespace ConlangAudioHoning
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(420, 470);
 
-            editor = new LexiconEditor(lexicon, partOfSpeech,soundMapList);
+            editor = new LexiconEditor(lexicon, partOfSpeech, soundMapList);
 
             editor.SaveAndCloseToolStripMenuItem.Click += SaveAndCloseToolStripMenuItem_Click;
             editor.CloseWithoutSavingToolStripMenuItem.Click += CloseWithoutSavingToolStripMenuItem_Click;

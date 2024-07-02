@@ -16,7 +16,6 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */using ConlangJson;
 using System.Text.RegularExpressions;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace ConlangAudioHoning
 {

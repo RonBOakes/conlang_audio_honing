@@ -195,19 +195,19 @@ namespace ConlangJson
             // In order to match with words in the derived_word_list, spaces need to be 
             // replaced with underscores.
             foreach (LexiconEntry entry in from LexiconEntry word in language.lexicon
-                                          where word.declensions.Contains("root")
-                                          select word)
+                                           where word.declensions.Contains("root")
+                                           select word)
 
+            {
+                string wmEnglish = entry.english.Replace(' ', '_');
+                _ = wordMap.TryAdd(wmEnglish, entry);
+                string partOfSpeech = entry.part_of_speech;
+                if (partOfSpeech.StartsWith('n'))
                 {
-                    string wmEnglish = entry.english.Replace(' ', '_');
-                    _ = wordMap.TryAdd(wmEnglish, entry);
-                    string partOfSpeech = entry.part_of_speech;
-                    if (partOfSpeech.StartsWith('n'))
-                    {
-                        partOfSpeech = "n";
-                    }
-                    _ = wordMapTuple.TryAdd((wmEnglish, partOfSpeech), entry);
+                    partOfSpeech = "n";
                 }
+                _ = wordMapTuple.TryAdd((wmEnglish, partOfSpeech), entry);
+            }
 
             // Iterate over the derived_word_list
             foreach (string words in language.derived_word_list)

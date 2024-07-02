@@ -17,7 +17,6 @@
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using ConlangJson;
-using System.Text;
 
 namespace ConlangAudioHoning
 {

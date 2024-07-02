@@ -18,15 +18,12 @@
  */
 using ConlangAudioHoning;
 using ConlangJson;
-using Microsoft.VisualBasic;
 using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Unicode;
-using System.Threading.Channels;
-using System.Linq;
 using System.Text.RegularExpressions;
+using System.Text.Unicode;
 
 namespace LanguageEditor
 {
@@ -313,7 +310,7 @@ namespace LanguageEditor
 
         private void Txt_derivedWord_Enter(object? sender, EventArgs e)
         {
-            if((sender == null) || (sender.GetType () != typeof(TextBox)))
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
             {
                 return;
             }
@@ -323,30 +320,30 @@ namespace LanguageEditor
 
         private void Txt_derivedWord_Leave(object? sender, EventArgs e)
         {
-            if((sender == null) || (sender.GetType() != typeof(TextBox)))
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
             {
                 return;
             }
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
-            if(derivedWordUpdateRunning)
+            if (derivedWordUpdateRunning)
             {
                 return;
             }
             derivedWordUpdateRunning = true;
             TextBox derivedWord = (TextBox)sender;
-            if(derivedWord.Text.Trim().Equals(derivedWordText))
+            if (derivedWord.Text.Trim().Equals(derivedWordText))
             {
                 derivedWordUpdateRunning = false;
                 return;
             }
-            if(string.IsNullOrEmpty(derivedWordText))
+            if (string.IsNullOrEmpty(derivedWordText))
             {
                 languageDescription.derived_word_list.Add(derivedWord.Text.Trim());
             }
-            else if(string.IsNullOrEmpty(derivedWord.Text.Trim()))
+            else if (string.IsNullOrEmpty(derivedWord.Text.Trim()))
             {
                 languageDescription.derived_word_list.Remove(derivedWordText);
             }
@@ -395,19 +392,19 @@ namespace LanguageEditor
 
         private void DerivationalAffixEditor_Delete(object? sender, EventArgs e)
         {
-            if(e == null)
+            if (e == null)
             {
                 return;
             }
-            if(e.GetType() != typeof(DerivationalAffixEditor.DerivationalAffixEntryDeleteEventArgs))
+            if (e.GetType() != typeof(DerivationalAffixEditor.DerivationalAffixEntryDeleteEventArgs))
             {
                 return;
             }
-            if(sender?.GetType() != typeof(DerivationalAffixEditor))
+            if (sender?.GetType() != typeof(DerivationalAffixEditor))
             {
                 return;
             }
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
@@ -422,7 +419,7 @@ namespace LanguageEditor
             {
                 languageDescription.derivational_affix_map.Remove(derivationKey);
                 DialogResult result = MessageBox.Show(string.Format("Remove Derived Word Rules based on {0}?", derivationKey), "Remove Rules", MessageBoxButtons.YesNo);
-                if(result == DialogResult.Yes)
+                if (result == DialogResult.Yes)
                 {
                     List<string> rulesToRemove =
                     [
@@ -450,7 +447,7 @@ namespace LanguageEditor
 
         private void AddDerivationalAffix_Enter(object? sender, EventArgs e)
         {
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
@@ -638,7 +635,7 @@ namespace LanguageEditor
                 {
                     foreach (object control in tabPage.Controls)
                     {
-                        if(control.GetType() == typeof(DerivationalAffixEditor))
+                        if (control.GetType() == typeof(DerivationalAffixEditor))
                         {
                             DerivationalAffixEditor editor = (DerivationalAffixEditor)control;
                             languageDescription.derivational_affix_map[tabPage.Text.Trim()] = editor.AffixRules;
@@ -727,7 +724,7 @@ namespace LanguageEditor
 
         private void Txt_nounGender_Enter(object? sender, EventArgs e)
         {
-            if((sender == null) || (sender.GetType() != typeof(TextBox)))
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
             {
                 return;
             }
@@ -741,21 +738,21 @@ namespace LanguageEditor
             {
                 return;
             }
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
-            if(nounGenderUpdateRunning)
+            if (nounGenderUpdateRunning)
             {
                 return;
             }
             nounGenderUpdateRunning = true;
             TextBox nounGender = (TextBox)sender;
-            if(nounGender.Text.Trim().Equals(nounGenderText))
+            if (nounGender.Text.Trim().Equals(nounGenderText))
             {
                 return;
             }
-            if(string.IsNullOrEmpty(nounGenderText))
+            if (string.IsNullOrEmpty(nounGenderText))
             {
                 languageDescription.noun_gender_list.Add(nounGender.Text.Trim());
             }
@@ -765,7 +762,7 @@ namespace LanguageEditor
             }
             else
             {
-                for(int i = 0; i < languageDescription.noun_gender_list.Count; i++)
+                for (int i = 0; i < languageDescription.noun_gender_list.Count; i++)
                 {
                     if (languageDescription.noun_gender_list[i].Equals(nounGenderText))
                     {
@@ -823,25 +820,25 @@ namespace LanguageEditor
             {
                 return;
             }
-            if(partOfSpeechUpdateRunning)
+            if (partOfSpeechUpdateRunning)
             {
                 return;
             }
             partOfSpeechUpdateRunning = true;
             TextBox partOfSpeech = (TextBox)sender;
-            if(partOfSpeech.Text.Trim().Equals(partOfSpeechText))
+            if (partOfSpeech.Text.Trim().Equals(partOfSpeechText))
             {
                 return;
             }
-            if(string.IsNullOrEmpty(partOfSpeechText))
+            if (string.IsNullOrEmpty(partOfSpeechText))
             {
                 languageDescription.part_of_speech_list.Add(partOfSpeech.Text.Trim());
             }
             else if (string.IsNullOrEmpty(partOfSpeech.Text.Trim()))
             {
                 languageDescription.part_of_speech_list.Remove(partOfSpeechText);
-                DialogResult result = MessageBox.Show("Remove all words of this Part of Speech from the Lexicon?", "Remove Words",MessageBoxButtons.YesNo);
-                if(result == DialogResult.Yes)
+                DialogResult result = MessageBox.Show("Remove all words of this Part of Speech from the Lexicon?", "Remove Words", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
                 {
                     languageDescription.lexicon = lexiconEditor?.Lexicon ?? [];
 #pragma warning disable IDE0028 // Simplify collection initialization
@@ -854,7 +851,7 @@ namespace LanguageEditor
                     {
                         languageDescription.lexicon.Remove(entry);
                     }
-                    if(lexiconEditor != null)
+                    if (lexiconEditor != null)
                     {
                         lexiconEditor.Lexicon = languageDescription.lexicon;
                     }
@@ -862,7 +859,7 @@ namespace LanguageEditor
             }
             else
             {
-                for(int i = 0; i < languageDescription.part_of_speech_list.Count; i++)
+                for (int i = 0; i < languageDescription.part_of_speech_list.Count; i++)
                 {
                     if (languageDescription.part_of_speech_list[i].Equals(partOfSpeechText))
                     {

@@ -16,14 +16,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using ConlangJson;
 using ConlangAudioHoning;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using ConlangJson;
 
 namespace LanguageEditor
 {
@@ -453,7 +447,7 @@ namespace LanguageEditor
 
         public class DerivationalAffixEntryDeleteEventArgs : EventArgs
         {
-            public string? DerivationKey {  get; set; }
+            public string? DerivationKey { get; set; }
         }
 
         public event EventHandler Delete;

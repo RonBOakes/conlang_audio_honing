@@ -15,13 +15,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using ConlangJson;
+using System.Xml.Linq;
 
 namespace PolyGlot2ConlangJson
 {
@@ -32,7 +27,7 @@ namespace PolyGlot2ConlangJson
             List<SpellingPronunciationRules> soundMapList = new();
 
             IEnumerable<XElement> proCollection = polyGlotLanguage.Descendants("pronunciationCollection");
-            foreach(XElement p in proCollection) 
+            foreach (XElement p in proCollection)
             {
                 IEnumerable<XElement> proGuides = p.Descendants("proGuide");
                 foreach (XElement proGuide in proGuides)

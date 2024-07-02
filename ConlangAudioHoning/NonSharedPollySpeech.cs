@@ -16,23 +16,15 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using Amazon.Runtime.CredentialManagement;
-using Amazon.Runtime;
-using ConlangJson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Amazon.SecurityToken.Model;
+using Amazon;
 using Amazon.Polly;
 using Amazon.Polly.Model;
-using Amazon.SecurityToken;
-using Amazon;
-using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
+using Amazon.Runtime;
+using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
 using Amazon.S3.Model;
+using ConlangJson;
+using System.Diagnostics;
 
 namespace ConlangAudioHoning
 {
@@ -62,7 +54,7 @@ namespace ConlangAudioHoning
                 throw new NonSharedPollyException("Unable to create NonSharedPollySpeech object:", ex);
             }
 
-            pollyClient = new AmazonPollyClient(credentials,RegionEndpoint.GetBySystemName(credentials.Region));
+            pollyClient = new AmazonPollyClient(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
             s3Client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
         }
 
@@ -285,7 +277,7 @@ namespace ConlangAudioHoning
                 Generate(speed, caller);
             }
 
-            if(voiceModels.Count == 0)
+            if (voiceModels.Count == 0)
             {
                 _ = GetVoices();
             }
@@ -310,14 +302,14 @@ namespace ConlangAudioHoning
                 // Start the speech generation.
                 Task<StartSpeechSynthesisTaskResponse> responseTask = pollyClient.StartSpeechSynthesisTaskAsync(request);
 
-                while(!responseTask.IsCompleted)
+                while (!responseTask.IsCompleted)
                 {
                     Thread.Sleep(5000);
                 }
 
                 // Wait for it to finish.
                 StartSpeechSynthesisTaskResponse response = responseTask.Result;
-                if (response != null) 
+                if (response != null)
                 {
                     SynthesisTask task = response.SynthesisTask;
                     string outputURIString = task.OutputUri;
@@ -355,7 +347,7 @@ namespace ConlangAudioHoning
                         getObjectResponse.WriteResponseStreamToFileAsync(targetFile, false, cancellationToken).Wait();
 
                         // Delete all files in the S3 Bucket (to clean up from past issues)
-                        foreach(S3Object s3file in listObjectsV2Response.S3Objects)
+                        foreach (S3Object s3file in listObjectsV2Response.S3Objects)
                         {
                             DeleteObjectRequest deleteObjectRequest = new()
                             {
@@ -421,9 +413,9 @@ namespace ConlangAudioHoning
         private bool CreateBucketIfNeeded()
         {
             ListBucketsResponse response = s3Client.ListBucketsAsync().Result;
-            foreach(S3Bucket bucket in response.Buckets)
+            foreach (S3Bucket bucket in response.Buckets)
             {
-                if(bucket.BucketName == PollyS3Bucket)
+                if (bucket.BucketName == PollyS3Bucket)
                 {
                     return true;
                 }
@@ -439,7 +431,7 @@ namespace ConlangAudioHoning
             {
                 _ = s3Client.PutBucketAsync(request).Result;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -459,7 +451,7 @@ namespace ConlangAudioHoning
             {
                 throw new NonSharedPollyException($"Failed to find the {PollySSOProfile} profile");
             }
-            if(credentials == null )
+            if (credentials == null)
             {
                 throw new NonSharedPollyException("Unable to acquire credentials");
             }

@@ -1020,7 +1020,7 @@ namespace ConlangAudioHoning
                             }
                             else
                             {
-                                if(firstCharUpper)
+                                if (firstCharUpper)
                                 {
                                     sampleTextBuilder.AppendFormat("{0}{1} ", StringExtensions.FirstCharToUpper(word), punctuation);
                                 }
@@ -1064,7 +1064,7 @@ namespace ConlangAudioHoning
         [GeneratedRegex(@"(\w+)([.,?!])", RegexOptions.Compiled)]
         private static partial Regex WordPatternRegex();
     }
-    
+
     /// <summary>
     /// String extensions - currently only FirstCharToUpper
     /// </summary>
