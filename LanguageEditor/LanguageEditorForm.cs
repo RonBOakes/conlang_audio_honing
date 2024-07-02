@@ -43,6 +43,8 @@ namespace LanguageEditor
         private bool nounGenderUpdateRunning = false;
         private string partOfSpeechText = "";
         private bool partOfSpeechUpdateRunning = false;
+        private string derivedWordText = "";
+        private bool derivedWordUpdateRunning = false;
 
         public LanguageEditorForm()
         {
@@ -145,7 +147,7 @@ namespace LanguageEditor
             panel_nounGender.Controls.Add(txt_nounGenderBlank);
             panel_nounGender.ResumeLayout(true);
 
-            tab_soundMapList.SuspendLayout();
+            tab_spellingPronounciationRules.SuspendLayout();
             xPos = 0;
             yPos = 0;
             soundMapEditor = new SpellingPronunciationRuleListEditor
@@ -154,10 +156,10 @@ namespace LanguageEditor
                 Size = new Size(895, 355),
                 SoundMapList = languageDescription.spelling_pronunciation_rules
             };
-            tab_soundMapList.Controls.Add(soundMapEditor);
-            tab_soundMapList.Enter += Tab_soundMapList_Enter;
-            tab_soundMapList.Leave += Tab_soundMapList_Leave;
-            tab_soundMapList.ResumeLayout(true);
+            tab_spellingPronounciationRules.Controls.Add(soundMapEditor);
+            tab_spellingPronounciationRules.Enter += Tab_soundMapList_Enter;
+            tab_spellingPronounciationRules.Leave += Tab_soundMapList_Leave;
+            tab_spellingPronounciationRules.ResumeLayout(true);
 
             xPos = 0;
             yPos = 0;
@@ -275,6 +277,8 @@ namespace LanguageEditor
                     Size = new Size(850, 20)
                 };
                 yPos += 25;
+                txt_derivedWord.Enter += Txt_derivedWord_Enter;
+                txt_derivedWord.Leave += Txt_derivedWord_Leave;
                 tab_derivedWordList.Controls.Add(txt_derivedWord);
             }
             TextBox txt_derivedWordBlank = new()
@@ -283,6 +287,8 @@ namespace LanguageEditor
                 Location = new Point(xPos, yPos),
                 Size = new Size(850, 20)
             };
+            txt_derivedWordBlank.Enter += Txt_derivedWord_Enter;
+            txt_derivedWordBlank.Leave += Txt_derivedWord_Leave;
             tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
             tab_derivedWordList.ResumeLayout(true);
 
@@ -303,6 +309,88 @@ namespace LanguageEditor
             txt_languageNameNativeEnglish.TextChanged += Txt_languageNameNativeEnglish_TextChanged;
 
             languageFileInfo = new FileInfo(filename);
+        }
+
+        private void Txt_derivedWord_Enter(object? sender, EventArgs e)
+        {
+            if((sender == null) || (sender.GetType () != typeof(TextBox)))
+            {
+                return;
+            }
+            TextBox derivedWord = (TextBox)sender;
+            derivedWordText = derivedWord.Text.Trim();
+        }
+
+        private void Txt_derivedWord_Leave(object? sender, EventArgs e)
+        {
+            if((sender == null) || (sender.GetType() != typeof(TextBox)))
+            {
+                return;
+            }
+            if(languageDescription == null)
+            {
+                return;
+            }
+            if(derivedWordUpdateRunning)
+            {
+                return;
+            }
+            derivedWordUpdateRunning = true;
+            TextBox derivedWord = (TextBox)sender;
+            if(derivedWord.Text.Trim().Equals(derivedWordText))
+            {
+                derivedWordUpdateRunning = false;
+                return;
+            }
+            if(string.IsNullOrEmpty(derivedWordText))
+            {
+                languageDescription.derived_word_list.Add(derivedWord.Text.Trim());
+            }
+            else if(string.IsNullOrEmpty(derivedWord.Text.Trim()))
+            {
+                languageDescription.derived_word_list.Remove(derivedWordText);
+            }
+            else
+            {
+                for (int i = 0; i < languageDescription.derived_word_list.Count; i++)
+                {
+                    if (languageDescription.derived_word_list[i].Equals(derivedWordText))
+                    {
+                        languageDescription.derived_word_list[i] = derivedWord.Text.Trim();
+                        break;
+                    }
+                }
+            }
+            int xPos = 0, yPos = 0;
+            tab_derivedWordList.SuspendLayout();
+            tab_derivedWordList.Controls.Clear();
+            tab_derivedWordList.ResumeLayout(true);
+            tab_derivedWordList.SuspendLayout();
+            tab_derivedWordList.AutoScroll = true;
+            foreach (string derivedWordEntry in languageDescription.derived_word_list)
+            {
+                TextBox txt_derivedWord = new()
+                {
+                    Text = derivedWordEntry,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(850, 20)
+                };
+                yPos += 25;
+                txt_derivedWord.Enter += Txt_derivedWord_Enter;
+                txt_derivedWord.Leave += Txt_derivedWord_Leave;
+                tab_derivedWordList.Controls.Add(txt_derivedWord);
+            }
+            TextBox txt_derivedWordBlank = new()
+            {
+                Text = string.Empty,
+                Location = new Point(xPos, yPos),
+                Size = new Size(850, 20)
+            };
+            txt_derivedWordBlank.Enter += Txt_derivedWord_Enter;
+            txt_derivedWordBlank.Leave += Txt_derivedWord_Leave;
+            tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
+            tab_derivedWordList.ResumeLayout(true);
+            derivedWordUpdateRunning = false;
         }
 
         private void DerivationalAffixEditor_Delete(object? sender, EventArgs e)
@@ -385,16 +473,6 @@ namespace LanguageEditor
             tpn_DerivationalAffixMap.TabPages.Insert(tpn_DerivationalAffixMap.TabPages.Count - 1, tabPage);
             tpn_DerivationalAffixMap.ResumeLayout(true);
             tpn_DerivationalAffixMap.SelectedTab = tabPage;
-        }
-
-        private void Txt_partOfSpeech_Leave1(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Txt_nounGenderBlank_Leave(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void Tab_soundMapList_Enter(object? sender, EventArgs e)
