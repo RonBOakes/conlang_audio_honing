@@ -253,6 +253,7 @@ namespace LanguageEditor
                     SpellingPronunciationRules = SpellingPronunciationRules ?? [],
                 };
                 editor.Changed += posPane.DeclensionAffixEditor_Changed;
+                editor.Delete += DeclensionAffixEditor_Delete;
                 affixTab.Controls.Remove(ctl);
                 affixTab.Controls.Add(editor);
                 yPos += editor.Height + 5;
@@ -269,6 +270,50 @@ namespace LanguageEditor
         }
 
 
+        internal void DeclensionAffixEditor_Delete(object? sender, EventArgs e)
+        {
+            if (_affix_map == null)
+            {
+                return;
+            }
+            if ((sender == null) || (sender.GetType() != typeof(DeclensionAffixEditor)))
+            {
+                return;
+            }
+            if (e.GetType() == typeof(DeclensionAffixEditor.DeclensionAffixEntryEventArgs))
+            {
+                DeclensionAffixEditor.DeclensionAffixEntryEventArgs e2 = (DeclensionAffixEditor.DeclensionAffixEntryEventArgs)e;
+                if ((!string.IsNullOrEmpty(e2.AffixType)) && (!string.IsNullOrEmpty(e2.PartOfSpeech)) && (e2.Declension != null))
+                {
+                    TabPage? posTab = null;
+                    foreach (var tabPage1 in from TabPage tabPage1 in tpn_partOfSpeechLevel.TabPages
+                                             where tabPage1.Text.Trim().Equals(e2.PartOfSpeech.Trim())
+                                             select tabPage1)
+                    {
+                        posTab = tabPage1;
+                    }
+
+                    if (posTab == null)
+                    {
+                        return;
+                    }
+                    Control posControl = posTab.Controls[0];
+                    if ((posControl is not PosSubPane))
+                    {
+                        return;
+                    }
+                    PosSubPane posPane = (PosSubPane)posControl;
+
+                    foreach (var subDict in from Dictionary<string, Affix> subDict in _affix_map[e2.PartOfSpeech][0][e2.AffixType]
+                                            where subDict.ContainsKey(e2.Declension)
+                                            select (subDict))
+                    {
+                        subDict.Remove(e2.Declension);
+                    }
+                    posPane.PosSubMap = _affix_map[e2.PartOfSpeech][0];
+                }
+            }
+        }
 
         private sealed class PosSubPane : Panel
         {
@@ -399,6 +444,10 @@ namespace LanguageEditor
                             SpellingPronunciationRules = SpellingPronunciationRules ?? [],
                         };
                         declensionAffixEditor.Changed += DeclensionAffixEditor_Changed;
+                        if (ParentPane != null)
+                        {
+                            declensionAffixEditor.Delete += ParentPane.DeclensionAffixEditor_Delete;
+                        }
                         tab.Controls.Add(declensionAffixEditor);
                         yPos += declensionAffixEditor.Height + 5;
                     }
@@ -419,22 +468,21 @@ namespace LanguageEditor
 
                 tab.ResumeLayout(true);
             }
-
             internal void DeclensionAffixEditor_Changed(object? sender, EventArgs e)
             {
-                if(_posSubMap == null)
-                { 
-                    return; 
+                if (_posSubMap == null)
+                {
+                    return;
                 }
-                if((sender == null) || (sender.GetType() != typeof(DeclensionAffixEditor)))
+                if ((sender == null) || (sender.GetType() != typeof(DeclensionAffixEditor)))
                 {
                     return;
                 }
                 DeclensionAffixEditor editor = (DeclensionAffixEditor)sender;
-                if(e.GetType() == typeof(DeclensionAffixEditor.DeclensionAffixChangedEventArgs))
+                if (e.GetType() == typeof(DeclensionAffixEditor.DeclensionAffixChangedEventArgs))
                 {
                     DeclensionAffixEditor.DeclensionAffixChangedEventArgs e2 = (DeclensionAffixEditor.DeclensionAffixChangedEventArgs)e;
-                    if((e2.DeclensionTextChanged) && (!string.IsNullOrEmpty(e2.AffixType)) && (e2.Declension != null))
+                    if ((e2.DeclensionTextChanged) && (!string.IsNullOrEmpty(e2.AffixType)) && (e2.Declension != null))
                     {
                         foreach (var (subDict, temp) in from Dictionary<string, Affix> subDict in _posSubMap[e2.AffixType]
                                                         where subDict.ContainsKey(e2.Declension)
