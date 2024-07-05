@@ -131,6 +131,7 @@ namespace LanguageEditor
                 yPos += 20;
                 txt_nounGender.Enter += Txt_nounGender_Enter;
                 txt_nounGender.Leave += Txt_nounGender_Leave;
+                txt_nounGender.KeyPress += Txt_nounGender_KeyPress;
                 panel_nounGender.Controls.Add(txt_nounGender);
             }
             TextBox txt_nounGenderBlank = new()
@@ -141,6 +142,7 @@ namespace LanguageEditor
             };
             txt_nounGenderBlank.Enter += Txt_nounGender_Enter;
             txt_nounGenderBlank.Leave += Txt_nounGender_Leave;
+            txt_nounGenderBlank.KeyPress += Txt_nounGender_KeyPress;
             panel_nounGender.Controls.Add(txt_nounGenderBlank);
             panel_nounGender.ResumeLayout(true);
 
@@ -173,6 +175,7 @@ namespace LanguageEditor
                 yPos += 20;
                 txt_partOfSpeech.Enter += Txt_partOfSpeech_Enter;
                 txt_partOfSpeech.Leave += Txt_partOfSpeech_Leave;
+                txt_partOfSpeech.KeyPress += Txt_partOfSpeech_KeyPress;
                 panel_partsOfSpeechList.Controls.Add(txt_partOfSpeech);
             }
             TextBox txt_partOfSpeechBlank = new()
@@ -183,6 +186,7 @@ namespace LanguageEditor
             };
             txt_partOfSpeechBlank.Enter += Txt_partOfSpeech_Enter;
             txt_partOfSpeechBlank.Leave += Txt_partOfSpeech_Leave;
+            txt_partOfSpeechBlank.KeyPress += Txt_partOfSpeech_KeyPress;
             panel_partsOfSpeechList.Controls.Add(txt_partOfSpeechBlank);
             panel_partsOfSpeechList.ResumeLayout(true);
 
@@ -276,6 +280,7 @@ namespace LanguageEditor
                 yPos += 25;
                 txt_derivedWord.Enter += Txt_derivedWord_Enter;
                 txt_derivedWord.Leave += Txt_derivedWord_Leave;
+                txt_derivedWord.KeyPress += Txt_derivedWord_KeyPress;
                 tab_derivedWordList.Controls.Add(txt_derivedWord);
             }
             TextBox txt_derivedWordBlank = new()
@@ -286,6 +291,7 @@ namespace LanguageEditor
             };
             txt_derivedWordBlank.Enter += Txt_derivedWord_Enter;
             txt_derivedWordBlank.Leave += Txt_derivedWord_Leave;
+            txt_derivedWordBlank.KeyPress += Txt_derivedWord_KeyPress;
             tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
             tab_derivedWordList.ResumeLayout(true);
 
@@ -390,7 +396,93 @@ namespace LanguageEditor
             derivedWordUpdateRunning = false;
         }
 
-        private void DerivationalAffixEditor_Delete(object? sender, EventArgs e)
+        private void Txt_derivedWord_KeyPress(object? sender, KeyPressEventArgs e)
+        {
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
+            {
+                e.Handled = false;
+                return;
+            }
+            if (languageDescription == null)
+            {
+                e.Handled = false;
+                return;
+            }
+            if (derivedWordUpdateRunning)
+            {
+                e.Handled = false;
+                return;
+            }
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                derivedWordUpdateRunning = true;
+                TextBox derivedWord = (TextBox)sender;
+                if (derivedWord.Text.Trim().Equals(derivedWordText))
+                {
+                    derivedWordUpdateRunning = false;
+                    return;
+                }
+                if (string.IsNullOrEmpty(derivedWordText))
+                {
+                    languageDescription.derived_word_list.Add(derivedWord.Text.Trim());
+                }
+                else if (string.IsNullOrEmpty(derivedWord.Text.Trim()))
+                {
+                    languageDescription.derived_word_list.Remove(derivedWordText);
+                }
+                else
+                {
+                    for (int i = 0; i < languageDescription.derived_word_list.Count; i++)
+                    {
+                        if (languageDescription.derived_word_list[i].Equals(derivedWordText))
+                        {
+                            languageDescription.derived_word_list[i] = derivedWord.Text.Trim();
+                            break;
+                        }
+                    }
+                }
+                int xPos = 0, yPos = 0;
+                tab_derivedWordList.SuspendLayout();
+                tab_derivedWordList.Controls.Clear();
+                tab_derivedWordList.ResumeLayout(true);
+                tab_derivedWordList.SuspendLayout();
+                tab_derivedWordList.AutoScroll = true;
+                foreach (string derivedWordEntry in languageDescription.derived_word_list)
+                {
+                    TextBox txt_derivedWord = new()
+                    {
+                        Text = derivedWordEntry,
+                        Location = new Point(xPos, yPos),
+                        Size = new Size(850, 20)
+                    };
+                    yPos += 25;
+                    txt_derivedWord.Enter += Txt_derivedWord_Enter;
+                    txt_derivedWord.Leave += Txt_derivedWord_Leave;
+                    txt_derivedWord.KeyPress += Txt_derivedWord_KeyPress;
+                    tab_derivedWordList.Controls.Add(txt_derivedWord);
+                }
+                TextBox txt_derivedWordBlank = new()
+                {
+                    Text = string.Empty,
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(850, 20)
+                };
+                txt_derivedWordBlank.Enter += Txt_derivedWord_Enter;
+                txt_derivedWordBlank.Leave += Txt_derivedWord_Leave;
+                txt_derivedWordBlank.KeyPress += Txt_derivedWord_KeyPress;
+                tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
+                tab_derivedWordList.ResumeLayout(true);
+                derivedWordUpdateRunning = false;
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = false;
+            }
+        }
+
+
+            private void DerivationalAffixEditor_Delete(object? sender, EventArgs e)
         {
             if (e == null)
             {
@@ -750,6 +842,7 @@ namespace LanguageEditor
             TextBox nounGender = (TextBox)sender;
             if (nounGender.Text.Trim().Equals(nounGenderText))
             {
+                nounGenderUpdateRunning = false;
                 return;
             }
             if (string.IsNullOrEmpty(nounGenderText))
@@ -798,6 +891,88 @@ namespace LanguageEditor
             panel_nounGender.Controls.Add(txt_nounGenderBlank);
             panel_nounGender.ResumeLayout(true);
             nounGenderUpdateRunning = false;
+        }
+
+        private void Txt_nounGender_KeyPress(object? sender, KeyPressEventArgs e)
+        {
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
+            {
+                e.Handled = false;
+                return;
+            }
+            if (languageDescription == null)
+            {
+                e.Handled = false;
+                return;
+            }
+            if (nounGenderUpdateRunning)
+            {
+                e.Handled = false;
+                return;
+            }
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                nounGenderUpdateRunning = true;
+                TextBox nounGender = (TextBox)sender;
+                if (nounGender.Text.Trim().Equals(nounGenderText))
+                {
+                    nounGenderUpdateRunning = false;
+                    return;
+                }
+                if (string.IsNullOrEmpty(nounGenderText))
+                {
+                    languageDescription.noun_gender_list.Add(nounGender.Text.Trim());
+                }
+                else if (string.IsNullOrEmpty(nounGender.Text.Trim()))
+                {
+                    languageDescription.noun_gender_list.Remove(nounGenderText);
+                }
+                else
+                {
+                    for (int i = 0; i < languageDescription.noun_gender_list.Count; i++)
+                    {
+                        if (languageDescription.noun_gender_list[i].Equals(nounGenderText))
+                        {
+                            languageDescription.noun_gender_list[i] = nounGender.Text.Trim();
+                            break;
+                        }
+                    }
+                }
+                int xPos = 0, yPos = 0;
+                panel_nounGender.SuspendLayout();
+                panel_nounGender.Controls.Clear();
+                foreach (string noun2 in languageDescription.noun_gender_list)
+                {
+                    TextBox txt_nounGender = new()
+                    {
+                        Text = noun2,
+                        Location = new Point(xPos, yPos),
+                        Size = new Size(125, 12)
+                    };
+                    yPos += 20;
+                    txt_nounGender.Enter += Txt_nounGender_Enter;
+                    txt_nounGender.Leave += Txt_nounGender_Leave;
+                    txt_nounGender.KeyPress += Txt_nounGender_KeyPress;
+                    panel_nounGender.Controls.Add(txt_nounGender);
+                }
+                TextBox txt_nounGenderBlank = new()
+                {
+                    Text = "",
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(125, 12)
+                };
+                txt_nounGenderBlank.Enter += Txt_nounGender_Enter;
+                txt_nounGenderBlank.Leave += Txt_nounGender_Leave;
+                txt_nounGenderBlank.KeyPress += Txt_nounGender_KeyPress;
+                panel_nounGender.Controls.Add(txt_nounGenderBlank);
+                panel_nounGender.ResumeLayout(true);
+                nounGenderUpdateRunning = false;
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = false;
+            }
         }
 
         private void Txt_partOfSpeech_Enter(object? sender, EventArgs e)
@@ -902,6 +1077,113 @@ namespace LanguageEditor
             panel_partsOfSpeechList.Controls.Add(txt_partOfSpeechBlank);
             panel_partsOfSpeechList.ResumeLayout(true);
             partOfSpeechUpdateRunning = false;
+        }
+
+        private void Txt_partOfSpeech_KeyPress(object? sender, KeyPressEventArgs e)
+        {
+            if ((sender == null) || (sender.GetType() != typeof(TextBox)))
+            {
+                e.Handled = false;
+                return;
+            }
+            if (languageDescription == null)
+            {
+                e.Handled = false;
+                return;
+            }
+            if (partOfSpeechUpdateRunning)
+            {
+                e.Handled = false;
+                return;
+            }
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                partOfSpeechUpdateRunning = true;
+                TextBox partOfSpeech = (TextBox)sender;
+                if (partOfSpeech.Text.Trim().Equals(partOfSpeechText))
+                {
+                    return;
+                }
+                if (string.IsNullOrEmpty(partOfSpeechText))
+                {
+                    languageDescription.part_of_speech_list.Add(partOfSpeech.Text.Trim());
+                }
+                else if (string.IsNullOrEmpty(partOfSpeech.Text.Trim()))
+                {
+                    languageDescription.part_of_speech_list.Remove(partOfSpeechText);
+                    DialogResult result = MessageBox.Show("Remove all words of this Part of Speech from the Lexicon?", "Remove Words", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        languageDescription.lexicon = lexiconEditor?.Lexicon ?? [];
+#pragma warning disable IDE0028 // Simplify collection initialization
+                        List<LexiconEntry> entriesToRemove = new();
+#pragma warning restore IDE0028 // Simplify collection initialization
+                        entriesToRemove.AddRange(from LexiconEntry entry in languageDescription.lexicon
+                                                 where entry.part_of_speech.Equals(partOfSpeechText)
+                                                 select entry);
+                        foreach (LexiconEntry entry in entriesToRemove)
+                        {
+                            languageDescription.lexicon.Remove(entry);
+                        }
+                        if (lexiconEditor != null)
+                        {
+                            lexiconEditor.Lexicon = languageDescription.lexicon;
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < languageDescription.part_of_speech_list.Count; i++)
+                    {
+                        if (languageDescription.part_of_speech_list[i].Equals(partOfSpeechText))
+                        {
+                            languageDescription.part_of_speech_list[i] = partOfSpeech.Text.Trim();
+                            foreach (var entry in from LexiconEntry entry in languageDescription.lexicon
+                                                  where entry.part_of_speech.Equals(partOfSpeechText)
+                                                  select entry)
+                            {
+                                entry.part_of_speech = partOfSpeech.Text.Trim();
+                            }
+                        }
+                    }
+                }
+                languageDescription.part_of_speech_list.Sort();
+                int xPos = 0;
+                int yPos = 0;
+                panel_partsOfSpeechList.SuspendLayout();
+                panel_partsOfSpeechList.Controls.Clear();
+                foreach (string partOfSpeech2 in languageDescription.part_of_speech_list)
+                {
+                    TextBox txt_partOfSpeech = new()
+                    {
+                        Text = partOfSpeech2,
+                        Location = new Point(xPos, yPos),
+                        Size = new Size(125, 12)
+                    };
+                    yPos += 20;
+                    txt_partOfSpeech.Enter += Txt_partOfSpeech_Enter;
+                    txt_partOfSpeech.Leave += Txt_partOfSpeech_Leave;
+                    txt_partOfSpeech.KeyPress += Txt_partOfSpeech_KeyPress;
+                    panel_partsOfSpeechList.Controls.Add(txt_partOfSpeech);
+                }
+                TextBox txt_partOfSpeechBlank = new()
+                {
+                    Text = "",
+                    Location = new Point(xPos, yPos),
+                    Size = new Size(125, 12)
+                };
+                txt_partOfSpeechBlank.Enter += Txt_partOfSpeech_Enter;
+                txt_partOfSpeechBlank.Leave += Txt_partOfSpeech_Leave;
+                txt_partOfSpeechBlank.KeyPress += Txt_partOfSpeech_KeyPress;
+                panel_partsOfSpeechList.Controls.Add(txt_partOfSpeechBlank);
+                panel_partsOfSpeechList.ResumeLayout(true);
+                partOfSpeechUpdateRunning = false;
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = false;
+            }
         }
 
         [GeneratedRegex(@"\s+")]
