@@ -930,8 +930,13 @@ def parse_grammar_rules(grammar,part_of_speech_set,spelling_pronunciation_rules,
                             if abbrv_try in declension_map:
                                 abbrv_list.append(abbrv_try)
                                 abbrv_try = ''
+                            else:
+                                abbrv_try = '.' + abbrv_part
+                                if abbrv_try in declension_map:
+                                    abbrv_list.append(abbrv_try)
+                                    abbrv_try = ''
                 if abbrv_try != '' and abbrv_try not in abbrv_list:
-                    print("Unmapped declension abbreviation: " + abbrv_try + "(" + line + ")")
+                    print("Unmapped declension abbreviation: " + abbrv_try + " (" + line + ")")
                     print(abbrv_list)
                     print(declension_map)
                     exit()
