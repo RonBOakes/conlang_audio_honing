@@ -27,7 +27,7 @@ namespace ConlangAudioHoning
     /// <summary>
     /// Handles the phonetic changes for the Conlang Honing Application.
     /// </summary>
-    internal partial class PhoneticChanger
+    public partial class PhoneticChanger
     {
 
         /// <summary>

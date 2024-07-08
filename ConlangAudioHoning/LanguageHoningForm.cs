@@ -2546,7 +2546,7 @@ namespace ConlangAudioHoning
             // ShowDialog is modal
             if (soundMapListEditorForm.SoundMapSaved)
             {
-                DialogResult result = MessageBox.Show("Preserve the spelling (Yes)?\nNo preserves the pronunciation.", "Spelling or pronunciation", MessageBoxButtons.YesNoCancel);
+                DialogResult result = SpellingPronunciationRuleListEditorForm.SpellingPronunciationDialogBox();
                 if (result == DialogResult.Yes)
                 {
                     languageDescription.spelling_pronunciation_rules = soundMapListEditorForm.SoundMapList;

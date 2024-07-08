@@ -18,7 +18,7 @@
 
 namespace ConlangAudioHoning
 {
-    internal class SpellingPronunciationRuleListEditorForm : Form
+    public class SpellingPronunciationRuleListEditorForm : Form
     {
         private readonly SpellingPronunciationRuleListEditor SoundMapListEditor;
 
@@ -105,6 +105,61 @@ namespace ConlangAudioHoning
         {
             get => SoundMapListEditor.HeaderText;
             set => SoundMapListEditor.HeaderText = value;
+        }
+
+        /// <summary>
+        /// Custom dialog that prompts the user about mass changes to the lexicon.  
+        /// </summary>
+        /// <param name="title">Optional string to change the title</param>
+        /// <param name="promptText">Optional string to change the dialog box text</param>
+        /// <param name="button1">Optional text to change the first button - returns DialogResult.Yes</param>
+        /// <param name="button2">Optional text to change the second button - returns DialogResult.No</param>
+        /// <returns></returns>
+        public static DialogResult SpellingPronunciationDialogBox(string title = "Spelling or Pronunciation",
+            string promptText = "Preserve the spelling or pronunciation?",
+            string button1 = "Spelling", 
+            string button2 = "Pronunciation")
+        {
+            Form form = new Form();
+            Label label = new Label();
+            Button button_1 = new Button();
+            Button button_2 = new Button();
+
+            int buttonStartPos = 130; //Standard two button position
+
+            form.Text = title;
+
+            // Label
+            label.Text = promptText;
+            label.SetBounds(9, 20, 372, 13);
+            label.Font = new Font("Microsoft Tai Le", 10, FontStyle.Regular);
+
+            button_1.Text = button1;
+            button_2.Text = button2;
+            button_1.DialogResult = DialogResult.Yes;
+            button_2.DialogResult = DialogResult.No;
+
+
+            button_1.SetBounds(buttonStartPos, 72, 100, 23);
+            button_2.SetBounds(buttonStartPos + 100, 72, 100, 23);
+
+            label.AutoSize = true;
+            button_1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            button_2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+
+            form.ClientSize = new Size(396, 107);
+            form.Controls.AddRange(new Control[] { label, button_1, button_2 });
+
+            form.ClientSize = new Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
+            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.MinimizeBox = false;
+            form.MaximizeBox = false;
+            form.AcceptButton = button_1;
+            form.CancelButton = button_2;
+
+            DialogResult dialogResult = form.ShowDialog();
+            return dialogResult;
         }
     }
 }

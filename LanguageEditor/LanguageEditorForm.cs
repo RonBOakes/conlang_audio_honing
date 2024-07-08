@@ -32,7 +32,7 @@ namespace LanguageEditor
         private LanguageDescription? languageDescription;
         private FileInfo? languageFileInfo = null;
         private LexiconEditor? lexiconEditor = null;
-        private SpellingPronunciationRuleListEditor? soundMapEditor = null;
+        private SpellingPronunciationRuleListEditor? spellingPronunciationRulesEditor = null;
         private DeclensionAffixMapPane? declensionAffixMapPane = null;
         private LexicalOrderEditor? lexicalOrderEditor = null;
 
@@ -149,15 +149,15 @@ namespace LanguageEditor
             tab_spellingPronounciationRules.SuspendLayout();
             xPos = 0;
             yPos = 0;
-            soundMapEditor = new SpellingPronunciationRuleListEditor
+            spellingPronunciationRulesEditor = new SpellingPronunciationRuleListEditor
             {
                 Location = new Point(xPos, yPos),
                 Size = new Size(895, 355),
                 SoundMapList = languageDescription.spelling_pronunciation_rules
             };
-            tab_spellingPronounciationRules.Controls.Add(soundMapEditor);
-            tab_spellingPronounciationRules.Enter += Tab_soundMapList_Enter;
-            tab_spellingPronounciationRules.Leave += Tab_soundMapList_Leave;
+            tab_spellingPronounciationRules.Controls.Add(spellingPronunciationRulesEditor);
+            tab_spellingPronounciationRules.Enter += Tab_spellingPronunciationRules_Enter;
+            tab_spellingPronounciationRules.Leave += Tab_spellingPronunciationRules_Leave;
             tab_spellingPronounciationRules.ResumeLayout(true);
 
             xPos = 0;
@@ -564,25 +564,44 @@ namespace LanguageEditor
             tpn_DerivationalAffixMap.SelectedTab = tabPage;
         }
 
-        private void Tab_soundMapList_Enter(object? sender, EventArgs e)
+        private void Tab_spellingPronunciationRules_Enter(object? sender, EventArgs e)
         {
-            if ((languageDescription != null) && (soundMapEditor != null))
+            if ((languageDescription != null) && (spellingPronunciationRulesEditor != null))
             {
-                soundMapEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
+                spellingPronunciationRulesEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
             }
         }
 
-        private void Tab_soundMapList_Leave(object? sender, EventArgs e)
+        private void Tab_spellingPronunciationRules_Leave(object? sender, EventArgs e)
         {
-            if ((languageDescription != null) && (soundMapEditor != null))
+            if ((languageDescription != null) && (spellingPronunciationRulesEditor != null))
             {
-                if (soundMapEditor.SoundMapSaved)
+                if (spellingPronunciationRulesEditor.SoundMapSaved)
                 {
-                    languageDescription.spelling_pronunciation_rules = soundMapEditor.SoundMapList;
+                    languageDescription.spelling_pronunciation_rules = spellingPronunciationRulesEditor.SoundMapList;
+                    DialogResult result = SpellingPronunciationRuleListEditorForm.SpellingPronunciationDialogBox();
+                    if (result == DialogResult.Yes)
+                    {
+                        PhoneticChanger phoneticChanger = new()
+                        {
+                            Language = languageDescription
+                        };
+                        phoneticChanger.UpdatePronunciation();
+                        languageDescription.lexicon = phoneticChanger.Language.lexicon;
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        PhoneticChanger phoneticChanger = new()
+                        {
+                            Language = languageDescription
+                        };
+                        phoneticChanger.UpdateSpelling();
+                        languageDescription.lexicon = phoneticChanger.Language.lexicon;
+                    }
                 }
                 else
                 {
-                    soundMapEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
+                    spellingPronunciationRulesEditor.SoundMapList = languageDescription.spelling_pronunciation_rules;
                 }
             }
         }
