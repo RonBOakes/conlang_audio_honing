@@ -133,7 +133,7 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 				<File Source="..\conlang_json_python\not_madlibs.py"/>
 			</Component>
 			<Component>
-				<File Source="..\conlang_json_python\parse_vulgrarlang.py"/>
+				<File Source="..\conlang_json_python\parse_vulgarlang.py"/>
 			</Component>
 			<Component>
 				<File Source="..\conlang_json_python\write_lexicon_csv.py"/>
