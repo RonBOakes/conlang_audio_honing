@@ -395,6 +395,7 @@ namespace LanguageEditor
             tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
             tab_derivedWordList.ResumeLayout(true);
             derivedWordUpdateRunning = false;
+            CheckDerivedWordRegeneration();
         }
 
         private void Txt_derivedWord_KeyPress(object? sender, KeyPressEventArgs e)
@@ -474,6 +475,7 @@ namespace LanguageEditor
                 tab_derivedWordList.Controls.Add(txt_derivedWordBlank);
                 tab_derivedWordList.ResumeLayout(true);
                 derivedWordUpdateRunning = false;
+                CheckDerivedWordRegeneration();
                 e.Handled = true;
             }
             else
