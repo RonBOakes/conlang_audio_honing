@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Application launch program for the Conlang Data editor
  *
  * Copyright (C) 2024 Ronald B. Oakes

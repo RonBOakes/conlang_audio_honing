@@ -16,8 +16,8 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using ConlangJson;
 using System.Text;
+using ConlangJson;
 
 namespace ConlangAudioHoning
 {
@@ -270,7 +270,10 @@ namespace ConlangAudioHoning
             // Initialize the eSpeak-ng library via the wrapper
             List<string> ipaText =
             [
-                "ðɪs", "ɪz", "ɐ", "tˈɛst"
+                "ðɪs",
+                "ɪz",
+                "ɐ",
+                "tˈɛst"
             ];
             StringBuilder sb = new();
             foreach (string word in ipaText)

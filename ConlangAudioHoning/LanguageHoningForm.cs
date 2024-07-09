@@ -16,7 +16,6 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using ConlangJson;
 using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Text;
@@ -24,6 +23,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Unicode;
+using ConlangJson;
 
 namespace ConlangAudioHoning
 {

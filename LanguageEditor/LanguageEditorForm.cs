@@ -1,4 +1,4 @@
-/*
+﻿/*
  * User Methods for the top level Conlang Editor.
  
  * Copyright (C) 2024 Ronald B. Oakes
@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using ConlangAudioHoning;
-using ConlangJson;
 using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Text.Unicode;
+using ConlangAudioHoning;
+using ConlangJson;
 
 namespace LanguageEditor
 {
@@ -77,7 +77,7 @@ namespace LanguageEditor
                     languageToolStripMenuItem.Visible = true;
                     declineLanguageToolStripMenuItem.Enabled = true;
                     deriveLanguageToolStripMenuItem.Enabled = true;
-                    if(languageDescription.derived)
+                    if (languageDescription.derived)
                     {
                         deriveLanguageToolStripMenuItem.Text = "Remove Derived Words";
                     }
@@ -85,7 +85,7 @@ namespace LanguageEditor
                     {
                         deriveLanguageToolStripMenuItem.Text = "Derive Language";
                     }
-                    if(languageDescription.declined)
+                    if (languageDescription.declined)
                     {
                         declineLanguageToolStripMenuItem.Text = "Remove Declined Words";
                     }
@@ -553,8 +553,8 @@ namespace LanguageEditor
                     List<string> rulesToRemove =
                     [
                         .. from string rule in languageDescription.derived_word_list
-                                               where rule.Contains(derivationKey)
-                                               select rule,
+                           where rule.Contains(derivationKey)
+                           select rule,
                     ];
                     foreach (string ruleToRemove in rulesToRemove)
                     {
@@ -1336,16 +1336,16 @@ namespace LanguageEditor
 
         private void DeclineLanguageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
-            if(languageDescription.declined)
+            if (languageDescription.declined)
             {
                 ConlangUtilities.RemoveDeclinedEntries(languageDescription);
                 languageDescription.declined = false;
                 declineLanguageToolStripMenuItem.Text = "Decline Language";
-                if(lexiconEditor != null)
+                if (lexiconEditor != null)
                 {
                     lexiconEditor.Lexicon = languageDescription.lexicon;
                 }

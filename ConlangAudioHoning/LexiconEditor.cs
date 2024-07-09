@@ -1,4 +1,5 @@
-﻿/*
+﻿using System.Text.RegularExpressions;
+/*
  * Lexicon Editor form
  * Copyright (C) 2024 Ronald B. Oakes
  *
@@ -14,8 +15,8 @@
  *
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
- */using ConlangJson;
-using System.Text.RegularExpressions;
+ */
+using ConlangJson;
 
 namespace ConlangAudioHoning
 {
@@ -87,7 +88,7 @@ namespace ConlangAudioHoning
                     {
                         lbxLexicon.Items.Add(string.Format("{1} ({0}: {2})", entry.spelled, entry.english, entry.part_of_speech));
                     }
-                    lexiconMap.Add((entry.spelled, entry.english, entry.part_of_speech), entry);
+                    _ = lexiconMap.TryAdd((entry.spelled, entry.english, entry.part_of_speech), entry);
                 }
                 lbxLexicon.EndUpdate();
             }
@@ -177,14 +178,7 @@ namespace ConlangAudioHoning
             lexiconMap.Clear();
             foreach (LexiconEntry entry in lexiconEntries)
             {
-                if (SortByCriteria == SortByCriteriaTypes.CONLANG)
-                {
-                    lbxLexicon.Items.Add(string.Format("{0} ({1}: {2})", entry.spelled, entry.english, entry.part_of_speech));
-                }
-                else
-                {
-                    lbxLexicon.Items.Add(string.Format("{1} ({0}: {2})", entry.spelled, entry.english, entry.part_of_speech));
-                }
+                lbxLexicon.Items.Add(string.Format("{0} ({1}: {2})", entry.spelled, entry.english, entry.part_of_speech));
                 lexiconMap.TryAdd((entry.spelled, entry.english, entry.part_of_speech), entry);
             }
             lbxLexicon.EndUpdate();

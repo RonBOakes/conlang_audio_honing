@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using ConlangJson;
 using System.Text;
+using ConlangJson;
 
 namespace ConlangAudioHoning
 {
@@ -29,7 +29,12 @@ namespace ConlangAudioHoning
     {
         private static readonly string[] _suprasegmentals =
         [
-            "\u02d0", "\u02d1", "\u02c8", "\u02cc", "\u035c", "\u0361"
+            "\u02d0",
+            "\u02d1",
+            "\u02c8",
+            "\u02cc",
+            "\u035c",
+            "\u0361"
         ];
         private static readonly Dictionary<string, List<string>> _consonant_changes = new()
         {
@@ -137,30 +142,139 @@ namespace ConlangAudioHoning
         /// Returns an array containing strings with all of the identified Pulmonic Consonants.
         /// </summary>
         public static String[] PConsonants { get; } = [
-            "b", "\u03b2", "\u0299", "c", "\u00e7", "d", "\u0256", "\u1d91", "\u02a3", "\u02a5", "\u02a4", "\uab66",
-            "f", "\u0278", "g", "\u0262", "\u0270", "h", "\u0266", "\u0127", "\u0267", "j", "\u029d", "\u025f", "k",
-            "l", "\u026c", "\u026e", "\u026d", "\ua78e", "\u029f", "m",
-            "\u0271", "n", "\u0273", "\u0272", "\u014b", "\u0274", "p", "q", "r", "\u0279", "\u027e", "\u027d",
-            "\u027b", "\u027a", "\u0281", "\u0280", "s", "\u0282", "\u0283", "t", "\u0288", "\u02a6",
-            "\u02a8", "\u02a7", "\uab67", "v", "\u2c71", "\u028b", "x", "\u0263", "\u03c7", "\u028e",
-            "z", "\u0290", "\u0292", "\u03b8", "\u00f0", "\u0294", "\u0295", "ɕ", "ʑ",
+            "b",
+            "\u03b2",
+            "\u0299",
+            "c",
+            "\u00e7",
+            "d",
+            "\u0256",
+            "\u1d91",
+            "\u02a3",
+            "\u02a5",
+            "\u02a4",
+            "\uab66",
+            "f",
+            "\u0278",
+            "g",
+            "\u0262",
+            "\u0270",
+            "h",
+            "\u0266",
+            "\u0127",
+            "\u0267",
+            "j",
+            "\u029d",
+            "\u025f",
+            "k",
+            "l",
+            "\u026c",
+            "\u026e",
+            "\u026d",
+            "\ua78e",
+            "\u029f",
+            "m",
+            "\u0271",
+            "n",
+            "\u0273",
+            "\u0272",
+            "\u014b",
+            "\u0274",
+            "p",
+            "q",
+            "r",
+            "\u0279",
+            "\u027e",
+            "\u027d",
+            "\u027b",
+            "\u027a",
+            "\u0281",
+            "\u0280",
+            "s",
+            "\u0282",
+            "\u0283",
+            "t",
+            "\u0288",
+            "\u02a6",
+            "\u02a8",
+            "\u02a7",
+            "\uab67",
+            "v",
+            "\u2c71",
+            "\u028b",
+            "x",
+            "\u0263",
+            "\u03c7",
+            "\u028e",
+            "z",
+            "\u0290",
+            "\u0292",
+            "\u03b8",
+            "\u00f0",
+            "\u0294",
+            "\u0295",
+            "ɕ",
+            "ʑ",
         ];
 
         /// <summary>
         /// Returns an array containing strings with all of the identified Nonpulmonic Consonants.
         /// </summary>
         public static string[] NpConsonants { get; } = [
-            "\u0253", "\u0257", "\u0284", "\u0260", "\u029b", "w", "\u028d", "\u0265", "\u02a1", "\u02a2", "\u0255",
-            "\u0291", "\u029c", "\u0298", "\u01c0", "\u01c3", "\u01c2", "\u01c1", "\ud837\udf0a"
+            "\u0253",
+            "\u0257",
+            "\u0284",
+            "\u0260",
+            "\u029b",
+            "w",
+            "\u028d",
+            "\u0265",
+            "\u02a1",
+            "\u02a2",
+            "\u0255",
+            "\u0291",
+            "\u029c",
+            "\u0298",
+            "\u01c0",
+            "\u01c3",
+            "\u01c2",
+            "\u01c1",
+            "\ud837\udf0a"
         ];
 
         /// <summary>
         /// Returns an array containing strings with all of the vowels.
         /// </summary>
         public static string[] Vowels { get; } = [
-            "a", "\u00e6", "\u0251", "\u0252", "\u0250", "e", "\u025b", "\u025c", "\u025e", "\u0259", "i", "\u0268",
-            "\u026a", "y", "\u028f", "\u00f8", "\u0258", "\u0275", "\u0153", "\u0276", "\u0264", "o", "\u0254", "u",
-            "\u0289", "\u028a", "\u026f", "\u028c", "\u025a",
+            "a",
+            "\u00e6",
+            "\u0251",
+            "\u0252",
+            "\u0250",
+            "e",
+            "\u025b",
+            "\u025c",
+            "\u025e",
+            "\u0259",
+            "i",
+            "\u0268",
+            "\u026a",
+            "y",
+            "\u028f",
+            "\u00f8",
+            "\u0258",
+            "\u0275",
+            "\u0153",
+            "\u0276",
+            "\u0264",
+            "o",
+            "\u0254",
+            "u",
+            "\u0289",
+            "\u028a",
+            "\u026f",
+            "\u028c",
+            "\u025a",
         ];
 
         /// <summary>
@@ -176,17 +290,55 @@ namespace ConlangAudioHoning
         /// Returns an array of strings with the modifiers that can be applied to vowels.
         /// </summary>
         public static string[] Vowel_modifiers { get; } = [
-            "\u02d0", "\u02d1", "\u032f",
+            "\u02d0",
+            "\u02d1",
+            "\u032f",
         ];
 
         /// <summary>
         /// Returns an array of strings with the diacritics valid for use with IPA.
         /// </summary>
         public static string[] Diacritics { get; } = [
-            "\u02f3", "\u0325", "\u030a", "\u0324", "\u032a", "\u0329", "\u0c3c", "\u032c", "\u02f7", "\u0330",
-            "\u02f7", "\u0330", "\u02fd", "\u033a", "\u032f", "\u02b0", "\u033c", "\u033b", "\u02d2", "\u0339", "\u20b7",
-            "\u0303", "\u02b2", "\u02d3", "\u031c", "\u02d6", "\u031f", "\u207f", "\u00a8", "\u0308", "\u02e0", "\u02cd",
-            "\u0320", "\u20e1", "\u02df", "\u033d", "\u02e4", "\uab68", "\u0319", "\u02de"
+            "\u02f3",
+            "\u0325",
+            "\u030a",
+            "\u0324",
+            "\u032a",
+            "\u0329",
+            "\u0c3c",
+            "\u032c",
+            "\u02f7",
+            "\u0330",
+            "\u02f7",
+            "\u0330",
+            "\u02fd",
+            "\u033a",
+            "\u032f",
+            "\u02b0",
+            "\u033c",
+            "\u033b",
+            "\u02d2",
+            "\u0339",
+            "\u20b7",
+            "\u0303",
+            "\u02b2",
+            "\u02d3",
+            "\u031c",
+            "\u02d6",
+            "\u031f",
+            "\u207f",
+            "\u00a8",
+            "\u0308",
+            "\u02e0",
+            "\u02cd",
+            "\u0320",
+            "\u20e1",
+            "\u02df",
+            "\u033d",
+            "\u02e4",
+            "\uab68",
+            "\u0319",
+            "\u02de"
         ];
 
         /// <summary>
@@ -194,7 +346,12 @@ namespace ConlangAudioHoning
         /// phonemes that could be used in place of rhoticity.  
         /// </summary>
         public static string[] RPhonemes { get; } = [
-            "ɹ", "ɾ", "ɺ", "ɽ", "ɻ", "r"
+            "ɹ",
+            "ɾ",
+            "ɺ",
+            "ɽ",
+            "ɻ",
+            "r"
         ];
 
         /// <summary>
@@ -577,8 +734,29 @@ namespace ConlangAudioHoning
         /// </summary>
         /// <returns></returns>
         public static List<string> Ipa_replacements { get; } = [
-            "!","@","#","$","%","&","*","+","=","<",">","~","\u00a2","\u00a3","\u00a4",
-            "\u00a5","\u00a7","\u00a9","\u00ae","\u0394","\u039e","\u03a6","\u03a8",
+            "!",
+            "@",
+            "#",
+            "$",
+            "%",
+            "&",
+            "*",
+            "+",
+            "=",
+            "<",
+            ">",
+            "~",
+            "\u00a2",
+            "\u00a3",
+            "\u00a4",
+            "\u00a5",
+            "\u00a7",
+            "\u00a9",
+            "\u00ae",
+            "\u0394",
+            "\u039e",
+            "\u03a6",
+            "\u03a8",
         ];
 
         /// <summary>

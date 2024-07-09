@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Main program for launching the Conlang Audio Honing Program
 * 
 * Copyright (C) 2024 Ronald B. Oakes

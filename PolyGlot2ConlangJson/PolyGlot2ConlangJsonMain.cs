@@ -17,11 +17,11 @@
  */
 // See https://aka.ms/new-console-template for more information
 
+using System.IO.Compression;
+using System.Xml.Linq;
 using ConlangJson;
 using Mono.Options;
 using PolyGlot2ConlangJson;
-using System.IO.Compression;
-using System.Xml.Linq;
 
 string? inputFile = null;
 string? outputFile = null;

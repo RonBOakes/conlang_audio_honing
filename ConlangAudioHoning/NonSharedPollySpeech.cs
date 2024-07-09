@@ -16,6 +16,7 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using System.Diagnostics;
 using Amazon;
 using Amazon.Polly;
 using Amazon.Polly.Model;
@@ -24,7 +25,6 @@ using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
 using Amazon.S3.Model;
 using ConlangJson;
-using System.Diagnostics;
 
 namespace ConlangAudioHoning
 {

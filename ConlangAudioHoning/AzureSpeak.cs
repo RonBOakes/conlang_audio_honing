@@ -14,11 +14,12 @@
  *
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
- */using ConlangJson;
-using Microsoft.CognitiveServices.Speech;
-using Microsoft.CognitiveServices.Speech.Audio;
+ */
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using ConlangJson;
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
 
 namespace ConlangAudioHoning
 {
@@ -283,7 +284,7 @@ namespace ConlangAudioHoning
                 return voices;
             }
             string data = result.Content.ReadAsStringAsync().Result;
-            if (!String.IsNullOrEmpty(data))
+            if (!string.IsNullOrEmpty(data))
             {
                 responseData = JsonSerializer.Deserialize<JsonArray>(data);
             }

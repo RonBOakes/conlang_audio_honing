@@ -124,7 +124,7 @@ namespace ConlangAudioHoning
         /// <returns></returns>
         public static DialogResult SpellingPronunciationDialogBox(string title = "Spelling or Pronunciation",
             string promptText = "Preserve the spelling or pronunciation?",
-            string button1 = "Spelling", 
+            string button1 = "Spelling",
             string button2 = "Pronunciation")
         {
             Form form = new();

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System.Text.RegularExpressions;
 using Amazon.Runtime.Internal.Transform;
 using ConlangJson;
-using System.Text.RegularExpressions;
 
 namespace LanguageEditor
 {
@@ -69,14 +69,14 @@ namespace LanguageEditor
                 {
                     List<Dictionary<string, List<Dictionary<string, Affix>>>> posList = _affix_map[partOfSpeech];
                     List<Dictionary<string, List<Dictionary<string, Affix>>>> returnPosList = new();
-                    foreach(Dictionary<string, List<Dictionary<string, Affix>>> posSubDict in posList)
+                    foreach (Dictionary<string, List<Dictionary<string, Affix>>> posSubDict in posList)
                     {
                         Dictionary<string, List<Dictionary<string, Affix>>> returnPosSubDict = new();
-                        foreach(string affix in  posSubDict.Keys)
+                        foreach (string affix in posSubDict.Keys)
                         {
                             List<Dictionary<string, Affix>> affixList = posSubDict[affix];
                             List<Dictionary<string, Affix>> returnAffixList = new();
-                            foreach(Dictionary<string, Affix> affixDict in affixList)
+                            foreach (Dictionary<string, Affix> affixDict in affixList)
                             {
                                 if (affixDict.Count > 0)
                                 {

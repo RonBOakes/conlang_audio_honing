@@ -1,4 +1,5 @@
-﻿/*
+﻿using System.Text;
+/*
  * Lexical Order Editor Form
  * Copyright (C) 2024 Ronald B. Oakes
  *
@@ -14,8 +15,8 @@
  *
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
- */using ConlangJson;
-using System.Text;
+ */
+using ConlangJson;
 
 namespace ConlangAudioHoning
 {
