@@ -59,6 +59,9 @@
             useCompactJsonToolStripItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
+            languageToolStripMenuItem = new ToolStripMenuItem();
+            deriveLanguageToolStripMenuItem = new ToolStripMenuItem();
+            declineLanguageToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             viewHelpPageToolStripMenuItem = new ToolStripMenuItem();
             aboutLanguageEditorToolStripMenuItem = new ToolStripMenuItem();
@@ -144,7 +147,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
@@ -191,6 +194,27 @@
             exitToolStripMenuItem.Size = new Size(176, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
+            // 
+            // languageToolStripMenuItem
+            // 
+            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { deriveLanguageToolStripMenuItem, declineLanguageToolStripMenuItem });
+            languageToolStripMenuItem.Name = "languageToolStripMenuItem";
+            languageToolStripMenuItem.Size = new Size(71, 20);
+            languageToolStripMenuItem.Text = "Language";
+            // 
+            // deriveLanguageToolStripMenuItem
+            // 
+            deriveLanguageToolStripMenuItem.Name = "deriveLanguageToolStripMenuItem";
+            deriveLanguageToolStripMenuItem.Size = new Size(180, 22);
+            deriveLanguageToolStripMenuItem.Text = "Derive Language";
+            deriveLanguageToolStripMenuItem.Click += DeriveLanguageToolStripMenuItem_Click;
+            // 
+            // declineLanguageToolStripMenuItem
+            // 
+            declineLanguageToolStripMenuItem.Name = "declineLanguageToolStripMenuItem";
+            declineLanguageToolStripMenuItem.Size = new Size(180, 22);
+            declineLanguageToolStripMenuItem.Text = "Decline Language";
+            declineLanguageToolStripMenuItem.Click += DeclineLanguageToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
@@ -464,5 +488,8 @@
         private ToolStripMenuItem aboutLanguageEditorToolStripMenuItem;
         private ToolStripMenuItem useCompactJsonToolStripItem;
         private TabPage tab_LexicalOrder;
+        private ToolStripMenuItem languageToolStripMenuItem;
+        private ToolStripMenuItem deriveLanguageToolStripMenuItem;
+        private ToolStripMenuItem declineLanguageToolStripMenuItem;
     }
 }

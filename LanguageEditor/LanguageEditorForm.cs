@@ -47,6 +47,8 @@ namespace LanguageEditor
         {
             InitializeComponent();
             useCompactJsonToolStripItem.Checked = false;
+            languageToolStripMenuItem.Enabled = false;
+            languageToolStripMenuItem.Visible = false;
         }
 
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -69,6 +71,30 @@ namespace LanguageEditor
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 LoadLanguage(openFileDialog.FileName);
+                if (languageDescription != null)
+                {
+                    languageToolStripMenuItem.Enabled = true;
+                    languageToolStripMenuItem.Visible = true;
+                    declineLanguageToolStripMenuItem.Enabled = true;
+                    deriveLanguageToolStripMenuItem.Enabled = true;
+                    if(languageDescription.derived)
+                    {
+                        deriveLanguageToolStripMenuItem.Text = "Remove Derived Words";
+                    }
+                    else
+                    {
+                        deriveLanguageToolStripMenuItem.Text = "Derive Language";
+                    }
+                    if(languageDescription.declined)
+                    {
+                        declineLanguageToolStripMenuItem.Text = "Remove Declined Words";
+                    }
+                    else
+                    {
+                        declineLanguageToolStripMenuItem.Text = "Decline Language";
+                    }
+                }
+
             }
         }
 
@@ -485,7 +511,7 @@ namespace LanguageEditor
         }
 
 
-            private void DerivationalAffixEditor_Delete(object? sender, EventArgs e)
+        private void DerivationalAffixEditor_Delete(object? sender, EventArgs e)
         {
             if (e == null)
             {
@@ -1217,7 +1243,7 @@ namespace LanguageEditor
 
         private void CheckDerivedWordRegeneration()
         {
-            if(languageDescription == null)
+            if (languageDescription == null)
             {
                 return;
             }
@@ -1238,8 +1264,8 @@ namespace LanguageEditor
             {
                 return;
             }
-            DialogResult result = MessageBox.Show("Update the derived words in the lexicon?","Update Derived Words",MessageBoxButtons.YesNo);
-            if(result == DialogResult.Yes)
+            DialogResult result = MessageBox.Show("Update the derived words in the lexicon?", "Update Derived Words", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
             {
 
                 ConlangUtilities.RemoveDerivedEntries(languageDescription);
@@ -1253,5 +1279,46 @@ namespace LanguageEditor
 
         [GeneratedRegex(@"\s+")]
         private static partial Regex WhiteSpaceRegex();
+
+        private void DeriveLanguageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (languageDescription == null)
+            {
+                return;
+            }
+            if (languageDescription.derived)
+            {
+                ConlangUtilities.RemoveDeclinedEntries(languageDescription);
+                languageDescription.derived = false;
+                deriveLanguageToolStripMenuItem.Text = "Derive Language";
+            }
+            else
+            {
+                ConlangUtilities.DeriveLexicon(languageDescription);
+                languageDescription.derived = true;
+                deriveLanguageToolStripMenuItem.Text = "Remove Derived Words";
+            }
+        }
+
+        private void DeclineLanguageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(languageDescription == null)
+            {
+                return;
+            }
+            if(languageDescription.declined)
+            {
+                ConlangUtilities.RemoveDeclinedEntries(languageDescription);
+                languageDescription.declined = false;
+                declineLanguageToolStripMenuItem.Text = "Decline Language";
+            }
+            else
+            {
+                ConlangUtilities.DeclineLexicon(languageDescription);
+                languageDescription.declined = true;
+                declineLanguageToolStripMenuItem.Text = "Remove Declined Words";
+            }
+
+        }
     }
 }
