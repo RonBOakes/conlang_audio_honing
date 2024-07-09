@@ -182,6 +182,8 @@ namespace LanguageEditor
 
         private TextBox _lastFocused;
 
+        private bool changed = false;
+
 #pragma warning restore S1450
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -189,6 +191,8 @@ namespace LanguageEditor
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
+            this.LostFocus += DerivationalAffixEditor_LostFocus;
+            this.Leave += DerivationalAffixEditor_LostFocus;
         }
 
         private void InitializeComponent()
@@ -438,19 +442,34 @@ namespace LanguageEditor
 
         private void Btn_delete_Click(object? sender, EventArgs e)
         {
-            DerivationalAffixEntryDeleteEventArgs args = new()
+            DerivationalAffixEntryEventArgs args = new()
             {
                 DerivationKey = DerivationKey
             };
             Delete?.Invoke(this, args);
         }
 
-        public class DerivationalAffixEntryDeleteEventArgs : EventArgs
+        public class DerivationalAffixEntryEventArgs : EventArgs
         {
             public string? DerivationKey { get; set; }
         }
 
         public event EventHandler Delete;
+
+        private void DerivationalAffixEditor_LostFocus(object? sender, EventArgs e)
+        {
+            if (changed)
+            {
+                DerivationalAffixEntryEventArgs args = new()
+                {
+                    DerivationKey = DerivationKey
+                };
+                Changed?.Invoke(this, args);
+                changed = false;
+            }
+        }
+
+        public event EventHandler Changed;
 
         private void Txt_fSpellingAdd_TextChanged(object? sender, EventArgs e)
         {
@@ -463,6 +482,7 @@ namespace LanguageEditor
                 {
                     txt_fPronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_fSpellingAdd.Text.Trim(), SpellingPronunciationRules);
                 }
+                changed = true;
             }
             finally
             {
@@ -482,6 +502,7 @@ namespace LanguageEditor
                 {
                     txt_fSpellingAdd.Text = ConlangUtilities.SpellWord(txt_fPronunciationAdd.Text.Trim(), SpellingPronunciationRules);
                 }
+                changed = true;
             }
             finally
             {
@@ -501,6 +522,7 @@ namespace LanguageEditor
                 {
                     txt_tPronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_tSpellingAdd.Text.Trim(), SpellingPronunciationRules);
                 }
+                changed = true;
             }
             finally
             {
@@ -520,6 +542,7 @@ namespace LanguageEditor
                 {
                     txt_tSpellingAdd.Text = ConlangUtilities.SpellWord(txt_tPronunciationAdd.Text.Trim(), SpellingPronunciationRules);
                 }
+                changed = true;
             }
             finally
             {
@@ -539,6 +562,7 @@ namespace LanguageEditor
                 {
                     txt_pronunciationAdd.Text = ConlangUtilities.SoundOutWord(txt_spellingAdd.Text.Trim(), SpellingPronunciationRules);
                 }
+                changed = true;
             }
             finally
             {
@@ -558,6 +582,7 @@ namespace LanguageEditor
                 {
                     txt_spellingAdd.Text = ConlangUtilities.SpellWord(txt_pronunciationAdd.Text.Trim(), SpellingPronunciationRules);
                 }
+                changed = true;
             }
             finally
             {
@@ -597,6 +622,7 @@ namespace LanguageEditor
                 this.controlSize.Height = 170;
                 this.Size = this.controlSize;
                 this.ResumeLayout(true);
+                changed = true;
             }
             else
             {
@@ -627,8 +653,8 @@ namespace LanguageEditor
                 this.controlSize.Height = 290;
                 this.Size = this.controlSize;
                 this.ResumeLayout(true);
+                changed = true;
             }
-
         }
 
         private void CharInsetToolStripMenuItem_Click(object? sender, EventArgs e)

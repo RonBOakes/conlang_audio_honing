@@ -18,10 +18,17 @@
 
 namespace ConlangAudioHoning
 {
+    /// <summary>
+    /// Form for editing the spelling and pronunciation rules.
+    /// </summary>
     public class SpellingPronunciationRuleListEditorForm : Form
     {
         private readonly SpellingPronunciationRuleListEditor SoundMapListEditor;
 
+        /// <summary>
+        /// Constructor for constructing the spelling and pronunciation rules editor form.
+        /// </summary>
+        /// <exception cref="ConlangAudioHoningException"></exception>
         public SpellingPronunciationRuleListEditorForm()
         {
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -120,10 +127,10 @@ namespace ConlangAudioHoning
             string button1 = "Spelling", 
             string button2 = "Pronunciation")
         {
-            Form form = new Form();
-            Label label = new Label();
-            Button button_1 = new Button();
-            Button button_2 = new Button();
+            Form form = new();
+            Label label = new();
+            Button button_1 = new();
+            Button button_2 = new();
 
             int buttonStartPos = 130; //Standard two button position
 
@@ -148,7 +155,7 @@ namespace ConlangAudioHoning
             button_2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 
             form.ClientSize = new Size(396, 107);
-            form.Controls.AddRange(new Control[] { label, button_1, button_2 });
+            form.Controls.AddRange([label, button_1, button_2]);
 
             form.ClientSize = new Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
             form.FormBorderStyle = FormBorderStyle.FixedDialog;

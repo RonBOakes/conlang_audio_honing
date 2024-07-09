@@ -25,7 +25,7 @@ namespace ConlangAudioHoning
     /// Abstract Class used for defining the speech engine interface.<br/>
     /// This is an abstract class to allow for sharing methods.
     /// </summary>
-    internal abstract class SpeechEngine
+    internal abstract partial class SpeechEngine
     {
         private LanguageDescription? _languageDescription;
         private string? _sampleText = null;
@@ -179,7 +179,7 @@ namespace ConlangAudioHoning
                 word = word[..(wordLen - 1)];
             }
 
-            word = Regex.Replace(word, @"\W+", "");
+            word = NonWordRegex().Replace(word, "");
 
             string phonetic;
             if (wordMap.TryGetValue(word, out LexiconEntry? value))
@@ -257,5 +257,8 @@ namespace ConlangAudioHoning
             /// </summary>
             public string[] SupportedEngines { get; set; }
         }
+
+        [GeneratedRegex(@"\W+")]
+        private static partial Regex NonWordRegex();
     }
 }

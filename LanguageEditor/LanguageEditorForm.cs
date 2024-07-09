@@ -246,6 +246,7 @@ namespace LanguageEditor
                     DerivationKey = derivationKey,
                 };
                 editor.Delete += DerivationalAffixEditor_Delete;
+                editor.Changed += DerivationalAffixEditor_Changed;
                 tabPage.Controls.Add(editor);
                 tpn_DerivationalAffixMap.TabPages.Add(tabPage);
             }
@@ -488,7 +489,7 @@ namespace LanguageEditor
             {
                 return;
             }
-            if (e.GetType() != typeof(DerivationalAffixEditor.DerivationalAffixEntryDeleteEventArgs))
+            if (e.GetType() != typeof(DerivationalAffixEditor.DerivationalAffixEntryEventArgs))
             {
                 return;
             }
@@ -500,7 +501,7 @@ namespace LanguageEditor
             {
                 return;
             }
-            DerivationalAffixEditor.DerivationalAffixEntryDeleteEventArgs eventArgs = (DerivationalAffixEditor.DerivationalAffixEntryDeleteEventArgs)e;
+            DerivationalAffixEditor.DerivationalAffixEntryEventArgs eventArgs = (DerivationalAffixEditor.DerivationalAffixEntryEventArgs)e;
 
 #pragma warning disable S2589 // Boolean expressions should not be gratuitous
             string derivationKey = eventArgs?.DerivationKey ?? string.Empty;
@@ -533,8 +534,14 @@ namespace LanguageEditor
                     tpn_DerivationalAffixMap.TabPages.Remove(current);
                 }
                 tpn_DerivationalAffixMap.ResumeLayout(true);
+                CheckDerivedWordRegeneration();
             }
 #pragma warning restore CA1853 // Unnecessary call to 'Dictionary.ContainsKey(key)'
+        }
+
+        private void DerivationalAffixEditor_Changed(object? sender, EventArgs e)
+        {
+            CheckDerivedWordRegeneration();
         }
 
         private void AddDerivationalAffix_Enter(object? sender, EventArgs e)
@@ -556,6 +563,7 @@ namespace LanguageEditor
                 DerivationKey = newIndex,
             };
             editor.Delete += DerivationalAffixEditor_Delete;
+            editor.Changed += DerivationalAffixEditor_Changed;
             TabPage tabPage = new(newIndex);
             tabPage.Controls.Add(editor);
             tpn_DerivationalAffixMap.SuspendLayout();
@@ -1202,6 +1210,42 @@ namespace LanguageEditor
             else
             {
                 e.Handled = false;
+            }
+        }
+
+        private void CheckDerivedWordRegeneration()
+        {
+            if(languageDescription == null)
+            {
+                return;
+            }
+            languageDescription.derivational_affix_map.Clear();
+            foreach (TabPage tabPage in tpn_DerivationalAffixMap.Controls)
+            {
+                foreach (object control in tabPage.Controls)
+                {
+                    if (control.GetType() == typeof(DerivationalAffixEditor))
+                    {
+                        DerivationalAffixEditor editor = (DerivationalAffixEditor)control;
+                        languageDescription.derivational_affix_map[tabPage.Text.Trim()] = editor.AffixRules;
+                        break;
+                    }
+                }
+            }
+            if (!languageDescription.derived)
+            {
+                return;
+            }
+            DialogResult result = MessageBox.Show("Update the derived words in the lexicon?","Update Derived Words",MessageBoxButtons.YesNo);
+            if(result == DialogResult.Yes)
+            {
+
+                ConlangUtilities.RemoveDerivedEntries(languageDescription);
+                ConlangUtilities.DeriveLexicon(languageDescription);
+                if (lexiconEditor != null)
+                {
+                    lexiconEditor.Lexicon = languageDescription.lexicon;
+                }
             }
         }
 
