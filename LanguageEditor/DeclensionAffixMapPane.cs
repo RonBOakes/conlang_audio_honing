@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using Amazon.Runtime.Internal.Transform;
 using ConlangJson;
 using System.Text.RegularExpressions;
 
@@ -57,11 +58,37 @@ namespace LanguageEditor
                         _affix_map[partOfSpeech].Clear();
                         _affix_map[partOfSpeech].Add(subPane.PosSubMap);
                     }
-
-                    return _affix_map;
                 }
 
-                return _affix_map;
+
+                // Clean up _affix_map by making sure that any empty entries are removed.
+                Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>> returnMap = new();
+                foreach (string partOfSpeech in _affix_map.Keys)
+                {
+                    List<Dictionary<string, List<Dictionary<string, Affix>>>> posList = _affix_map[partOfSpeech];
+                    List<Dictionary<string, List<Dictionary<string, Affix>>>> returnPosList = new();
+                    foreach(Dictionary<string, List<Dictionary<string, Affix>>> posSubDict in posList)
+                    {
+                        Dictionary<string, List<Dictionary<string, Affix>>> returnPosSubDict = new();
+                        foreach(string affix in  posSubDict.Keys)
+                        {
+                            List<Dictionary<string, Affix>> affixList = posSubDict[affix];
+                            List<Dictionary<string, Affix>> returnAffixList = new();
+                            foreach(Dictionary<string, Affix> affixDict in affixList)
+                            {
+                                if (affixDict.Count > 0)
+                                {
+                                    returnAffixList.Add(affixDict);
+                                }
+                            }
+                            returnPosSubDict[affix] = returnAffixList;
+                        }
+                        returnPosList.Add(returnPosSubDict);
+                    }
+                    returnMap.Add(partOfSpeech, returnPosList);
+                }
+
+                return returnMap;
             }
             set
             {

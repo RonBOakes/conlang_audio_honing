@@ -89,6 +89,9 @@ def process_affix_map_tuple(affix_map_tuple,phonetic,part_of_speech,prior_declen
             phonetic2 = phonetic
             
         # At this point, the entry should be a dictionary with one key and a dictionary as its only value
+        if len(entry.keys()) < 1:
+            print ("Error processing tuple: ",affix_map_tuple,phonetic,part_of_speech)
+            exit();
         declension = list(entry.keys())[0]
         rules = entry[declension]
         

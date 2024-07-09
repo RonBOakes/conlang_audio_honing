@@ -50,8 +50,9 @@ if not language_structure["derived"]:
     add_lexicon += derive_words(language_structure['derived_word_list'],
                                 language_structure['derivational_affix_map'],
                                 language_structure['lexicon'],
+                                language_structure['affix_map'],
                                 language_structure['spelling_pronunciation_rules'],
-                                false)
+                                False)
     clean_lexicon = dedup_lexicon(add_lexicon)
     if len(clean_lexicon) < len(add_lexicon):
         add_lexicon = clean_lexicon
