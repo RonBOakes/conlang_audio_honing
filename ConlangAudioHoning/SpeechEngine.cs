@@ -17,6 +17,7 @@
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using ConlangJson;
+using System.Text.RegularExpressions;
 
 namespace ConlangAudioHoning
 {
@@ -177,6 +178,8 @@ namespace ConlangAudioHoning
                 punctuation = lastChar;
                 word = word[..(wordLen - 1)];
             }
+
+            word = Regex.Replace(word, @"\W+", "");
 
             string phonetic;
             if (wordMap.TryGetValue(word, out LexiconEntry? value))
