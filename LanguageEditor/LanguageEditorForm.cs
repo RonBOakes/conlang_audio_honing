@@ -1291,12 +1291,20 @@ namespace LanguageEditor
                 ConlangUtilities.RemoveDeclinedEntries(languageDescription);
                 languageDescription.derived = false;
                 deriveLanguageToolStripMenuItem.Text = "Derive Language";
+                if (lexiconEditor != null)
+                {
+                    lexiconEditor.Lexicon = languageDescription.lexicon;
+                }
             }
             else
             {
                 ConlangUtilities.DeriveLexicon(languageDescription);
                 languageDescription.derived = true;
                 deriveLanguageToolStripMenuItem.Text = "Remove Derived Words";
+                if (lexiconEditor != null)
+                {
+                    lexiconEditor.Lexicon = languageDescription.lexicon;
+                }
             }
         }
 
@@ -1311,12 +1319,20 @@ namespace LanguageEditor
                 ConlangUtilities.RemoveDeclinedEntries(languageDescription);
                 languageDescription.declined = false;
                 declineLanguageToolStripMenuItem.Text = "Decline Language";
+                if(lexiconEditor != null)
+                {
+                    lexiconEditor.Lexicon = languageDescription.lexicon;
+                }
             }
             else
             {
                 ConlangUtilities.DeclineLexicon(languageDescription);
                 languageDescription.declined = true;
                 declineLanguageToolStripMenuItem.Text = "Remove Declined Words";
+                if (lexiconEditor != null)
+                {
+                    lexiconEditor.Lexicon = languageDescription.lexicon;
+                }
             }
 
         }
