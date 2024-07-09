@@ -144,7 +144,7 @@ namespace ConlangAudioHoning
             if (UserConfiguration.IsAzureSupported)
             {
                 AzureSpeak azureSpeak = new();
-                Dictionary<String, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
+                Dictionary<string, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
                 speechEngines.Add(azureSpeak.Description, azureSpeak);
                 voices.Add(azureSpeak.Description, azureVoices);
             }
@@ -292,12 +292,14 @@ namespace ConlangAudioHoning
                 return;
             }
 
+#pragma warning disable S1244 // Floating point numbers should not be tested for equality
             if (languageDescription.version != 1.0)
             {
                 _ = MessageBox.Show("Incorrect language file version", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 languageDescription = new LanguageDescription();
                 return;
             }
+#pragma warning restore S1244 // Floating point numbers should not be tested for equality
 
             languageFileInfo = new FileInfo(filename);
 
@@ -372,7 +374,9 @@ namespace ConlangAudioHoning
 #pragma warning disable CA1869 // Cache and reuse 'JsonSerializerOptions' instances
                 JsonSerializerOptions jsonSerializerOptions = new(DefaultJsonSerializerOptions);
 #pragma warning restore CA1869 // Cache and reuse 'JsonSerializerOptions' instances
+#pragma warning disable IDE0007 // Use implicit type
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+#pragma warning restore IDE0007 // Use implicit type
                 jsonSerializerOptions.Encoder = encoder;
 
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
@@ -1575,7 +1579,7 @@ namespace ConlangAudioHoning
             if (checkChar.Length == 1)
             {
                 char c = checkChar[0];
-                if (Char.IsLetter(c))
+                if (char.IsLetter(c))
                 {
                     hasSpellingMap = true;
                 }
@@ -1678,14 +1682,14 @@ namespace ConlangAudioHoning
         {
             List<string> missingPhonemes = KirshenbaumUtilities.UnmappedPhonemes;
             StringBuilder stringBuilder = new();
-            foreach (var (phoneme, sb2) in from string phoneme in missingPhonemes
-                                           where IpaUtilities.IpaPhonemesMap.ContainsKey(phoneme)
-                                           let sb2 = new StringBuilder()
-                                           select (phoneme, sb2))
+            foreach ((string phoneme, StringBuilder sb2) in from string phoneme in missingPhonemes
+                                                            where IpaUtilities.IpaPhonemesMap.ContainsKey(phoneme)
+                                                            let sb2 = new StringBuilder()
+                                                            select (phoneme, sb2))
             {
                 foreach (char c in phoneme)
                 {
-                    if (Char.IsAsciiLetterOrDigit(c))
+                    if (char.IsAsciiLetterOrDigit(c))
                     {
                         _ = sb2.Append(c);
                     }
@@ -1972,7 +1976,9 @@ namespace ConlangAudioHoning
             {
                 if (UserConfiguration.UseSharedPolly)
                 {
+#pragma warning disable IDE0007 // Use implicit type
                     SharedPollySpeech pollySpeech = (SharedPollySpeech)speechEngines[engineName];
+#pragma warning restore IDE0007 // Use implicit type
                     DateTime now = DateTime.Now;
                     string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
                     targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2011,7 +2017,9 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
+#pragma warning disable IDE0007 // Use implicit type
                     NonSharedPollySpeech pollySpeech = (NonSharedPollySpeech)speechEngines[engineName];
+#pragma warning restore IDE0007 // Use implicit type
                     DateTime now = DateTime.Now;
                     string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
                     targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2051,7 +2059,9 @@ namespace ConlangAudioHoning
             }
             else if ((engineName.Equals("eSpeak-ng")) && (UserConfiguration.IsESpeakNGSupported))
             {
+#pragma warning disable IDE0007 // Use implicit type
                 ESpeakNGSpeak speechEngine = (ESpeakNGSpeak)speechEngines[engineName];
+#pragma warning restore IDE0007 // Use implicit type
                 DateTime now = DateTime.Now;
                 string targetFileBaseName = string.Format("speech_{0:s}.wav", now);
                 targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2094,7 +2104,9 @@ namespace ConlangAudioHoning
             }
             else if ((engineName.Equals("Microsoft Azure")) && UserConfiguration.IsAzureSupported)
             {
+#pragma warning disable IDE0007 // Use implicit type
                 AzureSpeak speechEngine = (AzureSpeak)speechEngines[engineName];
+#pragma warning restore IDE0007 // Use implicit type
                 DateTime now = DateTime.Now;
                 string targetFileBaseName = string.Format("speech_{0:s}.wav", now);
                 targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2285,7 +2297,9 @@ namespace ConlangAudioHoning
             }
             else if ((tabPhoneticAlterations.SelectedIndex == 3) && rbn_replaceRSpelling.Checked && cbx_phonemeToChange.SelectedItem != null)
             {
+#pragma warning disable IDE0007 // Use implicit type
                 SpellingPronunciationRules mapToReplace = (SpellingPronunciationRules)cbx_phonemeToChange.SelectedItem;
+#pragma warning restore IDE0007 // Use implicit type
                 SpellingPronunciationRules replacementMap = mapToReplace.copy();
                 string phonemeToAdd = cbx_replacementPhoneme.Text.Split()[0];
                 string diacriticAtEnd = string.Format("{0}$", IpaUtilities.DiacriticPattern);
@@ -2305,7 +2319,7 @@ namespace ConlangAudioHoning
                     }
                     replacementMap.phoneme += phonemeToAdd;
                 }
-                PhoneticChanger.ReplaceSoundMapEntry(mapToReplace, replacementMap, languageDescription.spelling_pronunciation_rules);
+                PhoneticChanger.ReplaceSpellingPronunciationRuleEntry(mapToReplace, replacementMap, languageDescription.spelling_pronunciation_rules);
                 phoneticChanger.UpdatePronunciation();
                 if (sampleText != string.Empty)
                 {

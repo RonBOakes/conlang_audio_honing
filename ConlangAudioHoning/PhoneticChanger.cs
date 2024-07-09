@@ -155,11 +155,11 @@ namespace ConlangAudioHoning
             foreach (string partOfSpeech in Language.affix_map.Keys)
             {
                 //foreach(List<Dictionary<string, List<Dictionary<string, Affix>>>> byPartOfSpeech in Language.affix_map[partOfSpeech])
-                foreach (var byPartOfSpeech in Language.affix_map[partOfSpeech])
+                foreach (Dictionary<string, List<Dictionary<string, Affix>>> byPartOfSpeech in Language.affix_map[partOfSpeech])
                 {
                     foreach (string affixType in byPartOfSpeech.Keys)
                     {
-                        foreach (var byAffixType in byPartOfSpeech[affixType])
+                        foreach (Dictionary<string, Affix> byAffixType in byPartOfSpeech[affixType])
                         {
                             foreach (string declension in byAffixType.Keys)
                             {
@@ -484,11 +484,11 @@ namespace ConlangAudioHoning
             // Update the Affix Map
             foreach (string partOfSpeech in Language.affix_map.Keys)
             {
-                foreach (var byPartOfSpeech in Language.affix_map[partOfSpeech])
+                foreach (Dictionary<string, List<Dictionary<string, Affix>>> byPartOfSpeech in Language.affix_map[partOfSpeech])
                 {
                     foreach (string affixType in byPartOfSpeech.Keys)
                     {
-                        foreach (var byAffixType in byPartOfSpeech[affixType])
+                        foreach (Dictionary<string, Affix> byAffixType in byPartOfSpeech[affixType])
                         {
                             foreach (string declension in byAffixType.Keys)
                             {
@@ -958,11 +958,8 @@ namespace ConlangAudioHoning
 
             foreach (SpellingPronunciationRules soundMap in soundMapList)
             {
-                if ((soundMap.romanization.Contains('r')) && !rPresentRegex.IsMatch(soundMap.spelling_regex))
-                {
-                    rAddingEntries.Add(soundMap);
-                }
-                else if ((soundMap.pronunciation_regex.Contains('r')) && !rPresentRegex.IsMatch(soundMap.phoneme))
+                if (((soundMap.romanization.Contains('r')) && !rPresentRegex.IsMatch(soundMap.spelling_regex)) ||
+                    ((soundMap.pronunciation_regex.Contains('r')) && !rPresentRegex.IsMatch(soundMap.phoneme)))
                 {
                     rAddingEntries.Add(soundMap);
                 }
@@ -970,13 +967,21 @@ namespace ConlangAudioHoning
             return rAddingEntries;
         }
 
-        public static void ReplaceSoundMapEntry(SpellingPronunciationRules oldEntry, SpellingPronunciationRules newEntry, List<SpellingPronunciationRules> soundMapList)
+        /// <summary>
+        /// Update the Spelling and Pronunciation rules based.
+        /// </summary>
+        /// <param name="oldEntry">Entry to be updated</param>
+        /// <param name="newEntry">Updated Entry </param>
+        /// <param name="spellingPronunciationRuleList">Rule list to be updated.</param>
+        public static void ReplaceSpellingPronunciationRuleEntry(SpellingPronunciationRules oldEntry,
+            SpellingPronunciationRules newEntry,
+            List<SpellingPronunciationRules> spellingPronunciationRuleList)
         {
-            for (int i = 0; i < soundMapList.Count; i++)
+            for (int i = 0; i < spellingPronunciationRuleList.Count; i++)
             {
-                if (soundMapList[i] == oldEntry)
+                if (spellingPronunciationRuleList[i] == oldEntry)
                 {
-                    soundMapList[i] = newEntry;
+                    spellingPronunciationRuleList[i] = newEntry;
                     break;
                 }
             }
@@ -1054,10 +1059,22 @@ namespace ConlangAudioHoning
             }
         }
 
+        /// <summary>
+        /// Encapsulates the history of a phonetic change.
+        /// </summary>
         public struct PhoneticChangeHistory
         {
+            /// <summary>
+            /// Indicates the phoneme that was replaced.
+            /// </summary>
             public string OldPhoneme { get; set; }
+            /// <summary>
+            /// Indicates the phoneme that was used in the replacement.
+            /// </summary>
             public string NewPhoneme { get; set; }
+            /// <summary>
+            /// Lexicon entry prior to this update.
+            /// </summary>
             public LexiconEntry OldVersion { get; set; }
         }
 

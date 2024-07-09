@@ -447,7 +447,9 @@ namespace ConlangJson
                 {
                     throw new NotSupportedException();
                 }
+#pragma warning disable IDE0007 // Use implicit type
                 StringComparer strComp = StringComparer.Create(System.Globalization.CultureInfo.CurrentCulture, true);
+#pragma warning restore IDE0007 // Use implicit type
 
                 string xComparisonString = string.Format("{0}-{1}({2})", x.english, x.part_of_speech, x.phonetic);
                 string yComparisonString = string.Format("{0}-{1}({2})", y.english, y.part_of_speech, y.phonetic);

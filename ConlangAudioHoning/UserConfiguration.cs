@@ -178,7 +178,9 @@ namespace ConlangAudioHoning
                 di.Create();
             }
 
+#pragma warning disable IDE0007 // Use implicit type
             JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+#pragma warning restore IDE0007 // Use implicit type
             jsonSerializerOptions.Encoder = encoder;
             jsonSerializerOptions.WriteIndented = true;
 

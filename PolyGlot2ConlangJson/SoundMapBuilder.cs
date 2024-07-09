@@ -34,6 +34,7 @@ namespace PolyGlot2ConlangJson
                 {
                     XElement? proGuideBase = proGuide.Element("proGuideBase");
                     XElement? proGuidePhon = proGuide.Element("proGuidePhon");
+#pragma warning disable IDE0007 // Use implicit type
                     SpellingPronunciationRules soundMap = new SpellingPronunciationRules
                     {
                         phoneme = proGuidePhon?.Value ?? string.Empty,
@@ -41,6 +42,7 @@ namespace PolyGlot2ConlangJson
                         romanization = proGuideBase?.Value ?? string.Empty,
                         spelling_regex = proGuidePhon?.Value ?? string.Empty
                     };
+#pragma warning restore IDE0007 // Use implicit type
                     soundMapList.Add(soundMap);
                 }
             }

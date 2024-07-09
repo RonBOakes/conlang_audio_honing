@@ -1296,7 +1296,7 @@ namespace ConlangAudioHoning
             ];
             foreach (ToolStripMenuItem menuItem in ipaMenuItems)
             {
-                if (!String.IsNullOrEmpty(menuItem.Text))
+                if (!string.IsNullOrEmpty(menuItem.Text))
                 {
                     string menuChar = menuItem.Text.Trim().Split()[0];
                     menuItem.Text = string.Format("{0} -- {1}", menuChar, IpaUtilities.IpaPhonemesMap[menuChar]);

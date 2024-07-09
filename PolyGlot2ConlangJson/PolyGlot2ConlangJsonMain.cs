@@ -64,7 +64,9 @@ if (inputFileInfo.Exists)
     if (entry != null)
     {
         using StreamReader reader = new(entry.Open());
+#pragma warning disable IDE0007 // Use implicit type
         XElement polyGlotLanguage = XElement.Load(reader);
+#pragma warning restore IDE0007 // Use implicit type
 
         LanguageDescription language = new()
         {

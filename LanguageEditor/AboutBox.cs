@@ -39,7 +39,9 @@ namespace LanguageEditor
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
                 if (attributes.Length > 0)
                 {
+#pragma warning disable IDE0007 // Use implicit type
                     AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+#pragma warning restore IDE0007 // Use implicit type
                     if (titleAttribute.Title != "")
                     {
                         return titleAttribute.Title;

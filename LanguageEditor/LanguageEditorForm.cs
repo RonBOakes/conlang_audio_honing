@@ -347,7 +347,9 @@ namespace LanguageEditor
             {
                 return;
             }
+#pragma warning disable IDE0007 // Use implicit type
             TextBox derivedWord = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
             derivedWordText = derivedWord.Text.Trim();
         }
 
@@ -366,7 +368,9 @@ namespace LanguageEditor
                 return;
             }
             derivedWordUpdateRunning = true;
+#pragma warning disable IDE0007 // Use implicit type
             TextBox derivedWord = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
             if (derivedWord.Text.Trim().Equals(derivedWordText))
             {
                 derivedWordUpdateRunning = false;
@@ -444,7 +448,9 @@ namespace LanguageEditor
             if (e.KeyChar == (char)Keys.Enter)
             {
                 derivedWordUpdateRunning = true;
+#pragma warning disable IDE0007 // Use implicit type
                 TextBox derivedWord = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
                 if (derivedWord.Text.Trim().Equals(derivedWordText))
                 {
                     derivedWordUpdateRunning = false;
@@ -529,7 +535,9 @@ namespace LanguageEditor
             {
                 return;
             }
+#pragma warning disable IDE0007 // Use implicit type
             DerivationalAffixEditor.DerivationalAffixEntryEventArgs eventArgs = (DerivationalAffixEditor.DerivationalAffixEntryEventArgs)e;
+#pragma warning restore IDE0007 // Use implicit type
 
 #pragma warning disable S2589 // Boolean expressions should not be gratuitous
             string derivationKey = eventArgs?.DerivationKey ?? string.Empty;
@@ -784,7 +792,9 @@ namespace LanguageEditor
                     {
                         if (control.GetType() == typeof(DerivationalAffixEditor))
                         {
+#pragma warning disable IDE0007 // Use implicit type
                             DerivationalAffixEditor editor = (DerivationalAffixEditor)control;
+#pragma warning restore IDE0007 // Use implicit type
                             languageDescription.derivational_affix_map[tabPage.Text.Trim()] = editor.AffixRules;
                             break;
                         }
@@ -818,7 +828,9 @@ namespace LanguageEditor
 #pragma warning disable CA1869 // Cache and reuse 'JsonSerializerOptions' instances
                 JsonSerializerOptions jsonSerializerOptions = new(DefaultJsonSerializerOptions);
 #pragma warning restore CA1869 // Cache and reuse 'JsonSerializerOptions' instances
+#pragma warning disable IDE0007 // Use implicit type
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+#pragma warning restore IDE0007 // Use implicit type
                 jsonSerializerOptions.Encoder = encoder;
 
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
@@ -875,7 +887,9 @@ namespace LanguageEditor
             {
                 return;
             }
+#pragma warning disable IDE0007 // Use implicit type
             TextBox nounGender = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
             nounGenderText = nounGender.Text.Trim();
         }
 
@@ -894,7 +908,9 @@ namespace LanguageEditor
                 return;
             }
             nounGenderUpdateRunning = true;
+#pragma warning disable IDE0007 // Use implicit type
             TextBox nounGender = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
             if (nounGender.Text.Trim().Equals(nounGenderText))
             {
                 nounGenderUpdateRunning = false;
@@ -968,7 +984,9 @@ namespace LanguageEditor
             if (e.KeyChar == (char)Keys.Enter)
             {
                 nounGenderUpdateRunning = true;
+#pragma warning disable IDE0007 // Use implicit type
                 TextBox nounGender = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
                 if (nounGender.Text.Trim().Equals(nounGenderText))
                 {
                     nounGenderUpdateRunning = false;
@@ -1036,7 +1054,9 @@ namespace LanguageEditor
             {
                 return;
             }
+#pragma warning disable IDE0007 // Use implicit type
             TextBox partOfSpeech = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
             partOfSpeechText = partOfSpeech.Text.Trim();
         }
 
@@ -1055,7 +1075,9 @@ namespace LanguageEditor
                 return;
             }
             partOfSpeechUpdateRunning = true;
+#pragma warning disable IDE0007 // Use implicit type
             TextBox partOfSpeech = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
             if (partOfSpeech.Text.Trim().Equals(partOfSpeechText))
             {
                 return;
@@ -1154,7 +1176,9 @@ namespace LanguageEditor
             if (e.KeyChar == (char)Keys.Enter)
             {
                 partOfSpeechUpdateRunning = true;
+#pragma warning disable IDE0007 // Use implicit type
                 TextBox partOfSpeech = (TextBox)sender;
+#pragma warning restore IDE0007 // Use implicit type
                 if (partOfSpeech.Text.Trim().Equals(partOfSpeechText))
                 {
                     return;
@@ -1254,7 +1278,9 @@ namespace LanguageEditor
                 {
                     if (control.GetType() == typeof(DerivationalAffixEditor))
                     {
+#pragma warning disable IDE0007 // Use implicit type
                         DerivationalAffixEditor editor = (DerivationalAffixEditor)control;
+#pragma warning restore IDE0007 // Use implicit type
                         languageDescription.derivational_affix_map[tabPage.Text.Trim()] = editor.AffixRules;
                         break;
                     }
