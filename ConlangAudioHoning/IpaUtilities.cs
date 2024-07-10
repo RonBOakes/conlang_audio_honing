@@ -18,6 +18,7 @@
  */
 using System.Text;
 using ConlangJson;
+using System.Linq;
 
 namespace ConlangAudioHoning
 {
@@ -141,7 +142,7 @@ namespace ConlangAudioHoning
         /// <summary>
         /// Returns an array containing strings with all of the identified Pulmonic Consonants.
         /// </summary>
-        public static String[] PConsonants { get; } = [
+        public static string[] PConsonants { get; } = [
             "b",
             "\u03b2",
             "\u0299",
@@ -775,7 +776,7 @@ namespace ConlangAudioHoning
                 StringBuilder sb2 = new();
                 foreach (char c in phoneme)
                 {
-                    if (Char.IsAsciiLetterOrDigit(c))
+                    if (char.IsAsciiLetterOrDigit(c))
                     {
                         _ = sb2.Append(c);
                     }
@@ -1197,19 +1198,9 @@ namespace ConlangAudioHoning
 
         private static int CountDiacritics(string priorChars)
         {
-            int count = 0;
-            foreach (char c in priorChars)
-            {
-                if (Diacritics.Contains(c.ToString()))
-                {
-                    count++;
-                }
-                else if ((c == '\u02D0') || (c == '\u02D1'))
-                {
-                    count++;
-                }
-            }
-            return count;
+            return (from char c in priorChars
+                    where Diacritics.Contains(c.ToString())
+                    select c).Count();
         }
 
         private static Dictionary<string, List<string>> PopulateL2ConantChanges()

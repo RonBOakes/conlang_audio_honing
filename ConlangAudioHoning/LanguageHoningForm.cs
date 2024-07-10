@@ -22,6 +22,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using System.Text.Unicode;
 using ConlangJson;
 
@@ -528,7 +529,7 @@ namespace ConlangAudioHoning
                     break;
                 case 2: // Vowel diphthongs
                     cbx_phonemeToChange.Items.Clear();
-                    // The SpeakingSpeeds to go into the combo box depend on the selected radio button
+                    // The phonemes to go into the combo box depend on the selected radio button
                     if (rbn_vowelToDiphthongStart.Checked || rbn_vowelToDiphthongEnd.Checked)
                     {
                         // Populate with vowels
@@ -610,6 +611,15 @@ namespace ConlangAudioHoning
                         lbl_diphthongStartVowel.Visible = true;
                         cbx_diphthongEndVowel.Visible = true;
                         lbl_DiphthongEndVowel.Visible = true;
+                        cbx_replacementPhoneme.Visible = false;
+                        lbl_replacementCbx.Visible = false;
+                    }
+                    else if ((rbn_removeStartVowel.Checked) || (rbn_removeEndVowel.Checked))
+                    {
+                        cbx_diphthongStartVowel.Visible = false;
+                        lbl_diphthongStartVowel.Visible = false;
+                        cbx_diphthongEndVowel.Visible = false;
+                        lbl_DiphthongEndVowel.Visible = false;
                         cbx_replacementPhoneme.Visible = false;
                         lbl_replacementCbx.Visible = false;
                     }
@@ -2268,7 +2278,8 @@ namespace ConlangAudioHoning
             if ((tabPhoneticAlterations.SelectedIndex == 0) ||
                 (tabPhoneticAlterations.SelectedIndex == 1) ||
                 ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)) ||
-                ((tabPhoneticAlterations.SelectedIndex == 2) && (!rbn_diphthongReplacement.Checked)))
+                ((tabPhoneticAlterations.SelectedIndex == 2) &&
+                ((!rbn_diphthongReplacement.Checked) && (!rbn_removeStartVowel.Checked) && (!rbn_removeEndVowel.Checked))))
             {
                 if ((cbx_phonemeToChange.SelectedIndex == -1) || (cbx_replacementPhoneme.SelectedIndex == -1))
                 {
@@ -2366,12 +2377,54 @@ namespace ConlangAudioHoning
                     tabPhoneticAlterations.SelectedIndex = -1;
                 }
             }
+            else if ((tabPhoneticAlterations.SelectedIndex == 2) && ((rbn_removeStartVowel.Checked) || (rbn_removeEndVowel.Checked)))
+            {
+                if (cbx_phonemeToChange.SelectedIndex == -1)
+                {
+                    return;
+                }
+                string diphthong = cbx_phonemeToChange.Text.Split()[0];
+                Match diphthongMatch = DiphthongRegexPattern().Match(diphthong);
+                if (diphthongMatch.Success)
+                {
+                    string startVowel = diphthongMatch.Groups[1].Value;
+                    string endVowel = diphthongMatch.Groups[2].Value;
+                    if (rbn_removeStartVowel.Checked)
+                    {
+                        phoneticChanger.PhoneticChange(diphthong, endVowel);
+                    }
+                    else
+                    {
+                        phoneticChanger.PhoneticChange(diphthong, startVowel);
+                    }
+                    // Update sample text
+                    if (sampleText != string.Empty)
+                    {
+                        sampleText = phoneticChanger.SampleText;
+                        txt_SampleText.Text = sampleText;
+                        txt_phonetic.Text = string.Empty;
+                        foreach (string engineName in speechEngines.Keys)
+                        {
+                            SpeechEngine speechEngine = speechEngines[engineName];
+                            speechEngine.SampleText = sampleText;
+                        }
+                    }
+                }
+                // Clear the combo boxes
+                cbx_phonemeToChange.Items.Clear();
+                cbx_replacementPhoneme.Items.Clear();
+                tabPhoneticAlterations.SelectedIndex = -1;
+            }
             // Add other options as needed.
 
             // Mark language and sample dirty
             languageDirty = true;
             sampleDirty = true;
         }
+
+        [GeneratedRegex(@"([a\u00e6\u0251\u0252\u0250e\u025b\u025c\u025e\u0259i\u0268\u026ay\u028f\u00f8\u0258\u0275\u0153\u0276\u0264o\u0254u\u0289\u028a\u026f\u028c\u025a])([a\u00e6\u0251\u0252\u0250e\u025b\u025c\u025e\u0259i\u0268\u026ay\u028f\u00f8\u0258\u0275\u0153\u0276\u0264o\u0254u\u0289\u028a\u026f\u028c\u025a])[\u02d0\u02d1\u032f]?")]
+        private static partial Regex DiphthongRegexPattern();
+
 
         private void Cbx_replacementPhoneme_MeasureItem(object? sender, System.Windows.Forms.MeasureItemEventArgs e)
         {
@@ -2641,6 +2694,16 @@ namespace ConlangAudioHoning
             UpdatePhonemeToChangeCbx();
         }
 
+        private void Rbn_removeStartVowel_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_removeEndVowel_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
         private void Rbn_normalDiphthong_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
@@ -2662,6 +2725,31 @@ namespace ConlangAudioHoning
         }
 
         private void Rbn_replaceRhotacized_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_vowelToDiphthongStart_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_vowelToDiphthongEnd_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_changeStartVowel_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_ChangeEndVowel_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePhonemeToChangeCbx();
+        }
+
+        private void Rbn_diphthongReplacement_CheckedChanged(object sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
         }
@@ -2820,31 +2908,6 @@ namespace ConlangAudioHoning
                 speechEngines.Add(azureSpeak.Description, azureSpeak);
                 voices.Add(azureSpeak.Description, azureVoices);
             }
-        }
-
-        private void Rbn_vowelToDiphthongStart_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdatePhonemeToChangeCbx();
-        }
-
-        private void Rbn_vowelToDiphthongEnd_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdatePhonemeToChangeCbx();
-        }
-
-        private void Rbn_changeStartVowel_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdatePhonemeToChangeCbx();
-        }
-
-        private void Rbn_ChangeEndVowel_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdatePhonemeToChangeCbx();
-        }
-
-        private void Rbn_diphthongReplacement_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdatePhonemeToChangeCbx();
         }
 
         private void DeriveToolStripMenuItem_Click(object sender, EventArgs e)

@@ -144,6 +144,8 @@
             btn_updateSoundMapList = new Button();
             tb_Volume = new TrackBar();
             label1 = new Label();
+            rbn_removeStartVowel = new RadioButton();
+            rbn_removeEndVowel = new RadioButton();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -856,6 +858,8 @@
             // 
             // tabPageVowelDiphthongs
             // 
+            tabPageVowelDiphthongs.Controls.Add(rbn_removeEndVowel);
+            tabPageVowelDiphthongs.Controls.Add(rbn_removeStartVowel);
             tabPageVowelDiphthongs.Controls.Add(lbl_DiphthongEndVowel);
             tabPageVowelDiphthongs.Controls.Add(cbx_diphthongEndVowel);
             tabPageVowelDiphthongs.Controls.Add(lbl_diphthongStartVowel);
@@ -876,7 +880,7 @@
             // lbl_DiphthongEndVowel
             // 
             lbl_DiphthongEndVowel.AutoSize = true;
-            lbl_DiphthongEndVowel.Location = new Point(234, 76);
+            lbl_DiphthongEndVowel.Location = new Point(236, 102);
             lbl_DiphthongEndVowel.Name = "lbl_DiphthongEndVowel";
             lbl_DiphthongEndVowel.Size = new Size(121, 15);
             lbl_DiphthongEndVowel.TabIndex = 8;
@@ -885,7 +889,7 @@
             // cbx_diphthongEndVowel
             // 
             cbx_diphthongEndVowel.FormattingEnabled = true;
-            cbx_diphthongEndVowel.Location = new Point(234, 93);
+            cbx_diphthongEndVowel.Location = new Point(236, 119);
             cbx_diphthongEndVowel.Name = "cbx_diphthongEndVowel";
             cbx_diphthongEndVowel.Size = new Size(225, 23);
             cbx_diphthongEndVowel.TabIndex = 7;
@@ -893,7 +897,7 @@
             // lbl_diphthongStartVowel
             // 
             lbl_diphthongStartVowel.AutoSize = true;
-            lbl_diphthongStartVowel.Location = new Point(6, 76);
+            lbl_diphthongStartVowel.Location = new Point(8, 102);
             lbl_diphthongStartVowel.Name = "lbl_diphthongStartVowel";
             lbl_diphthongStartVowel.Size = new Size(125, 15);
             lbl_diphthongStartVowel.TabIndex = 6;
@@ -902,7 +906,7 @@
             // cbx_diphthongStartVowel
             // 
             cbx_diphthongStartVowel.FormattingEnabled = true;
-            cbx_diphthongStartVowel.Location = new Point(6, 94);
+            cbx_diphthongStartVowel.Location = new Point(8, 120);
             cbx_diphthongStartVowel.Name = "cbx_diphthongStartVowel";
             cbx_diphthongStartVowel.Size = new Size(222, 23);
             cbx_diphthongStartVowel.TabIndex = 5;
@@ -910,7 +914,7 @@
             // rbn_diphthongReplacement
             // 
             rbn_diphthongReplacement.AutoSize = true;
-            rbn_diphthongReplacement.Location = new Point(6, 56);
+            rbn_diphthongReplacement.Location = new Point(6, 81);
             rbn_diphthongReplacement.Name = "rbn_diphthongReplacement";
             rbn_diphthongReplacement.Size = new Size(154, 19);
             rbn_diphthongReplacement.TabIndex = 4;
@@ -921,7 +925,7 @@
             // rbn_changeEndVowel
             // 
             rbn_changeEndVowel.AutoSize = true;
-            rbn_changeEndVowel.Location = new Point(139, 31);
+            rbn_changeEndVowel.Location = new Point(190, 31);
             rbn_changeEndVowel.Name = "rbn_changeEndVowel";
             rbn_changeEndVowel.Size = new Size(140, 19);
             rbn_changeEndVowel.TabIndex = 3;
@@ -1074,6 +1078,30 @@
             label1.Size = new Size(47, 15);
             label1.TabIndex = 35;
             label1.Text = "Volume";
+            // 
+            // rbn_removeStartVowel
+            // 
+            rbn_removeStartVowel.AutoSize = true;
+            rbn_removeStartVowel.Location = new Point(6, 56);
+            rbn_removeStartVowel.Name = "rbn_removeStartVowel";
+            rbn_removeStartVowel.Size = new Size(129, 19);
+            rbn_removeStartVowel.TabIndex = 9;
+            rbn_removeStartVowel.TabStop = true;
+            rbn_removeStartVowel.Text = "Remove Start Vowel";
+            rbn_removeStartVowel.UseVisualStyleBackColor = true;
+            rbn_removeStartVowel.CheckedChanged += Rbn_removeStartVowel_CheckedChanged;
+            // 
+            // rbn_removeEndVowel
+            // 
+            rbn_removeEndVowel.AutoSize = true;
+            rbn_removeEndVowel.Location = new Point(190, 56);
+            rbn_removeEndVowel.Name = "rbn_removeEndVowel";
+            rbn_removeEndVowel.Size = new Size(125, 19);
+            rbn_removeEndVowel.TabIndex = 10;
+            rbn_removeEndVowel.TabStop = true;
+            rbn_removeEndVowel.Text = "Remove End Vowel";
+            rbn_removeEndVowel.UseVisualStyleBackColor = true;
+            rbn_removeEndVowel.CheckedChanged += Rbn_removeEndVowel_CheckedChanged;
             // 
             // LanguageHoningForm
             // 
@@ -1236,5 +1264,7 @@
         private TrackBar tb_Volume;
         private Label label1;
         private ToolStripMenuItem useCompactJsonToolStripItem;
+        private RadioButton rbn_removeStartVowel;
+        private RadioButton rbn_removeEndVowel;
     }
 }
