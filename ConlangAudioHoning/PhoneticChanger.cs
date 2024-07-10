@@ -1011,7 +1011,7 @@ namespace ConlangAudioHoning
                     line = sampleTextReader.ReadLine();
                     if ((line != null) && (!line.Trim().Equals(string.Empty)))
                     {
-                        foreach (string wordIterator in line.Split())
+                        foreach (string wordIterator in line.Trim().Split())
                         {
                             string word = wordIterator.Trim();
                             bool firstCharUpper = char.IsUpper(word[0]);
