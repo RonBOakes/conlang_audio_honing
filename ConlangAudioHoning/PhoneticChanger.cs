@@ -86,6 +86,8 @@ namespace ConlangAudioHoning
                 Language.spelling_pronunciation_rules = soundMapListEditorForm.SoundMapList;
             }
 
+            Cursor.Current = Cursors.WaitCursor;
+
             string replacementPattern = oldPhoneme + @"(?!" + IpaUtilities.DiacriticPattern + @")";
 
             // Update the Lexicon
@@ -138,7 +140,6 @@ namespace ConlangAudioHoning
                     string pchString = JsonSerializer.Serialize<Dictionary<string, PhoneticChangeHistory>>(phoneticChangeHistories);
                     word.metadata["PhoneticChangeHistory"] = JsonSerializer.Deserialize<JsonObject>(pchString);
                 }
-
             }
 
             // Update the phoneme inventory - the next update depends on it for diphthongs (at least)
@@ -345,6 +346,7 @@ namespace ConlangAudioHoning
 
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -386,6 +388,7 @@ namespace ConlangAudioHoning
             {
                 Language.spelling_pronunciation_rules = soundMapListEditorForm.SoundMapList;
             }
+            Cursor.Current = Cursors.WaitCursor;
 
             string changeHistoryTimestamp = string.Format("{0:yyyyMMdd.hhmmssfffffff}", DateTime.Now);
 
@@ -772,6 +775,7 @@ namespace ConlangAudioHoning
 
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -783,6 +787,8 @@ namespace ConlangAudioHoning
             {
                 return;
             }
+
+            Cursor.Current = Cursors.WaitCursor;
 
             foreach (LexiconEntry word in Language.lexicon)
             {
@@ -817,6 +823,7 @@ namespace ConlangAudioHoning
             }
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -829,6 +836,7 @@ namespace ConlangAudioHoning
                 return;
             }
 
+            Cursor.Current = Cursors.WaitCursor;
 
             foreach (LexiconEntry word in Language.lexicon)
             {
@@ -859,6 +867,7 @@ namespace ConlangAudioHoning
             }
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -869,6 +878,7 @@ namespace ConlangAudioHoning
         /// </summary>
         public void RevertMostRecentChange()
         {
+            Cursor.Current = Cursors.WaitCursor;
             Dictionary<double, string> changeHistoryKeyMap = [];
             foreach (LexiconEntry lexiconEntry in Language.lexicon)
             {
@@ -931,6 +941,7 @@ namespace ConlangAudioHoning
             Language.lexicon = newLexicon;
             // Update the phonetic inventory
             IpaUtilities.BuildPhoneticInventory(Language);
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>

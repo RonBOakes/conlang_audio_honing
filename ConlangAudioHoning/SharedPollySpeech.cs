@@ -86,6 +86,7 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
+            Cursor.Current = Cursors.WaitCursor;
             bool removeDerivedWords = false;
             if (!LanguageDescription.derived)
             {
@@ -189,6 +190,7 @@ namespace ConlangAudioHoning
             {
                 ConlangUtilities.RemoveDerivedEntries(LanguageDescription);
             }
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -293,6 +295,8 @@ namespace ConlangAudioHoning
                 Generate(speed, caller);
             }
 
+            Cursor.Current = Cursors.WaitCursor;
+
             bool generated = false;
             HttpHandler httpHandler = HttpHandler.Instance;
             HttpClient httpClient = httpHandler.HttpClient;
@@ -327,6 +331,7 @@ namespace ConlangAudioHoning
                 HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
+                    Cursor.Current = Cursors.Default;
                     return false;
                 }
             }
@@ -351,6 +356,7 @@ namespace ConlangAudioHoning
                 HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
+                    Cursor.Current = Cursors.Default;
                     return false;
                 }
                 string data = result.Content.ReadAsStringAsync().Result;
@@ -380,11 +386,13 @@ namespace ConlangAudioHoning
                     HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                     if (result.StatusCode != System.Net.HttpStatusCode.OK)
                     {
+                        Cursor.Current = Cursors.Default;
                         return false;
                     }
                     string data = result.Content.ReadAsStringAsync().Result;
                     if (data.Contains("FAILED"))
                     {
+                        Cursor.Current = Cursors.Default;
                         return false;
                     }
                     if (data.Contains("COMPLETE"))
@@ -411,6 +419,7 @@ namespace ConlangAudioHoning
                 HttpResponseMessage result = httpClient.PostAsync(PollyURI, content).Result;
                 if (result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
+                    Cursor.Current = Cursors.Default;
                     return false;
                 }
                 byte[] data = result.Content.ReadAsByteArrayAsync().Result;
@@ -438,6 +447,7 @@ namespace ConlangAudioHoning
                 progressBar.SendToBack();
             }
 
+            Cursor.Current = Cursors.Default;
             return generated;
         }
 

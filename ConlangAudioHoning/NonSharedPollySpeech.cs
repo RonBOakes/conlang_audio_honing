@@ -135,6 +135,7 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
+            Cursor.Current = Cursors.WaitCursor;
             bool removeDerivedWords = false;
             if (!LanguageDescription.derived)
             {
@@ -238,6 +239,7 @@ namespace ConlangAudioHoning
             {
                 ConlangUtilities.RemoveDerivedEntries(LanguageDescription);
             }
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -276,6 +278,8 @@ namespace ConlangAudioHoning
             {
                 Generate(speed, caller);
             }
+
+            Cursor.Current = Cursors.Default;
 
             if (voiceModels.Count == 0)
             {
@@ -332,6 +336,7 @@ namespace ConlangAudioHoning
 
                         if (s3AudioFile == null)
                         {
+                            Cursor.Current = Cursors.Default;
                             return false;
                         }
                         // Get the S3 Object
@@ -359,19 +364,23 @@ namespace ConlangAudioHoning
                     }
                     else
                     {
+                        Cursor.Current = Cursors.Default;
                         return false;
                     }
                 }
                 else
                 {
+                    Cursor.Current = Cursors.Default;
                     return false;
                 }
             }
             catch (Exception)
             {
+                Cursor.Current = Cursors.Default;
                 return false;
             }
 
+            Cursor.Current = Cursors.Default;
             return true;
         }
 

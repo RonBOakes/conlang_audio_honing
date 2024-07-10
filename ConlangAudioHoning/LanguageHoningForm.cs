@@ -188,6 +188,7 @@ namespace ConlangAudioHoning
         /// <param name="language">Language to be declined.</param>
         internal void DeclineLexicon(LanguageDescription language)
         {
+            Cursor.Current = Cursors.WaitCursor;
             ProgressBar.Style = ProgressBarStyle.Continuous;
             ProgressBar.BringToFront();
             ProgressBar.Minimum = 0;
@@ -217,6 +218,7 @@ namespace ConlangAudioHoning
             ProgressBar.SendToBack();
             pbTimer.Enabled = false;
             language.declined = true;
+            Cursor.Current = Cursors.Default;
         }
 
         private void LoadSpeechEngines()
@@ -276,6 +278,7 @@ namespace ConlangAudioHoning
 
         private void LoadLanguage(string filename)
         {
+            Cursor.Current = Cursors.WaitCursor;
             string jsonString = File.ReadAllText(filename);
 
             try
@@ -340,6 +343,7 @@ namespace ConlangAudioHoning
             rbn_vowelToDiphthongStart.Checked = true;
             UpdatePhonemeToChangeCbx();
             LoadVoices();
+            Cursor.Current = Cursors.Default;
 
             // Clear the dirty setting
             languageDirty = false;
@@ -359,6 +363,7 @@ namespace ConlangAudioHoning
             }
             else
             {
+                Cursor.Current = Cursors.WaitCursor;
                 DateTime now = DateTime.UtcNow;
                 string timestamp = now.ToString("o");
                 string history = "Edited in LanguageEditor, saved at " + timestamp;
@@ -382,6 +387,7 @@ namespace ConlangAudioHoning
 
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
                 File.WriteAllText(filename, jsonString, System.Text.Encoding.UTF8);
+                Cursor.Current = Cursors.Default;
 
                 // Clear the dirty setting
                 languageDirty = false;

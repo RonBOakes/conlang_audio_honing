@@ -83,6 +83,7 @@ namespace ConlangAudioHoning
             {
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
+            Cursor.Current = Cursors.WaitCursor;
             bool removeDerivedWords = false;
             if (!LanguageDescription.derived)
             {
@@ -199,6 +200,7 @@ namespace ConlangAudioHoning
             {
                 ConlangUtilities.RemoveDerivedEntries(LanguageDescription);
             }
+            Cursor.Current = Cursors.Default;
         }
 
         public override bool GenerateSpeech(string targetFile, string? voice = null, string? speed = null, LanguageHoningForm? caller = null)
@@ -230,6 +232,7 @@ namespace ConlangAudioHoning
             {
                 Generate(speed, caller, voices[voice]);
             }
+            Cursor.Current = Cursors.Default;
 
 #pragma warning disable IDE0007 // Use implicit type
             SpeechConfig speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
@@ -255,7 +258,7 @@ namespace ConlangAudioHoning
             {
                 ok = false;
             }
-
+            Cursor.Current = Cursors.Default;
             return ok;
         }
 
