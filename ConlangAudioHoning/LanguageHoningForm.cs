@@ -385,7 +385,10 @@ namespace ConlangAudioHoning
 #pragma warning restore IDE0007 // Use implicit type
                 jsonSerializerOptions.Encoder = encoder;
 
+                MetadataWasher.CleanLanguageMetadata(languageDescription);
+
                 string jsonString = JsonSerializer.Serialize<LanguageDescription>(languageDescription, jsonSerializerOptions);
+
                 File.WriteAllText(filename, jsonString, System.Text.Encoding.UTF8);
                 Cursor.Current = Cursors.Default;
 

@@ -129,6 +129,7 @@ namespace ConlangAudioHoning
                         phoneticChangeHistories = JsonSerializer.Deserialize<Dictionary<string, PhoneticChangeHistory>>(word.metadata["PhoneticChangeHistory"]);
                     }
                     phoneticChangeHistories ??= [];
+                    MetadataWasher.CleanLexiconEntryMetadata(oldVersion, true);
                     PhoneticChangeHistory pch = new()
                     {
                         OldPhoneme = oldPhoneme,
