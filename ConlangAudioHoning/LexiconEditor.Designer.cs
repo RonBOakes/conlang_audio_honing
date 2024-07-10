@@ -54,6 +54,7 @@
             conlangToolStripMenuItem = new ToolStripMenuItem();
             englishToolStripMenuItem = new ToolStripMenuItem();
             findToolStripMenuItem = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -100,7 +101,7 @@
             // 
             // editToolStripMenuItem
             // 
-            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addEntryMenuItem, sortByToolStripMenuItem, findToolStripMenuItem });
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addEntryMenuItem, sortByToolStripMenuItem, findToolStripMenuItem, deleteToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(39, 20);
             editToolStripMenuItem.Text = "Edit";
@@ -140,6 +141,14 @@
             findToolStripMenuItem.Size = new Size(180, 22);
             findToolStripMenuItem.Text = "Find";
             findToolStripMenuItem.Click += FindToolStripMenuItem_Click;
+            //
+            // deleteToolStrip MenuItem
+            //
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.ShortcutKeys = Keys.Delete;
+            deleteToolStripMenuItem.Size = new Size(180, 22);
+            deleteToolStripMenuItem.Text = "Delete Entry";
+            deleteToolStripMenuItem.Click += DeleteToolStripMenuItem_Click;
             // 
             // LexiconEditor
             // 
@@ -166,5 +175,6 @@
         private ToolStripMenuItem conlangToolStripMenuItem;
         private ToolStripMenuItem englishToolStripMenuItem;
         private ToolStripMenuItem findToolStripMenuItem;
+        private ToolStripMenuItem deleteToolStripMenuItem;
     }
 }

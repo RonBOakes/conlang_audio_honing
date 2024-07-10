@@ -278,7 +278,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        [GeneratedRegex(@"^\s*(\S+)\s+\((\S+):\s+(\S+)\)\s*$")]
+        [GeneratedRegex(@"^\s*(\S+|\<.+\>)\s+\((\S+|\<.+\>):\s+(\S+)\)\s*$")]
         private static partial Regex EditorEntryRegex();
 
         private void AddEntryMenuItem_Click(object sender, EventArgs e)
@@ -324,6 +324,42 @@ namespace ConlangAudioHoning
         {
             FindDialog findDialog = new(this);
             findDialog.Show(this);
+        }
+
+        private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lbxLexicon.SelectedItem == null)
+            {
+                return;
+            }
+            string? selectedWord = lbxLexicon.SelectedItem.ToString();
+            if (!string.IsNullOrEmpty(selectedWord))
+            {
+                Match wordMatch = EditorEntryRegex().Match(selectedWord);
+                if (wordMatch.Success)
+                {
+                    string conlang = (SortByCriteria == SortByCriteriaTypes.CONLANG ? wordMatch.Groups[1].Value : wordMatch.Groups[2].Value);
+                    string english = (SortByCriteria == SortByCriteriaTypes.CONLANG ? wordMatch.Groups[2].Value : wordMatch.Groups[1].Value);
+                    string partOfSpeech = wordMatch.Groups[3].Value;
+
+                    LexiconEntry word = lexiconMap[(conlang, english, partOfSpeech)];
+                    lexiconEntries.Remove(word);
+                    lbxLexicon.BeginUpdate();
+                    lbxLexicon.Items.Clear();
+                    foreach (LexiconEntry entry in lexiconEntries)
+                    {
+                        if (SortByCriteria == SortByCriteriaTypes.CONLANG)
+                        {
+                            lbxLexicon.Items.Add(string.Format("{0} ({1}: {2})", entry.spelled, entry.english, entry.part_of_speech));
+                        }
+                        else
+                        {
+                            lbxLexicon.Items.Add(string.Format("{1} ({0}: {2})", entry.spelled, entry.english, entry.part_of_speech));
+                        }
+                    }
+                    lbxLexicon.EndUpdate();
+                }
+            }
         }
 
         private sealed class FindDialog : Form
