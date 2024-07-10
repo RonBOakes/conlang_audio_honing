@@ -35,7 +35,7 @@ namespace ConlangJson
         /// representation.
         /// </summary>
         /// <param name="phonetic">Phonetic representation of a word using IPA.</param>
-        /// <param name="soundMapList">The SoundMapList (spelling_pronounciation_rules) from the Language.  
+        /// <param name="soundMapList">The SoundMapList (spelling_pronunciation_rules) from the Language.  
         /// This must be ordered so that processing from the first to the last element will 
         /// produce the correct spelling.</param>
         /// <returns>The Romanized or Latinized version of the word.</returns>
@@ -58,7 +58,7 @@ namespace ConlangJson
         /// form in IPA.
         /// </summary>
         /// <param name="word">The Romanized or Latinized version of the word.</param>
-        /// <param name="soundMapList">The SoundMapList (spelling_pronounciation_rules) from the Language.  
+        /// <param name="soundMapList">The SoundMapList (spelling_pronunciation_rules) from the Language.  
         /// This must be ordered so that processing from the last to the first element will 
         /// produce the correct phonetic representation.</param>
         /// <returns>The phonetic representation of the word in IPA.</returns>
@@ -82,7 +82,7 @@ namespace ConlangJson
         /// <param name="word">LexiconEntry for the word to be declined</param>
         /// <param name="affixMap">AffixMap (affix_map) from the language containing the word 
         /// to be declined</param>
-        /// <param name="soundMapList">The SoundMapList (spelling_pronounciation_rules) from the Language.  
+        /// <param name="spellingPronunciationRules">The SoundMapList (spelling_pronunciation_rules) from the Language.  
         /// This must be ordered so that processing from the first to the last element will 
         /// produce the correct spelling, and processing in the reverse order will produce
         /// the correct pronunciation.</param>
@@ -91,7 +91,7 @@ namespace ConlangJson
         /// <returns>A List of LexiconEntry objects containing the new words created by 
         /// declining the word parameter according to the supplied AffixMap's rules.</returns>
         public static List<LexiconEntry> DeclineWord(LexiconEntry word, Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>> affixMap,
-            List<SpellingPronunciationRules> soundMapList, bool derivedWord = false)
+            List<SpellingPronunciationRules> spellingPronunciationRules, bool derivedWord = false)
         {
             // Safety check - never decline a word already marked as declined, or a word with
             // a source metadata entry
@@ -127,7 +127,7 @@ namespace ConlangJson
 
             foreach (NewWordData phoneticEntry in phoneticList)
             {
-                string spelled = SpellWord(phoneticEntry.Phonetic, soundMapList);
+                string spelled = SpellWord(phoneticEntry.Phonetic, spellingPronunciationRules);
                 JsonObject newMetadata;
                 if (word.metadata != null)
                 {
@@ -282,9 +282,9 @@ namespace ConlangJson
                     {
                         // Searching for matching entries that start and use the first one
                         bool found = false;
-                        foreach (var searchWord in from string searchWord in wordMap.Keys
-                                                   where searchWord.StartsWith(word)
-                                                   select searchWord)
+                        foreach (string searchWord in from string searchWord in wordMap.Keys
+                                                      where searchWord.StartsWith(word)
+                                                      select searchWord)
                         {
                             lexEntry = wordMap[searchWord];
                             found = true;

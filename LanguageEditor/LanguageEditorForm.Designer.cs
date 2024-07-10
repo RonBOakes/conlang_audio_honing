@@ -83,6 +83,7 @@
             tab_declensionAffixes = new TabPage();
             tab_lexicon = new TabPage();
             tab_LexicalOrder = new TabPage();
+            removeDuplicateWordsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel_nounGender.SuspendLayout();
             tpn_Main.SuspendLayout();
@@ -197,7 +198,7 @@
             // 
             // languageToolStripMenuItem
             // 
-            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { deriveLanguageToolStripMenuItem, declineLanguageToolStripMenuItem });
+            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { deriveLanguageToolStripMenuItem, declineLanguageToolStripMenuItem, removeDuplicateWordsToolStripMenuItem });
             languageToolStripMenuItem.Name = "languageToolStripMenuItem";
             languageToolStripMenuItem.Size = new Size(71, 20);
             languageToolStripMenuItem.Text = "Language";
@@ -205,14 +206,14 @@
             // deriveLanguageToolStripMenuItem
             // 
             deriveLanguageToolStripMenuItem.Name = "deriveLanguageToolStripMenuItem";
-            deriveLanguageToolStripMenuItem.Size = new Size(180, 22);
+            deriveLanguageToolStripMenuItem.Size = new Size(207, 22);
             deriveLanguageToolStripMenuItem.Text = "Derive Language";
             deriveLanguageToolStripMenuItem.Click += DeriveLanguageToolStripMenuItem_Click;
             // 
             // declineLanguageToolStripMenuItem
             // 
             declineLanguageToolStripMenuItem.Name = "declineLanguageToolStripMenuItem";
-            declineLanguageToolStripMenuItem.Size = new Size(180, 22);
+            declineLanguageToolStripMenuItem.Size = new Size(207, 22);
             declineLanguageToolStripMenuItem.Text = "Decline Language";
             declineLanguageToolStripMenuItem.Click += DeclineLanguageToolStripMenuItem_Click;
             // 
@@ -421,6 +422,13 @@
             tab_LexicalOrder.Text = "Lexical Order";
             tab_LexicalOrder.UseVisualStyleBackColor = true;
             // 
+            // removeDuplicateWordsToolStripMenuItem
+            // 
+            removeDuplicateWordsToolStripMenuItem.Name = "removeDuplicateWordsToolStripMenuItem";
+            removeDuplicateWordsToolStripMenuItem.Size = new Size(207, 22);
+            removeDuplicateWordsToolStripMenuItem.Text = "Remove Duplicate Words";
+            removeDuplicateWordsToolStripMenuItem.Click += RemoveDuplicateWordsToolStripMenuItem_Click;
+            // 
             // LanguageEditorForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -491,5 +499,6 @@
         private ToolStripMenuItem languageToolStripMenuItem;
         private ToolStripMenuItem deriveLanguageToolStripMenuItem;
         private ToolStripMenuItem declineLanguageToolStripMenuItem;
+        private ToolStripMenuItem removeDuplicateWordsToolStripMenuItem;
     }
 }

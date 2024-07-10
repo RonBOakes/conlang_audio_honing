@@ -1116,9 +1116,9 @@ namespace LanguageEditor
                     if (languageDescription.part_of_speech_list[i].Equals(partOfSpeechText))
                     {
                         languageDescription.part_of_speech_list[i] = partOfSpeech.Text.Trim();
-                        foreach (var entry in from LexiconEntry entry in languageDescription.lexicon
-                                              where entry.part_of_speech.Equals(partOfSpeechText)
-                                              select entry)
+                        foreach (LexiconEntry entry in from LexiconEntry entry in languageDescription.lexicon
+                                                       where entry.part_of_speech.Equals(partOfSpeechText)
+                                                       select entry)
                         {
                             entry.part_of_speech = partOfSpeech.Text.Trim();
                         }
@@ -1217,9 +1217,9 @@ namespace LanguageEditor
                         if (languageDescription.part_of_speech_list[i].Equals(partOfSpeechText))
                         {
                             languageDescription.part_of_speech_list[i] = partOfSpeech.Text.Trim();
-                            foreach (var entry in from LexiconEntry entry in languageDescription.lexicon
-                                                  where entry.part_of_speech.Equals(partOfSpeechText)
-                                                  select entry)
+                            foreach (LexiconEntry entry in from LexiconEntry entry in languageDescription.lexicon
+                                                           where entry.part_of_speech.Equals(partOfSpeechText)
+                                                           select entry)
                             {
                                 entry.part_of_speech = partOfSpeech.Text.Trim();
                             }
@@ -1314,7 +1314,9 @@ namespace LanguageEditor
             }
             if (languageDescription.derived)
             {
-                ConlangUtilities.RemoveDeclinedEntries(languageDescription);
+                Cursor.Current = Cursors.WaitCursor;
+                ConlangUtilities.RemoveDerivedEntries(languageDescription);
+                Cursor.Current = Cursors.Default;
                 languageDescription.derived = false;
                 deriveLanguageToolStripMenuItem.Text = "Derive Language";
                 if (lexiconEditor != null)
@@ -1324,7 +1326,9 @@ namespace LanguageEditor
             }
             else
             {
+                Cursor.Current = Cursors.WaitCursor;
                 ConlangUtilities.DeriveLexicon(languageDescription);
+                Cursor.Current = Cursors.Default;
                 languageDescription.derived = true;
                 deriveLanguageToolStripMenuItem.Text = "Remove Derived Words";
                 if (lexiconEditor != null)
@@ -1342,7 +1346,9 @@ namespace LanguageEditor
             }
             if (languageDescription.declined)
             {
+                Cursor.Current = Cursors.WaitCursor;
                 ConlangUtilities.RemoveDeclinedEntries(languageDescription);
+                Cursor.Current = Cursors.Default;
                 languageDescription.declined = false;
                 declineLanguageToolStripMenuItem.Text = "Decline Language";
                 if (lexiconEditor != null)
@@ -1352,7 +1358,9 @@ namespace LanguageEditor
             }
             else
             {
+                Cursor.Current = Cursors.WaitCursor;
                 ConlangUtilities.DeclineLexicon(languageDescription);
+                Cursor.Current = Cursors.Default;
                 languageDescription.declined = true;
                 declineLanguageToolStripMenuItem.Text = "Remove Declined Words";
                 if (lexiconEditor != null)
@@ -1361,6 +1369,31 @@ namespace LanguageEditor
                 }
             }
 
+        }
+
+        private void RemoveDuplicateWordsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (languageDescription == null)
+            {
+                return;
+            }
+            if (lexiconEditor != null)
+            {
+                languageDescription.lexicon = lexiconEditor.Lexicon;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+            List<LexiconEntry> lexiconList = [.. languageDescription.lexicon];
+            lexiconList = ConlangUtilities.DeDuplicateLexicon(lexiconList);
+            languageDescription.lexicon.Clear();
+            foreach (LexiconEntry entry in lexiconList)
+            {
+                languageDescription.lexicon.Add(entry);
+            }
+            if (lexiconEditor != null)
+            {
+                lexiconEditor.Lexicon = languageDescription.lexicon;
+            }
+            Cursor.Current = Cursors.Default;
         }
     }
 }
