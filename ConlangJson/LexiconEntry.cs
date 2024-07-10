@@ -291,6 +291,7 @@ namespace ConlangJson
                 double xVal = lexicalIndex(x.spelled);
                 double yVal = lexicalIndex(y.spelled);
 
+#pragma warning disable S1244 // Floating point numbers should not be tested for equality
                 if (xVal < yVal)
                 {
                     return -1;
@@ -352,6 +353,7 @@ namespace ConlangJson
                 {
                     return 1;
                 }
+#pragma warning restore S1244 // Floating point numbers should not be tested for equality
             }
 
 #pragma warning disable IDE1006 // Naming Styles
