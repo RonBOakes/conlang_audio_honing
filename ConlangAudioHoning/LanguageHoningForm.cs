@@ -183,6 +183,18 @@ namespace ConlangAudioHoning
         private void TabPhoneticAlterations_SelectedIndexChanged(object? sender, EventArgs e)
         {
             UpdatePhonemeToChangeCbx();
+            if (tabPhoneticAlterations.SelectedIndex == 0)
+            {
+                UpdateConsonantReplacementSettings();
+            }
+            else
+            {
+                btn_addCurrentChangeToList.Enabled = true;
+                btn_addCurrentChangeToList.Visible = true;
+                btn_applyListOfChanges.Enabled = true;
+                btn_applyListOfChanges.Visible = true;
+            }
+
             if ((tabPhoneticAlterations.SelectedIndex != 3) || ((tabPhoneticAlterations.SelectedIndex == 3) && (!rbn_replaceRSpelling.Checked)))
             {
                 lbl_choiceCbx.Text = "Phoneme to change";
@@ -3070,6 +3082,24 @@ namespace ConlangAudioHoning
 
         private void UpdateConsonantReplacementSettings()
         {
+            if (rbn_replaceConsonantsGlobally.Checked)
+            {
+                btn_addCurrentChangeToList.Enabled = true;
+                btn_addCurrentChangeToList.Visible = true;
+                btn_applyListOfChanges.Enabled = true;
+                btn_applyListOfChanges.Visible = true;
+                cbx_changeNotMatchLocations.Enabled = false;
+                cbx_changeNotMatchLocations.Visible = false;
+            }
+            else
+            {
+                btn_addCurrentChangeToList.Enabled = false;
+                btn_addCurrentChangeToList.Visible = false;
+                btn_applyListOfChanges.Enabled = false;
+                btn_applyListOfChanges.Visible = false;
+                cbx_changeNotMatchLocations.Enabled = true;
+                cbx_changeNotMatchLocations.Visible = true;
+            }
             if (rbn_replaceConsonantsPattern.Checked)
             {
                 txt_customReplacementPattern.Visible = true;

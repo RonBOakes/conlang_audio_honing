@@ -31,6 +31,7 @@
             txt_pattern = new TextBox();
             btn_OK = new Button();
             menus = new MenuStrip();
+            txt_usageText = new TextBox();
             SuspendLayout();
             // 
             // txt_pattern
@@ -57,11 +58,21 @@
             menus.TabIndex = 2;
             menus.Text = "menuStrip1";
             // 
+            // txt_usageText
+            // 
+            txt_usageText.Location = new Point(12, 85);
+            txt_usageText.Multiline = true;
+            txt_usageText.Name = "txt_usageText";
+            txt_usageText.ReadOnly = true;
+            txt_usageText.Size = new Size(759, 89);
+            txt_usageText.TabIndex = 3;
+            // 
             // CustomPatternForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(783, 84);
+            ClientSize = new Size(783, 184);
+            Controls.Add(txt_usageText);
             Controls.Add(btn_OK);
             Controls.Add(txt_pattern);
             Controls.Add(menus);
@@ -77,5 +88,6 @@
         private TextBox txt_pattern;
         private Button btn_OK;
         private MenuStrip menus;
+        private TextBox txt_usageText;
     }
 }

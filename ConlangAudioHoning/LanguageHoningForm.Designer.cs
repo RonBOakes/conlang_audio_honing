@@ -153,6 +153,7 @@
             btn_updateSoundMapList = new Button();
             tb_Volume = new TrackBar();
             label1 = new Label();
+            cbx_changeNotMatchLocations = new CheckBox();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -737,7 +738,7 @@
             // lbl_customReplacementPattern
             // 
             lbl_customReplacementPattern.AutoSize = true;
-            lbl_customReplacementPattern.Location = new Point(6, 135);
+            lbl_customReplacementPattern.Location = new Point(3, 144);
             lbl_customReplacementPattern.Name = "lbl_customReplacementPattern";
             lbl_customReplacementPattern.Size = new Size(162, 15);
             lbl_customReplacementPattern.TabIndex = 28;
@@ -745,20 +746,21 @@
             // 
             // txt_customReplacementPattern
             // 
-            txt_customReplacementPattern.Location = new Point(6, 108);
+            txt_customReplacementPattern.Location = new Point(3, 117);
             txt_customReplacementPattern.Name = "txt_customReplacementPattern";
             txt_customReplacementPattern.Size = new Size(453, 23);
             txt_customReplacementPattern.TabIndex = 27;
             // 
             // gbx_scopeOfConsonantReplacement
             // 
+            gbx_scopeOfConsonantReplacement.Controls.Add(cbx_changeNotMatchLocations);
             gbx_scopeOfConsonantReplacement.Controls.Add(rbn_replaceConsonantsPattern);
             gbx_scopeOfConsonantReplacement.Controls.Add(rbn_replaceConsonantsEndOfWord);
             gbx_scopeOfConsonantReplacement.Controls.Add(rbn_replaceConsonantsStartOfWords);
             gbx_scopeOfConsonantReplacement.Controls.Add(rbn_replaceConsonantsGlobally);
             gbx_scopeOfConsonantReplacement.Location = new Point(6, 50);
             gbx_scopeOfConsonantReplacement.Name = "gbx_scopeOfConsonantReplacement";
-            gbx_scopeOfConsonantReplacement.Size = new Size(453, 52);
+            gbx_scopeOfConsonantReplacement.Size = new Size(453, 67);
             gbx_scopeOfConsonantReplacement.TabIndex = 26;
             gbx_scopeOfConsonantReplacement.TabStop = false;
             gbx_scopeOfConsonantReplacement.Text = "Scope of Replacement";
@@ -1192,6 +1194,16 @@
             label1.TabIndex = 35;
             label1.Text = "Volume";
             // 
+            // cbx_changeNotMatchLocations
+            // 
+            cbx_changeNotMatchLocations.AutoSize = true;
+            cbx_changeNotMatchLocations.Location = new Point(6, 45);
+            cbx_changeNotMatchLocations.Name = "cbx_changeNotMatchLocations";
+            cbx_changeNotMatchLocations.Size = new Size(229, 19);
+            cbx_changeNotMatchLocations.TabIndex = 4;
+            cbx_changeNotMatchLocations.Text = "Change where pattern does not match";
+            cbx_changeNotMatchLocations.UseVisualStyleBackColor = true;
+            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1365,5 +1377,6 @@
         private TextBox txt_customReplacementPattern;
         private RadioButton rbn_replaceConsonantsPattern;
         private RadioButton rbn_replaceConsonantsEndOfWord;
+        private CheckBox cbx_changeNotMatchLocations;
     }
 }

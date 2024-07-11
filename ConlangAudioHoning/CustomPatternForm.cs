@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -16,6 +17,11 @@ namespace ConlangAudioHoning
     /// </summary>
     public partial class CustomPatternForm : Form
     {
+        private static readonly string s_usageText =
+            "This pattern will be used to for matching when the selected phoneme will, or will not, " +
+            "be replaced.  This is a generalized regular expression, and can include wildcards, including " +
+            "vowel or consonant patterns.  It must include the selected phoneme in order to work.  Failing " +
+            "to include the selected phoneme will result in no changes being made.";
         private string Pattern
         {
             get; set;
@@ -31,6 +37,8 @@ namespace ConlangAudioHoning
             btn_OK.Click += Btn_OK_Click;
 
             txt_pattern.Text = Pattern;
+
+            txt_usageText.Text = s_usageText;
         }
 
         /// <summary>
