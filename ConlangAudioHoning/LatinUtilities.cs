@@ -183,11 +183,11 @@ namespace ConlangAudioHoning
                                 {
                                     _ = sb.AppendFormat("[{0}]", declension);
                                 }
-                                _ = sb.Append(") ");
+                                _ = sb.AppendLine(")");
                             }
                             else
                             {
-                                _ = sb.AppendFormat("Unknown Word ({0}) ", word);
+                                _ = sb.AppendFormat("Unknown Word ({0})\n", word);
                             }
                         }
                     }
