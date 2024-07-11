@@ -327,9 +327,9 @@ namespace ConlangAudioHoning
                     S3Object? s3AudioFile = null;
                     if (listObjectsV2Response != null)
                     {
-                        foreach (var s3file in from S3Object s3file in listObjectsV2Response.S3Objects
-                                               where outputURIString.Contains(s3file.Key)
-                                               select s3file)
+                        foreach (S3Object s3file in from S3Object s3file in listObjectsV2Response.S3Objects
+                                                    where outputURIString.Contains(s3file.Key)
+                                                    select s3file)
                         {
                             s3AudioFile = s3file;
                         }

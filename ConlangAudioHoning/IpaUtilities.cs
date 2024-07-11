@@ -135,9 +135,10 @@ namespace ConlangAudioHoning
         private static Dictionary<string, List<string>>? _consonant_changes_l2 = null;
 
         private static Dictionary<string, List<string>>? _consonant_changes_l3 = null;
-        private static string? _consonant_pattern = null;
-        private static string? _vowel_pattern = null;
-        private static string? _diacritic_pattern = null;
+        private static string? s_consonant_pattern = null;
+        private static string? s_vowel_pattern = null;
+        private static string? s_vowel_modifier_pattern = null;
+        private static string? s_diacritic_pattern = null;
 
         /// <summary>
         /// Returns an array containing strings with all of the identified Pulmonic Consonants.
@@ -364,7 +365,7 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if (_consonant_pattern == null)
+                if (s_consonant_pattern == null)
                 {
                     StringBuilder sb = new();
                     _ = sb.Append('[');
@@ -377,9 +378,9 @@ namespace ConlangAudioHoning
                         _ = sb.Append(consonant);
                     }
                     _ = sb.Append(']');
-                    _consonant_pattern = sb.ToString();
+                    s_consonant_pattern = sb.ToString();
                 }
-                return _consonant_pattern;
+                return s_consonant_pattern;
             }
         }
 
@@ -392,7 +393,7 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if (_vowel_pattern == null)
+                if (s_vowel_pattern == null)
                 {
                     StringBuilder sb = new();
                     _ = sb.Append('[');
@@ -401,9 +402,32 @@ namespace ConlangAudioHoning
                         _ = sb.Append(vowel);
                     }
                     _ = sb.Append(']');
-                    _vowel_pattern = sb.ToString();
+                    s_vowel_pattern = sb.ToString();
                 }
-                return _vowel_pattern;
+                return s_vowel_pattern;
+            }
+        }
+
+        /// <summary>
+        /// Returns a string that can be used within a generalized regular expression to match
+        /// all IPA Vowel Modifiers.
+        /// </summary>
+        public static string VowelModifierPattern
+        {
+            get
+            {
+                if (s_vowel_modifier_pattern == null)
+                {
+                    StringBuilder sb = new();
+                    _ = sb.Append('[');
+                    foreach (string diacritic in Vowel_modifiers)
+                    {
+                        _ = sb.Append(diacritic);
+                    }
+                    _ = sb.Append(']');
+                    s_vowel_modifier_pattern = sb.ToString();
+                }
+                return s_vowel_modifier_pattern;
             }
         }
 
@@ -415,7 +439,7 @@ namespace ConlangAudioHoning
         {
             get
             {
-                if (_diacritic_pattern == null)
+                if (s_diacritic_pattern == null)
                 {
                     StringBuilder sb = new();
                     _ = sb.Append('[');
@@ -428,9 +452,9 @@ namespace ConlangAudioHoning
                         _ = sb.Append(diacritic);
                     }
                     _ = sb.Append(']');
-                    _diacritic_pattern = sb.ToString();
+                    s_diacritic_pattern = sb.ToString();
                 }
-                return _diacritic_pattern;
+                return s_diacritic_pattern;
             }
         }
 

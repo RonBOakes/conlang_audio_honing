@@ -96,7 +96,7 @@ namespace ConlangAudioHoning
         /// Returns true if the SoundMap being edited is in a valid state.  That is
         /// if it satisfies both of the dependency requirements found in 
         /// https://github.com/RonBOakes/conlang_json/blob/main/doc/conlang_json_spec.pdf
-        /// section on spelling_pronounciation_rules entries.
+        /// section on spelling_pronunciation_rules entries.
         /// </summary>
         public bool ValidMap
         {
@@ -104,11 +104,11 @@ namespace ConlangAudioHoning
             {
                 bool valid = false;
 
-                if ((!String.IsNullOrEmpty(SoundMapData.pronunciation_regex.Trim())) && (!String.IsNullOrEmpty(SoundMapData.phoneme.Trim())))
+                if ((!string.IsNullOrEmpty(SoundMapData.pronunciation_regex.Trim())) && (!string.IsNullOrEmpty(SoundMapData.phoneme.Trim())))
                 {
                     valid = true;
                 }
-                if ((!String.IsNullOrEmpty(SoundMapData.spelling_regex.Trim())) && (!String.IsNullOrEmpty(SoundMapData.romanization.Trim())))
+                if ((!string.IsNullOrEmpty(SoundMapData.spelling_regex.Trim())) && (!string.IsNullOrEmpty(SoundMapData.romanization.Trim())))
                 {
                     valid = true;
                 }
@@ -123,7 +123,7 @@ namespace ConlangAudioHoning
         /// <param name="textToAppend">string containing the text to append.</param>
         public void PasteIntoFocusedBox(string textToAppend)
         {
-            if ((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
+            if ((_lastFocused != null) && (!string.IsNullOrEmpty(textToAppend)))
             {
                 Clipboard.SetText(textToAppend);
                 _lastFocused.Paste();
@@ -209,22 +209,22 @@ namespace ConlangAudioHoning
             Controls.Add(txt_spellingRegex);
         }
 
-        private void Txt_phoneme_GotFocus(Object? sender, EventArgs e)
+        private void Txt_phoneme_GotFocus(object? sender, EventArgs e)
         {
             _lastFocused = this.txt_phoneme;
         }
 
-        private void Txt_pronunciationRegex_GotFocus(Object? sender, EventArgs e)
+        private void Txt_pronunciationRegex_GotFocus(object? sender, EventArgs e)
         {
             _lastFocused = this.txt_pronunciationRegex;
         }
 
-        private void Txt_romanization_GotFocus(Object? sender, EventArgs e)
+        private void Txt_romanization_GotFocus(object? sender, EventArgs e)
         {
             _lastFocused = this.txt_romanization;
         }
 
-        private void Txt_spellingRegex_GotFocus(Object? sender, EventArgs e)
+        private void Txt_spellingRegex_GotFocus(object? sender, EventArgs e)
         {
             _lastFocused = this.txt_spellingRegex;
         }

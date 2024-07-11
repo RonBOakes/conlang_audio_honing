@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System.Text.RegularExpressions;
 using ConlangAudioHoning;
 using ConlangJson;
 
@@ -660,11 +661,27 @@ namespace LanguageEditor
 #pragma warning disable IDE0007 // Use implicit type
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 #pragma warning restore IDE0007 // Use implicit type
-            if (String.IsNullOrEmpty(menuItem.Text))
+            if (string.IsNullOrEmpty(menuItem.Text))
             {
                 return;
             }
-            string charToInsert = menuItem.Text.Split()[0];
+            Match menuTextMatch = CharacterInsertToolStripMenuItem.RegexMenuTextRegex().Match(menuItem.Text);
+            string charToInsert;
+            if (menuTextMatch.Success)
+            {
+                if (menuTextMatch.Groups[1].Value.Contains("Vowel"))
+                {
+                    charToInsert = CharacterInsertToolStripMenuItem.VowelMatchPattern;
+                }
+                else
+                {
+                    charToInsert = CharacterInsertToolStripMenuItem.ConsonantMatchPattern;
+                }
+            }
+            else
+            {
+                charToInsert = menuItem.Text.Split()[0];
+            }
             PasteIntoFocusedBox(charToInsert);
         }
 
@@ -675,14 +692,14 @@ namespace LanguageEditor
         /// <param name="textToAppend">string containing the text to append.</param>
         public void PasteIntoFocusedBox(string textToAppend)
         {
-            if ((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
+            if ((_lastFocused != null) && (!string.IsNullOrEmpty(textToAppend)))
             {
                 Clipboard.SetText(textToAppend);
                 _lastFocused.Paste();
             }
         }
 
-        private void Txt_GotFocus(Object? sender, EventArgs e)
+        private void Txt_GotFocus(object? sender, EventArgs e)
         {
             if (sender is TextBox box)
             {

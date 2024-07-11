@@ -17,6 +17,7 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System.Text;
+using System.Text.RegularExpressions;
 using ConlangJson;
 
 namespace ConlangAudioHoning
@@ -165,11 +166,27 @@ namespace ConlangAudioHoning
 #pragma warning disable IDE0007 // Use implicit type
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 #pragma warning restore IDE0007 // Use implicit type
-            if (String.IsNullOrEmpty(menuItem.Text))
+            if (string.IsNullOrEmpty(menuItem.Text))
             {
                 return;
             }
-            string charToInsert = menuItem.Text.Split()[0];
+            Match menuTextMatch = CharacterInsertToolStripMenuItem.RegexMenuTextRegex().Match(menuItem.Text);
+            string charToInsert;
+            if (menuTextMatch.Success)
+            {
+                if (menuTextMatch.Groups[1].Value.Contains("Vowel"))
+                {
+                    charToInsert = CharacterInsertToolStripMenuItem.VowelMatchPattern;
+                }
+                else
+                {
+                    charToInsert = CharacterInsertToolStripMenuItem.ConsonantMatchPattern;
+                }
+            }
+            else
+            {
+                charToInsert = menuItem.Text.Split()[0];
+            }
             soundMapEditor.PasteIntoFocusedBox(charToInsert);
         }
 

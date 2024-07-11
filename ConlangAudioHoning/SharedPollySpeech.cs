@@ -231,7 +231,7 @@ namespace ConlangAudioHoning
                     return voices;
                 }
                 string data = result.Content.ReadAsStringAsync().Result;
-                if (!String.IsNullOrEmpty(data))
+                if (!string.IsNullOrEmpty(data))
                 {
                     responseData = JsonSerializer.Deserialize<JsonObject>(data);
                 }

@@ -24,7 +24,6 @@ namespace ConlangAudioHoning
     {
         private static Size controlSize = new(850, 280);
 
-        private List<SpellingPronunciationRules>? _spellingPronunciationRuleList;
         private List<string>? _partOfSpeechList;
 
         private LexiconEntry? _lexiconEntry;
@@ -109,11 +108,11 @@ namespace ConlangAudioHoning
 
             if (soundMapList == null)
             {
-                _spellingPronunciationRuleList = [];
+                SpellingPronunciationRuleList = [];
             }
             else
             {
-                _spellingPronunciationRuleList = soundMapList;
+                SpellingPronunciationRuleList = soundMapList;
             }
 
             if (lexiconEntry == null)
@@ -138,22 +137,15 @@ namespace ConlangAudioHoning
                 cmb_partOfSpeech.Items.AddRange([.. _partOfSpeechList]);
                 cmb_partOfSpeech.SelectedIndex = 0;
             }
-            private get
+            get
             {
-                return [.. _partOfSpeechList];
+                return _partOfSpeechList ?? [];
             }
         }
 
         internal List<SpellingPronunciationRules> SpellingPronunciationRuleList
         {
-            set
-            {
-                _spellingPronunciationRuleList = value;
-            }
-            private get
-            {
-                return _spellingPronunciationRuleList ?? [];
-            }
+            set; get;
         }
 
         private void LoadDeclensionList()
@@ -398,9 +390,9 @@ namespace ConlangAudioHoning
                 txt_spelled.TextChanged -= Txt_spelled_TextChanged;
                 txt_phonetic.TextChanged -= Txt_phonetic_TextChanged;
 
-                if (_spellingPronunciationRuleList != null)
+                if (SpellingPronunciationRuleList != null)
                 {
-                    txt_phonetic.Text = ConlangUtilities.SoundOutWord(txt_spelled.Text.Trim(), _spellingPronunciationRuleList);
+                    txt_phonetic.Text = ConlangUtilities.SoundOutWord(txt_spelled.Text.Trim(), SpellingPronunciationRuleList);
                 }
             }
             finally
@@ -418,9 +410,9 @@ namespace ConlangAudioHoning
                 txt_spelled.TextChanged -= Txt_spelled_TextChanged;
                 txt_phonetic.TextChanged -= Txt_phonetic_TextChanged;
 
-                if (_spellingPronunciationRuleList != null)
+                if (SpellingPronunciationRuleList != null)
                 {
-                    txt_spelled.Text = ConlangUtilities.SpellWord(txt_phonetic.Text.Trim(), _spellingPronunciationRuleList);
+                    txt_spelled.Text = ConlangUtilities.SpellWord(txt_phonetic.Text.Trim(), SpellingPronunciationRuleList);
                 }
             }
             finally
@@ -452,7 +444,12 @@ namespace ConlangAudioHoning
 #pragma warning disable IDE0007 // Use implicit type
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 #pragma warning restore IDE0007 // Use implicit type
-            if (String.IsNullOrEmpty(menuItem.Text))
+            if (string.IsNullOrEmpty(menuItem.Text))
+            {
+                return;
+            }
+            // LexiconEntryEditor has no regular expression boxes
+            if (menuItem.Text.Contains("Match a"))
             {
                 return;
             }
@@ -467,14 +464,14 @@ namespace ConlangAudioHoning
         /// <param name="textToAppend">string containing the text to append.</param>
         public void PasteIntoFocusedBox(string textToAppend)
         {
-            if ((_lastFocused != null) && (!String.IsNullOrEmpty(textToAppend)))
+            if ((_lastFocused != null) && (!string.IsNullOrEmpty(textToAppend)))
             {
                 Clipboard.SetText(textToAppend);
                 _lastFocused.Paste();
             }
         }
 
-        private void Txt_GotFocus(Object? sender, EventArgs e)
+        private void Txt_GotFocus(object? sender, EventArgs e)
         {
             if (sender is TextBox box)
             {

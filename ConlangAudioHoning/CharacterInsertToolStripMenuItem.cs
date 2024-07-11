@@ -16,21 +16,26 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System.Text;
+using System.Text.RegularExpressions;
+
 namespace ConlangAudioHoning
 {
     /// <summary>
     /// Menu item to provide a top-level menu for inserting IPA characters and 
     /// latin diacritics into TextBoxes or other controls.
     /// </summary>
-    public class CharacterInsertToolStripMenuItem : ToolStripMenuItem
+    public partial class CharacterInsertToolStripMenuItem : ToolStripMenuItem
     {
         // First level menus
-#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
         private readonly ToolStripMenuItem pulmonicConsonantsToolStripMenuItem;
         private readonly ToolStripMenuItem nonPulmonicConsonantsToolStripMenuItem;
         private readonly ToolStripMenuItem vowelsToolStripMenuItem;
         private readonly ToolStripMenuItem symbolsToolStripMenuItem;
         private readonly ToolStripMenuItem latinTextDiacriticsToolStripMenuItem;
+        private readonly ToolStripMenuItem _regularExpressionToolStripMenuItem;
+        private readonly ToolStripMenuItem _vowelMatchToolStripMenuItem;
+        private readonly ToolStripMenuItem _consonantMatchToolStripMenuItem;
         // Pulmonic Consonant Submenu
         private readonly ToolStripMenuItem plosiveToolStripMenuItem;
         private readonly ToolStripMenuItem nasalToolStripMenuItem;
@@ -172,7 +177,6 @@ namespace ConlangAudioHoning
         private readonly ToolStripMenuItem halfLengthenedToolStripMenuItem;
         private readonly ToolStripMenuItem shortenedToolStripMenuItem;
         private readonly ToolStripMenuItem rhoticityToolStripMenuItem;
-#pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
 
         private readonly List<ToolStripMenuItem> latinDiacriticToolStripSubMenus = [];
 
@@ -187,6 +191,7 @@ namespace ConlangAudioHoning
             vowelsToolStripMenuItem = new ToolStripMenuItem();
             symbolsToolStripMenuItem = new ToolStripMenuItem();
             latinTextDiacriticsToolStripMenuItem = new ToolStripMenuItem();
+            _regularExpressionToolStripMenuItem = new ToolStripMenuItem();
 
             plosiveToolStripMenuItem = new ToolStripMenuItem();
             nasalToolStripMenuItem = new ToolStripMenuItem();
@@ -1133,6 +1138,12 @@ namespace ConlangAudioHoning
             latinTextDiacriticsToolStripMenuItem.Name = "latinTextDiacriticsToolStripMenuItem";
             latinTextDiacriticsToolStripMenuItem.Size = new Size(211, 22);
             latinTextDiacriticsToolStripMenuItem.Text = "Latin/Text Diacritics";
+            //
+            // _
+            //
+            _regularExpressionToolStripMenuItem.Name = "_regularExpressionToolStripMenuItem";
+            _regularExpressionToolStripMenuItem.Size = new Size(211, 22);
+            _regularExpressionToolStripMenuItem.Text = "Regular Expression Fragments";
 
             int subMenuCount = (LatinUtilities.DiacriticsMap.Count / 10) + 1;
             for (int i = 0; i < subMenuCount; i++)
@@ -1163,6 +1174,20 @@ namespace ConlangAudioHoning
                 }
             }
 
+            // Build the regular expression menu
+            _vowelMatchToolStripMenuItem = new()
+            {
+                Text = "Match a Vowel",
+                Size = new Size(211, 22),
+            };
+            _consonantMatchToolStripMenuItem = new()
+            {
+                Text = "Match a Consonant",
+                Size = new Size(211, 22),
+            };
+
+            _regularExpressionToolStripMenuItem.DropDownItems.AddRange([_vowelMatchToolStripMenuItem, _consonantMatchToolStripMenuItem]);
+
             this.Size = new Size(107, 20);
             this.Text = "Character Inserts";
             this.DropDownItems.AddRange(
@@ -1172,6 +1197,7 @@ namespace ConlangAudioHoning
                 vowelsToolStripMenuItem,
                 symbolsToolStripMenuItem,
                 latinTextDiacriticsToolStripMenuItem,
+                _regularExpressionToolStripMenuItem,
             ]);
         }
 
@@ -1310,7 +1336,47 @@ namespace ConlangAudioHoning
                     subMenuItem.Click += clickDelegate;
                 }
             }
-
+            _vowelMatchToolStripMenuItem.Click += clickDelegate;
+            _consonantMatchToolStripMenuItem.Click += clickDelegate;
         }
+
+        /// <summary>
+        /// Pattern for matching vowels that can be inserted.
+        /// </summary>
+        public static string VowelMatchPattern
+        {
+            get
+            {
+                StringBuilder sb = new();
+                sb.Append(IpaUtilities.VowelPattern);
+                sb.Append(IpaUtilities.VowelModifierPattern);
+                sb.Append('?');
+
+                return sb.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Pattern for matching consonants that can be inserted
+        /// </summary>
+        public static string ConsonantMatchPattern
+        {
+            get
+            {
+                StringBuilder sb = new();
+                sb.Append(IpaUtilities.ConsonantPattern);
+                sb.Append(IpaUtilities.DiacriticPattern);
+                sb.Append('?');
+                return sb.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Get a regular expression that can be used to match to see if
+        /// the menu item is for generating a regular expression, and what
+        /// it matches.
+        /// </summary>
+        [GeneratedRegex(@"Match\s+a\s+(\w+)")]
+        public static partial Regex RegexMenuTextRegex();
     }
 }

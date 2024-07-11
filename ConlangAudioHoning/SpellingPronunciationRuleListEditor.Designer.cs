@@ -188,7 +188,7 @@
             label1.TabIndex = 13;
             label1.Text = "Phoneme Being Replaced:";
             // 
-            // SpellingPronounciationRuleListEditor
+            // SpellingPronunciationRuleListEditor
             // 
             Controls.Add(menuStrip1);
             menuStrip1.ResumeLayout(false);

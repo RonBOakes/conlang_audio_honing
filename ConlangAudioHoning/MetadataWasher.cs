@@ -32,11 +32,7 @@ namespace ConlangAudioHoning
             }
             if (phoneticChangeHistories != null)
             {
-                SortedSet<string> timeStamps = new();
-                foreach (string timestamp in phoneticChangeHistories.Keys)
-                {
-                    timeStamps.Add(timestamp);
-                }
+                SortedSet<string> timeStamps = [.. phoneticChangeHistories.Keys];
                 if (!aggressive)
                 {
                     string lastTimestamp = timeStamps.Max ?? string.Empty;
