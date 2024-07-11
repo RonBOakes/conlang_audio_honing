@@ -2,4 +2,5 @@ Conlang Audio Honing testing notes:
 
 - Changes can mess up sample texts even with the updates
 - Missing phoneme in Kirshbaum coding.
-- Metadata runs away.  Had to add code to account for this 
+- Metadata runs away.  Had to add code to account for this
+- Found the gloss very useful in tracking down messed up words in sample texts.

@@ -170,24 +170,24 @@ namespace ConlangAudioHoning
                         foreach (string wordIterator in line.Split())
                         {
                             string word = wordIterator.Trim().ToLower();
-                            Match wordMatch = MyRegex().Match(word);
+                            Match wordMatch = WordMatch().Match(word);
                             if (wordMatch.Success)
                             {
                                 word = wordMatch.Groups[1].Value;
-                            }
-                            if (wordMap.TryGetValue(word, out LexiconEntry? value))
-                            {
-                                LexiconEntry lexiconEntry = value;
-                                _ = sb.AppendFormat("{0}-({1} ", lexiconEntry.english, lexiconEntry.part_of_speech);
-                                foreach (string declension in lexiconEntry.declensions)
+                                if (wordMap.TryGetValue(word, out LexiconEntry? value))
                                 {
-                                    _ = sb.AppendFormat("[{0}]", declension);
+                                    LexiconEntry lexiconEntry = value;
+                                    _ = sb.AppendFormat("{0}-({1} ", lexiconEntry.english, lexiconEntry.part_of_speech);
+                                    foreach (string declension in lexiconEntry.declensions)
+                                    {
+                                        _ = sb.AppendFormat("[{0}]", declension);
+                                    }
+                                    _ = sb.AppendLine(")");
                                 }
-                                _ = sb.AppendLine(")");
-                            }
-                            else
-                            {
-                                _ = sb.AppendFormat("Unknown Word ({0})\n", word);
+                                else
+                                {
+                                    _ = sb.AppendFormat("Unknown Word ({0})\n", word);
+                                }
                             }
                         }
                     }
@@ -203,7 +203,7 @@ namespace ConlangAudioHoning
             return sb.ToString();
         }
 
-        [GeneratedRegex(@"(\w+)[.,?!]")]
-        private static partial Regex MyRegex();
+        [GeneratedRegex(@"(\w+)")]
+        private static partial Regex WordMatch();
     }
 }
