@@ -3083,7 +3083,8 @@ namespace ConlangAudioHoning
         }
         private void Txt_customReplacementPattern_ClickOrEnter(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            _ = CustomPatternForm.Show(out string customPattern);
+            txt_customReplacementPattern.Text = customPattern;
         }
     }
 }
