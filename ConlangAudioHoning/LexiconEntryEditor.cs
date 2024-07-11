@@ -362,7 +362,7 @@ namespace ConlangAudioHoning
 
             menuStrip1.Items.Add(controlsToolStripMenuItem);
 
-            CharacterInsertToolStripMenuItem ciMenu = new();
+            CharacterInsertToolStripMenuItem ciMenu = new(false);
             _ = menuStrip1.Items.Add(ciMenu);
 
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);

@@ -33,9 +33,9 @@ namespace ConlangAudioHoning
         private readonly ToolStripMenuItem vowelsToolStripMenuItem;
         private readonly ToolStripMenuItem symbolsToolStripMenuItem;
         private readonly ToolStripMenuItem latinTextDiacriticsToolStripMenuItem;
-        private readonly ToolStripMenuItem _regularExpressionToolStripMenuItem;
-        private readonly ToolStripMenuItem _vowelMatchToolStripMenuItem;
-        private readonly ToolStripMenuItem _consonantMatchToolStripMenuItem;
+        private readonly ToolStripMenuItem? _regularExpressionToolStripMenuItem;
+        private readonly ToolStripMenuItem? _vowelMatchToolStripMenuItem;
+        private readonly ToolStripMenuItem? _consonantMatchToolStripMenuItem;
         // Pulmonic Consonant Submenu
         private readonly ToolStripMenuItem plosiveToolStripMenuItem;
         private readonly ToolStripMenuItem nasalToolStripMenuItem;
@@ -182,8 +182,9 @@ namespace ConlangAudioHoning
 
         /// <summary>
         /// Constructor for a CharacterInsertToolStripMenuItem
+        /// <paramref name="includeRegularExpressions">Set to true to include the menu for Regular Expressions</paramref>
         /// </summary>
-        public CharacterInsertToolStripMenuItem()
+        public CharacterInsertToolStripMenuItem(bool includeRegularExpressions = true)
         {
             // Instantiate the menu SpeakingSpeeds.
             pulmonicConsonantsToolStripMenuItem = new ToolStripMenuItem();
@@ -191,7 +192,6 @@ namespace ConlangAudioHoning
             vowelsToolStripMenuItem = new ToolStripMenuItem();
             symbolsToolStripMenuItem = new ToolStripMenuItem();
             latinTextDiacriticsToolStripMenuItem = new ToolStripMenuItem();
-            _regularExpressionToolStripMenuItem = new ToolStripMenuItem();
 
             plosiveToolStripMenuItem = new ToolStripMenuItem();
             nasalToolStripMenuItem = new ToolStripMenuItem();
@@ -1138,12 +1138,6 @@ namespace ConlangAudioHoning
             latinTextDiacriticsToolStripMenuItem.Name = "latinTextDiacriticsToolStripMenuItem";
             latinTextDiacriticsToolStripMenuItem.Size = new Size(211, 22);
             latinTextDiacriticsToolStripMenuItem.Text = "Latin/Text Diacritics";
-            //
-            // _
-            //
-            _regularExpressionToolStripMenuItem.Name = "_regularExpressionToolStripMenuItem";
-            _regularExpressionToolStripMenuItem.Size = new Size(211, 22);
-            _regularExpressionToolStripMenuItem.Text = "Regular Expression Fragments";
 
             int subMenuCount = (LatinUtilities.DiacriticsMap.Count / 10) + 1;
             for (int i = 0; i < subMenuCount; i++)
@@ -1174,31 +1168,51 @@ namespace ConlangAudioHoning
                 }
             }
 
-            // Build the regular expression menu
-            _vowelMatchToolStripMenuItem = new()
+            if (includeRegularExpressions)
             {
-                Text = "Match a Vowel",
-                Size = new Size(211, 22),
-            };
-            _consonantMatchToolStripMenuItem = new()
+                _regularExpressionToolStripMenuItem = new ToolStripMenuItem();
+                _regularExpressionToolStripMenuItem.Name = "_regularExpressionToolStripMenuItem";
+                _regularExpressionToolStripMenuItem.Size = new Size(211, 22);
+                _regularExpressionToolStripMenuItem.Text = "Regular Expression Fragments";
+
+                // Build the regular expression menu
+                _vowelMatchToolStripMenuItem = new()
+                {
+                    Text = "Match a Vowel",
+                    Size = new Size(211, 22),
+                };
+                _consonantMatchToolStripMenuItem = new()
+                {
+                    Text = "Match a Consonant",
+                    Size = new Size(211, 22),
+                };
+
+                _regularExpressionToolStripMenuItem.DropDownItems.AddRange([_vowelMatchToolStripMenuItem, _consonantMatchToolStripMenuItem]);
+
+                this.Size = new Size(107, 20);
+                this.Text = "Character Inserts";
+                this.DropDownItems.AddRange([
+                    pulmonicConsonantsToolStripMenuItem,
+                    nonPulmonicConsonantsToolStripMenuItem,
+                    vowelsToolStripMenuItem,
+                    symbolsToolStripMenuItem,
+                    latinTextDiacriticsToolStripMenuItem,
+                    _regularExpressionToolStripMenuItem,
+                    ]);
+            }
+            else
             {
-                Text = "Match a Consonant",
-                Size = new Size(211, 22),
-            };
 
-            _regularExpressionToolStripMenuItem.DropDownItems.AddRange([_vowelMatchToolStripMenuItem, _consonantMatchToolStripMenuItem]);
-
-            this.Size = new Size(107, 20);
-            this.Text = "Character Inserts";
-            this.DropDownItems.AddRange(
-            [
-                pulmonicConsonantsToolStripMenuItem,
-                nonPulmonicConsonantsToolStripMenuItem,
-                vowelsToolStripMenuItem,
-                symbolsToolStripMenuItem,
-                latinTextDiacriticsToolStripMenuItem,
-                _regularExpressionToolStripMenuItem,
-            ]);
+                this.Size = new Size(107, 20);
+                this.Text = "Character Inserts";
+                this.DropDownItems.AddRange([
+                    pulmonicConsonantsToolStripMenuItem,
+                    nonPulmonicConsonantsToolStripMenuItem,
+                    vowelsToolStripMenuItem,
+                    symbolsToolStripMenuItem,
+                    latinTextDiacriticsToolStripMenuItem,
+                ]);
+            }
         }
 
         /// <summary>
@@ -1336,8 +1350,11 @@ namespace ConlangAudioHoning
                     subMenuItem.Click += clickDelegate;
                 }
             }
-            _vowelMatchToolStripMenuItem.Click += clickDelegate;
-            _consonantMatchToolStripMenuItem.Click += clickDelegate;
+            if ((_vowelMatchToolStripMenuItem != null) && (_consonantMatchToolStripMenuItem != null))
+            {
+                _vowelMatchToolStripMenuItem.Click += clickDelegate;
+                _consonantMatchToolStripMenuItem.Click += clickDelegate;
+            }
         }
 
         /// <summary>

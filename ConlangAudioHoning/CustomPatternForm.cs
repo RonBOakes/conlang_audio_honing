@@ -19,9 +19,11 @@ namespace ConlangAudioHoning
     {
         private static readonly string s_usageText =
             "This pattern will be used to for matching when the selected phoneme will, or will not, " +
-            "be replaced.  This is a generalized regular expression, and can include wildcards, including " +
-            "vowel or consonant patterns.  It must include the selected phoneme in order to work.  Failing " +
-            "to include the selected phoneme will result in no changes being made.";
+            "be replaced.  This is not a regular expression, and cannot include wildcards. It must include " +
+            "the selected phoneme in order to work.  Failing to include the selected phoneme will result in " +
+            "no changes being made.\n\n" +
+            "To match any vowel put in a capital V, and to match any consonant put in a capital C.  The tool will " +
+            "use these as needed performing the updates.";
         private string Pattern
         {
             get; set;
@@ -31,7 +33,7 @@ namespace ConlangAudioHoning
         {
             Pattern = pattern ?? string.Empty;
             InitializeComponent();
-            CharacterInsertToolStripMenuItem ciMenu = new();
+            CharacterInsertToolStripMenuItem ciMenu = new(false);
             _ = menus.Items.Add(ciMenu);
             ciMenu.AddClickDelegate(CharInsetToolStripMenuItem_Click);
             btn_OK.Click += Btn_OK_Click;
