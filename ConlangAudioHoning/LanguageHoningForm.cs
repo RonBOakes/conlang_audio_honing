@@ -160,6 +160,14 @@ namespace ConlangAudioHoning
             LoadSpeeds();
             tabPhoneticAlterations.SelectedIndexChanged += TabPhoneticAlterations_SelectedIndexChanged;
 
+            // Hide controls on the Consonants tab that only show when certain radio buttons are pressed
+            lbl_customReplacementPattern.Visible = false;
+            txt_customReplacementPattern.Visible = false;
+
+            // Add handlers for the custom replacement pattern box
+            txt_customReplacementPattern.Click += Txt_customReplacementPattern_ClickOrEnter;
+            txt_customReplacementPattern.Enter += Txt_customReplacementPattern_ClickOrEnter;
+
             // Hide controls on the Diphthong tab that only show up when certain radio buttons are pressed
             lbl_diphthongStartVowel.Visible = false;
             cbx_diphthongStartVowel.Visible = false;
@@ -339,6 +347,7 @@ namespace ConlangAudioHoning
             rbn_normalVowel.Checked = true;
             tabPhoneticAlterations.SelectedIndex = 0; // Consonants.
             rbn_l1.Checked = true;
+            rbn_replaceConsonantsGlobally.Checked = true;
             rbn_addRhoticityRegular.Checked = true;
             rbn_vowelToDiphthongStart.Checked = true;
             UpdatePhonemeToChangeCbx();
@@ -3037,6 +3046,44 @@ namespace ConlangAudioHoning
                 DefaultJsonSerializerOptions.WriteIndented = true;
                 useCompactJsonToolStripItem.Checked = false;
             }
+        }
+
+        private void Rbn_replaceConsonantsGlobally_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateConsonantReplacementSettings();
+        }
+
+        private void Rbn_replaceConsonantsStartOfWords_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateConsonantReplacementSettings();
+        }
+
+        private void Rbn_replaceConsonantsEndOfWord_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateConsonantReplacementSettings();
+        }
+
+        private void Rbn_replaceConsonantsPattern_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateConsonantReplacementSettings();
+        }
+
+        private void UpdateConsonantReplacementSettings()
+        {
+            if (rbn_replaceConsonantsPattern.Checked)
+            {
+                txt_customReplacementPattern.Visible = true;
+                lbl_customReplacementPattern.Visible = true;
+            }
+            else
+            {
+                txt_customReplacementPattern.Visible = false;
+                lbl_customReplacementPattern.Visible = false;
+            }
+        }
+        private void Txt_customReplacementPattern_ClickOrEnter(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
