@@ -2317,20 +2317,52 @@ namespace ConlangAudioHoning
                 }
                 string oldPhoneme = cbx_phonemeToChange.Text.Split()[0];
                 string newPhoneme = cbx_replacementPhoneme.Text.Split()[0];
-                // Make the change
-                phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme);
-                // Update sample text
-                if (sampleText != string.Empty)
+                if (rbn_replaceConsonantsGlobally.Checked)
                 {
-                    sampleText = phoneticChanger.SampleText;
-                    txt_SampleText.Text = sampleText;
-                    txt_phonetic.Text = string.Empty;
-                    foreach (string engineName in speechEngines.Keys)
+                    // Make the change
+                    phoneticChanger.PhoneticChange(oldPhoneme, newPhoneme);
+                    // Update sample text
+                    if (sampleText != string.Empty)
                     {
-                        SpeechEngine speechEngine = speechEngines[engineName];
-                        speechEngine.SampleText = sampleText;
+                        sampleText = phoneticChanger.SampleText;
+                        txt_SampleText.Text = sampleText;
+                        txt_phonetic.Text = string.Empty;
+                        foreach (string engineName in speechEngines.Keys)
+                        {
+                            SpeechEngine speechEngine = speechEngines[engineName];
+                            speechEngine.SampleText = sampleText;
+                        }
                     }
                 }
+                // TODO Add others in appropriate order.
+                else if (rbn_replaceConsonantsPattern.Checked)
+                {
+                    if (!string.IsNullOrEmpty(txt_customReplacementPattern.Text))
+                    {
+                        if (!chk_changeNotMatchLocations.Checked)
+                        {
+                            string clusterPattern = txt_customReplacementPattern.Text.Trim();
+                            phoneticChanger.ConsonantClusterPhoneticChange(clusterPattern, oldPhoneme, newPhoneme);
+                        }
+                        else
+                        {
+                            // TODO: Add other case.
+                        }
+                    }
+                    // Update sample text
+                    if (sampleText != string.Empty)
+                    {
+                        sampleText = phoneticChanger.SampleText;
+                        txt_SampleText.Text = sampleText;
+                        txt_phonetic.Text = string.Empty;
+                        foreach (string engineName in speechEngines.Keys)
+                        {
+                            SpeechEngine speechEngine = speechEngines[engineName];
+                            speechEngine.SampleText = sampleText;
+                        }
+                    }
+                }
+
                 // Clear the combo boxes
                 cbx_phonemeToChange.Items.Clear();
                 cbx_replacementPhoneme.Items.Clear();
@@ -3088,8 +3120,8 @@ namespace ConlangAudioHoning
                 btn_addCurrentChangeToList.Visible = true;
                 btn_applyListOfChanges.Enabled = true;
                 btn_applyListOfChanges.Visible = true;
-                cbx_changeNotMatchLocations.Enabled = false;
-                cbx_changeNotMatchLocations.Visible = false;
+                chk_changeNotMatchLocations.Enabled = false;
+                chk_changeNotMatchLocations.Visible = false;
             }
             else
             {
@@ -3097,8 +3129,8 @@ namespace ConlangAudioHoning
                 btn_addCurrentChangeToList.Visible = false;
                 btn_applyListOfChanges.Enabled = false;
                 btn_applyListOfChanges.Visible = false;
-                cbx_changeNotMatchLocations.Enabled = true;
-                cbx_changeNotMatchLocations.Visible = true;
+                chk_changeNotMatchLocations.Enabled = true;
+                chk_changeNotMatchLocations.Visible = true;
             }
             if (rbn_replaceConsonantsPattern.Checked)
             {

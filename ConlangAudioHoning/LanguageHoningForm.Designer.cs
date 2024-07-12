@@ -116,6 +116,7 @@
             lbl_customReplacementPattern = new Label();
             txt_customReplacementPattern = new TextBox();
             gbx_scopeOfConsonantReplacement = new GroupBox();
+            chk_changeNotMatchLocations = new CheckBox();
             rbn_replaceConsonantsPattern = new RadioButton();
             rbn_replaceConsonantsEndOfWord = new RadioButton();
             rbn_replaceConsonantsStartOfWords = new RadioButton();
@@ -153,7 +154,6 @@
             btn_updateSoundMapList = new Button();
             tb_Volume = new TrackBar();
             label1 = new Label();
-            cbx_changeNotMatchLocations = new CheckBox();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -753,7 +753,7 @@
             // 
             // gbx_scopeOfConsonantReplacement
             // 
-            gbx_scopeOfConsonantReplacement.Controls.Add(cbx_changeNotMatchLocations);
+            gbx_scopeOfConsonantReplacement.Controls.Add(chk_changeNotMatchLocations);
             gbx_scopeOfConsonantReplacement.Controls.Add(rbn_replaceConsonantsPattern);
             gbx_scopeOfConsonantReplacement.Controls.Add(rbn_replaceConsonantsEndOfWord);
             gbx_scopeOfConsonantReplacement.Controls.Add(rbn_replaceConsonantsStartOfWords);
@@ -764,6 +764,16 @@
             gbx_scopeOfConsonantReplacement.TabIndex = 26;
             gbx_scopeOfConsonantReplacement.TabStop = false;
             gbx_scopeOfConsonantReplacement.Text = "Scope of Replacement";
+            // 
+            // chk_changeNotMatchLocations
+            // 
+            chk_changeNotMatchLocations.AutoSize = true;
+            chk_changeNotMatchLocations.Location = new Point(6, 45);
+            chk_changeNotMatchLocations.Name = "chk_changeNotMatchLocations";
+            chk_changeNotMatchLocations.Size = new Size(229, 19);
+            chk_changeNotMatchLocations.TabIndex = 4;
+            chk_changeNotMatchLocations.Text = "Change where pattern does not match";
+            chk_changeNotMatchLocations.UseVisualStyleBackColor = true;
             // 
             // rbn_replaceConsonantsPattern
             // 
@@ -1194,16 +1204,6 @@
             label1.TabIndex = 35;
             label1.Text = "Volume";
             // 
-            // cbx_changeNotMatchLocations
-            // 
-            cbx_changeNotMatchLocations.AutoSize = true;
-            cbx_changeNotMatchLocations.Location = new Point(6, 45);
-            cbx_changeNotMatchLocations.Name = "cbx_changeNotMatchLocations";
-            cbx_changeNotMatchLocations.Size = new Size(229, 19);
-            cbx_changeNotMatchLocations.TabIndex = 4;
-            cbx_changeNotMatchLocations.Text = "Change where pattern does not match";
-            cbx_changeNotMatchLocations.UseVisualStyleBackColor = true;
-            // 
             // LanguageHoningForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1377,6 +1377,6 @@
         private TextBox txt_customReplacementPattern;
         private RadioButton rbn_replaceConsonantsPattern;
         private RadioButton rbn_replaceConsonantsEndOfWord;
-        private CheckBox cbx_changeNotMatchLocations;
+        private CheckBox chk_changeNotMatchLocations;
     }
 }

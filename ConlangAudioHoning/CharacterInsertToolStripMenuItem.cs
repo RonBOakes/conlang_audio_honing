@@ -1170,10 +1170,12 @@ namespace ConlangAudioHoning
 
             if (includeRegularExpressions)
             {
-                _regularExpressionToolStripMenuItem = new ToolStripMenuItem();
-                _regularExpressionToolStripMenuItem.Name = "_regularExpressionToolStripMenuItem";
-                _regularExpressionToolStripMenuItem.Size = new Size(211, 22);
-                _regularExpressionToolStripMenuItem.Text = "Regular Expression Fragments";
+                _regularExpressionToolStripMenuItem = new ToolStripMenuItem
+                {
+                    Name = "_regularExpressionToolStripMenuItem",
+                    Size = new Size(211, 22),
+                    Text = "Regular Expression Fragments"
+                };
 
                 // Build the regular expression menu
                 _vowelMatchToolStripMenuItem = new()
