@@ -2324,6 +2324,25 @@ namespace ConlangAudioHoning
                         }
                     }
                 }
+                else if (rbn_replaceConsonantsStartOfWords.Checked)
+                {
+                    if (!chk_changeNotMatchLocations.Checked)
+                    {
+                        phoneticChanger.PhoneticChangeStartOnly(oldPhoneme, newPhoneme);
+                    }
+                    // Update sample text
+                    if (sampleText != string.Empty)
+                    {
+                        sampleText = phoneticChanger.SampleText;
+                        txt_SampleText.Text = sampleText;
+                        txt_phonetic.Text = string.Empty;
+                        foreach (string engineName in speechEngines.Keys)
+                        {
+                            SpeechEngine speechEngine = speechEngines[engineName];
+                            speechEngine.SampleText = sampleText;
+                        }
+                    }
+                }
                 // TODO Add others in appropriate order.
                 else if (rbn_replaceConsonantsPattern.Checked)
                 {
