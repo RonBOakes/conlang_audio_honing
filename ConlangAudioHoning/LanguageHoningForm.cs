@@ -2330,6 +2330,10 @@ namespace ConlangAudioHoning
                     {
                         phoneticChanger.PhoneticChangeStartOnly(oldPhoneme, newPhoneme);
                     }
+                    else
+                    {
+                        phoneticChanger.PhoneticChangeStartNever(oldPhoneme, newPhoneme);
+                    }
                     // Update sample text
                     if (sampleText != string.Empty)
                     {
