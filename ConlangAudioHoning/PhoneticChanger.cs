@@ -1339,46 +1339,6 @@ namespace ConlangAudioHoning
 
         }
 
-        private static string clusterPatternUpdate(string source, string oldPhoneme, string newPhoneme, string cluster)
-        {
-            StringBuilder sb = new();
-            string workingString = source;
-            Match startMatch = Regex.Match(source, string.Format(@"^\s*{0}(\w+)\s*$", workingString));
-            if (startMatch.Success)
-            {
-                sb.Append(startMatch.Groups[1].Value);
-                workingString = startMatch.Groups[2].Value;
-            }
-
-#pragma warning disable IDE0007 // Use implicit type
-            Regex clusterRegex = new Regex(string.Format(@"(\w+?){0}", cluster), RegexOptions.Compiled);
-#pragma warning restore IDE0007 // Use implicit type
-            MatchCollection matches = clusterRegex.Matches(workingString);
-            if ((matches != null) && (matches.Count > 0))
-            {
-                for (int i = 0; i < matches.Count; i++)
-                {
-                    Match match = matches[i];
-                    sb.Append(match.Groups[1].Value.Replace(oldPhoneme, newPhoneme));
-                    if (!string.IsNullOrEmpty(match.Groups[2].Value))
-                    {
-                        sb.Append(match.Groups[2].Value);
-                    }
-                }
-                Match extraStringMatch = Regex.Match(workingString, String.Format(@"^.*{0}(\w*?)\s*$", cluster));
-                if ((extraStringMatch.Success) && (!extraStringMatch.Groups[2].Value.Contains(cluster)))
-                {
-                    sb.Append(extraStringMatch.Groups[2].Value.Replace(oldPhoneme, newPhoneme));
-                }
-            }
-            else
-            {
-                sb.Append(workingString.Replace(oldPhoneme, newPhoneme));
-            }
-
-            return sb.ToString();
-        }
-
 
         /// <summary>
         /// Update the spelling of every word in the lexicon based on the current spelling_pronunciation_rules.
@@ -1655,6 +1615,44 @@ namespace ConlangAudioHoning
             }
 
             SampleText = sampleTextBuilder.ToString().Trim();
+        }
+
+        private static string clusterPatternUpdate(string source, string oldPhoneme, string newPhoneme, string cluster)
+        {
+            StringBuilder sb = new();
+            string workingString = source;
+            Match startMatch = Regex.Match(source, string.Format(@"^\s*{0}(\w+)\s*$", workingString));
+            if (startMatch.Success)
+            {
+                sb.Append(startMatch.Groups[1].Value);
+                workingString = startMatch.Groups[2].Value;
+            }
+
+            Regex clusterRegex = new Regex(string.Format(@"(\w+?){0}", cluster), RegexOptions.Compiled);
+            MatchCollection matches = clusterRegex.Matches(workingString);
+            if ((matches != null) && (matches.Count > 0))
+            {
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    Match match = matches[i];
+                    sb.Append(match.Groups[1].Value.Replace(oldPhoneme, newPhoneme));
+                    if (!string.IsNullOrEmpty(match.Groups[2].Value))
+                    {
+                        sb.Append(match.Groups[2].Value);
+                    }
+                }
+                Match extraStringMatch = Regex.Match(workingString, string.Format(@"^.*{0}(\w*?)\s*$", cluster));
+                if ((extraStringMatch.Success) && (!extraStringMatch.Groups[2].Value.Contains(cluster)))
+                {
+                    sb.Append(extraStringMatch.Groups[2].Value.Replace(oldPhoneme, newPhoneme));
+                }
+            }
+            else
+            {
+                sb.Append(workingString.Replace(oldPhoneme, newPhoneme));
+            }
+
+            return sb.ToString();
         }
 
         private sealed class StringTupleLengthComp : IComparer<(string, string)>
