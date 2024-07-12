@@ -1098,8 +1098,8 @@ namespace ConlangAudioHoning
         {
             Cursor.Current = Cursors.WaitCursor;
             // Replace V and C characters in the clusterPattern with captures for vowels or consonants.
-            clusterPattern = VowelSourcePatternRegex().Replace(clusterPattern, @"((?:" + IpaUtilities.VowelPattern + IpaUtilities.VowelModifierPattern + @"?))+");
-            clusterPattern = ConsonantSourcePatternRegex().Replace(clusterPattern, @"((?:" + IpaUtilities.ConsonantPattern + IpaUtilities.DiacriticPattern + @"?))+");
+            clusterPattern = VowelSourcePatternRegex().Replace(clusterPattern, @"(?:(?:" + IpaUtilities.VowelPattern + IpaUtilities.VowelModifierPattern + @"?))+");
+            clusterPattern = ConsonantSourcePatternRegex().Replace(clusterPattern, @"(?:(?:" + IpaUtilities.ConsonantPattern + IpaUtilities.DiacriticPattern + @"?))+");
             clusterPattern = string.Format("({0})", clusterPattern);
 
 
@@ -1351,7 +1351,7 @@ namespace ConlangAudioHoning
             }
 
 #pragma warning disable IDE0007 // Use implicit type
-            Regex clusterRegex = new Regex(string.Format(@"(\w+?){0}(\w*?)", cluster), RegexOptions.Compiled);
+            Regex clusterRegex = new Regex(string.Format(@"(\w+?){0}", cluster), RegexOptions.Compiled);
 #pragma warning restore IDE0007 // Use implicit type
             MatchCollection matches = clusterRegex.Matches(workingString);
             if ((matches != null) && (matches.Count > 0))
@@ -1360,12 +1360,20 @@ namespace ConlangAudioHoning
                 {
                     Match match = matches[i];
                     sb.Append(match.Groups[1].Value.Replace(oldPhoneme, newPhoneme));
-                    sb.Append(match.Groups[2].Value);
-                    if (!string.IsNullOrEmpty(match.Groups[3].Value))
+                    if (!string.IsNullOrEmpty(match.Groups[2].Value))
                     {
-                        sb.Append(match.Groups[3].Value.Replace(oldPhoneme, newPhoneme));
+                        sb.Append(match.Groups[2].Value);
                     }
                 }
+                Match extraStringMatch = Regex.Match(workingString, String.Format(@"^.*{0}(\w*?)\s*$", cluster));
+                if ((extraStringMatch.Success) && (!extraStringMatch.Groups[2].Value.Contains(cluster)))
+                {
+                    sb.Append(extraStringMatch.Groups[2].Value.Replace(oldPhoneme, newPhoneme));
+                }
+            }
+            else
+            {
+                sb.Append(workingString.Replace(oldPhoneme, newPhoneme));
             }
 
             return sb.ToString();

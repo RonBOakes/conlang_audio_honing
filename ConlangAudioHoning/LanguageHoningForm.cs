@@ -2339,14 +2339,14 @@ namespace ConlangAudioHoning
                 {
                     if (!string.IsNullOrEmpty(txt_customReplacementPattern.Text))
                     {
+                        string clusterPattern = txt_customReplacementPattern.Text.Trim();
                         if (!chk_changeNotMatchLocations.Checked)
                         {
-                            string clusterPattern = txt_customReplacementPattern.Text.Trim();
                             phoneticChanger.ConsonantClusterPhoneticChange(clusterPattern, oldPhoneme, newPhoneme);
                         }
                         else
                         {
-                            // TODO: Add other case.
+                            phoneticChanger.ConsonantClusterExcludePhoneticChange(clusterPattern, oldPhoneme, newPhoneme);
                         }
                     }
                     // Update sample text

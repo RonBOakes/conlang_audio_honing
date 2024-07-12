@@ -756,17 +756,16 @@ namespace ConlangAudioHoning
         /// as a temporary placeholder during a multi-phase replacement operation.  These
         /// are Unicode symbols that are not part of IPA and are distinct from any IPA character
         /// so that if an error occurs and they remain in place the error will be noticeable.
+        /// These cannot be symbols used to match regular expressions either due to how matching might
+        /// occur.
         /// </summary>
         /// <returns></returns>
         public static List<string> Ipa_replacements { get; } = [
             "!",
             "@",
             "#",
-            "$",
             "%",
             "&",
-            "*",
-            "+",
             "=",
             "<",
             ">",
