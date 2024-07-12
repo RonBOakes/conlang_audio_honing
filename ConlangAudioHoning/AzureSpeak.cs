@@ -234,12 +234,8 @@ namespace ConlangAudioHoning
             }
             Cursor.Current = Cursors.Default;
 
-#pragma warning disable IDE0007 // Use implicit type
             SpeechConfig speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
-#pragma warning restore IDE0007 // Use implicit type
-#pragma warning disable IDE0007 // Use implicit type
             AudioConfig audioConfig = AudioConfig.FromDefaultSpeakerOutput();
-#pragma warning restore IDE0007 // Use implicit type
 
             // Start configuring the speech engine
             speechConfig.SpeechSynthesisVoiceName = voice;
@@ -249,9 +245,7 @@ namespace ConlangAudioHoning
 
             if ((speechSynthesisResult != null) && (speechSynthesisResult.Reason == ResultReason.SynthesizingAudioCompleted))
             {
-#pragma warning disable IDE0007 // Use implicit type
                 AudioDataStream stream = AudioDataStream.FromResult(speechSynthesisResult);
-#pragma warning restore IDE0007 // Use implicit type
                 stream.SaveToWaveFileAsync(targetFile);
             }
             else

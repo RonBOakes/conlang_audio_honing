@@ -401,9 +401,7 @@ namespace ConlangAudioHoning
 #pragma warning disable CA1869 // Cache and reuse 'JsonSerializerOptions' instances
                 JsonSerializerOptions jsonSerializerOptions = new(DefaultJsonSerializerOptions);
 #pragma warning restore CA1869 // Cache and reuse 'JsonSerializerOptions' instances
-#pragma warning disable IDE0007 // Use implicit type
                 JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-#pragma warning restore IDE0007 // Use implicit type
                 jsonSerializerOptions.Encoder = encoder;
 
                 MetadataWasher.CleanLanguageMetadata(languageDescription);
@@ -2016,9 +2014,7 @@ namespace ConlangAudioHoning
             {
                 if (UserConfiguration.UseSharedPolly)
                 {
-#pragma warning disable IDE0007 // Use implicit type
                     SharedPollySpeech pollySpeech = (SharedPollySpeech)speechEngines[engineName];
-#pragma warning restore IDE0007 // Use implicit type
                     DateTime now = DateTime.Now;
                     string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
                     targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2057,9 +2053,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-#pragma warning disable IDE0007 // Use implicit type
                     NonSharedPollySpeech pollySpeech = (NonSharedPollySpeech)speechEngines[engineName];
-#pragma warning restore IDE0007 // Use implicit type
                     DateTime now = DateTime.Now;
                     string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
                     targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2099,9 +2093,7 @@ namespace ConlangAudioHoning
             }
             else if ((engineName.Equals("eSpeak-ng")) && (UserConfiguration.IsESpeakNGSupported))
             {
-#pragma warning disable IDE0007 // Use implicit type
                 ESpeakNGSpeak speechEngine = (ESpeakNGSpeak)speechEngines[engineName];
-#pragma warning restore IDE0007 // Use implicit type
                 DateTime now = DateTime.Now;
                 string targetFileBaseName = string.Format("speech_{0:s}.wav", now);
                 targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2144,9 +2136,7 @@ namespace ConlangAudioHoning
             }
             else if ((engineName.Equals("Microsoft Azure")) && UserConfiguration.IsAzureSupported)
             {
-#pragma warning disable IDE0007 // Use implicit type
                 AzureSpeak speechEngine = (AzureSpeak)speechEngines[engineName];
-#pragma warning restore IDE0007 // Use implicit type
                 DateTime now = DateTime.Now;
                 string targetFileBaseName = string.Format("speech_{0:s}.wav", now);
                 targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2370,9 +2360,7 @@ namespace ConlangAudioHoning
             }
             else if ((tabPhoneticAlterations.SelectedIndex == 3) && rbn_replaceRSpelling.Checked && cbx_phonemeToChange.SelectedItem != null)
             {
-#pragma warning disable IDE0007 // Use implicit type
                 SpellingPronunciationRules mapToReplace = (SpellingPronunciationRules)cbx_phonemeToChange.SelectedItem;
-#pragma warning restore IDE0007 // Use implicit type
                 SpellingPronunciationRules replacementMap = mapToReplace.copy();
                 string phonemeToAdd = cbx_replacementPhoneme.Text.Split()[0];
                 string diacriticAtEnd = string.Format("{0}$", IpaUtilities.DiacriticPattern);

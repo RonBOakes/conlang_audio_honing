@@ -464,9 +464,7 @@ namespace ConlangAudioHoning
             {
                 throw new NonSharedPollyException("Unable to acquire credentials");
             }
-#pragma warning disable IDE0007 // Use implicit type
             SSOAWSCredentials ssoCredentials = (SSOAWSCredentials)credentials;
-#pragma warning restore IDE0007 // Use implicit type
 
             ssoCredentials.Options.ClientName = "ConlangAudioHoning-Polly-App";
             ssoCredentials.Options.SsoVerificationCallback = args =>

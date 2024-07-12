@@ -163,9 +163,7 @@ namespace ConlangAudioHoning
             {
                 return;
             }
-#pragma warning disable IDE0007 // Use implicit type
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-#pragma warning restore IDE0007 // Use implicit type
             if (string.IsNullOrEmpty(menuItem.Text))
             {
                 return;
