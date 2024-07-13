@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -323,9 +324,8 @@ namespace ConlangAudioHoning
                 }
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
-                    string oldSpelled = word.spelled;
                     word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
-                    UpdateSampleText(oldSpelled, word.spelled);
+                    UpdateSampleText(oldVersion, word);
                     word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
@@ -770,9 +770,8 @@ namespace ConlangAudioHoning
                 }
                 if (!oldVersion.phonetic.Equals(word.phonetic))
                 {
-                    string oldSpelled = word.spelled;
                     word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
-                    UpdateSampleText(oldSpelled, word.spelled);
+                    UpdateSampleText(oldVersion, word);
                 }
             }
 
@@ -1021,9 +1020,8 @@ namespace ConlangAudioHoning
                 }
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
-                    string oldSpelled = word.spelled;
                     word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
-                    UpdateSampleText(oldSpelled, word.spelled);
+                    UpdateSampleText(oldVersion, word);
                     word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
@@ -1292,9 +1290,8 @@ namespace ConlangAudioHoning
                     }
                     if (!oldPhonetic.Equals(word.phonetic))
                     {
-                        string oldSpelled = word.spelled;
                         word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
-                        UpdateSampleText(oldSpelled, word.spelled);
+                        UpdateSampleText(oldVersion, word);
                         word.metadata ??= [];
                         Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                         if (word.metadata.ContainsKey("PhoneticChangeHistory"))
@@ -1562,9 +1559,8 @@ namespace ConlangAudioHoning
                 }
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
-                    string oldSpelled = word.spelled;
                     word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
-                    UpdateSampleText(oldSpelled, word.spelled);
+                    UpdateSampleText(oldVersion, word);
                     word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
@@ -1834,9 +1830,8 @@ namespace ConlangAudioHoning
                     }
                     if (!oldPhonetic.Equals(word.phonetic))
                     {
-                        string oldSpelled = word.spelled;
                         word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
-                        UpdateSampleText(oldSpelled, word.spelled);
+                        UpdateSampleText(oldVersion, word);
                         word.metadata ??= [];
                         Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                         if (word.metadata.ContainsKey("PhoneticChangeHistory"))
@@ -2142,9 +2137,8 @@ namespace ConlangAudioHoning
                 }
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
-                    string oldSpelled = word.spelled;
                     word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
-                    UpdateSampleText(oldSpelled, word.spelled);
+                    UpdateSampleText(oldVersion, word);
                     word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
@@ -2390,9 +2384,8 @@ namespace ConlangAudioHoning
                 }
                 if (!oldPhonetic.Equals(word.phonetic))
                 {
-                    string oldSpelled = word.spelled;
                     word.spelled = ConlangUtilities.SpellWord(word.phonetic, Language.spelling_pronunciation_rules);
-                    UpdateSampleText(oldSpelled, word.spelled);
+                    UpdateSampleText(oldVersion, word);
                     word.metadata ??= [];
                     Dictionary<string, PhoneticChangeHistory>? phoneticChangeHistories = null;
                     if (word.metadata.ContainsKey("PhoneticChangeHistory"))
@@ -2459,7 +2452,7 @@ namespace ConlangAudioHoning
                     word.spelled = newSpelling;
                     if (!string.IsNullOrEmpty(SampleText))
                     {
-                        UpdateSampleText(oldSpelling, word.spelled);
+                        UpdateSampleText(oldVersion, word);
                     }
                 }
             }
@@ -2640,8 +2633,18 @@ namespace ConlangAudioHoning
             }
         }
 
-        private void UpdateSampleText(string oldSpelled, string newSpelled)
+        private void UpdateSampleText(LexiconEntry oldWord, LexiconEntry newWord)
         {
+            List<LexiconEntry> oldWordDeclensions = ConlangUtilities.DeclineWord(oldWord, Language.affix_map, Language.spelling_pronunciation_rules, oldWord.derived_word);
+            oldWordDeclensions.Add(oldWord);
+            List<LexiconEntry> newWordDeclensions = ConlangUtilities.DeclineWord(newWord, Language.affix_map, Language.spelling_pronunciation_rules, oldWord.derived_word);
+            newWordDeclensions.Add(newWord);
+            Dictionary<string, LexiconEntry> newWordDeclensionDict = [];
+            foreach (LexiconEntry entry in newWordDeclensions)
+            {
+                newWordDeclensionDict.Add(GetDeclensionText(entry.declensions), entry);
+            }
+
             Regex wordMatcher = WordPatternRegex();
             StringBuilder sampleTextBuilder = new();
 
@@ -2667,28 +2670,13 @@ namespace ConlangAudioHoning
                                     word = wordMatch.Groups[1].Value;
                                     punctuation = wordMatch.Groups[2].Value;
                                 }
-                                if (word.Equals(oldSpelled))
+                                if (firstCharUpper)
                                 {
-                                    if (firstCharUpper)
-                                    {
-                                        sampleTextBuilder.AppendFormat("{0}{1} ", StringExtensions.FirstCharToUpper(newSpelled), punctuation);
-                                    }
-                                    else
-                                    {
-                                        sampleTextBuilder.AppendFormat("{0}{1} ", newSpelled, punctuation);
-                                    }
+                                    sampleTextBuilder.AppendFormat("{0}{1} ", StringExtensions.FirstCharToUpper(GetReplacementWord(word, oldWordDeclensions, newWordDeclensionDict)), punctuation);
                                 }
                                 else
                                 {
-                                    if (firstCharUpper)
-                                    {
-                                        sampleTextBuilder.AppendFormat("{0}{1} ", StringExtensions.FirstCharToUpper(word), punctuation);
-                                    }
-                                    else
-                                    {
-                                        sampleTextBuilder.AppendFormat("{0}{1} ", word, punctuation);
-                                    }
-
+                                    sampleTextBuilder.AppendFormat("{0}{1} ", GetReplacementWord(word, oldWordDeclensions, newWordDeclensionDict), punctuation);
                                 }
                             }
                         }
@@ -2698,6 +2686,41 @@ namespace ConlangAudioHoning
             }
 
             SampleText = sampleTextBuilder.ToString().Trim();
+        }
+
+        private static string GetReplacementWord(string word, List<LexiconEntry> oldWordDeclensions, Dictionary<string, LexiconEntry> newWordDeclensionDict)
+        {
+            string replacementWord = string.Empty;
+            foreach (var entry in from LexiconEntry entry in oldWordDeclensions
+                                  where word.Equals(entry.spelled)
+                                  select entry)
+            {
+                if (newWordDeclensionDict.ContainsKey(GetDeclensionText(entry.declensions)))
+                {
+                    replacementWord = newWordDeclensionDict[GetDeclensionText(entry.declensions)].spelled;
+                }
+                else
+                {
+                    throw new ConlangAudioHoningException(string.Format("Lost declension for {0}: {1}", entry.english, entry.declensions[0]));
+                }
+            }
+            if (string.IsNullOrEmpty(replacementWord))
+            {
+                replacementWord = word;
+            }
+
+            return replacementWord;
+        }
+
+        private static string GetDeclensionText(List<string> declensions)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string declension in declensions)
+            {
+                sb.Append(declension);
+            }
+
+            return sb.ToString().Trim();
         }
 
         private static string clusterPatternUpdate(string source, string oldPhoneme, string newPhoneme, string cluster)
