@@ -534,12 +534,12 @@ namespace ConlangAudioHoning
 			{ "\u027a", new string("voiced alveolar lateral flap") },
             // Wikipedia has a voiced retroflex lateral flap with an invalid unicode (or at least UTF8)\
             // Affricate (Only in Vulgarlang, but needed to support conlangs coming from Vulgarlang)
-            { "\u02a6", new string("unvoiced alveolar affricate") },
-            { "\u02a3", new string("voiced alveolar affricate") },
-            { "\u02a7", new string("unvoiced postalveolar affricate") },
-            { "\u02a4", new string("voiced postalveolar affricate") },
-            { "\u02a8", new string("unvoiced alveolo-palatal affricate") },
-            { "\u02a5", new string("voiced alveolo-palatal affricate") },
+            { "\u02a6", new string("unvoiced alveolar Affricate") },
+            { "\u02a3", new string("voiced alveolar Affricate") },
+            { "\u02a7", new string("unvoiced postalveolar Affricate") },
+            { "\u02a4", new string("voiced postalveolar Affricate") },
+            { "\u02a8", new string("unvoiced alveolo-palatal Affricate") },
+            { "\u02a5", new string("voiced alveolo-palatal Affricate") },
 			// Fricatives
 			{ "\u0278", new string("unvoiced bilabial fricative") },
             { "\u03b2", new string("voiced bilabial fricative") },

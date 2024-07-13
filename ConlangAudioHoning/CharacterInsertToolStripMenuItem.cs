@@ -18,6 +18,7 @@
  */
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace ConlangAudioHoning
 {
@@ -39,6 +40,7 @@ namespace ConlangAudioHoning
         // Pulmonic Consonant Submenu
         private readonly ToolStripMenuItem plosiveToolStripMenuItem;
         private readonly ToolStripMenuItem nasalToolStripMenuItem;
+        private readonly ToolStripMenuItem _affricateToolStripMenuItem;
         private readonly ToolStripMenuItem trillStripMenuItem;
         private readonly ToolStripMenuItem tapOrFlapToolStripMenuItem;
         private readonly ToolStripMenuItem fricativeToolStripMenuItem;
@@ -63,6 +65,13 @@ namespace ConlangAudioHoning
         private readonly ToolStripMenuItem ɲToolStripMenuItem;
         private readonly ToolStripMenuItem ŋToolStripMenuItem;
         private readonly ToolStripMenuItem ɴToolStripMenuItem;
+        // Affricate Consonants
+        private readonly ToolStripMenuItem _ʦToolStripMenuItem;
+        private readonly ToolStripMenuItem _ʣToolStripMenuItem;
+        private readonly ToolStripMenuItem _ʧToolStripMenuItem;
+        private readonly ToolStripMenuItem _ʤToolStripMenuItem;
+        private readonly ToolStripMenuItem _ʨToolStripMenuItem;
+        private readonly ToolStripMenuItem _ʥToolStripMenuItem;
         // Trill Consonants
         private readonly ToolStripMenuItem ʙToolStripMenuItem;
         private readonly ToolStripMenuItem rToolStripMenuItem;
@@ -195,6 +204,7 @@ namespace ConlangAudioHoning
 
             plosiveToolStripMenuItem = new ToolStripMenuItem();
             nasalToolStripMenuItem = new ToolStripMenuItem();
+            _affricateToolStripMenuItem = new ToolStripMenuItem();
             trillStripMenuItem = new ToolStripMenuItem();
             tapOrFlapToolStripMenuItem = new ToolStripMenuItem();
             fricativeToolStripMenuItem = new ToolStripMenuItem();
@@ -227,6 +237,12 @@ namespace ConlangAudioHoning
             ɲToolStripMenuItem = new ToolStripMenuItem();
             ŋToolStripMenuItem = new ToolStripMenuItem();
             ɴToolStripMenuItem = new ToolStripMenuItem();
+            _ʣToolStripMenuItem = new ToolStripMenuItem();
+            _ʧToolStripMenuItem = new ToolStripMenuItem();
+            _ʤToolStripMenuItem = new ToolStripMenuItem();
+            _ʨToolStripMenuItem = new ToolStripMenuItem();
+            _ʥToolStripMenuItem = new ToolStripMenuItem();
+            _ʦToolStripMenuItem = new ToolStripMenuItem();
             ʙToolStripMenuItem = new ToolStripMenuItem();
             rToolStripMenuItem = new ToolStripMenuItem();
             ʀToolStripMenuItem = new ToolStripMenuItem();
@@ -327,7 +343,7 @@ namespace ConlangAudioHoning
             // 
             // pulmonicConsonantsToolStripMenuItem
             // 
-            pulmonicConsonantsToolStripMenuItem.DropDownItems.AddRange([plosiveToolStripMenuItem, nasalToolStripMenuItem, trillStripMenuItem, tapOrFlapToolStripMenuItem, fricativeToolStripMenuItem, lateralFricativeToolStripMenuItem, approximateToolStripMenuItem, lateralApproximateToolStripMenuItem]);
+            pulmonicConsonantsToolStripMenuItem.DropDownItems.AddRange([plosiveToolStripMenuItem, nasalToolStripMenuItem, _affricateToolStripMenuItem, trillStripMenuItem, tapOrFlapToolStripMenuItem, fricativeToolStripMenuItem, lateralFricativeToolStripMenuItem, approximateToolStripMenuItem, lateralApproximateToolStripMenuItem]);
             pulmonicConsonantsToolStripMenuItem.Name = "pulmonicConsonantsToolStripMenuItem";
             pulmonicConsonantsToolStripMenuItem.Size = new Size(211, 22);
             pulmonicConsonantsToolStripMenuItem.Text = "IPA Pulmonic Consonants";
@@ -465,7 +481,50 @@ namespace ConlangAudioHoning
             ɴToolStripMenuItem.Name = "ɴToolStripMenuItem";
             ɴToolStripMenuItem.Size = new Size(85, 22);
             ɴToolStripMenuItem.Text = "ɴ";
-            // 
+            //
+            // _affricateToolStripMenuItem
+            //
+            _affricateToolStripMenuItem.DropDownItems.AddRange([_ʣToolStripMenuItem, _ʧToolStripMenuItem, _ʤToolStripMenuItem, _ʨToolStripMenuItem, _ʥToolStripMenuItem, _ʦToolStripMenuItem]);
+            _affricateToolStripMenuItem.Name = "_affricateToolStripMenuItem";
+            _affricateToolStripMenuItem.Size = new Size(181, 22);
+            _affricateToolStripMenuItem.Text = "Affricate";
+            //
+            // _ʣToolStripMenuItem
+            //
+            _ʣToolStripMenuItem.Name = "_ʣToolStripMenuItem";
+            _ʣToolStripMenuItem.Size = new Size(85, 22);
+            _ʣToolStripMenuItem.Text = "ʣ";
+            //
+            // _ʧToolStripMenuItem
+            //
+            _ʧToolStripMenuItem.Name = "_ʧToolStripMenuItem";
+            _ʧToolStripMenuItem.Size = new Size(85, 22);
+            _ʧToolStripMenuItem.Text = "ʧ";
+            //
+            // _ʤToolStripMenuItem
+            //
+            _ʤToolStripMenuItem.Name = "_ʤToolStripMenuItem";
+            _ʤToolStripMenuItem.Size = new Size(85, 22);
+            _ʤToolStripMenuItem.Text = "ʤ";
+            //
+            // _ʨToolStripMenuItem
+            //
+            _ʨToolStripMenuItem.Name = "_ʨToolStripMenuItem";
+            _ʨToolStripMenuItem.Size = new Size(85, 22);
+            _ʨToolStripMenuItem.Text = "ʨ";
+            //
+            // _ʥToolStripMenuItem
+            //
+            _ʥToolStripMenuItem.Name = "_ʥToolStripMenuItem";
+            _ʥToolStripMenuItem.Size = new Size(85, 22);
+            _ʥToolStripMenuItem.Text = "ʥ";
+            //
+            // _ʦToolStripMenuItem
+            //
+            _ʦToolStripMenuItem.Name = "_ʦToolStripMenuItem";
+            _ʦToolStripMenuItem.Size = new Size(85, 22);
+            _ʦToolStripMenuItem.Text = "ʦ";
+            //
             // trillStripMenuItem
             // 
             trillStripMenuItem.DropDownItems.AddRange([ʙToolStripMenuItem, rToolStripMenuItem, ʀToolStripMenuItem]);
@@ -1247,6 +1306,12 @@ namespace ConlangAudioHoning
                 ɲToolStripMenuItem,
                 ŋToolStripMenuItem,
                 ɴToolStripMenuItem,
+                _ʦToolStripMenuItem,
+                _ʣToolStripMenuItem,
+                _ʧToolStripMenuItem,
+                _ʤToolStripMenuItem,
+                _ʨToolStripMenuItem,
+                _ʥToolStripMenuItem,
                 ʙToolStripMenuItem,
                 rToolStripMenuItem,
                 ʀToolStripMenuItem,

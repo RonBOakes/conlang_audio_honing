@@ -278,7 +278,7 @@ namespace ConlangAudioHoning
             }
         }
 
-        [GeneratedRegex(@"^\s*(\S+|\<.+\>)\s+\((\S+|\<.+\>):\s+(\S+)\)\s*$")]
+        [GeneratedRegex(@"^\s*((?:\S+\(?.*?\)?)|\<.+\>)\s+\((\S+|\<.+\>):\s+(\S+)\)\s*$")]
         private static partial Regex EditorEntryRegex();
 
         private void AddEntryMenuItem_Click(object sender, EventArgs e)
