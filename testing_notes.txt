@@ -1,6 +1,9 @@
 Conlang Audio Honing testing notes:
 
 - Changes can mess up sample texts even with the updates
+-- Opened issue #54 to track this after realizing that the problem was with declined
+   words.
 - Missing phoneme in Kirshbaum coding.
 - Metadata runs away.  Had to add code to account for this
 - Found the gloss very useful in tracking down messed up words in sample texts.
+- Added words in the lexicon editor do not automatically get the "root" declension.
