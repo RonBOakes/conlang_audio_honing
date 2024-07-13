@@ -1200,7 +1200,7 @@ namespace ConlangAudioHoning
                     symbolsToolStripMenuItem,
                     latinTextDiacriticsToolStripMenuItem,
                     _regularExpressionToolStripMenuItem,
-                    ]);
+                ]);
             }
             else
             {
