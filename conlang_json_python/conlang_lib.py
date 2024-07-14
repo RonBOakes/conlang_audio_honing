@@ -98,12 +98,12 @@ def process_affix_map_tuple(affix_map_tuple,phonetic,part_of_speech,prior_declen
         # Perform the substitution if there is a regular expression in the affix rule.
         if 'pronunciation_regex' in rules.keys():
             if affix == 'prefix':
-                if re.match(rules['pronunciation_regex'],phonetic):
+                if re.search(rules['pronunciation_regex'],phonetic) != None:
                     new_word = rules['t_pronunciation_add'] + phonetic2
                 else:
                     new_word = rules['f_pronunciation_add'] + phonetic2
             elif affix == 'suffix':
-                if re.match(rules['pronunciation_regex'],phonetic):
+                if re.search(rules['pronunciation_regex'],phonetic) != None:
                     new_word = phonetic2 + rules['t_pronunciation_add']
                 else:
                     new_word = phonetic2 +rules['f_pronunciation_add']
