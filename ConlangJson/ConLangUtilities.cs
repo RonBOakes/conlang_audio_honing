@@ -311,7 +311,7 @@ namespace ConlangJson
                     {
                         if (!string.IsNullOrEmpty(ruleAffixData.pronunciation_regex))
                         {
-                            if (Regex.IsMatch(ruleAffixData.pronunciation_regex, phoneticPart))
+                            if (Regex.IsMatch(phoneticPart, ruleAffixData.pronunciation_regex))
                             {
                                 if (ruleAffixData.type == "PREFIX")
                                 {
