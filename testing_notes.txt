@@ -7,3 +7,21 @@ Conlang Audio Honing testing notes:
 - Metadata runs away.  Had to add code to account for this
 - Found the gloss very useful in tracking down messed up words in sample texts.
 - Added words in the lexicon editor do not automatically get the "root" declension.
+- Two related issues with regular expressions not properly matching.  The Python code
+  used to build the CSV file used for translations and clean-up work would mess up 
+  declension due to one bug, and the C# code would mess up derived words due to a 
+  different bug.  Together these would result in myriad problems with words in sample
+  texts not matching the lexicon.
+- Because of working with languages that had been tweaked and changed since the initial 
+  sample texts had been created, the texts had to be updated to the current languages before
+  honing could start.  After some work was done, the best method was found to be:
+  == Load the sample text into the Conlang Audio Honing tool and produce a phonetic representation
+  == Open the lexicon editor and sort it using the "English" words.  The top entries will be the words
+     that were "sounded out."
+  == Match these with the sample.  If the sample text has a "gloss" version, this is helpful.  Find the 
+     correct version and update the text(s) with the correct version.
+- During honing additional capabilities were added for consonants:
+  == In addition to being able to globally replace a consonant across the lexicon, it can be replaced
+     at the start or end of words, everywhere but the start or end of words, or in or everywhere but 
+     specific clusters.
+
