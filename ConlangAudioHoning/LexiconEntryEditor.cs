@@ -464,8 +464,7 @@ namespace ConlangAudioHoning
         {
             if ((_lastFocused != null) && (!string.IsNullOrEmpty(textToAppend)))
             {
-                Clipboard.SetText(textToAppend);
-                _lastFocused.Paste();
+                _lastFocused.Text = _lastFocused.Text.Trim() + textToAppend;
             }
         }
 

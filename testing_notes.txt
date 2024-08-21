@@ -24,4 +24,5 @@ Conlang Audio Honing testing notes:
   == In addition to being able to globally replace a consonant across the lexicon, it can be replaced
      at the start or end of words, everywhere but the start or end of words, or in or everywhere but 
      specific clusters.
-
+- If a phoneme that is not in the spelling rules is removed, it will remain in the sample text.  An issue
+  will be raised to look into this, but it may take a while to track down a solution.

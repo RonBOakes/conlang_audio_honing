@@ -108,8 +108,7 @@ namespace ConlangAudioHoning
         {
             if (!string.IsNullOrEmpty(textToAppend))
             {
-                Clipboard.SetText(textToAppend);
-                txt_pattern.Paste();
+                txt_pattern.Text = txt_pattern.Text.Trim() + textToAppend;
             }
         }
     }
