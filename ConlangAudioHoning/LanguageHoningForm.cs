@@ -2271,7 +2271,7 @@ namespace ConlangAudioHoning
         {
             string fileName = cbx_recordings.Text;
             string targetFileName = speechFiles[fileName].FullName;
-            // Play the audio (OGG) file with the default application
+            // Play the audio file with the default application
             Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
             AudioPlayer.PlayAudio(targetURI, (double)tb_Volume.Value / 100.0);
         }
