@@ -117,7 +117,7 @@ namespace ConlangAudioHoning
             // Get the phonetic representations of the text - ported from Python code.
             List<List<Dictionary<string, string>>> pronounceMapList = [];
             pronounceMapList.Clear();
-            using (StringReader sampleTextReader = new(SampleText.ToLower()))
+            using (StringReader sampleTextReader = new(IpaUtilities.IpaSafeLowerCase(SampleText)))
             {
                 string? line;
                 do

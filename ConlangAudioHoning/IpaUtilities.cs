@@ -1279,5 +1279,17 @@ namespace ConlangAudioHoning
             return pConsonantChangesL3;
         }
 
+        /// <summary>
+        /// Performs a conversion to lower case in a manner that will ensure that the operation is safe for matching with 
+        /// IPA, at least in the language honing tool.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string IpaSafeLowerCase(string input)
+        {
+            input = input.Replace('G', 'ɡ');
+            return (input.ToLower());
+        }
+
     }
 }
