@@ -1287,7 +1287,6 @@ namespace ConlangAudioHoning
         /// <returns></returns>
         public static string IpaSafeLowerCase(string input)
         {
-            input = input.Replace('G', 'ɡ');
             return (input.ToLower());
         }
 
