@@ -52,9 +52,7 @@ namespace LanguageEditor
                     {
                         return _affix_map;
                     }
-#pragma warning disable IDE0007 // Use implicit type
                     PosSubPane subPane = (PosSubPane)control;
-#pragma warning restore IDE0007 // Use implicit type
                     if (subPane.DataChanged)
                     {
                         _affix_map[partOfSpeech].Clear();
@@ -64,18 +62,18 @@ namespace LanguageEditor
 
 
                 // Clean up _affix_map by making sure that any empty entries are removed.
-                Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>> returnMap = new();
+                Dictionary<string, List<Dictionary<string, List<Dictionary<string, Affix>>>>> returnMap = [];
                 foreach (string partOfSpeech in _affix_map.Keys)
                 {
                     List<Dictionary<string, List<Dictionary<string, Affix>>>> posList = _affix_map[partOfSpeech];
-                    List<Dictionary<string, List<Dictionary<string, Affix>>>> returnPosList = new();
+                    List<Dictionary<string, List<Dictionary<string, Affix>>>> returnPosList = [];
                     foreach (Dictionary<string, List<Dictionary<string, Affix>>> posSubDict in posList)
                     {
-                        Dictionary<string, List<Dictionary<string, Affix>>> returnPosSubDict = new();
+                        Dictionary<string, List<Dictionary<string, Affix>>> returnPosSubDict = [];
                         foreach (string affix in posSubDict.Keys)
                         {
                             List<Dictionary<string, Affix>> affixList = posSubDict[affix];
-                            List<Dictionary<string, Affix>> returnAffixList = new();
+                            List<Dictionary<string, Affix>> returnAffixList = [];
                             foreach (Dictionary<string, Affix> affixDict in affixList)
                             {
                                 if (affixDict.Count > 0)
@@ -212,9 +210,7 @@ namespace LanguageEditor
             {
                 return;
             }
-#pragma warning disable IDE0007 // Use implicit type
             Button addButton = (Button)sender;
-#pragma warning restore IDE0007 // Use implicit type
             string buttonText = addButton.Text;
             Match buttonMatch = ButtonTextRegex().Match(buttonText);
             if (buttonMatch.Success)
@@ -239,9 +235,7 @@ namespace LanguageEditor
                 {
                     return;
                 }
-#pragma warning disable IDE0007 // Use implicit type
                 PosSubPane posPane = (PosSubPane)posControl;
-#pragma warning restore IDE0007 // Use implicit type
 
                 TabPage? affixTab = null;
                 foreach (var tabPage2 in from TabPage tabPage2 in posPane.tpn_affixLevel.TabPages
@@ -309,9 +303,7 @@ namespace LanguageEditor
             }
             if (e.GetType() == typeof(DeclensionAffixEditor.DeclensionAffixEntryEventArgs))
             {
-#pragma warning disable IDE0007 // Use implicit type
                 DeclensionAffixEditor.DeclensionAffixEntryEventArgs e2 = (DeclensionAffixEditor.DeclensionAffixEntryEventArgs)e;
-#pragma warning restore IDE0007 // Use implicit type
                 if ((!string.IsNullOrEmpty(e2.AffixType)) && (!string.IsNullOrEmpty(e2.PartOfSpeech)) && (e2.Declension != null))
                 {
                     TabPage? posTab = null;
@@ -331,9 +323,7 @@ namespace LanguageEditor
                     {
                         return;
                     }
-#pragma warning disable IDE0007 // Use implicit type
                     PosSubPane posPane = (PosSubPane)posControl;
-#pragma warning restore IDE0007 // Use implicit type
 
                     foreach (var subDict in from Dictionary<string, Affix> subDict in _affix_map[e2.PartOfSpeech][0][e2.AffixType]
                                             where subDict.ContainsKey(e2.Declension)
@@ -509,14 +499,10 @@ namespace LanguageEditor
                 {
                     return;
                 }
-#pragma warning disable IDE0007 // Use implicit type
                 DeclensionAffixEditor editor = (DeclensionAffixEditor)sender;
-#pragma warning restore IDE0007 // Use implicit type
                 if (e.GetType() == typeof(DeclensionAffixEditor.DeclensionAffixChangedEventArgs))
                 {
-#pragma warning disable IDE0007 // Use implicit type
                     DeclensionAffixEditor.DeclensionAffixChangedEventArgs e2 = (DeclensionAffixEditor.DeclensionAffixChangedEventArgs)e;
-#pragma warning restore IDE0007 // Use implicit type
                     if ((e2.DeclensionTextChanged) && (!string.IsNullOrEmpty(e2.AffixType)) && (e2.Declension != null))
                     {
                         foreach (var (subDict, temp) in from Dictionary<string, Affix> subDict in _posSubMap[e2.AffixType]

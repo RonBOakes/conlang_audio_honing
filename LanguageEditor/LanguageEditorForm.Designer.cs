@@ -74,7 +74,7 @@
             lbl_phonemeInventory = new Label();
             panel_partsOfSpeechList = new Panel();
             lbl_partsOfSpeech = new Label();
-            tab_spellingPronounciationRules = new TabPage();
+            tab_spellingPronunciationRules = new TabPage();
             tab_derivationalAffixMap = new TabPage();
             tpn_DerivationalAffixMap = new TabControl();
             tabPage1 = new TabPage();
@@ -269,7 +269,7 @@
             // tpn_Main
             // 
             tpn_Main.Controls.Add(tab_misc);
-            tpn_Main.Controls.Add(tab_spellingPronounciationRules);
+            tpn_Main.Controls.Add(tab_spellingPronunciationRules);
             tpn_Main.Controls.Add(tab_derivationalAffixMap);
             tpn_Main.Controls.Add(tab_derivedWordList);
             tpn_Main.Controls.Add(tab_declensionAffixes);
@@ -329,16 +329,16 @@
             lbl_partsOfSpeech.TabIndex = 4;
             lbl_partsOfSpeech.Text = "Parts of Speech";
             // 
-            // tab_spellingPronounciationRules
+            // tab_spellingPronunciationRules
             // 
-            tab_spellingPronounciationRules.AutoScroll = true;
-            tab_spellingPronounciationRules.Location = new Point(4, 24);
-            tab_spellingPronounciationRules.Name = "tab_spellingPronounciationRules";
-            tab_spellingPronounciationRules.Padding = new Padding(3);
-            tab_spellingPronounciationRules.Size = new Size(895, 355);
-            tab_spellingPronounciationRules.TabIndex = 0;
-            tab_spellingPronounciationRules.Text = "Spelling/Pronunciation";
-            tab_spellingPronounciationRules.UseVisualStyleBackColor = true;
+            tab_spellingPronunciationRules.AutoScroll = true;
+            tab_spellingPronunciationRules.Location = new Point(4, 24);
+            tab_spellingPronunciationRules.Name = "tab_spellingPronunciationRules";
+            tab_spellingPronunciationRules.Padding = new Padding(3);
+            tab_spellingPronunciationRules.Size = new Size(895, 355);
+            tab_spellingPronunciationRules.TabIndex = 0;
+            tab_spellingPronunciationRules.Text = "Spelling/Pronunciation";
+            tab_spellingPronunciationRules.UseVisualStyleBackColor = true;
             // 
             // tab_derivationalAffixMap
             // 
@@ -475,7 +475,7 @@
         private VScrollBar vScrollBar1;
         private Label lbl_nounGenderList;
         private TabControl tpn_Main;
-        private TabPage tab_spellingPronounciationRules;
+        private TabPage tab_spellingPronunciationRules;
         private TabPage tab_misc;
         private Panel panel_phonemeInventory;
         private Label lbl_phonemeInventory;

@@ -24,7 +24,7 @@ namespace PolyGlot2ConlangJson
     {
         public static List<SpellingPronunciationRules> BuildSoundMap(XElement polyGlotLanguage)
         {
-            List<SpellingPronunciationRules> soundMapList = new();
+            List<SpellingPronunciationRules> soundMapList = [];
 
             IEnumerable<XElement> proCollection = polyGlotLanguage.Descendants("pronunciationCollection");
             foreach (XElement p in proCollection)

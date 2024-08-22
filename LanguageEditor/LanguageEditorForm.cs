@@ -172,7 +172,7 @@ namespace LanguageEditor
             panel_nounGender.Controls.Add(txt_nounGenderBlank);
             panel_nounGender.ResumeLayout(true);
 
-            tab_spellingPronounciationRules.SuspendLayout();
+            tab_spellingPronunciationRules.SuspendLayout();
             xPos = 0;
             yPos = 0;
             spellingPronunciationRulesEditor = new SpellingPronunciationRuleListEditor
@@ -181,10 +181,10 @@ namespace LanguageEditor
                 Size = new Size(895, 355),
                 SoundMapList = languageDescription.spelling_pronunciation_rules
             };
-            tab_spellingPronounciationRules.Controls.Add(spellingPronunciationRulesEditor);
-            tab_spellingPronounciationRules.Enter += Tab_spellingPronunciationRules_Enter;
-            tab_spellingPronounciationRules.Leave += Tab_spellingPronunciationRules_Leave;
-            tab_spellingPronounciationRules.ResumeLayout(true);
+            tab_spellingPronunciationRules.Controls.Add(spellingPronunciationRulesEditor);
+            tab_spellingPronunciationRules.Enter += Tab_spellingPronunciationRules_Enter;
+            tab_spellingPronunciationRules.Leave += Tab_spellingPronunciationRules_Leave;
+            tab_spellingPronunciationRules.ResumeLayout(true);
 
             xPos = 0;
             yPos = 0;
