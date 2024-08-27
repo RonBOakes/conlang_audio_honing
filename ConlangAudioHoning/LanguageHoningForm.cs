@@ -317,9 +317,10 @@ namespace ConlangAudioHoning
             }
 
 #pragma warning disable S1244 // Floating point numbers should not be tested for equality
-            if (languageDescription.version != 1.0)
+            if ((languageDescription.version < 1.0) || (languageDescription.version > 1.1))
             {
-                _ = MessageBox.Show("Incorrect language file version", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show(string.Format("Incorrect language file version {0}. Only versions 1.0 and 1.1 are supported",
+                    languageDescription.version), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 languageDescription = new LanguageDescription();
                 return;
             }
@@ -388,6 +389,10 @@ namespace ConlangAudioHoning
                 DateTime now = DateTime.UtcNow;
                 string timestamp = now.ToString("o");
                 string history = "Edited in LanguageEditor, saved at " + timestamp;
+
+                // Set the version based on the presence of phoneme_clusters.  Even if empty, 
+                // the version needs to be updated because the field will be in the saved JSON.
+                languageDescription.version = 1.1;
 
                 if (!languageDescription.metadata.ContainsKey("history"))
                 {

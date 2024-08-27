@@ -17,6 +17,7 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System.Text.Json.Nodes;
+using Microsoft.VisualBasic;
 
 namespace ConlangJson
 {
@@ -37,6 +38,7 @@ namespace ConlangJson
         private List<string>? _noun_gender_list;
         private List<string>? _part_of_speech_list;
         private List<string>? _phoneme_inventory;
+        private Dictionary<string, string>? _phoneme_clusters;
         private string? _word_order;
         private string? _adjective_position;
         private string? _pre_post_position;
@@ -58,6 +60,7 @@ namespace ConlangJson
             _noun_gender_list = [];
             _part_of_speech_list = [];
             _phoneme_inventory = [];
+            _phoneme_clusters = [];
             _spelling_pronunciation_rules = [];
             _lexical_order_list = [];
             _affix_map = [];
@@ -212,6 +215,20 @@ namespace ConlangJson
         {
             get => _phoneme_inventory ?? [];
             set => _phoneme_inventory = value;
+        }
+
+        /// <summary>
+        /// This object will contain clusters of phonemes
+        /// mapped to the type of cluster they are.This information is related to performing
+        /// Beats and Bindings Phonological analysis on the language (Dziubalska-Kołaczyk,
+        /// 2002) and other similar purposes.
+        /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
+        public Dictionary<string, string> phoneme_clusters
+#pragma warning restore IDE1006 // Naming Styles
+        {
+            get => _phoneme_clusters ?? [];
+            set => _phoneme_clusters = value;
         }
 
         /// <summary>
