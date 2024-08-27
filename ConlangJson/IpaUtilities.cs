@@ -20,7 +20,7 @@ using System.Linq;
 using System.Text;
 using ConlangJson;
 
-namespace ConlangAudioHoning
+namespace ConlangJson
 {
     /// <summary>
     /// A collection of static properties and methods for working with IPA, 

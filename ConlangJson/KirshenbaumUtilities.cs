@@ -18,7 +18,7 @@
 */
 using System.Text;
 
-namespace ConlangAudioHoning
+namespace ConlangJson
 {
     /// <summary>
     /// A collection of static properties and methods for working with the Kirshenbaum
@@ -26,7 +26,7 @@ namespace ConlangAudioHoning
     /// places.  The espeak-ng program uses Kirshenbaum for phonetic input from the
     /// command line.
     /// </summary>
-    internal static class KirshenbaumUtilities
+    public static class KirshenbaumUtilities
     {
 
         /// <summary>
