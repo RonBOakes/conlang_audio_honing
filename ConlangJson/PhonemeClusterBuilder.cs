@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConlangJson
 {
-    internal class PhonemeClusterBuilder
+    public class PhonemeClusterBuilder
     {
         private readonly LanguageDescription languageDescription;
 
@@ -116,13 +116,17 @@ namespace ConlangJson
             {
                 patternFragmentBuilder.Append(vowel);
             }
-            patternFragmentBuilder.Append("][");
-            foreach (char diacritic in diacritics)
+            patternFragmentBuilder.Append("]");
+            if (diacritics.Count > 0)
             {
-                patternFragmentBuilder.Append(diacritic);
+                patternFragmentBuilder.Append('[');
+                foreach (char diacritic in diacritics)
+                {
+                    patternFragmentBuilder.Append(diacritic);
+                }
+                patternFragmentBuilder.Append("]?");
             }
-            patternFragmentBuilder.Append("]?)");
-
+            patternFragmentBuilder.Append(')');
             return patternFragmentBuilder.ToString();
         }
 
@@ -169,12 +173,17 @@ namespace ConlangJson
             {
                 patternFragmentBuilder.Append(vowel);
             }
-            patternFragmentBuilder.Append("][");
-            foreach (char diacritic in diacritics)
+            patternFragmentBuilder.Append("]");
+            if (diacritics.Count > 0)
             {
-                patternFragmentBuilder.Append(diacritic);
+                patternFragmentBuilder.Append('[');
+                foreach (char diacritic in diacritics)
+                {
+                    patternFragmentBuilder.Append(diacritic);
+                }
+                patternFragmentBuilder.Append("]?");
             }
-            patternFragmentBuilder.Append("]?)");
+            patternFragmentBuilder.Append(')');
 
             return patternFragmentBuilder.ToString();
         }

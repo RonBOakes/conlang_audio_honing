@@ -3184,6 +3184,14 @@ namespace ConlangAudioHoning
             _ = CustomPatternForm.Show(out string customPattern);
             txt_customReplacementPattern.Text = customPattern;
         }
+
+        private void generatePhonemeClustersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (languageDescription != null)
+            {
+                PhonemeClusterBuilder.RebuildPhonemeClusters(languageDescription, false);
+            }
+        }
     }
 }
 
