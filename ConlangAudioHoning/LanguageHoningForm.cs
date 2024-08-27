@@ -316,7 +316,6 @@ namespace ConlangAudioHoning
                 return;
             }
 
-#pragma warning disable S1244 // Floating point numbers should not be tested for equality
             if ((languageDescription.version < 1.0) || (languageDescription.version > 1.1))
             {
                 _ = MessageBox.Show(string.Format("Incorrect language file version {0}. Only versions 1.0 and 1.1 are supported",
@@ -324,7 +323,6 @@ namespace ConlangAudioHoning
                 languageDescription = new LanguageDescription();
                 return;
             }
-#pragma warning restore S1244 // Floating point numbers should not be tested for equality
 
             languageFileInfo = new FileInfo(filename);
 

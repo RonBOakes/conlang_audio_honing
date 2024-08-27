@@ -61,7 +61,7 @@ namespace ConlangJson
             { "ɵ", "@." }, {"ǀ","!["}, {"‖","!"}, {"ǂ","!"}
         };
 
-        public static List<String> UnmappedPhonemes { get; } = [
+        public static List<string> UnmappedPhonemes { get; } = [
               "ʛ",
             "ᵻ",
             "ᵿ",

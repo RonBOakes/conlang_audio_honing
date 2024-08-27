@@ -10,17 +10,17 @@ namespace ConlangJson
 {
     internal class PhonemeClusterBuilder
     {
-        private LanguageDescription languageDescription;
+        private readonly LanguageDescription languageDescription;
 
-        private Regex CsVMatch;
-        private Regex CsVvMatch;
-        private Regex CsVCsMatch;
-        private Regex CsVvCsMatch;
-        private Regex VCsMatch;
-        private Regex VvCsMatch;
-        private Regex VVMatch;
-        private Regex VvVMatch;
-        private Regex VVvMatch;
+        private readonly Regex CsVMatch;
+        private readonly Regex CsVvMatch;
+        private readonly Regex CsVCsMatch;
+        private readonly Regex CsVvCsMatch;
+        private readonly Regex VCsMatch;
+        private readonly Regex VvCsMatch;
+        private readonly Regex VVMatch;
+        private readonly Regex VvVMatch;
+        private readonly Regex VVvMatch;
 
         private PhonemeClusterBuilder(LanguageDescription languageDescription)
         {
@@ -81,16 +81,16 @@ namespace ConlangJson
                 removeDeclined = true;
             }
 
-            foreach(LexiconEntry word in languageDescription.lexicon)
+            foreach (LexiconEntry word in languageDescription.lexicon)
             {
                 GetClusters(word.phonetic);
             }
 
-            if(removeDeclined)
+            if (removeDeclined)
             {
                 ConlangUtilities.RemoveDeclinedEntries(languageDescription);
             }
-            if(removeDerived)
+            if (removeDerived)
             {
                 ConlangUtilities.RemoveDerivedEntries(languageDescription);
             }
@@ -129,7 +129,7 @@ namespace ConlangJson
         private string buildVowelDiphthongPatternFragment()
         {
             StringBuilder patternFragmentBuilder = new();
-            patternFragmentBuilder.Append("(");
+            patternFragmentBuilder.Append('(');
             foreach (string vowel in languageDescription.phonetic_inventory["v_diphthongs"])
             {
                 patternFragmentBuilder.Append(vowel);
