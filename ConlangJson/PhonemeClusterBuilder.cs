@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace ConlangJson
 {
+    /// <summary>
+    /// Class that contains the static method for building Phoneme Clusters within a language description, as well as the 
+    /// private structures used for this purpose.
+    /// </summary>
     public class PhonemeClusterBuilder
     {
         private readonly LanguageDescription languageDescription;
@@ -45,6 +49,12 @@ namespace ConlangJson
             VvMatch = new Regex(string.Format("{0}", vowelDiphthongPatternFragment), RegexOptions.Compiled);
         }
 
+        /// <summary>
+        /// Rebuilds the phoneme_cluster section of the supplied LanguageDescription object based on its current lexicon.  
+        /// </summary>
+        /// <param name="languageDescription">LanguageDescription object that will have its phoneme_cluster rebuilt</param>
+        /// <param name="rebuildPhoneticInventory">Optional: rebuild the phonetic_inventory before rebuilding the phoneme_cluster.
+        /// Set to "true" if this is not currently up to date.</param>
         public static void RebuildPhonemeClusters(LanguageDescription languageDescription, bool rebuildPhoneticInventory = false)
         {
             if (languageDescription == null)
@@ -120,7 +130,7 @@ namespace ConlangJson
             {
                 patternFragmentBuilder.Append(vowel);
             }
-            patternFragmentBuilder.Append("]");
+            patternFragmentBuilder.Append(']');
             if (diacritics.Count > 0)
             {
                 patternFragmentBuilder.Append('[');
@@ -177,7 +187,7 @@ namespace ConlangJson
             {
                 patternFragmentBuilder.Append(vowel);
             }
-            patternFragmentBuilder.Append("]");
+            patternFragmentBuilder.Append(']');
             if (diacritics.Count > 0)
             {
                 patternFragmentBuilder.Append('[');
