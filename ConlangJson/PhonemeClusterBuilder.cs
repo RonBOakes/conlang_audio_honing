@@ -82,6 +82,45 @@ namespace ConlangJson
 
         }
 
+        /// <summary>
+        /// Returns a string containing the NAD clusters for the language passed in, one per line.<br/>
+        /// Only clusters of more than two characters are provided, since the NAD calculator only produces
+        /// results on clusters of that size.
+        /// </summary>
+        /// <param name="languageDescription">LanguageDescription to be analyzed.  The phoneme_clusters must 
+        /// be populated and is presumed to be current.</param>
+        /// <returns>A string containing the NAD analysis clusters, one per line.</returns>
+        public string getNADClusters(LanguageDescription languageDescription)
+        {
+            if (languageDescription == null)
+            {
+                return string.Empty;
+            }
+            if ((languageDescription.phoneme_clusters == null) || (languageDescription.phoneme_clusters.Count < 1))
+            {
+                return string.Empty;
+            }
+
+            SortedSet<String> nadClusters = [];
+
+            foreach (string cluster in languageDescription.phoneme_clusters.Keys)
+            {
+                string nadCluster = languageDescription.phoneme_clusters[cluster];
+                if (nadCluster.Length > 2)
+                {
+                    nadClusters.Add(cluster);
+                }
+            }
+
+            StringBuilder nadClusterBuilder = new();
+            foreach(string nadCluster in nadClusters)
+            {
+                nadClusterBuilder.AppendLine(nadCluster);
+            }
+
+            return nadClusterBuilder.ToString();
+        }
+
         private void BuildPhonemeClusters()
         {
             bool removeDerived = false;

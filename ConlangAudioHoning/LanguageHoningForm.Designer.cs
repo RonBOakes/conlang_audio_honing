@@ -59,6 +59,8 @@
             declineToolStripMenuItem = new ToolStripMenuItem();
             deriveToolStripMenuItem = new ToolStripMenuItem();
             setAndAdjustLexicalOrderToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator6 = new ToolStripSeparator();
+            generatePhonemeClustersToolStripMenuItem = new ToolStripMenuItem();
             utilitiesToolStripMenuItem = new ToolStripMenuItem();
             displayGlossOfSampleTextToolStripMenuItem = new ToolStripMenuItem();
             printSampleTextSummaryToolStripMenuItem = new ToolStripMenuItem();
@@ -154,8 +156,7 @@
             btn_updateSoundMapList = new Button();
             tb_Volume = new TrackBar();
             label1 = new Label();
-            toolStripSeparator6 = new ToolStripSeparator();
-            generatePhonemeClustersToolStripMenuItem = new ToolStripMenuItem();
+            listNADAnalysisCulstersToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -242,7 +243,7 @@
             // 
             // languageToolStripMenuItem
             // 
-            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem, setAndAdjustLexicalOrderToolStripMenuItem, toolStripSeparator6, generatePhonemeClustersToolStripMenuItem });
+            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem, setAndAdjustLexicalOrderToolStripMenuItem, toolStripSeparator6, generatePhonemeClustersToolStripMenuItem, listNADAnalysisCulstersToolStripMenuItem });
             languageToolStripMenuItem.Name = "languageToolStripMenuItem";
             languageToolStripMenuItem.Size = new Size(71, 20);
             languageToolStripMenuItem.Text = "Language";
@@ -274,6 +275,18 @@
             setAndAdjustLexicalOrderToolStripMenuItem.Size = new Size(222, 22);
             setAndAdjustLexicalOrderToolStripMenuItem.Text = "Set and Adjust Lexical Order";
             setAndAdjustLexicalOrderToolStripMenuItem.Click += SetAndAdjustLexicalOrderToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(219, 6);
+            // 
+            // generatePhonemeClustersToolStripMenuItem
+            // 
+            generatePhonemeClustersToolStripMenuItem.Name = "generatePhonemeClustersToolStripMenuItem";
+            generatePhonemeClustersToolStripMenuItem.Size = new Size(222, 22);
+            generatePhonemeClustersToolStripMenuItem.Text = "Generate Phoneme Clusters";
+            generatePhonemeClustersToolStripMenuItem.Click += generatePhonemeClustersToolStripMenuItem_Click;
             // 
             // utilitiesToolStripMenuItem
             // 
@@ -1206,17 +1219,11 @@
             label1.TabIndex = 35;
             label1.Text = "Volume";
             // 
-            // toolStripSeparator6
+            // listNADAnalysisCulstersToolStripMenuItem
             // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(219, 6);
-            // 
-            // generatePhonemeClustersToolStripMenuItem
-            // 
-            generatePhonemeClustersToolStripMenuItem.Name = "generatePhonemeClustersToolStripMenuItem";
-            generatePhonemeClustersToolStripMenuItem.Size = new Size(222, 22);
-            generatePhonemeClustersToolStripMenuItem.Text = "Generate Phoneme Clusters";
-            generatePhonemeClustersToolStripMenuItem.Click += generatePhonemeClustersToolStripMenuItem_Click;
+            listNADAnalysisCulstersToolStripMenuItem.Name = "listNADAnalysisCulstersToolStripMenuItem";
+            listNADAnalysisCulstersToolStripMenuItem.Size = new Size(222, 22);
+            listNADAnalysisCulstersToolStripMenuItem.Text = "List NAD Analysis Culsters";
             // 
             // LanguageHoningForm
             // 
@@ -1394,5 +1401,6 @@
         private CheckBox chk_changeNotMatchLocations;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem generatePhonemeClustersToolStripMenuItem;
+        private ToolStripMenuItem listNADAnalysisCulstersToolStripMenuItem;
     }
 }
