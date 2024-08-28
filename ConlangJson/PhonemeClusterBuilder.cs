@@ -37,12 +37,12 @@ namespace ConlangJson
             string consonantPatternFragment = buildConsonantPatternFragment();
             string vowelDiphthongPatternFragment = buildVowelDiphthongPatternFragment();
 
-            CsVMatch = new Regex(string.Format("{0}+{1}", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
-            CsVvMatch = new Regex(string.Format("{0}+{1}", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
-            CsVCsMatch = new Regex(string.Format("{0}+{1}{0}+", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
-            CsVvCsMatch = new Regex(string.Format("{0}+{1}{0}+", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
-            VCsMatch = new Regex(string.Format("{0}{1}+", vowelPatternFragment, consonantPatternFragment), RegexOptions.Compiled);
-            VvCsMatch = new Regex(string.Format("{0}{1}+", vowelDiphthongPatternFragment, consonantPatternFragment), RegexOptions.Compiled);
+            CsVMatch = new Regex(string.Format("{0}{1}", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            CsVvMatch = new Regex(string.Format("{0}{1}", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
+            CsVCsMatch = new Regex(string.Format("{0}{1}{0}", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            CsVvCsMatch = new Regex(string.Format("{0}{1}{0}", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
+            VCsMatch = new Regex(string.Format("{0}{1}", vowelPatternFragment, consonantPatternFragment), RegexOptions.Compiled);
+            VvCsMatch = new Regex(string.Format("{0}{1}", vowelDiphthongPatternFragment, consonantPatternFragment), RegexOptions.Compiled);
             VVMatch = new Regex(string.Format("{0}{{2}}", vowelPatternFragment), RegexOptions.Compiled);
             VvVMatch = new Regex(string.Format("{0}{1}", vowelPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
             VVvMatch = new Regex(string.Format("{0}{1}", vowelDiphthongPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
@@ -184,7 +184,7 @@ namespace ConlangJson
             }
 
             StringBuilder patternFragmentBuilder = new();
-            patternFragmentBuilder.Append("([");
+            patternFragmentBuilder.Append("((?:[");
             foreach (char vowel in consonant)
             {
                 patternFragmentBuilder.Append(vowel);
@@ -199,7 +199,7 @@ namespace ConlangJson
                 }
                 patternFragmentBuilder.Append("]?");
             }
-            patternFragmentBuilder.Append(')');
+            patternFragmentBuilder.Append(")+)");
 
             return patternFragmentBuilder.ToString();
         }
