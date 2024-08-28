@@ -90,7 +90,7 @@ namespace ConlangJson
         /// <param name="languageDescription">LanguageDescription to be analyzed.  The phoneme_clusters must 
         /// be populated and is presumed to be current.</param>
         /// <returns>A string containing the NAD analysis clusters, one per line.</returns>
-        public string getNADClusters(LanguageDescription languageDescription)
+        public static string GetNADClusters(LanguageDescription languageDescription)
         {
             if (languageDescription == null)
             {
@@ -108,7 +108,7 @@ namespace ConlangJson
                 string nadCluster = languageDescription.phoneme_clusters[cluster];
                 if (nadCluster.Length > 2)
                 {
-                    nadClusters.Add(cluster);
+                    nadClusters.Add(nadCluster);
                 }
             }
 

@@ -3195,6 +3195,18 @@ namespace ConlangAudioHoning
                 languageDirty = true;
             }
         }
+
+        private void ListNADAnalysisClustersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (languageDescription == null)
+            {
+                return;
+            }
+
+            string NADAnalysisClusters = PhonemeClusterBuilder.GetNADClusters(languageDescription);
+            NADDisplayForm displayForm = new(NADAnalysisClusters);
+            _ = displayForm.ShowDialog();
+        }
     }
 }
 
