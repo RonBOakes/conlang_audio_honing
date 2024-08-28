@@ -3189,7 +3189,10 @@ namespace ConlangAudioHoning
         {
             if (languageDescription != null)
             {
+                Cursor.Current = Cursors.WaitCursor;
                 PhonemeClusterBuilder.RebuildPhonemeClusters(languageDescription, false);
+                Cursor.Current = Cursors.Default;
+                languageDirty = true;
             }
         }
     }

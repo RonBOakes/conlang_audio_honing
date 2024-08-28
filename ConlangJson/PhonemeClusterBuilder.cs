@@ -21,6 +21,8 @@ namespace ConlangJson
         private readonly Regex VVMatch;
         private readonly Regex VvVMatch;
         private readonly Regex VVvMatch;
+        private readonly Regex VMatch;
+        private readonly Regex VvMatch;
 
         private PhonemeClusterBuilder(LanguageDescription languageDescription)
         {
@@ -39,6 +41,8 @@ namespace ConlangJson
             VVMatch = new Regex(string.Format("{0}{{2}}", vowelPatternFragment), RegexOptions.Compiled);
             VvVMatch = new Regex(string.Format("{0}{1}", vowelPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
             VVvMatch = new Regex(string.Format("{0}{1}", vowelDiphthongPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            VMatch = new Regex(string.Format("{0}", vowelPatternFragment), RegexOptions.Compiled);
+            VvMatch = new Regex(string.Format("{0}", vowelDiphthongPatternFragment), RegexOptions.Compiled);
         }
 
         public static void RebuildPhonemeClusters(LanguageDescription languageDescription, bool rebuildPhoneticInventory = false)
@@ -191,16 +195,6 @@ namespace ConlangJson
         private void GetClusters(string stringToParse)
         {
 
-            MatchCollection CsVMatches = CsVMatch.Matches(stringToParse);
-            foreach (Match C in CsVMatches)
-            {
-                if (C.Success)
-                {
-                    string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "(C)V"); // TODO: provide better descriptions
-                    stringToParse = stringToParse.Replace(cluster, "*");
-                }
-            }
             MatchCollection CsVvMatches = CsVvMatch.Matches(stringToParse);
             foreach (Match C in CsVvMatches)
             {
@@ -211,13 +205,13 @@ namespace ConlangJson
                     stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
-            MatchCollection CsVCsMatches = CsVCsMatch.Matches(stringToParse);
-            foreach (Match C in CsVCsMatches)
+            MatchCollection CsVMatches = CsVMatch.Matches(stringToParse);
+            foreach (Match C in CsVMatches)
             {
                 if (C.Success)
                 {
                     string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "(C)V(C)"); // TODO: provide better descriptions
+                    languageDescription.phoneme_clusters.TryAdd(cluster, "(C)V"); // TODO: provide better descriptions
                     stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
@@ -231,13 +225,13 @@ namespace ConlangJson
                     stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
-            MatchCollection VCsMatches = VCsMatch.Matches(stringToParse);
-            foreach (Match C in VCsMatches)
+            MatchCollection CsVCsMatches = CsVCsMatch.Matches(stringToParse);
+            foreach (Match C in CsVCsMatches)
             {
                 if (C.Success)
                 {
                     string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "V(C)"); // TODO: provide better descriptions
+                    languageDescription.phoneme_clusters.TryAdd(cluster, "(C)V(C)"); // TODO: provide better descriptions
                     stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
@@ -251,13 +245,13 @@ namespace ConlangJson
                     stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
-            MatchCollection VVMatches = VVMatch.Matches(stringToParse);
-            foreach (Match C in VVMatches)
+            MatchCollection VCsMatches = VCsMatch.Matches(stringToParse);
+            foreach (Match C in VCsMatches)
             {
                 if (C.Success)
                 {
                     string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "VV"); // TODO: provide better descriptions
+                    languageDescription.phoneme_clusters.TryAdd(cluster, "V(C)"); // TODO: provide better descriptions
                     stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
@@ -278,6 +272,36 @@ namespace ConlangJson
                 {
                     string cluster = C.Groups[0].Value;
                     languageDescription.phoneme_clusters.TryAdd(cluster, "VVv"); // TODO: provide better descriptions
+                    stringToParse = stringToParse.Replace(cluster, "*");
+                }
+            }
+            MatchCollection VVMatches = VVMatch.Matches(stringToParse);
+            foreach (Match C in VVMatches)
+            {
+                if (C.Success)
+                {
+                    string cluster = C.Groups[0].Value;
+                    languageDescription.phoneme_clusters.TryAdd(cluster, "VV"); // TODO: provide better descriptions
+                    stringToParse = stringToParse.Replace(cluster, "*");
+                }
+            }
+            MatchCollection VvMatches = VvMatch.Matches(stringToParse);
+            foreach (Match C in VvMatches)
+            {
+                if (C.Success)
+                {
+                    string cluster = C.Groups[0].Value;
+                    languageDescription.phoneme_clusters.TryAdd(cluster, "Vv"); // TODO: provide better descriptions
+                    stringToParse = stringToParse.Replace(cluster, "*");
+                }
+            }
+            MatchCollection VMatches = VMatch.Matches(stringToParse);
+            foreach (Match C in VMatches)
+            {
+                if (C.Success)
+                {
+                    string cluster = C.Groups[0].Value;
+                    languageDescription.phoneme_clusters.TryAdd(cluster, "V"); // TODO: provide better descriptions
                     stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
