@@ -18,16 +18,12 @@ namespace ConlangJson
 
         private readonly Regex CsVMatch;
         private readonly Regex CsVvMatch;
-        private readonly Regex CsVCsMatch;
-        private readonly Regex CsVvCsMatch;
+        private readonly Regex VCsVMatch;
+        private readonly Regex VvCsVMatch;
+        private readonly Regex VCsVvMatch;
+        private readonly Regex VvCsVvMatch;
         private readonly Regex VCsMatch;
         private readonly Regex VvCsMatch;
-        private readonly Regex VVMatch;
-        private readonly Regex VvVMatch;
-        private readonly Regex VVvMatch;
-        private readonly Regex VMatch;
-        private readonly Regex VvMatch;
-        private readonly Regex CMatch;
 
         private PhonemeClusterBuilder(LanguageDescription languageDescription)
         {
@@ -37,18 +33,14 @@ namespace ConlangJson
             string consonantPatternFragment = buildConsonantPatternFragment();
             string vowelDiphthongPatternFragment = buildVowelDiphthongPatternFragment();
 
-            CsVMatch = new Regex(string.Format("{0}{1}", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
-            CsVvMatch = new Regex(string.Format("{0}{1}", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
-            CsVCsMatch = new Regex(string.Format("{0}{1}{0}", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
-            CsVvCsMatch = new Regex(string.Format("{0}{1}{0}", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
-            VCsMatch = new Regex(string.Format("{0}{1}", vowelPatternFragment, consonantPatternFragment), RegexOptions.Compiled);
-            VvCsMatch = new Regex(string.Format("{0}{1}", vowelDiphthongPatternFragment, consonantPatternFragment), RegexOptions.Compiled);
-            VVMatch = new Regex(string.Format("{0}{{2}}", vowelPatternFragment), RegexOptions.Compiled);
-            VvVMatch = new Regex(string.Format("{0}{1}", vowelPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
-            VVvMatch = new Regex(string.Format("{0}{1}", vowelDiphthongPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
-            VMatch = new Regex(string.Format("{0}", vowelPatternFragment), RegexOptions.Compiled);
-            VvMatch = new Regex(string.Format("{0}", vowelDiphthongPatternFragment), RegexOptions.Compiled);
-            CMatch = new Regex(string.Format("{0}", consonantPatternFragment), RegexOptions.Compiled);
+            CsVMatch = new Regex(string.Format(@"^\s*(({0}){1}).*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            CsVvMatch = new Regex(string.Format(@"^\s*(({0}){1}).*$", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
+            VCsVMatch = new Regex(string.Format(@"^\s.*({1}({0}){1}).*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            VvCsVMatch = new Regex(string.Format(@"^\s.*({2}({0}){1}).*$", consonantPatternFragment, vowelPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
+            VCsVvMatch = new Regex(string.Format(@"^\s.*({1}({0}){2}).*$", consonantPatternFragment, vowelPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
+            VvCsVvMatch = new Regex(string.Format(@"^\s.*({1}({0}){1}).*$", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
+            VCsMatch = new Regex(string.Format(@"^.*({1}({0}))\s*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            VvCsMatch = new Regex(string.Format(@"^.*({1}({0}))\s*$", consonantPatternFragment, vowelDiphthongPatternFragment), RegexOptions.Compiled);
         }
 
         /// <summary>
@@ -153,8 +145,8 @@ namespace ConlangJson
 
         private string buildVowelPatternFragment()
         {
-            HashSet<char> vowels = [];
-            HashSet<char> diacritics = [];
+            SortedSet<char> vowels = [];
+            SortedSet<char> diacritics = [];
             foreach (string vowel in languageDescription.phonetic_inventory["vowels"])
             {
                 // Vowel should be length 1 or length 2
@@ -166,7 +158,7 @@ namespace ConlangJson
             }
 
             StringBuilder patternFragmentBuilder = new();
-            patternFragmentBuilder.Append("([");
+            patternFragmentBuilder.Append("(?:[");
             foreach (char vowel in vowels)
             {
                 patternFragmentBuilder.Append(vowel);
@@ -188,7 +180,7 @@ namespace ConlangJson
         private string buildVowelDiphthongPatternFragment()
         {
             StringBuilder patternFragmentBuilder = new();
-            patternFragmentBuilder.Append('(');
+            patternFragmentBuilder.Append("(?:");
             foreach (string vowel in languageDescription.phonetic_inventory["v_diphthongs"])
             {
                 patternFragmentBuilder.Append(vowel);
@@ -201,8 +193,8 @@ namespace ConlangJson
 
         private string buildConsonantPatternFragment()
         {
-            HashSet<char> consonant = [];
-            HashSet<char> diacritics = [];
+            SortedSet<char> consonant = [];
+            SortedSet<char> diacritics = [];
             foreach (string vowel in languageDescription.phonetic_inventory["p_consonants"])
             {
                 // Vowel should be length 1 or length 2
@@ -223,7 +215,14 @@ namespace ConlangJson
             }
 
             StringBuilder patternFragmentBuilder = new();
-            patternFragmentBuilder.Append("((?:[");
+            if(diacritics.Count > 0)
+            {
+                patternFragmentBuilder.Append("(?:[");
+            }
+            else
+            {
+                patternFragmentBuilder.Append('[');
+            }
             foreach (char vowel in consonant)
             {
                 patternFragmentBuilder.Append(vowel);
@@ -236,30 +235,32 @@ namespace ConlangJson
                 {
                     patternFragmentBuilder.Append(diacritic);
                 }
-                patternFragmentBuilder.Append("]?");
+                patternFragmentBuilder.Append("]?)");
             }
-            patternFragmentBuilder.Append(")+)");
+            else
+            {
+                patternFragmentBuilder.Append('+');
+            }
 
             return patternFragmentBuilder.ToString();
         }
 
         private void GetClusters(string stringToParse)
         {
-
+            if(stringToParse.StartsWith('ˈ'))
+            {
+                stringToParse = stringToParse.Substring(1);
+            }
             MatchCollection CsVvMatches = CsVvMatch.Matches(stringToParse);
             foreach (Match C in CsVvMatches)
             {
                 if (C.Success)
                 {
-                    string cluster = C.Groups[0].Value;
+                    string cluster = C.Groups[1].Value;
                     StringBuilder nadBuilder = new();
-                    for (int i = 1; i < C.Groups.Count - 1; i++)
-                    {
-                        nadBuilder.Append(C.Groups[i].Value);
-                    }
+                    nadBuilder.Append(C.Groups[2].Value);
                     nadBuilder.Append('V');
                     languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
-                    stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
             MatchCollection CsVMatches = CsVMatch.Matches(stringToParse);
@@ -267,75 +268,59 @@ namespace ConlangJson
             {
                 if (C.Success)
                 {
-                    string cluster = C.Groups[0].Value;
+                    string cluster = C.Groups[1].Value;
                     StringBuilder nadBuilder = new();
-                    for (int i = 1; i < C.Groups.Count - 1; i++)
-                    {
-                        nadBuilder.Append(C.Groups[i].Value);
-                    }
+                    nadBuilder.Append(C.Groups[2].Value);
                     nadBuilder.Append('V');
                     languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
-                    stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
-            MatchCollection CsVvCsMatches = CsVvCsMatch.Matches(stringToParse);
-            foreach (Match C in CsVvCsMatches)
+            MatchCollection VCsVMatches = VCsVMatch.Matches(stringToParse);
+            foreach (Match C in VCsVMatches)
             {
                 if (C.Success)
                 {
-                    string cluster = C.Groups[0].Value;
+                    string cluster = C.Groups[1].Value;
                     StringBuilder nadBuilder = new();
-                    for (int i = 1; i < C.Groups.Count; i++)
-                    {
-                        if (CMatch.IsMatch(C.Groups[i].Value))
-                        {
-                            nadBuilder.Append(C.Groups[i].Value);
-                        }
-                        else
-                        {
-                            nadBuilder.Append('V');
-                        }
-                    }
-                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
-                    stringToParse = stringToParse.Replace(cluster, "*");
-                }
-            }
-            MatchCollection CsVCsMatches = CsVCsMatch.Matches(stringToParse);
-            foreach (Match C in CsVCsMatches)
-            {
-                if (C.Success)
-                {
-                    string cluster = C.Groups[0].Value;
-                    StringBuilder nadBuilder = new();
-                    for (int i = 1; i < C.Groups.Count; i++)
-                    {
-                        if (CMatch.IsMatch(C.Groups[i].Value))
-                        {
-                            nadBuilder.Append(C.Groups[i].Value);
-                        }
-                        else
-                        {
-                            nadBuilder.Append('V');
-                        }
-                    }
-                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
-                    stringToParse = stringToParse.Replace(cluster, "*");
-                }
-            }
-            MatchCollection VvCsMatches = VvCsMatch.Matches(stringToParse);
-            foreach (Match C in VvCsMatches)
-            {
-                if (C.Success)
-                {
-                    string cluster = C.Groups[0].Value;
-                    StringBuilder nadBuilder = new();
+                    nadBuilder.Append(C.Groups[2].Value);
                     nadBuilder.Append('V');
-                    for (int i = 2; i < C.Groups.Count; i++)
-                    {
-                        nadBuilder.Append(C.Groups[i].Value);
-                    }
                     languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
-                    stringToParse = stringToParse.Replace(cluster, "*");
+                }
+            }
+            MatchCollection VvCsVMatches = VvCsVMatch.Matches(stringToParse);
+            foreach (Match C in VvCsVMatches)
+            {
+                if (C.Success)
+                {
+                    string cluster = C.Groups[1].Value;
+                    StringBuilder nadBuilder = new();
+                    nadBuilder.Append(C.Groups[2].Value);
+                    nadBuilder.Append('V');
+                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
+                }
+            }
+            MatchCollection VCsVvMatches = VCsVvMatch.Matches(stringToParse);
+            foreach (Match C in VCsVvMatches)
+            {
+                if (C.Success)
+                {
+                    string cluster = C.Groups[1].Value;
+                    StringBuilder nadBuilder = new();
+                    nadBuilder.Append(C.Groups[2].Value);
+                    nadBuilder.Append('V');
+                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
+                }
+            }
+            MatchCollection VvCsVvMatches = VvCsVvMatch.Matches(stringToParse);
+            foreach (Match C in VvCsVvMatches)
+            {
+                if (C.Success)
+                {
+                    string cluster = C.Groups[1].Value;
+                    StringBuilder nadBuilder = new();
+                    nadBuilder.Append(C.Groups[2].Value);
+                    nadBuilder.Append('V');
+                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
                 }
             }
             MatchCollection VCsMatches = VCsMatch.Matches(stringToParse);
@@ -343,65 +328,23 @@ namespace ConlangJson
             {
                 if (C.Success)
                 {
-                    string cluster = C.Groups[0].Value;
+                    string cluster = C.Groups[1].Value;
                     StringBuilder nadBuilder = new();
+                    nadBuilder.Append(C.Groups[2].Value);
                     nadBuilder.Append('V');
-                    for (int i = 2; i < C.Groups.Count; i++)
-                    {
-                        nadBuilder.Append(C.Groups[i].Value);
-                    }
                     languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
-                    stringToParse = stringToParse.Replace(cluster, "*");
                 }
             }
-            MatchCollection VvVMatches = VvVMatch.Matches(stringToParse);
-            foreach (Match C in VvVMatches)
+            MatchCollection VvCsMatches = VvCsMatch.Matches(stringToParse);
+            foreach (Match C in VvCsMatches)
             {
                 if (C.Success)
                 {
-                    string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "VV");
-                    stringToParse = stringToParse.Replace(cluster, "*");
-                }
-            }
-            MatchCollection VVvMatches = VVvMatch.Matches(stringToParse);
-            foreach (Match C in VVvMatches)
-            {
-                if (C.Success)
-                {
-                    string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "VV");
-                    stringToParse = stringToParse.Replace(cluster, "*");
-                }
-            }
-            MatchCollection VVMatches = VVMatch.Matches(stringToParse);
-            foreach (Match C in VVMatches)
-            {
-                if (C.Success)
-                {
-                    string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "VV");
-                    stringToParse = stringToParse.Replace(cluster, "*");
-                }
-            }
-            MatchCollection VvMatches = VvMatch.Matches(stringToParse);
-            foreach (Match C in VvMatches)
-            {
-                if (C.Success)
-                {
-                    string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "V");
-                    stringToParse = stringToParse.Replace(cluster, "*");
-                }
-            }
-            MatchCollection VMatches = VMatch.Matches(stringToParse);
-            foreach (Match C in VMatches)
-            {
-                if (C.Success)
-                {
-                    string cluster = C.Groups[0].Value;
-                    languageDescription.phoneme_clusters.TryAdd(cluster, "V");
-                    stringToParse = stringToParse.Replace(cluster, "*");
+                    string cluster = C.Groups[1].Value;
+                    StringBuilder nadBuilder = new();
+                    nadBuilder.Append(C.Groups[2].Value);
+                    nadBuilder.Append('V');
+                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
                 }
             }
         }
