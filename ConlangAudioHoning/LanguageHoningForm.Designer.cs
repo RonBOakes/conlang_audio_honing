@@ -157,6 +157,7 @@
             btn_updateSoundMapList = new Button();
             tb_Volume = new TrackBar();
             label1 = new Label();
+            btn_replaceCluster = new Button();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -762,9 +763,9 @@
             lbl_customReplacementPattern.AutoSize = true;
             lbl_customReplacementPattern.Location = new Point(3, 144);
             lbl_customReplacementPattern.Name = "lbl_customReplacementPattern";
-            lbl_customReplacementPattern.Size = new Size(162, 15);
+            lbl_customReplacementPattern.Size = new Size(215, 15);
             lbl_customReplacementPattern.TabIndex = 28;
-            lbl_customReplacementPattern.Text = "Custom Replacement Pattern";
+            lbl_customReplacementPattern.Text = "Custom Replacement PatternToReplace";
             // 
             // txt_customReplacementPattern
             // 
@@ -1190,6 +1191,7 @@
             // 
             // tabPageSpecialOperations
             // 
+            tabPageSpecialOperations.Controls.Add(btn_replaceCluster);
             tabPageSpecialOperations.Controls.Add(btn_updateSoundMapList);
             tabPageSpecialOperations.Location = new Point(4, 24);
             tabPageSpecialOperations.Name = "tabPageSpecialOperations";
@@ -1225,6 +1227,16 @@
             label1.Size = new Size(47, 15);
             label1.TabIndex = 35;
             label1.Text = "Volume";
+            // 
+            // btn_replaceCluster
+            // 
+            btn_replaceCluster.Location = new Point(200, 13);
+            btn_replaceCluster.Name = "btn_replaceCluster";
+            btn_replaceCluster.Size = new Size(110, 23);
+            btn_replaceCluster.TabIndex = 1;
+            btn_replaceCluster.Text = "Replace Cluster";
+            btn_replaceCluster.UseVisualStyleBackColor = true;
+            btn_replaceCluster.Click += btn_replaceCluster_Click;
             // 
             // LanguageHoningForm
             // 
@@ -1403,5 +1415,6 @@
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem generatePhonemeClustersToolStripMenuItem;
         private ToolStripMenuItem listNADAnalysisClustersToolStripMenuItem;
+        private Button btn_replaceCluster;
     }
 }

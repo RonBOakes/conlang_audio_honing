@@ -3207,6 +3207,12 @@ namespace ConlangAudioHoning
             NADDisplayForm displayForm = new(NADAnalysisClusters);
             _ = displayForm.ShowDialog();
         }
+
+        private void btn_replaceCluster_Click(object sender, EventArgs e)
+        {
+            _ = PatternReplacementForm.Show(out string patternToReplace, out string replacement);
+
+        }
     }
 }
 
