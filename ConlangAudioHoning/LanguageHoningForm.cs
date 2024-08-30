@@ -3211,7 +3211,19 @@ namespace ConlangAudioHoning
         private void btn_replaceCluster_Click(object sender, EventArgs e)
         {
             _ = PatternReplacementForm.Show(out string patternToReplace, out string replacement);
-
+            phoneticChanger.ClusterReplace(patternToReplace, replacement);
+            // Update sample text
+            if (sampleText != string.Empty)
+            {
+                sampleText = phoneticChanger.SampleText;
+                txt_SampleText.Text = sampleText;
+                txt_phonetic.Text = string.Empty;
+                foreach (string engineName in speechEngines.Keys)
+                {
+                    SpeechEngine speechEngine = speechEngines[engineName];
+                    speechEngine.SampleText = sampleText;
+                }
+            }
         }
     }
 }
