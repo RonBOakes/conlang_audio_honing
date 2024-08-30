@@ -28,7 +28,7 @@ namespace ConlangJson
             string consonantPatternFragment = buildConsonantPatternFragment();
 
             CsVMatch = new Regex(string.Format(@"^\s*(({0}){1}).*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
-            VCsVMatch = new Regex(string.Format(@"({1}({0}){1})", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            VCsVMatch = new Regex(string.Format(@"(?=({1}({0}){1}))", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
             VCsMatch = new Regex(string.Format(@"^.*({1}({0}))\s*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
         }
 
@@ -87,7 +87,8 @@ namespace ConlangJson
             foreach (string cluster in languageDescription.phoneme_clusters.Keys)
             {
                 string nadCluster = languageDescription.phoneme_clusters[cluster];
-                if (nadCluster.Length > 2)
+                string nadClusterLenCheck = nadCluster.Replace("V", "");
+                if (nadClusterLenCheck.Length >= 2)
                 {
                     nadClusters.Add(nadCluster);
                 }
