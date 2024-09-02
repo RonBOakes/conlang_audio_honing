@@ -82,7 +82,7 @@ namespace ConlangJson
                 return string.Empty;
             }
 
-            SortedSet<String> nadClusters = [];
+            SortedSet<string> nadClusters = [];
 
             foreach (string cluster in languageDescription.phoneme_clusters.Keys)
             {

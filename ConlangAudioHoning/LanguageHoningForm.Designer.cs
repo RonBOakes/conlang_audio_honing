@@ -154,10 +154,11 @@
             rbn_longToRhotacized = new RadioButton();
             rbn_addRhoticityRegular = new RadioButton();
             tabPageSpecialOperations = new TabPage();
+            btn_replaceCluster = new Button();
             btn_updateSoundMapList = new Button();
             tb_Volume = new TrackBar();
             label1 = new Label();
-            btn_replaceCluster = new Button();
+            exportNADClusterCountsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -244,7 +245,7 @@
             // 
             // languageToolStripMenuItem
             // 
-            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem, setAndAdjustLexicalOrderToolStripMenuItem, toolStripSeparator6, generatePhonemeClustersToolStripMenuItem, listNADAnalysisClustersToolStripMenuItem });
+            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem, setAndAdjustLexicalOrderToolStripMenuItem, toolStripSeparator6, generatePhonemeClustersToolStripMenuItem, listNADAnalysisClustersToolStripMenuItem, exportNADClusterCountsToolStripMenuItem });
             languageToolStripMenuItem.Name = "languageToolStripMenuItem";
             languageToolStripMenuItem.Size = new Size(71, 20);
             languageToolStripMenuItem.Text = "Language";
@@ -1201,6 +1202,16 @@
             tabPageSpecialOperations.Text = "Special Operations";
             tabPageSpecialOperations.UseVisualStyleBackColor = true;
             // 
+            // btn_replaceCluster
+            // 
+            btn_replaceCluster.Location = new Point(200, 13);
+            btn_replaceCluster.Name = "btn_replaceCluster";
+            btn_replaceCluster.Size = new Size(110, 23);
+            btn_replaceCluster.TabIndex = 1;
+            btn_replaceCluster.Text = "Replace Cluster";
+            btn_replaceCluster.UseVisualStyleBackColor = true;
+            btn_replaceCluster.Click += btn_replaceCluster_Click;
+            // 
             // btn_updateSoundMapList
             // 
             btn_updateSoundMapList.Location = new Point(6, 13);
@@ -1228,15 +1239,12 @@
             label1.TabIndex = 35;
             label1.Text = "Volume";
             // 
-            // btn_replaceCluster
+            // exportNADClusterCountsToolStripMenuItem
             // 
-            btn_replaceCluster.Location = new Point(200, 13);
-            btn_replaceCluster.Name = "btn_replaceCluster";
-            btn_replaceCluster.Size = new Size(110, 23);
-            btn_replaceCluster.TabIndex = 1;
-            btn_replaceCluster.Text = "Replace Cluster";
-            btn_replaceCluster.UseVisualStyleBackColor = true;
-            btn_replaceCluster.Click += btn_replaceCluster_Click;
+            exportNADClusterCountsToolStripMenuItem.Name = "exportNADClusterCountsToolStripMenuItem";
+            exportNADClusterCountsToolStripMenuItem.Size = new Size(222, 22);
+            exportNADClusterCountsToolStripMenuItem.Text = "Export NAD Cluster Counts";
+            exportNADClusterCountsToolStripMenuItem.Click += ExportNADClusterCountsToolStripMenuItem_Click;
             // 
             // LanguageHoningForm
             // 
@@ -1416,5 +1424,6 @@
         private ToolStripMenuItem generatePhonemeClustersToolStripMenuItem;
         private ToolStripMenuItem listNADAnalysisClustersToolStripMenuItem;
         private Button btn_replaceCluster;
+        private ToolStripMenuItem exportNADClusterCountsToolStripMenuItem;
     }
 }

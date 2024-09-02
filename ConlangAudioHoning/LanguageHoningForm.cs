@@ -3225,6 +3225,47 @@ namespace ConlangAudioHoning
                 }
             }
         }
+
+        private void ExportNADClusterCountsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (languageDescription == null)
+            {
+                return;
+            }
+            if ((languageDescription.phoneme_cluster_count == null) || (languageDescription.phoneme_cluster_count.Count == 0))
+            {
+                return;
+            }
+            using SaveFileDialog saveFileDialog = new();
+            if (languageFileInfo == null)
+            {
+                saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            }
+            else
+            {
+                saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+            }
+            saveFileDialog.Filter = "CSV file (*.csv)|*.csv|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.CheckFileExists = false;
+            saveFileDialog.OverwritePrompt = true;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                using StreamWriter csvStream = new StreamWriter(saveFileDialog.OpenFile(), System.Text.Encoding.UTF8);
+                csvStream.WriteLine("\"Cluster\",\"Count\"");
+                foreach (string cluster in languageDescription.phoneme_cluster_count.Keys)
+                {
+                    string nadClusterLenCheck = cluster.Replace("V", "");
+                    if (nadClusterLenCheck.Length >= 2)
+                    {
+                        csvStream.WriteLine(string.Format("\"{0}\",{1}", cluster, languageDescription.phoneme_cluster_count[cluster]));
+                    }
+                }
+                csvStream.Flush();
+                csvStream.Close();
+            }
+        }
     }
 }
 
