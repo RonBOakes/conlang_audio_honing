@@ -118,6 +118,14 @@ namespace ConlangJson
                 removeDeclined = true;
             }
 
+            if (languageDescription.phoneme_clusters != null)
+            {
+                languageDescription.phoneme_clusters.Clear();
+            }
+            if (languageDescription.phoneme_cluster_count != null)
+            {
+                languageDescription.phoneme_cluster_count.Clear();
+            }
             foreach (LexiconEntry word in languageDescription.lexicon)
             {
                 GetClusters(word.phonetic);
