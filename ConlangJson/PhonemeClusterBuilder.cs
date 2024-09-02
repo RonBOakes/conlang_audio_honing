@@ -95,7 +95,7 @@ namespace ConlangJson
             }
 
             StringBuilder nadClusterBuilder = new();
-            foreach(string nadCluster in nadClusters)
+            foreach (string nadCluster in nadClusters)
             {
                 nadClusterBuilder.AppendLine(nadCluster);
             }
@@ -184,7 +184,13 @@ namespace ConlangJson
                     StringBuilder nadBuilder = new();
                     nadBuilder.Append(C.Groups[2].Value);
                     nadBuilder.Append('V');
-                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
+                    string nad = nadBuilder.ToString();
+                    languageDescription.phoneme_clusters.TryAdd(cluster, nad);
+                    if (!languageDescription.phoneme_cluster_count.ContainsKey(nad))
+                    {
+                        languageDescription.phoneme_cluster_count[nad] = 0;
+                    }
+                    languageDescription.phoneme_cluster_count[nad] += 1;
                 }
             }
             MatchCollection VCsVMatches = VCsVMatch.Matches(stringToParse);
@@ -197,7 +203,13 @@ namespace ConlangJson
                     nadBuilder.Append('V');
                     nadBuilder.Append(C.Groups[2].Value);
                     nadBuilder.Append('V');
-                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
+                    string nad = nadBuilder.ToString();
+                    languageDescription.phoneme_clusters.TryAdd(cluster, nad);
+                    if (!languageDescription.phoneme_cluster_count.ContainsKey(nad))
+                    {
+                        languageDescription.phoneme_cluster_count[nad] = 0;
+                    }
+                    languageDescription.phoneme_cluster_count[nad] += 1;
                 }
             }
             MatchCollection VCsMatches = VCsMatch.Matches(stringToParse);
@@ -209,7 +221,13 @@ namespace ConlangJson
                     StringBuilder nadBuilder = new();
                     nadBuilder.Append('V');
                     nadBuilder.Append(C.Groups[2].Value);
-                    languageDescription.phoneme_clusters.TryAdd(cluster, nadBuilder.ToString());
+                    string nad = nadBuilder.ToString();
+                    languageDescription.phoneme_clusters.TryAdd(cluster, nad);
+                    if (!languageDescription.phoneme_cluster_count.ContainsKey(nad))
+                    {
+                        languageDescription.phoneme_cluster_count[nad] = 0;
+                    }
+                    languageDescription.phoneme_cluster_count[nad] += 1;
                 }
             }
         }

@@ -39,6 +39,7 @@ namespace ConlangJson
         private List<string>? _part_of_speech_list;
         private List<string>? _phoneme_inventory;
         private Dictionary<string, string>? _phoneme_clusters;
+        private Dictionary<string, int>? _phonemen_cluster_count;
         private string? _word_order;
         private string? _adjective_position;
         private string? _pre_post_position;
@@ -61,6 +62,7 @@ namespace ConlangJson
             _part_of_speech_list = [];
             _phoneme_inventory = [];
             _phoneme_clusters = [];
+            _phonemen_cluster_count = [];
             _spelling_pronunciation_rules = [];
             _lexical_order_list = [];
             _affix_map = [];
@@ -229,6 +231,20 @@ namespace ConlangJson
         {
             get => _phoneme_clusters ?? [];
             set => _phoneme_clusters = value;
+        }
+
+        /// <summary>
+        /// This object will contain a count of NAD clusters within the lexicon.
+        /// This count will reflect the number of times a particular cluster occurs
+        /// within the lexicon after it has been derived and declined. This 
+        /// information is related to performing Beats and Bindings Phonological 
+        /// analysis on the language (Dziubalska-Kołaczyk, 2002) and other similar 
+        /// purposes. 
+        /// </summary>
+        public Dictionary<string, int> phoneme_cluster_count
+        {
+            get => _phonemen_cluster_count ?? [];
+            set => _phonemen_cluster_count = value;
         }
 
         /// <summary>
