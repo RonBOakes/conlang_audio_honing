@@ -69,18 +69,26 @@ namespace AddTestEnglishLexicon
 
             foreach (LexiconEntry dwarvenEntry in dwarven.lexicon)
             {
-                LexiconEntry englishEntry = new LexiconEntry()
+                try
                 {
-                    english = dwarvenEntry.english,
-                    spelled = dwarvenEntry.english,
-                    phonetic = getWordPhonetic(dwarvenEntry.english),
-                    part_of_speech = dwarvenEntry.part_of_speech,
-                    declensions = [],
-                    declined_word = false,
-                    derived_word = dwarvenEntry.derived_word,
-                    metadata = []
-                };
-                testEnglish.lexicon.Add(englishEntry);
+                    LexiconEntry englishEntry = new LexiconEntry()
+                    {
+                        english = dwarvenEntry.english,
+                        spelled = dwarvenEntry.english,
+                        phonetic = getWordPhonetic(dwarvenEntry.english).Trim(),
+                        part_of_speech = dwarvenEntry.part_of_speech,
+                        declensions = [],
+                        declined_word = false,
+                        derived_word = dwarvenEntry.derived_word,
+                        metadata = []
+                    };
+                    testEnglish.lexicon.Add(englishEntry);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(string.Format("Unable to convert word {0}: {1}", dwarvenEntry.english, ex.Message));
+                    return;
+                }
             }
             DateTime now = DateTime.UtcNow;
             string timestamp = now.ToString("o");
@@ -141,7 +149,9 @@ namespace AddTestEnglishLexicon
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardError = true,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             process.Exited += new EventHandler((sender, e) =>
             {
@@ -168,6 +178,11 @@ namespace AddTestEnglishLexicon
             }
 
             string stdOut = process.StandardOutput.ReadToEnd();
+            Encoding stdOutEncoding = process.StandardOutput.CurrentEncoding;
+            if( stdOutEncoding != Encoding.UTF8 )
+            {
+                throw new ApplicationException(string.Format("Incorrectly encoded output from eSpeak-ng: {0}", stdOutEncoding.EncodingName));
+            }
             string stdErr = process.StandardError.ReadToEnd();
 
             bool noError = false;
