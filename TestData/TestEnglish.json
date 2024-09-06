@@ -900,26 +900,6 @@
       "metadata": {}
     },
     {
-      "phonetic": "fjˈuːtʃɚ pˈɑːɹɾɪkəl",
-      "spelled": "\u003CFuture Particle\u003E",
-      "english": "\u003CFuture Particle\u003E",
-      "part_of_speech": "Special",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "bˈɑːx",
-      "spelled": "Bach",
-      "english": "Bach",
-      "part_of_speech": "pn",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
       "phonetic": "bˈætʃəlɚ",
       "spelled": "bachelor",
       "english": "bachelor",
@@ -1380,16 +1360,6 @@
       "metadata": {}
     },
     {
-      "phonetic": "ˈælɪlˌʌn",
-      "spelled": "Alilun",
-      "english": "Alilun",
-      "part_of_speech": "pn",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
       "phonetic": "bˈæθ",
       "spelled": "bath",
       "english": "bath",
@@ -1704,16 +1674,6 @@
       "spelled": "altitude",
       "english": "altitude",
       "part_of_speech": "nin",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "ɐljˈuːɪlˌʌn",
-      "spelled": "Aluilun",
-      "english": "Aluilun",
-      "part_of_speech": "pn",
       "declensions": [],
       "derived_word": false,
       "declined_word": false,
@@ -6034,16 +5994,6 @@
       "spelled": "church",
       "english": "church",
       "part_of_speech": "nin",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "tʃˈɜːdʒd",
-      "spelled": "Churged",
-      "english": "Churged",
-      "part_of_speech": "pn",
       "declensions": [],
       "derived_word": false,
       "declined_word": false,
@@ -11540,16 +11490,6 @@
       "metadata": {}
     },
     {
-      "phonetic": "dɹˈʌdʒɪˌɪnuː",
-      "spelled": "Drugyinu",
-      "english": "Drugyinu",
-      "part_of_speech": "pn",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
       "phonetic": "dɹˈʌm",
       "spelled": "drum",
       "english": "drum",
@@ -14014,16 +13954,6 @@
       "spelled": "flirtatious",
       "english": "flirtatious",
       "part_of_speech": "adj",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "ɡˈɑːɹbɚ",
-      "spelled": "gârber",
-      "english": "gârber",
-      "part_of_speech": "pn",
       "declensions": [],
       "derived_word": false,
       "declined_word": false,
@@ -16740,16 +16670,6 @@
       "metadata": {}
     },
     {
-      "phonetic": "ɡˈoːɹnætʃ",
-      "spelled": "Gornatch",
-      "english": "Gornatch",
-      "part_of_speech": "pn",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
       "phonetic": "hˈiəɹoʊ",
       "spelled": "hero",
       "english": "hero",
@@ -16944,16 +16864,6 @@
       "spelled": "gravity",
       "english": "gravity",
       "part_of_speech": "nin",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "ɡɹˈævz",
-      "spelled": "Gravs",
-      "english": "Gravs",
-      "part_of_speech": "pn",
       "declensions": [],
       "derived_word": false,
       "declined_word": false,
@@ -17404,16 +17314,6 @@
       "spelled": "guest",
       "english": "guest",
       "part_of_speech": "nan",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "ɡjˈuːdʒ",
-      "spelled": "Guge",
-      "english": "Guge",
-      "part_of_speech": "pn",
       "declensions": [],
       "derived_word": false,
       "declined_word": false,
@@ -19358,16 +19258,6 @@
       "part_of_speech": "nan",
       "declensions": [],
       "derived_word": true,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "dʒɔɪhwˈʌʃ",
-      "spelled": "Joihwushe",
-      "english": "Joihwushe",
-      "part_of_speech": "pn",
-      "declensions": [],
-      "derived_word": false,
       "declined_word": false,
       "metadata": {}
     },
@@ -24764,16 +24654,6 @@
       "metadata": {}
     },
     {
-      "phonetic": "pˈɑːɹsætʃ",
-      "spelled": "Pârsatch",
-      "english": "Pârsatch",
-      "part_of_speech": "pn",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
       "phonetic": "pˈɔːz",
       "spelled": "pause",
       "english": "pause",
@@ -27970,16 +27850,6 @@
       "metadata": {}
     },
     {
-      "phonetic": "ɹˈæʃ",
-      "spelled": "Rash",
-      "english": "Rash",
-      "part_of_speech": "pn",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
       "phonetic": "pˈʊʃ",
       "spelled": "push",
       "english": "push",
@@ -30630,16 +30500,6 @@
       "metadata": {}
     },
     {
-      "phonetic": "sˈɛlnɚ",
-      "spelled": "Selnor",
-      "english": "Selnor",
-      "part_of_speech": "pn",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
       "phonetic": "sˈiːmən",
       "spelled": "semen",
       "english": "semen",
@@ -30784,16 +30644,6 @@
       "spelled": "series",
       "english": "series",
       "part_of_speech": "nin",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "sɛɹˈiːnə",
-      "spelled": "Serina",
-      "english": "Serina",
-      "part_of_speech": "pn",
       "declensions": [],
       "derived_word": false,
       "declined_word": false,
@@ -33044,16 +32894,6 @@
       "spelled": "sock",
       "english": "sock",
       "part_of_speech": "nin",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "tˈiːdˈɔɪd",
-      "spelled": "Tdoid",
-      "english": "Tdoid",
-      "part_of_speech": "pn",
       "declensions": [],
       "derived_word": false,
       "declined_word": false,
@@ -36310,16 +36150,6 @@
       "spelled": "to",
       "english": "to",
       "part_of_speech": "prep",
-      "declensions": [],
-      "derived_word": false,
-      "declined_word": false,
-      "metadata": {}
-    },
-    {
-      "phonetic": "swˈʌʃoʊ",
-      "spelled": "Swusho",
-      "english": "Swusho",
-      "part_of_speech": "pn",
       "declensions": [],
       "derived_word": false,
       "declined_word": false,
