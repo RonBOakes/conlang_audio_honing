@@ -179,9 +179,11 @@ namespace AddTestEnglishLexicon
 
             string stdOut = process.StandardOutput.ReadToEnd();
             Encoding stdOutEncoding = process.StandardOutput.CurrentEncoding;
-            if( stdOutEncoding != Encoding.UTF8 )
+            if (stdOutEncoding != Encoding.UTF8)
             {
+#pragma warning disable S112 // General or reserved exceptions should never be thrown
                 throw new ApplicationException(string.Format("Incorrectly encoded output from eSpeak-ng: {0}", stdOutEncoding.EncodingName));
+#pragma warning restore S112 // General or reserved exceptions should never be thrown
             }
             string stdErr = process.StandardError.ReadToEnd();
 
