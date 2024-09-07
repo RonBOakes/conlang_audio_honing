@@ -177,7 +177,7 @@ namespace ConlangJson
             foreach (string cluster in languageDescription.phoneme_cluster_count.Keys)
             {
                 int count = languageDescription.phoneme_cluster_count[cluster];
-                string bbCluster = string.Empty;
+                StringBuilder bbClusterBuilder = new();
                 Match CV_ClusterMatch = CV_ClusterRegex.Match(cluster);
                 Match VCV_ClusterMatch = VCV_ClusterRegex.Match(cluster);
                 Match VC_ClusterMatch = VC_ClusterRegex.Match(cluster);
@@ -185,21 +185,26 @@ namespace ConlangJson
                 if (CV_ClusterMatch.Success)
                 {
                     int cCount = CV_ClusterMatch.Groups[1].Value.Trim().Length;
-                    bbCluster = new string('C', cCount) + 'V';
+                    bbClusterBuilder.Append(new string('C', cCount));
+                    bbClusterBuilder.Append('V');
                 }
                 else if (VCV_ClusterMatch.Success)
                 {
                     int cCount = VCV_ClusterMatch.Groups[1].Value.Trim().Length;
-                    bbCluster = "V" + new string('C', cCount) + 'V';
+                    bbClusterBuilder.Append('V');
+                    bbClusterBuilder.Append(new string('C', cCount));
+                    bbClusterBuilder.Append('V');
                 }
                 else if (VC_ClusterMatch.Success)
                 {
-                    int cCount = CV_ClusterMatch.Groups[1].Value.Trim().Length;
-                    bbCluster = "V" + new string('C', cCount);
+                    int cCount = VC_ClusterMatch.Groups[1].Value.Trim().Length;
+                    bbClusterBuilder.Append('V');
+                    bbClusterBuilder.Append(new string('C', cCount));
                 }
 
-                if (!string.IsNullOrEmpty(bbCluster))
+                if (bbClusterBuilder.Length > 0)
                 {
+                    string bbCluster = bbClusterBuilder.ToString();
                     if (!bbClusterCount.ContainsKey(bbCluster))
                     {
                         bbClusterCount[bbCluster] = 0;
