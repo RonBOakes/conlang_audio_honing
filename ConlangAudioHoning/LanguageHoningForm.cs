@@ -3266,6 +3266,47 @@ namespace ConlangAudioHoning
                 csvStream.Close();
             }
         }
+
+        private void ExportBBClusterCountsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (languageDescription == null)
+            {
+                return;
+            }
+            if ((languageDescription.phoneme_cluster_count == null) || (languageDescription.phoneme_cluster_count.Count == 0))
+            {
+                return;
+            }
+            using SaveFileDialog saveFileDialog = new();
+            if (languageFileInfo == null)
+            {
+                saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+            }
+            else
+            {
+                saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+            }
+            saveFileDialog.Filter = "CSV file (*.csv)|*.csv|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.CheckFileExists = false;
+            saveFileDialog.OverwritePrompt = true;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                using StreamWriter csvStream = new StreamWriter(saveFileDialog.OpenFile(), System.Text.Encoding.UTF8);
+                csvStream.WriteLine("\"Cluster\",\"Count\"");
+                SortedList<string, int> bbClusterCount = PhonemeClusterBuilder.GetBBClusterCount(languageDescription) ?? [];
+                if (bbClusterCount != null)
+                {
+                    foreach (string cluster in bbClusterCount.Keys)
+                    {
+                        csvStream.WriteLine(string.Format("\"{0}\",{1}", cluster, bbClusterCount[cluster]));
+                    }
+                }
+                csvStream.Flush();
+                csvStream.Close();
+            }
+        }
     }
 }
 

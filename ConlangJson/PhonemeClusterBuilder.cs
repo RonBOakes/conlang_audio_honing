@@ -9,16 +9,19 @@ using System.Threading.Tasks;
 namespace ConlangJson
 {
     /// <summary>
-    /// Class that contains the static method for building Phoneme Clusters within a language description, as well as the 
+    /// Class that contains the static method for building Phoneme Clusters within a languageDescription description, as well as the 
     /// private structures used for this purpose.
     /// </summary>
     public class PhonemeClusterBuilder
     {
         private readonly LanguageDescription languageDescription;
 
-        private readonly Regex CsVMatch;
-        private readonly Regex VCsVMatch;
-        private readonly Regex VCsMatch;
+        private readonly Regex CsVRegex;
+        private readonly Regex VCsVRegex;
+        private readonly Regex VCsRegex;
+        private readonly Regex CV_ClusterRegex;
+        private readonly Regex VCV_ClusterRegex;
+        private readonly Regex VC_ClusterRegex;
 
         private PhonemeClusterBuilder(LanguageDescription languageDescription)
         {
@@ -27,9 +30,12 @@ namespace ConlangJson
             string vowelPatternFragment = buildVowelPatternFragment();
             string consonantPatternFragment = buildConsonantPatternFragment();
 
-            CsVMatch = new Regex(string.Format(@"^\s*(({0}){1}).*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
-            VCsVMatch = new Regex(string.Format(@"(?=({1}({0}){1}))", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
-            VCsMatch = new Regex(string.Format(@"^.*({1}({0}))\s*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            CsVRegex = new Regex(string.Format(@"^\s*(({0}){1}).*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            VCsVRegex = new Regex(string.Format(@"(?=({1}({0}){1}))", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            VCsRegex = new Regex(string.Format(@"^.*({1}({0}))\s*$", consonantPatternFragment, vowelPatternFragment), RegexOptions.Compiled);
+            CV_ClusterRegex = new Regex(string.Format(@"^\s*({0})V\s*$", consonantPatternFragment), RegexOptions.Compiled);
+            VCV_ClusterRegex = new Regex(string.Format(@"^\s*V({0})V\s*$", consonantPatternFragment), RegexOptions.Compiled);
+            VC_ClusterRegex = new Regex(string.Format(@"^\s*V({0})\s*$", consonantPatternFragment), RegexOptions.Compiled);
         }
 
         /// <summary>
@@ -64,7 +70,7 @@ namespace ConlangJson
         }
 
         /// <summary>
-        /// Returns a string containing the NAD clusters for the language passed in, one per line.<br/>
+        /// Returns a string containing the NAD clusters for the languageDescription passed in, one per line.<br/>
         /// Only clusters of more than two characters are provided, since the NAD calculator only produces
         /// results on clusters of that size.
         /// </summary>
@@ -103,6 +109,29 @@ namespace ConlangJson
             return nadClusterBuilder.ToString();
         }
 
+        /// <summary>
+        /// Get the list of Beats and Bindings clusters.  These just use 'V' and 'C' to 
+        /// abstract beats (vowels) and bindings (consonants)
+        /// </summary>
+        /// <param name="languageDescription">Language to be counted</param>
+        /// <returns>Sorted list containing the B&amp;B binding clusters and the number of 
+        /// occurrences of each cluster within its lexicon.</returns>
+        public static SortedList<string, int>? GetBBClusterCount(LanguageDescription languageDescription)
+        {
+            if (languageDescription == null)
+            {
+                return null;
+            }
+            if (languageDescription.phoneme_clusters == null)
+            {
+                RebuildPhonemeClusters(languageDescription, true);
+            }
+
+            PhonemeClusterBuilder clusterBuilder = new(languageDescription);
+            SortedList<string, int> bbClusterCount = clusterBuilder.BuildBBClusterCount();
+            return bbClusterCount;
+        }
+
         private void BuildPhonemeClusters()
         {
             bool removeDerived = false;
@@ -139,6 +168,47 @@ namespace ConlangJson
             {
                 ConlangUtilities.RemoveDerivedEntries(languageDescription);
             }
+        }
+
+        private SortedList<string, int> BuildBBClusterCount()
+        {
+            SortedList<string, int> bbClusterCount = [];
+
+            foreach (string cluster in languageDescription.phoneme_cluster_count.Keys)
+            {
+                int count = languageDescription.phoneme_cluster_count[cluster];
+                string bbCluster = string.Empty;
+                Match CV_ClusterMatch = CV_ClusterRegex.Match(cluster);
+                Match VCV_ClusterMatch = VCV_ClusterRegex.Match(cluster);
+                Match VC_ClusterMatch = VC_ClusterRegex.Match(cluster);
+
+                if (CV_ClusterMatch.Success)
+                {
+                    int cCount = CV_ClusterMatch.Groups[1].Value.Trim().Length;
+                    bbCluster = new string('C', cCount) + 'V';
+                }
+                else if (VCV_ClusterMatch.Success)
+                {
+                    int cCount = VCV_ClusterMatch.Groups[1].Value.Trim().Length;
+                    bbCluster = "V" + new string('C', cCount) + 'V';
+                }
+                else if (VC_ClusterMatch.Success)
+                {
+                    int cCount = CV_ClusterMatch.Groups[1].Value.Trim().Length;
+                    bbCluster = "V" + new string('C', cCount);
+                }
+
+                if (!string.IsNullOrEmpty(bbCluster))
+                {
+                    if (!bbClusterCount.ContainsKey(bbCluster))
+                    {
+                        bbClusterCount[bbCluster] = 0;
+                    }
+                    bbClusterCount[bbCluster] += count;
+                }
+            }
+
+            return bbClusterCount;
         }
 
         private string buildVowelPatternFragment()
@@ -183,7 +253,7 @@ namespace ConlangJson
         {
             stringToParse = stringToParse.Replace("ˈ", "");
 
-            MatchCollection CsVMatches = CsVMatch.Matches(stringToParse);
+            MatchCollection CsVMatches = CsVRegex.Matches(stringToParse);
             foreach (Match C in CsVMatches)
             {
                 if (C.Success)
@@ -201,7 +271,7 @@ namespace ConlangJson
                     languageDescription.phoneme_cluster_count[nad] += 1;
                 }
             }
-            MatchCollection VCsVMatches = VCsVMatch.Matches(stringToParse);
+            MatchCollection VCsVMatches = VCsVRegex.Matches(stringToParse);
             foreach (Match C in VCsVMatches)
             {
                 if (C.Success)
@@ -220,7 +290,7 @@ namespace ConlangJson
                     languageDescription.phoneme_cluster_count[nad] += 1;
                 }
             }
-            MatchCollection VCsMatches = VCsMatch.Matches(stringToParse);
+            MatchCollection VCsMatches = VCsRegex.Matches(stringToParse);
             foreach (Match C in VCsMatches)
             {
                 if (C.Success)

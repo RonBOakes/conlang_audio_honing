@@ -62,6 +62,7 @@
             toolStripSeparator6 = new ToolStripSeparator();
             generatePhonemeClustersToolStripMenuItem = new ToolStripMenuItem();
             listNADAnalysisClustersToolStripMenuItem = new ToolStripMenuItem();
+            exportNADClusterCountsToolStripMenuItem = new ToolStripMenuItem();
             utilitiesToolStripMenuItem = new ToolStripMenuItem();
             displayGlossOfSampleTextToolStripMenuItem = new ToolStripMenuItem();
             printSampleTextSummaryToolStripMenuItem = new ToolStripMenuItem();
@@ -158,7 +159,7 @@
             btn_updateSoundMapList = new Button();
             tb_Volume = new TrackBar();
             label1 = new Label();
-            exportNADClusterCountsToolStripMenuItem = new ToolStripMenuItem();
+            exportBeatsAndBindingsClusterCountsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabPhoneticAlterations.SuspendLayout();
             tabPageConsonants.SuspendLayout();
@@ -245,7 +246,7 @@
             // 
             // languageToolStripMenuItem
             // 
-            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem, setAndAdjustLexicalOrderToolStripMenuItem, toolStripSeparator6, generatePhonemeClustersToolStripMenuItem, listNADAnalysisClustersToolStripMenuItem, exportNADClusterCountsToolStripMenuItem });
+            languageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editLexiconToolStripMenuItem, declineToolStripMenuItem, deriveToolStripMenuItem, setAndAdjustLexicalOrderToolStripMenuItem, toolStripSeparator6, generatePhonemeClustersToolStripMenuItem, listNADAnalysisClustersToolStripMenuItem, exportNADClusterCountsToolStripMenuItem, exportBeatsAndBindingsClusterCountsToolStripMenuItem });
             languageToolStripMenuItem.Name = "languageToolStripMenuItem";
             languageToolStripMenuItem.Size = new Size(71, 20);
             languageToolStripMenuItem.Text = "Language";
@@ -296,6 +297,13 @@
             listNADAnalysisClustersToolStripMenuItem.Size = new Size(222, 22);
             listNADAnalysisClustersToolStripMenuItem.Text = "List NAD Analysis Clusters";
             listNADAnalysisClustersToolStripMenuItem.Click += ListNADAnalysisClustersToolStripMenuItem_Click;
+            // 
+            // exportNADClusterCountsToolStripMenuItem
+            // 
+            exportNADClusterCountsToolStripMenuItem.Name = "exportNADClusterCountsToolStripMenuItem";
+            exportNADClusterCountsToolStripMenuItem.Size = new Size(222, 22);
+            exportNADClusterCountsToolStripMenuItem.Text = "Export NAD Cluster Counts";
+            exportNADClusterCountsToolStripMenuItem.Click += ExportNADClusterCountsToolStripMenuItem_Click;
             // 
             // utilitiesToolStripMenuItem
             // 
@@ -1239,12 +1247,12 @@
             label1.TabIndex = 35;
             label1.Text = "Volume";
             // 
-            // exportNADClusterCountsToolStripMenuItem
+            // exportBeatsAndBindingsClusterCountsToolStripMenuItem
             // 
-            exportNADClusterCountsToolStripMenuItem.Name = "exportNADClusterCountsToolStripMenuItem";
-            exportNADClusterCountsToolStripMenuItem.Size = new Size(222, 22);
-            exportNADClusterCountsToolStripMenuItem.Text = "Export NAD Cluster Counts";
-            exportNADClusterCountsToolStripMenuItem.Click += ExportNADClusterCountsToolStripMenuItem_Click;
+            exportBeatsAndBindingsClusterCountsToolStripMenuItem.Name = "exportBeatsAndBindingsClusterCountsToolStripMenuItem";
+            exportBeatsAndBindingsClusterCountsToolStripMenuItem.Size = new Size(285, 22);
+            exportBeatsAndBindingsClusterCountsToolStripMenuItem.Text = "Export Beats and Bindigs Cluster Counts";
+            exportBeatsAndBindingsClusterCountsToolStripMenuItem.Click += ExportBBClusterCountsToolStripMenuItem_Click;
             // 
             // LanguageHoningForm
             // 
@@ -1425,5 +1433,6 @@
         private ToolStripMenuItem listNADAnalysisClustersToolStripMenuItem;
         private Button btn_replaceCluster;
         private ToolStripMenuItem exportNADClusterCountsToolStripMenuItem;
+        private ToolStripMenuItem exportBeatsAndBindingsClusterCountsToolStripMenuItem;
     }
 }
