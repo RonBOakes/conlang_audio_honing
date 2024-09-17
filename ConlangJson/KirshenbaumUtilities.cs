@@ -61,6 +61,9 @@ namespace ConlangJson
             { "ɵ", "@." }, {"ǀ","!["}, {"‖","!"}, {"ǂ","!"}
         };
 
+        /// <summary>
+        /// IPA Phonemes that are not (currently) mapped in Kirshenbaum 
+        /// </summary>
         public static List<string> UnmappedPhonemes { get; } = [
               "ʛ",
             "ᵻ",
@@ -95,6 +98,11 @@ namespace ConlangJson
             "\u02b7",
         ];
 
+        /// <summary>
+        /// Convert a string consisting of a single word represented in IPA into its Kirshenbaum equivalent.
+        /// </summary>
+        /// <param name="word">Word in IPA representation</param>
+        /// <returns>Kirshenbaum equivalent</returns>
         public static string IpaWordToKirshenbaum(string word)
         {
             StringBuilder sb = new();

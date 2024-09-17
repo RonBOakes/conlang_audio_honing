@@ -16,12 +16,12 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System.Runtime.CompilerServices;
-using ConlangJson;
-using System.Text.Json;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Unicode;
+using ConlangJson;
 
 namespace AddTestEnglishLexicon
 {

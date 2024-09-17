@@ -233,6 +233,6 @@ namespace ConlangAudioHoning
         }
 
         [GeneratedRegex(@"\\((\d+\.\d+\.\d+\.\d+)\+[0-9a-f]+)\\")]
-        private static partial Regex VersionPatterRegex();
+        internal static partial Regex VersionPatterRegex();
     }
 }

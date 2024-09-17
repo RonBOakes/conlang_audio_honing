@@ -2428,9 +2428,9 @@ namespace ConlangAudioHoning
 
             StringBuilder replacementBuilder = new();
             int i = 1;
-            foreach(char c in replacement)
+            foreach (char c in replacement)
             {
-                if((c == 'V') || (c == 'C'))
+                if ((c == 'V') || (c == 'C'))
                 {
                     replacementBuilder.Append(string.Format("${0}", i++));
                 }

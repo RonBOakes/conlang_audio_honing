@@ -25,17 +25,17 @@ using System.Threading.Tasks;
 namespace ConlangAudioHoning
 {
     /// <summary>
-    /// Form for displaying Net Audio Distance (NAD) Clusters along with the link to the online calculator
+    /// Form for displaying Net Auditory Distance (NAD) Clusters along with the link to the online calculator
     /// for performing phonotactic analysis using this information.
     /// </summary>
-    internal class NADDisplayForm : Form
+    internal class NetAuditoryDistanceDisplayForm : Form
     {
-        LinkLabel _nadPhonotacticCalculatorSiteLabel;
-        TextBox _nadClusterListBox;
-        Button _okButton;
+        private readonly LinkLabel _nadPhonotacticCalculatorSiteLabel;
 
-        public NADDisplayForm(string nadString)
+        public NetAuditoryDistanceDisplayForm(string nadString)
         {
+            TextBox _nadClusterListBox;
+            Button _okButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(160, 280);

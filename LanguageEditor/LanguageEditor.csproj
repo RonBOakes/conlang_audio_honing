@@ -50,4 +50,8 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
     <ProjectReference Include="..\ConlangJson\ConlangJson.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="5.3.4" />
+  </ItemGroup>
+
 </Project>

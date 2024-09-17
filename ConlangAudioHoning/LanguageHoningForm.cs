@@ -24,7 +24,12 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Text.Unicode;
+
 using ConlangJson;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
+
 
 namespace ConlangAudioHoning
 {
@@ -48,6 +53,8 @@ namespace ConlangAudioHoning
         private bool languageDirty = false;
         private bool sampleDirty = false;
 
+        private Logger _logger;
+
         /// <summary>
         /// Provides access to the ProgressBar on the main form so that it can be accessed by other classes and methods.
         /// </summary>
@@ -60,7 +67,11 @@ namespace ConlangAudioHoning
         /// </summary>
         public LanguageHoningForm()
         {
+            _logger = CreateLogger();
+            _logger.Trace("_logger has been instantiated");
+
             InitializeComponent();
+            _logger.Trace("Components initialized");
             menuStrip1.Items.Clear();
 #pragma warning disable IDE0300 // Simplify collection initialization
 #if DEBUG
@@ -69,6 +80,7 @@ namespace ConlangAudioHoning
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, languageToolStripMenuItem, utilitiesToolStripMenuItem, helpToolStripMenuItem });
 #endif
 #pragma warning restore IDE0300 // Simplify collection initialization
+            _logger.Trace("Menu items added");
 
             // Checks to ensure that the form from the designer doesn't exceed 1024x768
             if (this.Width > 1024)
@@ -81,8 +93,10 @@ namespace ConlangAudioHoning
             }
 
             this.FormClosing += This_FormClosing;
+            _logger.Trace("Form Closing set");
 
             UserConfiguration = UserConfiguration.LoadFromFile();
+            _logger.Trace("User Configuration Loaded");
 
             useCompactJsonToolStripItem.Checked = false;
 
@@ -94,6 +108,7 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = true;
                 setAmazonPollyProfileToolStripMenuItem.Visible = false;
                 setAmazonPollyS3BucketNameToolStripMenuItem.Visible = false;
+                _logger.Trace("Shared Polly Menu configured");
             }
             else
             {
@@ -103,12 +118,14 @@ namespace ConlangAudioHoning
                 setAmazonPollyAuthorizationPasswordToolStripMenuItem.Visible = false;
                 setAmazonPollyProfileToolStripMenuItem.Visible = true;
                 setAmazonPollyS3BucketNameToolStripMenuItem.Visible = true;
+                _logger.Trace("Non-shared Poly Menu configured");
             }
 
 
             NoEngineSpeak noEngineSpeak = new();
             speechEngines.Add(noEngineSpeak.Description, noEngineSpeak);
             voices.Add(noEngineSpeak.Description, noEngineSpeak.GetVoices());
+            _logger.Trace("NoEngineSpeak configured");
 
             if (UserConfiguration.IsESpeakNGSupported)
             {
@@ -117,6 +134,7 @@ namespace ConlangAudioHoning
                 Dictionary<string, SpeechEngine.VoiceData> espeakVoices = eSpeakNGSpeak.GetVoices();
                 speechEngines.Add(eSpeakNGSpeak.Description, eSpeakNGSpeak);
                 voices.Add(eSpeakNGSpeak.Description, espeakVoices);
+                _logger.Trace("espeak-ng speak configured");
             }
 
             if (UserConfiguration.IsPollySupported)
@@ -140,6 +158,7 @@ namespace ConlangAudioHoning
                     speechEngines.Add(nonSharedPollySpeech.Description, nonSharedPollySpeech);
                     voices.Add(nonSharedPollySpeech.Description, amazonPollyVoices);
                 }
+                _logger.Trace("Polly Speak configured");
             }
 
             if (UserConfiguration.IsAzureSupported)
@@ -148,6 +167,7 @@ namespace ConlangAudioHoning
                 Dictionary<string, SpeechEngine.VoiceData> azureVoices = azureSpeak.GetVoices();
                 speechEngines.Add(azureSpeak.Description, azureSpeak);
                 voices.Add(azureSpeak.Description, azureVoices);
+                _logger.Trace("Azure speech configured");
             }
 
             tb_Volume.Value = 75;
@@ -156,8 +176,11 @@ namespace ConlangAudioHoning
 
             changesToBeMade.Clear();
             LoadSpeechEngines();
+            _logger.Trace("Speech Engines Loaded");
             LoadVoices();
+            _logger.Trace("Voices Loaded");
             LoadSpeeds();
+            _logger.Trace("Speeds Loaded");
             tabPhoneticAlterations.SelectedIndexChanged += TabPhoneticAlterations_SelectedIndexChanged;
 
             // Hide controls on the Consonants tab that only show when certain radio buttons are pressed
@@ -173,11 +196,13 @@ namespace ConlangAudioHoning
             cbx_diphthongStartVowel.Visible = false;
             lbl_DiphthongEndVowel.Visible = false;
             cbx_diphthongEndVowel.Visible = false;
+            _logger.Trace("Visibility and Events configured");
 
             // Handle the ApplicationExit event to know when the application is exiting.
             Application.ApplicationExit += new EventHandler(OnApplicationExit);
 
             ProgressBar = new();
+            _logger.Trace("Initialization Complete");
         }
 
         private void TabPhoneticAlterations_SelectedIndexChanged(object? sender, EventArgs e)
@@ -1946,6 +1971,8 @@ namespace ConlangAudioHoning
                     return;
                 }
             }
+            _logger.Debug("Shutting down application");
+            LogManager.Shutdown(); // Flush and close down internal threads and timers
         }
 
         private void Txt_SampleText_TextChanged(object sender, EventArgs e)
@@ -3204,7 +3231,7 @@ namespace ConlangAudioHoning
             }
 
             string NADAnalysisClusters = PhonemeClusterBuilder.GetNADClusters(languageDescription);
-            NADDisplayForm displayForm = new(NADAnalysisClusters);
+            NetAuditoryDistanceDisplayForm displayForm = new(NADAnalysisClusters);
             _ = displayForm.ShowDialog();
         }
 
@@ -3306,6 +3333,31 @@ namespace ConlangAudioHoning
                 csvStream.Flush();
                 csvStream.Close();
             }
+        }
+
+        private Logger CreateLogger()
+        {
+            NLog.Config.LoggingConfiguration config = new();
+
+            string filePath = Application.UserAppDataPath.Trim() + @"\ConlangAudioHoningLog.log";
+
+            Match commitInPathMatch = UserConfiguration.VersionPatterRegex().Match(filePath);
+            if (commitInPathMatch.Success)
+            {
+                filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
+            }
+
+            NLog.Targets.FileTarget logfile = new()
+            {
+                FileName = filePath
+            };
+            config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
+
+            // Apply config           
+            LogManager.Configuration = config;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            return _logger;
         }
     }
 }
