@@ -3351,6 +3351,11 @@ namespace ConlangAudioHoning
             {
                 FileName = filePath
             };
+
+            logfile.OpenFileFlushTimeout = 1;
+            logfile.AutoFlush = true;
+            logfile.OpenFileCacheTimeout = 1;
+
             config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
 
             // Apply config           

@@ -90,6 +90,9 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 			<Component>
 				<File Source="Microsoft.CognitiveServices.Speech.csharp.dll" />
 			</Component>
+            <Component>
+                <File Source="NLog.dll" />
+            </Component>
 		</ComponentGroup>
 		<ComponentGroup Id="NativeComponents" Directory="NATIVE">
 			<Component>
