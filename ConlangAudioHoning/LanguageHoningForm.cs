@@ -145,7 +145,7 @@ namespace ConlangAudioHoning
                     SharedPollySpeech.PollyEmail = UserConfiguration.PollyEmail;
                     SharedPollySpeech.PollyPassword = UserConfiguration.PollyPassword;
                     SharedPollySpeech pollySpeech = new();
-                    _logger.Trace("pollySpeech instantiated");
+                    _logger.Trace("nonSharedPollySpeech instantiated");
                     Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
                     _logger.Trace("amazonPollyVoices populated");
                     speechEngines.Add(pollySpeech.Description, pollySpeech);
@@ -2087,7 +2087,7 @@ namespace ConlangAudioHoning
                 }
                 else
                 {
-                    NonSharedPollySpeech pollySpeech = (NonSharedPollySpeech)speechEngines[engineName];
+                    NonSharedPollySpeech nonSharedPollySpeech = (NonSharedPollySpeech)speechEngines[engineName];
                     DateTime now = DateTime.Now;
                     string targetFileBaseName = string.Format("speech_{0:s}.mp3", now);
                     targetFileBaseName = targetFileBaseName.Replace(":", "_");
@@ -2105,14 +2105,15 @@ namespace ConlangAudioHoning
                     string voice = cbx_voice.Text.Trim().Split()[0];
                     string speed = cbx_speed.Text.Trim();
 
-                    bool ok = pollySpeech.GenerateSpeech(targetFileName, voice, speed, this);
+                    bool ok = nonSharedPollySpeech.GenerateSpeech(targetFileName, voice, speed, this);
                     if (!ok)
                     {
+                        _logger.Error("Unable to generate speech");
                         _ = MessageBox.Show("Unable to generate speech file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
-                        txt_phonetic.Text = pollySpeech.PhoneticText;
+                        txt_phonetic.Text = nonSharedPollySpeech.PhoneticText;
                         // Play the audio (MP3) file with the Windows Media Player
                         Uri targetURI = new(string.Format("file://{0}", targetFileName.Replace('\\', '/')));
                         AudioPlayer.PlayAudio(targetURI, (double)tb_Volume.Value / 100.0);

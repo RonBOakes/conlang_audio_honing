@@ -144,10 +144,12 @@ namespace ConlangAudioHoning
         {
             if (LanguageDescription == null)
             {
+                _logger.Error("Cannot Generate Polly Speech without a language description");
                 throw new ConlangAudioHoningException("Cannot Generate Polly Speech without a language description");
             }
             if (string.IsNullOrEmpty(SampleText))
             {
+                _logger.Error("Cannot Generate polly Speech without sample text");
                 throw new ConlangAudioHoningException("Cannot Generate polly Speech without sample text");
             }
             Cursor.Current = Cursors.WaitCursor;
@@ -273,10 +275,12 @@ namespace ConlangAudioHoning
         {
             if (LanguageDescription == null)
             {
+                _logger.Error("Cannot generate speech without a language description");
                 return false;
             }
             if ((SampleText == null) || (SampleText.Length == 0))
             {
+                _logger.Error("Cannot generate speech without sample text");
                 return false;
             }
 
@@ -303,6 +307,7 @@ namespace ConlangAudioHoning
 
             if (!CreateBucketIfNeeded())
             {
+                _logger.Error("Unable to create an S3 Bucket");
                 return false;
             }
 
@@ -338,59 +343,84 @@ namespace ConlangAudioHoning
                     {
                         BucketName = PollyS3Bucket
                     };
-                    ListObjectsV2Response listObjectsV2Response = s3Client.ListObjectsV2Async(listObjectsV2Request).Result;
-                    S3Object? s3AudioFile = null;
-                    if (listObjectsV2Response != null)
+                    int retryCount = 3;
+                    bool done = false;
+                    do
                     {
-                        foreach (S3Object s3file in from S3Object s3file in listObjectsV2Response.S3Objects
-                                                    where outputURIString.Contains(s3file.Key)
-                                                    select s3file)
+                        ListObjectsV2Response listObjectsV2Response = s3Client.ListObjectsV2Async(listObjectsV2Request).Result;
+                        S3Object? s3AudioFile = null;
+                        if (listObjectsV2Response != null)
                         {
-                            s3AudioFile = s3file;
-                        }
+                            foreach (S3Object s3file in from S3Object s3file in listObjectsV2Response.S3Objects
+                                                        where outputURIString.Contains(s3file.Key)
+                                                        select s3file)
+                            {
+                                s3AudioFile = s3file;
+                            }
 
-                        if (s3AudioFile == null)
-                        {
-                            Cursor.Current = Cursors.Default;
-                            return false;
-                        }
-                        // Get the S3 Object
-                        GetObjectRequest getObjectRequest = new()
-                        {
-                            BucketName = PollyS3Bucket,
-                            Key = s3AudioFile.Key
-                        };
-                        GetObjectResponse getObjectResponse = s3Client.GetObjectAsync(getObjectRequest).Result;
-
-                        // Write the data out to the target file
-                        CancellationToken cancellationToken = new();
-                        getObjectResponse.WriteResponseStreamToFileAsync(targetFile, false, cancellationToken).Wait();
-
-                        // Delete all files in the S3 Bucket (to clean up from past issues)
-                        foreach (S3Object s3file in listObjectsV2Response.S3Objects)
-                        {
-                            DeleteObjectRequest deleteObjectRequest = new()
+                            if (s3AudioFile == null)
+                            {
+                                Cursor.Current = Cursors.Default;
+                                _logger.Error("Failed to get the name for an audio file from S3 after receiving a valid V2Response");
+                                _logger.Debug("Output URI: {OutputURI}", outputURIString);
+                                foreach (S3Object s3file in listObjectsV2Response.S3Objects)
+                                {
+                                    _logger.Debug("--> S3 Object Key {Key}", s3file.Key);
+                                }
+                                Thread.Sleep(5000);
+                                continue;
+                            }
+                            // Get the S3 Object
+                            GetObjectRequest getObjectRequest = new()
                             {
                                 BucketName = PollyS3Bucket,
-                                Key = s3file.Key
+                                Key = s3AudioFile.Key
                             };
-                            s3Client.DeleteObjectAsync(deleteObjectRequest).Wait();
+                            GetObjectResponse getObjectResponse = s3Client.GetObjectAsync(getObjectRequest).Result;
+
+                            // Write the data out to the target file
+                            CancellationToken cancellationToken = new();
+                            getObjectResponse.WriteResponseStreamToFileAsync(targetFile, false, cancellationToken).Wait();
+
+                            // Delete all files in the S3 Bucket (to clean up from past issues)
+                            foreach (S3Object s3file in listObjectsV2Response.S3Objects)
+                            {
+                                DeleteObjectRequest deleteObjectRequest = new()
+                                {
+                                    BucketName = PollyS3Bucket,
+                                    Key = s3file.Key
+                                };
+                                s3Client.DeleteObjectAsync(deleteObjectRequest).Wait();
+                            }
+                            done = true;
+                        }
+                        else
+                        {
+                            Cursor.Current = Cursors.Default;
+                            _logger.Error("Did not get a listObjectsV2Response");
+                            return false;
                         }
                     }
-                    else
-                    {
-                        Cursor.Current = Cursors.Default;
-                        return false;
-                    }
+                    while ((!done) && (--retryCount >= 0));
                 }
                 else
                 {
                     Cursor.Current = Cursors.Default;
+                    _logger.Error("Did not get a response to StartSpeechSynthesisTaskAsync");
+                    if (responseTask.Exception != null)
+                    {
+                        _logger.Error(responseTask.Exception, "Exception in StartSpeechSynthesisTaskAsync: {ExceptionMessage}", responseTask.Exception.Message);
+                    }
+                    else
+                    {
+                        _logger.Info("The state of the task is {TaskStatus}", responseTask.Status.ToString());
+                    }
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error(ex, "Exception generating speech: {ExceptionMessage}", ex.Message);
                 Cursor.Current = Cursors.Default;
                 return false;
             }
@@ -455,8 +485,9 @@ namespace ConlangAudioHoning
             {
                 _ = s3Client.PutBucketAsync(request).Result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error(ex, "Exception when creating S3 bucket {BucketName}: {ExceptionMessage}", PollyS3Bucket, ex.Message);
                 return false;
             }
             return true;
@@ -473,10 +504,12 @@ namespace ConlangAudioHoning
             CredentialProfileStoreChain chain = new();
             if (!chain.TryGetAWSCredentials(PollySSOProfile, out AWSCredentials credentials))
             {
+                LogManager.GetCurrentClassLogger().Error("Failed to find the {PollySSOProfile} profile", PollySSOProfile);
                 throw new NonSharedPollyException($"Failed to find the {PollySSOProfile} profile");
             }
             if (credentials == null)
             {
+                LogManager.GetCurrentClassLogger().Error("Unable to acquire credentials");
                 throw new NonSharedPollyException("Unable to acquire credentials");
             }
             SSOAWSCredentials ssoCredentials = (SSOAWSCredentials)credentials;
