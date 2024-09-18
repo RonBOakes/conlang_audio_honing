@@ -24,6 +24,7 @@ using System.Text.RegularExpressions;
 using System.Text.Unicode;
 using ConlangAudioHoning;
 using ConlangJson;
+using NLog;
 
 namespace LanguageEditor
 {
@@ -43,12 +44,83 @@ namespace LanguageEditor
         private string derivedWordText = "";
         private bool derivedWordUpdateRunning = false;
 
+        private Logger _logger;
+
         public LanguageEditorForm()
         {
+            _logger = CreateLogger();
+            _logger.Trace("_logger has been instantiated");
+
             InitializeComponent();
             useCompactJsonToolStripItem.Checked = false;
             languageToolStripMenuItem.Enabled = false;
             languageToolStripMenuItem.Visible = false;
+        }
+
+        private void NewLanguageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (languageDescription != null)
+            {
+                DialogResult dialogResult = MessageBox.Show("Save loaded language?", "Save Language", MessageBoxButtons.YesNoCancel);
+                if (dialogResult.Equals(DialogResult.Yes))
+                {
+                    using SaveFileDialog saveFileDialog = new();
+                    if (languageFileInfo == null)
+                    {
+                        saveFileDialog.InitialDirectory = Environment.SpecialFolder.MyDocuments.ToString();
+                    }
+                    else
+                    {
+                        saveFileDialog.InitialDirectory = languageFileInfo.DirectoryName;
+                    }
+                    saveFileDialog.Filter = "JSON file (*.json)|*.json|txt file (*.txt)|*.txt|All Files (*.*)|*.*";
+                    saveFileDialog.FilterIndex = 1;
+                    saveFileDialog.RestoreDirectory = true;
+                    saveFileDialog.CheckFileExists = false;
+                    saveFileDialog.OverwritePrompt = true;
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        SaveLanguage(saveFileDialog.FileName);
+                    }
+                }
+
+                languageDescription = null;
+                languageFileInfo = null;
+            }
+
+            this.SuspendLayout();
+            languageDescription = new();
+            _logger.Debug("Created a new language");
+
+            LoadLanguage();
+            languageFileInfo = null;
+
+            _logger.Debug("Language Loaded into UI");
+            languageToolStripMenuItem.Enabled = true;
+            languageToolStripMenuItem.Visible = true;
+            declineLanguageToolStripMenuItem.Enabled = true;
+            deriveLanguageToolStripMenuItem.Enabled = true;
+            if (languageDescription.derived)
+            {
+                deriveLanguageToolStripMenuItem.Text = "Remove Derived Words";
+            }
+            else
+            {
+                deriveLanguageToolStripMenuItem.Text = "Derive Language";
+            }
+            if (languageDescription.declined)
+            {
+                declineLanguageToolStripMenuItem.Text = "Remove Declined Words";
+            }
+            else
+            {
+                declineLanguageToolStripMenuItem.Text = "Decline Language";
+            }
+            _logger.Debug("UI Reconfigured");
+            this.ResumeLayout(true);
+            this.Refresh();
+            _logger.Debug("UI Refreshed");
         }
 
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -137,6 +209,18 @@ namespace LanguageEditor
                 MessageBox.Show("Unable to decode Language file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            LoadLanguage();
+
+            languageFileInfo = new FileInfo(filename);
+        }
+
+        private void LoadLanguage()
+        {
+            if (languageDescription == null)
+            {
+                _logger.Error("LoadLanguage() called when languageDescription is null");
+                return;
+            }
 
             txt_languageNameEnglish.Text = languageDescription.english_name;
             txt_languageNameNativeEnglish.TextChanged -= Txt_languageNameNativeEnglish_TextChanged;
@@ -215,8 +299,6 @@ namespace LanguageEditor
             txt_partOfSpeechBlank.KeyPress += Txt_partOfSpeech_KeyPress;
             panel_partsOfSpeechList.Controls.Add(txt_partOfSpeechBlank);
             panel_partsOfSpeechList.ResumeLayout(true);
-
-            languageFileInfo = new FileInfo(filename);
 
             xPos = 0;
             yPos = 0;
@@ -337,8 +419,6 @@ namespace LanguageEditor
 
             txt_languageNativePhonetic.TextChanged += Txt_languageNativePhonetic_TextChanged;
             txt_languageNameNativeEnglish.TextChanged += Txt_languageNameNativeEnglish_TextChanged;
-
-            languageFileInfo = new FileInfo(filename);
         }
 
         private void Txt_derivedWord_Enter(object? sender, EventArgs e)
@@ -1369,5 +1449,36 @@ namespace LanguageEditor
             }
             Cursor.Current = Cursors.Default;
         }
+
+        private Logger CreateLogger()
+        {
+            NLog.Config.LoggingConfiguration config = new();
+
+            string filePath = Application.UserAppDataPath.Trim() + @"\LanguageEditorLog.log";
+
+            Match commitInPathMatch = VersionPatterRegex().Match(filePath);
+            if (commitInPathMatch.Success)
+            {
+                filePath = filePath.Replace(commitInPathMatch.Groups[1].ToString(), commitInPathMatch.Groups[2].ToString());
+            }
+
+            NLog.Targets.FileTarget logfile = new()
+            {
+                FileName = filePath,
+                OpenFileFlushTimeout = 1,
+                AutoFlush = true,
+                OpenFileCacheTimeout = 1
+            };
+
+            config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
+
+            // Apply config           
+            LogManager.Configuration = config;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            return _logger;
+        }
+        [GeneratedRegex(@"\\((\d+\.\d+\.\d+\.\d+)\+[0-9a-f]+)\\")]
+        private static partial Regex VersionPatterRegex();
     }
 }

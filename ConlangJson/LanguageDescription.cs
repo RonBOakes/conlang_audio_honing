@@ -39,7 +39,7 @@ namespace ConlangJson
         private List<string>? _part_of_speech_list;
         private List<string>? _phoneme_inventory;
         private Dictionary<string, string>? _phoneme_clusters;
-        private Dictionary<string, int>? _phonemen_cluster_count;
+        private Dictionary<string, int>? _phoneme_cluster_count;
         private string? _word_order;
         private string? _adjective_position;
         private string? _pre_post_position;
@@ -62,7 +62,7 @@ namespace ConlangJson
             _part_of_speech_list = [];
             _phoneme_inventory = [];
             _phoneme_clusters = [];
-            _phonemen_cluster_count = [];
+            _phoneme_cluster_count = [];
             _spelling_pronunciation_rules = [];
             _lexical_order_list = [];
             _affix_map = [];
@@ -243,8 +243,8 @@ namespace ConlangJson
         /// </summary>
         public Dictionary<string, int> phoneme_cluster_count
         {
-            get => _phonemen_cluster_count ?? [];
-            set => _phonemen_cluster_count = value;
+            get => _phoneme_cluster_count ?? [];
+            set => _phoneme_cluster_count = value;
         }
 
         /// <summary>
