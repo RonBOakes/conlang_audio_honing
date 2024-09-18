@@ -22,9 +22,11 @@ using Amazon.Polly;
 using Amazon.Polly.Model;
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
+using Amazon.Runtime.Internal.Util;
 using Amazon.S3;
 using Amazon.S3.Model;
 using ConlangJson;
+using NLog;
 
 namespace ConlangAudioHoning
 {
@@ -34,28 +36,36 @@ namespace ConlangAudioHoning
         private readonly AmazonS3Client s3Client;
         private readonly Dictionary<string, Amazon.Polly.Model.Voice> voiceModels = [];
 
+        private readonly NLog.Logger _logger;
+
         /// <summary>
         /// Constructor for the Amazon Polly interface.
         /// </summary>
         public NonSharedPollySpeech() : base()
         {
             Description = "Amazon Polly";
+            _logger = LogManager.GetCurrentClassLogger();
+
             if (string.IsNullOrEmpty(PollySSOProfile))
             {
+                _logger.Fatal("Unable to create NonSharedPollySpeech object: No SSO Profile available");
                 throw new NonSharedPollyException("Unable to create NonSharedPollySpeech object: No SSO Profile available");
             }
             SSOAWSCredentials credentials;
             try
             {
                 credentials = LoadSsoCredentials();
+                _logger.Trace("SSO Credentials created");
             }
             catch (NonSharedPollyException ex)
             {
+                _logger.Fatal(ex, "Unable to create NonSharedPollySpeech object: {Exception}", ex.Message);
                 throw new NonSharedPollyException("Unable to create NonSharedPollySpeech object:", ex);
             }
 
             pollyClient = new AmazonPollyClient(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
             s3Client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
+            _logger.Trace("Polly and S3 Clients Created");
         }
 
         /// <summary>
@@ -65,23 +75,28 @@ namespace ConlangAudioHoning
         public NonSharedPollySpeech(LanguageDescription languageDescription) : base(languageDescription)
         {
             Description = "Amazon Polly";
+            _logger = LogManager.GetCurrentClassLogger();
+
             if (string.IsNullOrEmpty(PollySSOProfile))
             {
+                _logger.Fatal("Unable to create NonSharedPollySpeech object: No SSO Profile available");
                 throw new NonSharedPollyException("Unable to create NonSharedPollySpeech object: No SSO Profile available");
             }
             SSOAWSCredentials credentials;
             try
             {
                 credentials = LoadSsoCredentials();
+                _logger.Trace("SSO Credentials created");
             }
             catch (NonSharedPollyException ex)
             {
+                _logger.Fatal(ex, "Unable to create NonSharedPollySpeech object: {Exception}", ex.Message);
                 throw new NonSharedPollyException("Unable to create NonSharedPollySpeech object:", ex);
             }
 
-            // Log into the SSO
             pollyClient = new AmazonPollyClient(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
             s3Client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(credentials.Region));
+            _logger.Trace("Polly and S3 Clients Created");
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
-  <Bundle Name="Conlang AudioHoning Installer" Manufacturer="Conlang Audio Honing Project" Version="0.1.0.0" UpgradeCode="4646c55a-adec-4e88-b69c-048ecc52166f">
+  <Bundle Name="Conlang Audio Honing" Manufacturer="Conlang Audio Honing Project" Version="0.1.0.0" UpgradeCode="4646c55a-adec-4e88-b69c-048ecc52166f">
     <BootstrapperApplication>
       <bal:WixStandardBootstrapperApplication LicenseUrl="https://www.gnu.org/licenses/gpl-3.0.en.html#license-text" Theme="hyperlinkLicense" />
     </BootstrapperApplication>

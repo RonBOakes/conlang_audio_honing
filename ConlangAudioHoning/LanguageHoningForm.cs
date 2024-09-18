@@ -145,7 +145,9 @@ namespace ConlangAudioHoning
                     SharedPollySpeech.PollyEmail = UserConfiguration.PollyEmail;
                     SharedPollySpeech.PollyPassword = UserConfiguration.PollyPassword;
                     SharedPollySpeech pollySpeech = new();
+                    _logger.Trace("pollySpeech instantiated");
                     Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = pollySpeech.GetVoices();
+                    _logger.Trace("amazonPollyVoices populated");
                     speechEngines.Add(pollySpeech.Description, pollySpeech);
                     voices.Add(pollySpeech.Description, amazonPollyVoices);
                 }
@@ -154,7 +156,9 @@ namespace ConlangAudioHoning
                     NonSharedPollySpeech.PollySSOProfile = UserConfiguration.PollyProfile;
                     NonSharedPollySpeech.PollyS3Bucket = UserConfiguration.PollyS3Bucket;
                     NonSharedPollySpeech nonSharedPollySpeech = new();
+                    _logger.Trace("nonSharedPollySpeech instantiated");
                     Dictionary<string, SpeechEngine.VoiceData> amazonPollyVoices = nonSharedPollySpeech.GetVoices();
+                    _logger.Trace("amazonPollyVoices populated");
                     speechEngines.Add(nonSharedPollySpeech.Description, nonSharedPollySpeech);
                     voices.Add(nonSharedPollySpeech.Description, amazonPollyVoices);
                 }
@@ -3349,12 +3353,11 @@ namespace ConlangAudioHoning
 
             NLog.Targets.FileTarget logfile = new()
             {
-                FileName = filePath
+                FileName = filePath,
+                OpenFileFlushTimeout = 1,
+                AutoFlush = true,
+                OpenFileCacheTimeout = 1
             };
-
-            logfile.OpenFileFlushTimeout = 1;
-            logfile.AutoFlush = true;
-            logfile.OpenFileCacheTimeout = 1;
 
             config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
 
