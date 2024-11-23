@@ -2928,6 +2928,10 @@ namespace ConlangAudioHoning
                             }
                         }
                     }
+                    else if ((line != null) && line.Trim().Equals(string.Empty))
+                    {
+                        sampleTextBuilder.AppendLine();
+                    }
                 }
                 while (line != null);
             }

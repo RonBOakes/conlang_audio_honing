@@ -140,6 +140,11 @@ namespace ConlangAudioHoning
                 SoundMapList.Insert(index, soundMapEditor.SoundMapData.copy());
                 UpdateSoundMapEntries();
             }
+            else if ((index < 0) && (SoundMapList.Count == 0))
+            {
+                SoundMapList.Add(soundMapEditor.SoundMapData.copy());
+                UpdateSoundMapEntries();
+            }
         }
 
         private void BtnAddBelow_Click(object sender, EventArgs e)
@@ -153,6 +158,11 @@ namespace ConlangAudioHoning
             if (index > 0)
             {
                 SoundMapList.Insert(index, soundMapEditor.SoundMapData.copy());
+                UpdateSoundMapEntries();
+            }
+            else if ((index <= 0) && (SoundMapList.Count == 0))
+            {
+                SoundMapList.Add(soundMapEditor.SoundMapData.copy());
                 UpdateSoundMapEntries();
             }
         }
