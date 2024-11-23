@@ -217,7 +217,7 @@ namespace ConlangAudioHoning
                 {
                     lbxLexicon.Items.Add(string.Format("{1} ({0}: {2})", entry.spelled, entry.english, entry.part_of_speech));
                 }
-                lexiconMap.Add((entry.spelled, entry.english, entry.part_of_speech), entry);
+                _ = lexiconMap.TryAdd((entry.spelled, entry.english, entry.part_of_speech), entry);
             }
             lbxLexicon.EndUpdate();
 
